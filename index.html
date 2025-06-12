@@ -762,7 +762,12 @@
     <br>
     <br>
 
+
 <!-- قسم آخر التحديثات -->  
+
+
+
+
 <section id="latest-updates" class="latest-updates animated-section" style="margin-top: 3rem; padding: 2.5rem; background: linear-gradient(135deg, #f1f8e9, #dcedc8); border-radius: 20px; box-shadow: 0 15px 35px rgba(80, 100, 0, 0.15); max-width: 90%; margin: 2rem auto; text-align: center; position: relative; border: none; overflow: hidden;">
     <!-- زخارف متحركة في الخلفية -->
     <div class="updates-bg-animation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0;">
@@ -771,7 +776,7 @@
         <div class="updates-shape shape3" style="position: absolute; width: 100px; height: 100px; background: rgba(80, 100, 0, 0.1); top: 40%; left: 5%; border-radius: 80% 20% 50% 50% / 50% 50% 50% 50%; animation: floatUpdatesShape 25s infinite ease-in-out; animation-delay: 2s;"></div>
     </div>
     
-    <h2 class="updates-title" style="color: #506400; margin-bottom: 1.5rem; font-size: 2.2rem; font-weight: bold; position: absolute; top: -20px; right: 20px; background: #ffffff; padding: 10px 20px; border: 2px solid #506400; border-radius: 10px; box-shadow: 0 5px 15px rgba(80, 100, 0, 0.2); z-index: 2; transition: all 0.3s ease;">كل ما هو جديد</h2>
+    <h2 class="updates-title" style="color: #506400; margin-bottom: 1.5rem; font-size: 2.2rem; font-weight: bold; position: absolute; top: -20px; right: 20px; background: #ffffff; padding: 10px 20px; border: 2px solid #506400; border-radius: 10px; box-shadow: 0 5px 15px rgba(80, 100, 0, 0.2); z-index: 2; transition: all 0.3s ease;">اخر الاخبار </h2>
     <br>
     <br>
     <br>
@@ -780,7 +785,11 @@
     <div class="updates-filter" style="margin: 1rem 0 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; position: relative; z-index: 1;">
         <button onclick="showAllUpdates()" class="update-filter-btn active" style="background: #506400; color: white; border: none; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; box-shadow: 0 3px 10px rgba(80, 100, 0, 0.2);">جميع الإعلانات</button>
         <button onclick="showUpdate('announcement1')" class="update-filter-btn" style="background: white; color: #506400; border: 1px solid #506400; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;"> تمديد التسجيل </button>
-        <button onclick="showUpdate('announcement2')" class="update-filter-btn" style="background: white; color: #506400; border: 1px solid #506400; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;">امتحانات  </button>
+        <button onclick="showUpdate('announcement2')" class="update-filter-btn" style="background: white; color: #506400; border: 1px solid #506400; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;"> هام</button>
+        <button onclick="showUpdate('announcement4')" class="update-filter-btn" style="background: white; color: #506400; border: 1px solid #506400; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;">تمديد تحميل صور الخريجين</button>
+        <button onclick="showUpdate('announcement5')" class="update-filter-btn" style="background: white; color: #506400; border: 1px solid #506400; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;">امتحان الشامل</button>
+        <button onclick="showUpdate('announcement2')" class="update-filter-btn" style="background: white; color: #506400; border: 1px solid #506400; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;">قبول والتسجيل  </button>
+        <button onclick="showUpdate('announcement3')" class="update-filter-btn" style="background: white; color: #506400; border: 1px solid #506400; border-radius: 50px; padding: 0.5rem 1.5rem; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease;">اخبار عامة</button>
     </div>
     
     <div class="announcements-container" style="position: relative; z-index: 1;">
@@ -816,7 +825,33 @@
                     <i class="fas fa-share-alt"></i> مشاركة
                 </button>
                 <span class="announcement-date" style="color: #777; font-size: 0.9rem;">
-                    <i class="far fa-clock" style="margin-left: 5px;"></i> قبل يوم
+                    <span id="announcement2-date"></span>
+                    <script>
+                        // حساب الفرق بين اليوم وتاريخ الإعلان (٢١/٥/٢٠٢٥)
+                        (function() {
+                            const announcementDate = new Date(2025, 4, 21); // شهر 4 = مايو (0-based)
+                            const today = new Date();
+                            // تصفير الوقت للمقارنة الصحيحة
+                            announcementDate.setHours(0,0,0,0);
+                            today.setHours(0,0,0,0);
+                            const diffDays = Math.floor((today - announcementDate) / (1000 * 60 * 60 * 24));
+                            let text = '';
+                            if (diffDays === 0) {
+                                text = '<i class="far fa-clock" style="margin-left: 5px;"></i> اليوم';
+                            } else if (diffDays === 1) {
+                                text = '<i class="far fa-clock" style="margin-left: 5px;"></i> قبل يوم';
+                            } else if (diffDays < 7 && diffDays > 1) {
+                                text = `<i class="far fa-clock" style="margin-left: 5px;"></i> قبل ${diffDays} أيام`;
+                            } else if (diffDays >= 7 && diffDays < 14) {
+                                text = '<i class="far fa-clock" style="margin-left: 5px;"></i> قبل أسبوع';
+                            } else if (diffDays >= 14) {
+                                text = `<i class="far fa-clock" style="margin-left: 5px;"></i> منذ فترة`;
+                            } else {
+                                text = '<i class="far fa-clock" style="margin-left: 5px;"></i> جديد';
+                            }
+                            document.getElementById('announcement2-date').innerHTML = text;
+                        })();
+                    </script>
                 </span>
                 <a href="https://www.bau.edu.jo/BauLivePortal/NewsDetail.aspx?news_id=15652" target="_blank" style="color: #506400; text-decoration: underline; font-size: 0.95rem;">رابط الخبر الرسمي</a>
             </div>
@@ -824,45 +859,221 @@
         
         <!-- الإعلان الثاني -->
         <div id="announcement2" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #e53935; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.2s;">
-            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #e53935; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(229, 57, 53, 0.2);">امتحانات</div>
+            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #e53935; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(229, 57, 53, 0.2);">قبول دولي</div>
             
             <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
-                <div class="announcement-icon" style="width: 50px; height: 50px; background: #ffebee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
-                    <i class="fas fa-pencil-alt" style="font-size: 1.5rem; color: #e53935;"></i>
-                </div>
-                <div>
-                    <h3 style="margin: 0; color: #e53935; font-size: 1.3rem;">اعــــلان 
- مواعيد الامتحانات النهائية للفصل الدراسي الثاني من العام الجامعي 2024-2025 </h3>
-                    <span style="color: #777; font-size: 0.9rem;">
-تاريخ الخبر: الأربعاء 21-5-2025 15:50
-</span>
-                </div>
+            <div class="announcement-icon" style="width: 50px; height: 50px; background: #ffebee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
+            <i class="fas fa-globe" style="font-size: 1.5rem; color: #e53935;"></i>
+            </div>
+            <div>
+            <h3 style="margin: 0; color: #e53935; font-size: 1.3rem;">فتح باب القبول في البرنامج الدولي للطلبة الوافدين (غير الأردنيين)</h3>
+            <span style="color: #777; font-size: 0.9rem;">
+            تاريخ الخبر: الأحد 1-6-2025
+            </span>
+            </div>
             </div>
             
             <div class="announcement-content" style="color: #333; font-size: 1rem; line-height: 1.8; position: relative;">
-                <p style="font-weight: bold; color: #000000ab; margin-bottom: 1rem;">
-                    يعلن المسجل العام بان مواعيد الامتحانات النهائية  للفصل الدراسي الثاني من العام الجامعي  2024/2025  في كليات مركز الجامعة، قد اصبحت متاحة على شاشات المدرسين والطلبة اعتبارا من  اليوم الاربعاء  الموافق 21/5/2025
-                </p>
-                <p>
-                    تتمنى جامعة البلقاء التطبيقية لجميع أبنائها الطلبة كل التوفيق، حماكم الله وحمى هذا الوطن.
-                </p>
-                <div class="announcement-signature" style="margin-top: 1.5rem; border-top: 1px dashed #ddd; padding-top: 1rem;">
-                    <p style="font-weight: bold; margin: 0;">مدير وحدة القبول والتسجيل</p>
-                    <p style="margin: 0.5rem 0 0;">الدكتور زكريا العطيات</p>
-                </div>
+            <p style="font-weight: bold; color: #000000ab; margin-bottom: 1rem;">
+            يعلن المسجل العام في جامعة البلقاء التطبيقية عن فتح باب القبول في البرنامج الدولي للطلبة الوافدين (غير الأردنيين) اعتبارا من يوم الأحد الموافق <strong>1/6/2025</strong> في كليات جامعة البلقاء التطبيقية لجميع المراحل الدراسية من خلال نظام القبول الموحد للطلبة الوافدين في وزارة التعليم العالي والبحث العلمي الأردنية ومن خلال الرابط التالي :
+            </p>
+            <p>
+            <a href="https://studyinjordan.jo/Ar/Explore#apply" target="_blank" style="color: #e53935; text-decoration: underline; font-weight: bold;">https://studyinjordan.jo/Ar/Explore#apply</a>
+            </p>
+            <p>
+            مرفقا مع هذا الإعلان نشرة تخصصات الدراسات العليا والبكالوريوس والدبلوم المتوسط المتاحة على الفصل الأول 2025/2026
+            </p>
+            <p>
+            متمنيا لكم اختيارا موفقا وحياة أكاديمية زاهرة في رحاب جامعة البلقاء التطبيقية
+            </p>
+            <div class="announcement-signature" style="margin-top: 1.5rem; border-top: 1px dashed #ddd; padding-top: 1rem;">
+            <p style="font-weight: bold; margin: 0;">مدير وحدة القبول والتسجيل</p>
+            <p style="margin: 0.5rem 0 0;">الدكتور زكريا العطيات</p>
+            </div>
             </div>
             
             <div class="announcement-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-                <button class="share-btn" style="background: transparent; border: none; color: #e53935; display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 0.9rem; padding: 5px 10px; border-radius: 5px; transition: all 0.3s ease;">
-                    <i class="fas fa-share-alt"></i> مشاركة
-                </button>
-                <span class="announcement-date" style="color: #777; font-size: 0.9rem;">
-                    <i class="far fa-clock" style="margin-left: 5px;"></i> قبل يوم
-                </span>
-                <a href="https://www.bau.edu.jo/BauLivePortal/NewsDetail.aspx?news_id=15648" target="_blank" style="color: #e53935; text-decoration: underline; font-size: 0.95rem;">رابط الخبر الرسمي</a>
+            <button class="share-btn" style="background: transparent; border: none; color: #e53935; display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 0.9rem; padding: 5px 10px; border-radius: 5px; transition: all 0.3s ease;">
+            <i class="fas fa-share-alt"></i> مشاركة
+            </button>
+
+            <a href="https://www.bau.edu.jo/BauLivePortal/NewsDetail.aspx?news_id=15742" target="_blank" style="color: #e53935; text-decoration: underline; font-size: 0.95rem;">رابط الخبر الرسمي</a>
             </div>
         </div>
+        <!-- الإعلان الثالث --> 
+        <div id="announcement3" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #1e88e5; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.4s;">
+            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #1e88e5; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(30, 136, 229, 0.2);">أخبار عامة</div>
+            
+            <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+            <div class="announcement-icon" style="width: 50px; height: 50px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
+                <i class="fas fa-info-circle" style="font-size: 1.5rem; color: #1e88e5;"></i>
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #1e88e5; font-size: 1.3rem;">تحدي أورنج الصيفي 2025</h3>
+                <span style="color: #777; font-size: 0.9rem;">تاريخ النشر: 2025/6/11</span>
+            </div>
+            </div>
+            
+            <div class="announcement-content" style="color: #333; font-size: 1rem; line-height: 1.8;">
+            <p>
+                يعود <strong style="color:#1e88e5;">تحدي أورنج الصيفي</strong> في عام 2025، ويدعو طلاب الجامعات في تخصصات تكنولوجيا المعلومات والهندسة للمشاركة في مشاريع جماعية تحقق تأثيراً حقيقياً خلال الفصل الدراسي الصيفي.<br>
+                إذا كنت مستعداً للتنافس، فهذه فرصتك للتعاون والابتكار وإيجاد حلول تهم المجتمع.<br>
+                <span style="color:#1e88e5; font-weight:bold;">لا تفوت الفرصة!</span>
+            </p>
+            <div class="announcement-image-container">
+                <img src="wab.koon/images/WhatsApp Image‏ 2025-06-11 at 09.02.38.jpeg" alt="تحدي أورنج الصيفي" class="announcement-image">
+            </div>
+            <p style="margin-top:1rem;">
+                <a href="https://osc25.gos.orange.com/talents" target="_blank" style="background: #1e88e5; color: #fff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: background 0.2s;">رابط التسجيل</a>
+            </p>
+            </div>
+
+        </div>
+        <!-- الإعلان الرابع --> 
+        <div id="announcement3" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #1e88e5; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.4s;">
+            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #1e88e5; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(30, 136, 229, 0.2);">أخبار عامة</div>
+            
+            <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+            <div class="announcement-icon" style="width: 50px; height: 50px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
+                <i class="fas fa-info-circle" style="font-size: 1.5rem; color: #1e88e5;"></i>
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #1e88e5; font-size: 1.3rem;">جلسة الأدوات الرقمية الثامنة</h3>
+                <span style="color: #777; font-size: 0.9rem;">تاريخ النشر: 2025/6/11</span>
+            </div>
+            </div>
+            
+            <div class="announcement-content" style="color: #333; font-size: 1rem; line-height: 1.8;">
+            <p>
+                تهدف سلسلة جلسات الأدوات الرقمية إلى تجهيز وتمكين الشباب وتزويدهم بالمعرفة والمهارات الرقمية المتطورة لمواكبة سوق العمل.
+            </p>
+            <p>
+                انضموا إلينا في الجلسة الثامنة من سلسلة جلسات الأدوات الرقمية للتعرف على أفضل الأدوات لبناء تطبيقات الويب، وتصميم قواعد البيانات، وإنشاء واجهة المستخدم، وإطلاق التطبيق وصيانته باستخدام أدوات الذكاء الاصطناعي.
+            </p>
+            <p style="font-weight:bold; color:#1e88e5;">
+                ‏‎‏‎رابط التسجيل:<br>
+                <a href="https://zoom.us/meeting/register/b-Tn1ZdZQJaCXq3OoHkPxg#/registration" target="_blank" style="background: #1e88e5; color: #fff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: background 0.2s; display:inline-block; margin-top:8px;">التسجيل عبر زووم</a>
+            </p>
+            <div class="announcement-image-container">
+                <img src="wab.koon/images/WhatsApp Image‏ 2025-06-11 at 09.04.19.jpeg" alt="جلسة الأدوات الرقمية الثامنة" class="announcement-image">
+            </div>
+        </div>
+            <p>
+                تطبيقات عملية متقدمة بانتظاركم مع المدرب جودت شمّاس، يوم السبت، 14 حزيران، من الساعة 11 صباحاً وحتى الـ 01:30 ظهراً.
+            </p>
+            <div style="margin: 1.5rem 0; color: #888; font-size: 0.95rem;">
+                مؤسسة_ولي_العهد #أدوات_رقمية #ذكاء_اصطناعي #تكنولوجيا
+            </div>
+            </div>
+        </div>
+        <!--اللاعلان الخامس-->
+        <div id="announcement4" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #e53935; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.6s;">
+            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #e53935; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(229, 57, 53, 0.2);">هام</div>
+            <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                <div class="announcement-icon" style="width: 50px; height: 50px; background: #ffebee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 1.5rem; color: #e53935;"></i>
+                </div>
+                <div>
+                    <h3 style="margin: 0; color: #e53935; font-size: 1.3rem;">تمديد تحميل صور الطلبة الخريجين للكتاب السنوي 2024/2025</h3>
+                    <span style="color: #777; font-size: 0.9rem;">تاريخ النشر: 2025/6/10</span>
+                </div>
+            </div>
+            <div class="announcement-content" style="color: #333; font-size: 1rem; line-height: 1.8; position: relative;">
+                <p>
+                    تعلن عمادة شؤون الطلبة في جامعة البلقاء التطبيقية عن تمديد تحميل صور الطلبة الخريجين على الفصل الدراسي الأول 2024/2025، والمتوقع تخرجهم على الفصل الدراسي الثاني 2024/2025، والمتوقع تخرجهم على الفصل الدراسي الصيفي 2024/2025، لغايات الكتاب السنوي 2024/2025 من طلبة الدراسات العليا والبكالوريوس والشهادة الجامعية المتوسطة لتاريخ <strong style="color:#e53935;">15/6/2025</strong>، على الرابط التالي:
+                </p>
+                <p>
+                    <a href="http://forsanapp.bau.edu.jo:8080/stdphoto/Login.jsp" target="_blank" style="color: #e53935; text-decoration: underline; font-weight: bold;">http://forsanapp.bau.edu.jo:8080/stdphoto/Login.jsp</a>
+                </p>
+                <p style="margin-bottom:0.7rem;">وضمن الشروط التالية :</p>
+                <ol style="margin-right:1.5rem; color:#e53935; font-weight:bold;">
+                    <li>الصورة بالروب الجامعي بحيث يكون لون الروب:<br>
+                        <span style="color:#333; font-weight:normal;">
+                            - أبيض لطلبة الدراسات العليا والبكالوريوس.<br>
+                            - أصفر لطلبة الدبلوم المتوسط.
+                        </span>
+                    </li>
+                    <li>لون خلفية الصورة أزرق سماوي.</li>
+                    <li>لا يظهر شعار الجامعة بالصورة.</li>
+                    <li>أن تكون الصورة مخزنة على نظام (JPG) وبحجم (3mp) والالتزام بالصورة الرسمية بعدم ارتداء طاقية تخرج، وشهادة جامعية ...... الخ.</li>
+                </ol>
+                <p style="margin-bottom:0.7rem;"><strong>علماً بأن:</strong></p>
+                <ul style="margin-right:1.5rem; color:#333;">
+                    <li>تصوير الطلبة اختياري في أي استوديو يرغب به الطالب.</li>
+                    <li>لعمادة شؤون الطلبة الحق في استثناء الصور التي لا تلتزم بالشروط والموعد أعلاه دون الرجوع للطالب.</li>
+                </ul>
+                <div class="announcement-signature" style="margin-top: 1.5rem; border-top: 1px dashed #ddd; padding-top: 1rem;">
+                    <p style="font-weight: bold; margin: 0;">عميد شؤون الطلبة</p>
+                    <p style="margin: 0.5rem 0 0;">أ.د خلف فخري ختاتنه</p>
+                </div>
+            </div>
+        </div>
+        <!--الاعلان السادس-->
+        <div id="announcement5" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #e53935; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.8s;">
+            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #e53935; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(229, 57, 53, 0.2);">هام</div>
+            <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+            <div class="announcement-icon" style="width: 50px; height: 50px; background: #ffebee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
+                <i class="fas fa-info-circle" style="font-size: 1.5rem; color: #e53935;"></i>
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #e53935; font-size: 1.3rem;">جامعة البلقاء التطبيقية : </h3>
+                <span style="color: #777; font-size: 0.9rem;">تاريخ النشر: 2025/6/11</span>
+            </div>
+            </div>
+            <div class="announcement-content" style="color: #333; font-size: 1rem; line-height: 1.8;">
+            <p>
+                أعلن الأستاذ الدكتور أحمد فخري العجلوني رئيس جامعة البلقاء التطبيقية / رئيس اللجنة العليا لامتحان الشهادة الجامعية المتوسطة (الشامل) عن استكمال كافة الإجراءات لبدء فعاليات الامتحانات النظرية للدورة الربيعية 2025 للامتحان الشامل، والتي ستعقد خلال الفترة من 17/6/2025م ولغاية 25/6/2025م، وفقاً للبرنامج المعلن على الموقع الرسمي لوحدة التقييم والامتحانات العامة في جامعة البلقاء التطبيقية، حيث سيتقدم لهذه الامتحانات (7075) سبعةُ آلافٍ وخمسةٌ وسبعونَ طالباً وطالبةً، من (51) إحدى وخمسينَ كلية جامعية وكلية جامعية متوسطة تشرف عليها الجامعة.
+            </p>
+            <p>
+                ومن المتوقع أن يتقدم (5549) خمسة آلاف وخمسمائة وتسعةٌ وأربعون طالباً وطالبةً للورقة الأولى يوم الثلاثاء الموافق 17/6/2025م، و(5623) خمسة آلاف وستمائة وثلاثة وعشرون طالبا وطالبة للورقة الثانية يوم السبت الموافق 21/6/2025م، و(6519) ستة آلاف وخمسمائة وتسعةَ عشَرَ طالباً وطالبة للورقة الثالثة يومي الثلاثاء والأربعاء الموافق 24/6 و25/6/2025م، حيث إن امتحان الورقة الثالثة سيستمر لمدة يومين في بعض مراكز الامتحان، وكما هو معلن.
+            </p>
+            <p>
+                وأضاف العجلوني بأن الطلبة سيتقدمون للامتحانات في هذه الدورة وفقا لـ (23) ثلاثةٍ وعشرين برنامجا دراسيا في (107) مئة وسبعة تخصصات أكاديميةً، وأن الامتحانات النظرية محوسبة بالكامل؛ وقد تم اعتماد (19) تسعة عشر قاعة للامتحان النظري موزعة على (15) خمسة عشر مركزاً للامتحانات النظرية منتشرة في جميع محافظات المملكة، ويشرف على هذه الامتحانات قرابة (600) ستمائة موظف من العاملين في الكليات الجامعية والجامعية المتوسطة الوطنية.
+            </p>
+            <p>
+                هذا، وقد فرغت وحدة التقييم والامتحانات العامة في الجامعة من تصحيح إجابات الطلبة في الامتحانات العملية المحوسبة ومعالجة نتائجها وتدقيقها ومطابقتها وإدخالها إلى نظام الامتحان الشامل المحوسب، حيث عُقِدَت هذه الامتحانات خلال الفترة ما بين 28/4 ولغاية 8/5/2025م، وتقدم إليها (4706) أربعة آلاف وسبعمائة وستة طالب وطالبة.
+            </p>
+            <p>
+                وتوقع العجلوني أن يتم إعلان نتائج امتحان الشهادة الجامعية المتوسطة للدورة الربيعية 2025، بداية شهر تموز القادم بعد المصادقة عليها واعتمادها من قبل اللجنة العليا للامتحانات ومجلس عمداء الجامعة.
+            </p>
+            <p>
+                <a href="https://www.bau.edu.jo/BauLivePortal/NewsDetail.aspx?news_id=15779" target="_blank" style="color: #e53935; text-decoration: underline; font-weight: bold;">رابط الخبر الرسمي</a>
+            </p>
+            <p style="font-weight:bold; color:#e53935;"></p>
+                #جامعة_البلقاء_التطبيقية
+            </p>
+            </div>
+        </div>
+        <!--اعلان السابع-->
+        <div id="announcement6" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #1e88e5; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 1s;">
+            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #1e88e5; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(30, 136, 229, 0.2);">أخبار عامة</div>
+            <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+            <div class="announcement-icon" style="width: 50px; height: 50px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
+                <i class="fas fa-info-circle" style="font-size: 1.5rem; color: #1e88e5;"></i>
+            </div>
+            <div>
+                <h3 style="margin: 0; color: #1e88e5; font-size: 1.3rem;">عاجل ‼️</h3>
+                <span style="color: #777; font-size: 0.9rem;">تاريخ النشر: 2025/6/12</span>
+            </div>
+            </div>
+            <div class="announcement-content" style="color: #333; font-size: 1rem; line-height: 1.8;">
+            <p>
+                <strong style="color:#e53935;">دفعة جديدة من العلامات أصبحت على الموقع.</strong>
+            </p>
+            <p style="color:#1565c0; font-weight:bold;">
+                #داتا_ستريم<br>
+                #data_stream
+            </p>
+            </div>
+        </div>
+
+        </div>
     </div>
+
+
+
+
+
     
 
 </section>
@@ -879,6 +1090,17 @@
             opacity: 1;
             transform: translateY(0);
         }
+    }
+
+    /* صورة الإعلان */
+    .announcement-image-container {
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+    .announcement-image {
+        max-width: 70%;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px #1e88e522;
     }
     
     /* تأثيرات بطاقات الإعلانات */
@@ -1002,9 +1224,14 @@
             } else {
                 announcement.style.display = 'none';
             }
+
         });
+
     }
+    
 </script>
+<br>
+<br>        
 <br>
 <section class="my-work-section" style="margin-top: 2rem; padding: 2rem; background-color: #f9f9f9; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); max-width: 90%; margin: 2rem auto; text-align: center; position: relative; border: 2px solid #506400;">
     <h2 style="color: #506400; margin-bottom: 1.5rem; font-size: 2rem; font-weight: bold; position: absolute; top: -15px; right: 15px; background: #ffffff; padding: 0 10px; border: 2px solid #506400; border-radius: 5px;">أعمالي</h2>
