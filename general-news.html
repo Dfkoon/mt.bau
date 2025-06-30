@@ -6,22 +6,19 @@
     <title>التقويم الاكاديمي - جامعة البلقاء التطبيقية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" type="image/png" href="images/koon.png">
-        <!-- إضافة خط جديد -->
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
         <style>
-        /* تطبيق الخط الجديد */
         body {
             font-family: 'Cairo', sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.6; /* تحسين قابلية القراءة */
-            background-color: #f4f4f4; /* لون خلفية مريح للعين */
+            line-height: 1.6; 
+            background-color: #f4f4f4; 
         }
         </style>
 
         <style>
 
-        /* تنسيقات شريط التنقل */
         nav {
             display: flex;
             justify-content: space-between;
@@ -57,7 +54,6 @@
         nav .nav-links li a:hover {
             text-decoration: underline;
         }
-        /* تنسيقات مخصصة للصفحة الرئيسية */
         .main-hero {
             background: linear-gradient(#b7eeee8e, #282a2acc),
                         url('images/hero-bg.jpg') center/cover;
@@ -73,14 +69,12 @@
             font-size: 1.2rem;
             margin-bottom: 2rem;
         }
-        /* تنسيقات عامة */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
         }
-        /* قسم التقويم الأكاديمي */
         .calendar-section {
             padding: 2rem;
             background: #fff;
@@ -89,16 +83,14 @@
             margin: 2rem auto;
             max-width: 1200px;
         }
-        /* تنسيق الأحداث التي فات تاريخها */
         .past-event {
-            color: #b1afaf; /* لون النص للأحداث التي فات تاريخها */
+            color: #b1afaf; 
         }
         .section-title {
             text-align: center;
             color: #333;
             margin-bottom: 1.5rem;
         }
-        /* تنسيقات الجدول */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -124,24 +116,287 @@
     </style>
 </head>
 <body>
-    <!-- شريط التنقل -->
-    <nav>
-        <div class="logo">
-            <img src="images/ookoon.png" alt="شعار الموقع" class="site-logo">
-        </div>
-        <div class="menu-toggle" id="menuToggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html">الصفحة الرئيسية</a></li>
-            <li><a href="mame.html">المواد الدراسية</a></li>
-            <li><a href="general-news.html">تقويم الأكاديمي</a></li>
-            <li><a href="grading-system.html">نظام العلامات</a></li>
+
+
+
+<!-- شريط تنقل الافقي -->
+
+<br>
+<br>
+<nav class="main-navbar" aria-label="القائمة الرئيسية"
+    style="width: 100%; background: #8e090900; box-shadow: 0px 0px 30px rgba(215, 16, 16, 0); position: sticky; top: 0; z-index: 2000; font-family: 'Cairo', sans-serif; backdrop-filter: blur(30px); border: 2px solid rgba(0, 0, 0, 0.655);">
+    <div class="nav-container"
+        style="display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: auto; padding: 0.5rem 2rem;">
+        <button class="navbar-toggle" aria-label="فتح القائمة" aria-expanded="false"
+            style="display: none; background: none; border: none; font-size: 1.5rem; color: #506400; cursor: pointer;">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="navbar-menu"
+            style="display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; align-items: center;">
+            <li style="position: relative;">
+                <a href="index.html" class="nav-link animated-bg"
+                    style="color: #333; text-decoration: none; font-weight: 600; padding: 0.5rem 0; position: relative; transition: color 0.3s; display: flex; align-items: center; gap: 8px;">
+                    الـصفحة الرئيسيـة<i class="fas fa-chevron-down"
+                        style="font-size: 0.8em; transition: transform 0.3s;"></i>
+                </a>
+                <ul class="dropdown"
+                    style="display: none; position: absolute; right: 0; top: 100%; background: #fff; min-width: 220px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-radius: 8px; padding: 0.5rem 0; z-index: 10; border: 1px solid #eee; margin-top: 8px;">
+                    <li><a href="#upcoming-events" class="dropdown-link animated-bg">الأحداث القادمة</a></li>
+                    <li><a href="#quick-links" class="dropdown-link animated-bg">خدماتنا</a></li>
+                    <li><a href="#materials-exchange" class="dropdown-link animated-bg">تـبادل الـمـواد</a></li>
+                    <li><a href="#tree-plans" class="dropdown-link animated-bg">الـخطط الشجرية</a></li>
+                    <li><a href="#electronic-services-section" class="dropdown-link animated-bg">خدمات إلكترونية</a>
+                    </li>
+                    <li><a href="#success-stories" class="dropdown-link animated-bg">قـصص النجاح</a></li>
+                    <li><a href="#supporters-section" class="dropdown-link animated-bg">الـداعـمين</a></li>
+                    <li><a href="#student-work" class="dropdown-link animated-bg">الأعمال الطلابية</a></li>
+                    <li><a href="#latest-updates" class="dropdown-link animated-bg">اخــر الاخـبار</a></li>
+                    <li><a href="#contact-us" class="dropdown-link animated-bg">تواصل معنـا</a></li>
+                </ul>
+            </li>
+            <li><a href="mame.html" class="nav-link animated-bg"
+                    style="color: #333; text-decoration: none; font-weight: 600; padding: 0.5rem 0; transition: color 0.3s;">مـكتبة
+                    المواد</a>
+            </li>
+            <li><a href="general-news.html" class="nav-link animated-bg"
+                    style="color: #333; text-decoration: none; font-weight: 600; padding: 0.5rem 0; transition: color 0.3s;">الـتقويـم
+                    الأكاديمي</a></li>
+            <li><a href="grading-system.html" class="nav-link animated-bg"
+                    style="color: #333; text-decoration: none; font-weight: 600; padding: 0.5rem 0; transition: color 0.3s;">نـظـام
+                    العلامات</a></li>
+            <li><a href="#ohsc" class="nav-link animated-bg"
+                    style="color: #333; text-decoration: none; font-weight: 600; padding: 0.5rem 0; transition: color 0.3s;">وصـف
+                    القاعات</a></li>
         </ul>
-    </nav>
-    <!-- قسم التقويم الأكاديمي -->
+    </div>
+</nav>
+<script>
+    document.querySelectorAll('.navbar-menu > li').forEach(li => {
+        const dropdown = li.querySelector('.dropdown');
+        if (!dropdown) return;
+        const chevron = li.querySelector('.fa-chevron-down');
+        li.addEventListener('mouseenter', () => {
+            dropdown.style.display = 'block';
+            li.setAttribute('aria-expanded', 'true');
+            if (chevron) chevron.style.transform = 'rotate(180deg)';
+        });
+        li.addEventListener('mouseleave', () => {
+            dropdown.style.display = 'none';
+            li.setAttribute('aria-expanded', 'false');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        });
+        li.addEventListener('focusin', () => {
+            dropdown.style.display = 'block';
+            li.setAttribute('aria-expanded', 'true');
+            if (chevron) chevron.style.transform = 'rotate(180deg)';
+        });
+        li.addEventListener('focusout', () => {
+            dropdown.style.display = 'none';
+            li.setAttribute('aria-expanded', 'false');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        });
+    });
+    const toggleBtn = document.querySelector('.navbar-toggle');
+    const navbarMenu = document.querySelector('.navbar-menu');
+    if (toggleBtn && navbarMenu) {
+        toggleBtn.addEventListener('click', () => {
+            const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+            toggleBtn.setAttribute('aria-expanded', !isExpanded);
+            navbarMenu.classList.toggle('active');
+            toggleBtn.innerHTML = isExpanded ? '<i class="fas fa-bars"></i>' : '<i class="fas fa-times"></i>';
+        });
+    }
+    function checkScreenSize() {
+        if (window.innerWidth <= 900) {
+            if (toggleBtn) toggleBtn.style.display = 'block';
+            if (navbarMenu) navbarMenu.style.display = 'none';
+        } else {
+            if (toggleBtn) toggleBtn.style.display = 'none';
+            if (navbarMenu) navbarMenu.style.display = 'flex';
+        }
+    }
+    window.addEventListener('resize', checkScreenSize);
+    checkScreenSize();
+</script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+
+    .nav-link:hover,
+    .nav-link:focus {
+        color: #506400 !important;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #506400;
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link:focus::after {
+        width: 100%;
+    }
+
+    .dropdown {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    }
+
+    .navbar-menu>li:hover .dropdown,
+    .navbar-menu>li:focus-within .dropdown {
+        opacity: 1;
+        visibility: visible;
+        display: block !important;
+        transform: translateY(0);
+    }
+
+    .dropdown-link {
+        display: block;
+        padding: 0.7rem 1.5rem;
+        color: #333 !important;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        position: relative;
+        border-radius: 4px;
+        margin: 0 0.5rem;
+    }
+
+    .dropdown-link:hover,
+    .dropdown-link:focus {
+        background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+        color: #ad0505ef !important;
+        padding-right: 1.8rem;
+        transform: translateX(-5px);
+    }
+
+    .dropdown-link::before {
+        position: absolute;
+        right: 1rem;
+        opacity: 0;
+        transition: all 0.2s ease;
+        font-weight: bold;
+    }
+
+    .dropdown-link:hover::before,
+    .dropdown-link:focus::before {
+        opacity: 1;
+        right: 0.8rem;
+    }
+
+    .navbar-menu,
+    .dropdown {
+        list-style: none !important;
+    }
+
+    .navbar-menu>li,
+    .dropdown>li {
+        list-style: none !important;
+    }
+
+    @media (max-width: 900px) {
+        .nav-container {
+            flex-wrap: wrap;
+            padding: 0.5rem 1rem !important;
+        }
+
+        .navbar-menu {
+            flex-direction: column;
+            gap: 0 !important;
+            background: #fff;
+            position: absolute;
+            right: 0;
+            left: 0;
+            top: 100%;
+            display: none;
+            z-index: 100;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 8px 8px;
+        }
+
+        .navbar-menu.active {
+            display: flex !important;
+        }
+
+        .navbar-menu>li {
+            padding: 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .navbar-menu>li:last-child {
+            border-bottom: none;
+        }
+
+        .navbar-menu>li>.nav-link {
+            padding: 1rem 1.5rem !important;
+            display: block;
+        }
+
+        .dropdown {
+            position: static !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            display: none;
+            background: #f8f9fa !important;
+            border: none !important;
+            margin-top: 0 !important;
+        }
+
+        .navbar-menu>li:hover .dropdown,
+        .navbar-menu>li:focus-within .dropdown {
+            display: block !important;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-link {
+            padding: 0.8rem 2rem !important;
+            margin: 0 !important;
+            border-radius: 0 !important;
+        }
+
+        .dropdown-link:hover,
+        .dropdown-link:focus {
+            background: #e9ecef !important;
+            transform: translateX(0) !important;
+            padding-right: 2.5rem !important;
+        }
+    }
+
+    @media (min-width: 901px) {
+        .nav-container {
+            gap: 1rem;
+        }
+
+        .navbar-menu {
+            margin-right: 1rem;
+        }
+    }
+
+    .main-navbar {
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .navbar-menu>li {
+        transition: all 0.2s ease;
+    }
+
+    .navbar-menu>li:hover {
+        transform: translateY(-1px);
+    }
+
+    
+</style>
     <section class="calendar-section">
         <h2 class="section-title">التقويم الاكاديمي - جامعة البلقاء التطبيقية</h2>
         <table>
@@ -153,7 +408,6 @@
                 </tr>
             </thead>
             <tbody id="eventTableBody">
-                <!-- Rows with events will go here -->
                 <tr>
                     <td>2025/02/10</td>
                     <td>الإثنين</td>
@@ -412,16 +666,13 @@
             </tbody>
         </table>
     </section>
-<!-- Footer Section -->
 <footer class="main-footer">
     <div class="footer-content">
-        <!-- Contact Information -->
         <div class="contact-info">
             <h4>Contact Information</h4>
             <p>Phone: 0782934685</p>
             <p>Email: koon.bau.jo.com</p>
         </div>
-        <!-- Social Media Links -->
         <div class="social-media">
             <h4>Social Media</h4>
             <a href="https://wa.me/qr/664NU4BEEWI6K1"><i class="fab fa-whatsapp"></i></a>
@@ -491,22 +742,20 @@
         font-size: 1.5rem;
     }
 </style>
-    <!-- قسم الحقوق -->
     <footer class="footer" style="background-color: #5a555523; text-align: center; padding: 1rem; color: #000000;">
         <p>جميع الحقوق محفوظة &copy; 2025</p>
     </footer>
 
     <script>
-        // Get today's date
         const today = new Date();
         const rows = document.querySelectorAll('#eventTableBody tr');
 
         rows.forEach(row => {
-            const dateCell = row.cells[0].textContent.split(' - ')[0]; // Get the first date in case of range
+            const dateCell = row.cells[0].textContent.split(' - ')[0]; 
             const eventDate = new Date(dateCell);
 
             if (eventDate < today) {
-                row.classList.add('past-event'); // Add the past-event class if the event date is in the past
+                row.classList.add('past-event'); 
             }
         });
     </script>
