@@ -383,17 +383,409 @@
 </div>
 
    
-<!-- قسم الملاحظات -->
-<section class="notes-section" style="margin-top: 2rem; padding: 2rem; background-color: #ffe0e0fc; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); max-width: 90%; margin: 2rem auto; text-align: center; position: relative; border: 2px solid #ff0000;">
-    <h2 style="color: #ff0000; margin-bottom: 1.5rem; font-size: 2rem; font-weight: bold; position: absolute; top: -15px; right: 15px; background: #ffffff; padding: 0 10px; border: 2px solid #ff0000; border-radius: 5px;">ملاحظات</h2>
+<!-- قسم شات ليمونة) -->
+
+
+
+
+<section id="lemon-chat"
+    style="margin-top: 3rem; padding: 2.5rem; background: linear-gradient(135deg, #fffde4 0%, #f9fbe7 100%); border-radius: 28px; box-shadow: 0 20px 50px 0 rgba(241,196,15,0.13); max-width: 92%; margin: 2rem auto; text-align: center; position: relative; border: 2.5px solid #f1c40f; overflow: hidden;">
+    <!-- صورة في الزاوية العلوية اليسرى من العنوان -->
+    <img src="images/BCO.36b476ef-303c-48fc-b3d5-5eaee6a881c2-removebg-preview.png" wert alt="Lemon Icon"
+        class="lemon-bounce"
+        style="position: absolute; left: 20px; top: 20px; width: 130px; height: 130px; z-index: 8; opacity: 0.7;">
+
+
+    <!-- زخارف خلفية عصرية -->
+    <div
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; pointer-events: none;">
+        <div
+            style="position: absolute; width: 220px; height: 220px; background: radial-gradient(circle, #f1c40f33 0%, #fffde400 80%); top: -90px; right: 10%; border-radius: 50%; filter: blur(2px);">
+        </div>
+        <div
+            style="position: absolute; width: 140px; height: 140px; background: radial-gradient(circle, #f1c40f22 0%, #fffde400 80%); bottom: -50px; left: 15%; border-radius: 50%; filter: blur(1px);">
+        </div>
+        <div
+            style="position: absolute; width: 80px; height: 80px; background: #f1c40f22; top: 40%; left: 5%; border-radius: 50%;">
+        </div>
+        <div
+            style="position: absolute; width: 60px; height: 60px; background: #f1c40f22; bottom: 10%; right: 8%; border-radius: 50%;">
+        </div>
+    </div>
+    <h2 style="color: #506400; margin-bottom: 1.5rem; font-size: 2.2rem; font-weight: bold; position: absolute; top: -20px; right: 20px; background: #ffffff; padding: 10px 20px; border: 2px solid #506400; border-radius: 10px; box-shadow: 0 5px 15px rgba(80, 100, 0, 0.12); z-index: 2;
+                opacity: 0.85;">
+        شات ليمونة 🍋🤖
+    </h2>
+    <br>
+    <br>
+    <br>
     <br>
 
-    <p style="color: #333; font-size: 1rem; margin-bottom: 1.5rem;">
-        <strong>موقع متخصص لطلاب كلية الذكاء الاصطناعي وبالأخص طلاب تخصص تحقيقات الجنائية.</strong>
-    </p>
-        <data style="color: #ff0000; font-size: 1.2rem; font-weight: bold;">قريبا سيتم تعاون مع ارشاد التخصصات الكلية واضافة المواد تخصصية لكل تخصصات الكلية </data>
-    </p>
+    <div
+        style="max-width: 900px; margin: 0 auto 1.7rem; position: relative; display: flex; align-items: flex-start; gap: 1.5rem; flex-direction: row-reverse;">
+        <!-- القسم والنص -->
+        <div style="flex:1;">
+
+            <!-- فقاعة عصرية برسالة واحدة متحركة -->
+            <div id="bot-type-bubble"
+                style="background: linear-gradient(120deg,#fffde4 80%,#f1c40f33 100%); border-radius: 30px 30px 10px 20px; box-shadow: 0 2px 12px #ffe06633; padding: 1.0rem 8rem; color: #506400; font-size: 1.11rem; font-weight: bold; min-height: 60px; min-width: 670px; max-width: 440px; display: inline-block; border:1.5px dashed #f1c40f;">
+                <span id="bot-type-text"></span><span id="bot-type-cursor"
+                    style="display:inline-block;width:10px;">|</span>
+            </div>
+        </div>
+        <!-- صورة البوت على اليسار الآن -->
+        <div style="flex-shrink:0; margin-top: 0.3rem;">
+            <img src="images/BCO.36b476ef-303c-48fc-b3d5-5eaee6a881c2-removebg-preview.png" alt="روبوت مساعد"
+                style="width: 92px; height: 92px; border-radius: 50%; background: #fffde400; box-shadow: 0 4px 16px #f1c40f33; animation: botFloat 2.5s infinite alternate;">
+        </div>
+        <style>
+            @keyframes botFloat {
+                0% {
+                    transform: translateY(0);
+                }
+
+                100% {
+                    transform: translateY(-10px);
+                }
+            }
+        </style>
+        <br>
+        <br>
+        <script>
+            // الرسائل المتسلسلة بشكل لوب
+            var botMsgs = [
+                "👋 أنا روبوت مساعد داخل موقع مساعدات BAU.",
+                "أستطيع إرشادك بسرعة لأي قسم أو صفحة تريدها!",
+                "اسألني عن المواد، الخطط، الدعم الفني أو أي خدمة في الموقع.",
+                "اكتب ما تحتاجة وسوفى ادلك .",
+            ];
+            var msgIdx = 0, charIdx = 0, speed = 27;
+            var textEl = document.getElementById('bot-type-text');
+            var cursorEl = document.getElementById('bot-type-cursor');
+
+            function typeBotMsg() {
+                if (charIdx < botMsgs[msgIdx].length) {
+                    textEl.innerHTML += botMsgs[msgIdx].charAt(charIdx) === "\n" ? "<br>" : botMsgs[msgIdx].charAt(charIdx);
+                    charIdx++;
+                    setTimeout(typeBotMsg, speed);
+                } else {
+                    cursorEl.style.display = "none";
+                    setTimeout(function () {
+                        textEl.innerHTML = "";
+                        cursorEl.style.display = "inline-block";
+                        msgIdx = (msgIdx + 1) % botMsgs.length;
+                        charIdx = 0;
+                        typeBotMsg();
+                    }, 1400);
+                }
+            }
+            typeBotMsg();
+        </script>
+    </div>
+    </div>
+
+<div id="lemon-chat-messages"
+    style="background: #fff; border-radius: 19px; box-shadow: 0 0px 99px #f1c40f22; margin: 2rem auto 0; max-width: 9000px; min-height: 300px; max-height: 260px; overflow-y: auto; padding: 1rem; text-align: right; font-size: 1.08rem; border: 1.5px solid #f1c40f; transition: box-shadow 0.2s;">
+</div>
+
+<form onsubmit="lemonSend(event)"
+    style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin: 1.5rem auto 0; max-width: 500px;">
+    <input id="lemon-chat-input" type="text" placeholder="اكتب سؤالك هنا..." autocomplete="off"
+        style="flex:1; padding: 0.5rem 1.5rem; border-radius: 10px; border: 1.5px solid #f1c40f; font-size: 1.2rem; outline: none; background: #fffde4;">
+    <button type="submit"
+        style="background: #f1c40f; color: #fff; border: none; border-radius: 20px; padding: 0.7rem 2rem; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: background 0.2s;">إرسال</button>
+</form>
+
+<div style="margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.7rem; justify-content: center;"
+    id="lemon-quick-links">
+    <button class="lemon-quick-btn" onclick="lemonQuick('أين الخطط الشجرية؟')">الخطط الشجرية</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('كيف أبحث عن المواد؟')">بحث عن المواد</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('الخدمات الإلكترونية')">الخدمات الإلكترونية</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('الدعم الفني')">الدعم الفني</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('أذكار الصباح والمساء')">أذكار</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('تبادل المواد الدراسية')">تبادل المواد</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('قصص النجاح')">قصص النجاح</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('الأعمال الطلابية')">الأعمال الطلابية</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('الأحداث القادمة')">الأحداث القادمة</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('نظام العلامات')">نظام العلامات</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('من نحن؟')">من نحن؟</button>
+</div>
+<style>
+
+    #lemon-chat-messages::-webkit-scrollbar {
+        width: 6px;
+        background: #fffde4;
+    }
+    #lemon-chat-messages::-webkit-scrollbar-thumb {
+        background: #f1c40f55;
+        border-radius: 10px;
+    }
+    #lemon-chat-messages {
+        scrollbar-width: thin;
+        scrollbar-color: #f1c40f55 #fffde4;
+    }
+    .lemon-quick-btn {
+        background: #fffde4;
+        color: #f1c40f;
+        border: 1px solid #f1c40f;
+        border-radius: 20px;
+        padding: 0.5rem 1.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+    }
+    .lemon-quick-btn:hover {
+        background: #f1c40f;
+        color: #fff;
+    }
+    #lemon-chat-messages .lemon-msg-user {
+        background: #f1c40f;
+        color: #fff;
+        border-radius: 12px 12px 0 12px;
+        padding: 0.7rem 1rem;
+        margin: 0.3rem 0 0.3rem 1.5rem;
+        text-align: right;
+        max-width: 80%;
+        float: right;
+        clear: both;
+    }
+    #lemon-chat-messages .lemon-msg-bot {
+        background: #fffde4;
+        color: #333;
+        border-radius: 12px 12px 12px 0;
+        padding: 0.7rem 1rem;
+        margin: 0.3rem 1.5rem 0.3rem 0;
+        text-align: right;
+        max-width: 80%;
+        float: left;
+        clear: both;
+        border: 1px solid #f1c40f;
+    }
+</style>
+
+<script>
+// قاعدة بيانات الأحداث القادمة
+const eventsDB = [
+    {
+        keywords: ["امتحانات", "امتحان", "متى الامتحانات", "امتحانات الفصل"],
+        title: "مواعيد امتحانات الفصل الأول",
+        date: "2025/12/01 - 2025/12/15",
+        details: "تبدأ امتحانات الفصل الدراسي الأول للعام الجامعي 2025/2026 من 1 كانون الأول حتى 15 كانون الأول 2025."
+    },
+    {
+        keywords: ["سحب", "إضافة", "سحب واضافة", "موعد السحب", "موعد الإضافة", "سحب المواد", "إضافة المواد"],
+        title: "موعد سحب وإضافة المواد",
+        date: "2025/07/6 - 2025/07/8",
+        details: " يبدأ سحب وإضافة المواد للفصل الصيفي 2025/2026 من 6 تموز حتى 8 تموز 2025 عبر بوابة الطالب الإلكترونية.ويجب على الطلاب التأكد من مراجعة الخطط الشجرية قبل اختيار المواد. حيث هاض الموعد قابل للتمديد"
+    },
+    {
+        keywords: ["بداية الفصل", "دوام", "متى يبدأ الفصل", "بداية الدراسة"],
+        title: "بداية الفصل الدراسي الأول",
+        date: "2025/09/21",
+        details: "يبدأ الفصل الدراسي الأول للعام الجامعي 2025/2026 يوم الأحد 21 أيلول 2025."
+    },
+    {
+        keywords: ["عطلة", "إجازة", "عطلة رسمية", "إجازة رسمية"],
+        title: "العطل الرسمية القادمة",
+        date: "2025/10/03",
+        details: "عطلة رأس السنة الهجرية يوم الجمعة 3 تشرين الأول 2025."
+    }
+    // أضف المزيد من الأحداث حسب الحاجة
+];
+
+// دالة البحث في الأحداث مع تحسين النصوص وإضافة عبارات ودية
+function searchEvent(msg) {
+    for (const event of eventsDB) {
+        for (const kw of event.keywords) {
+            if (msg.includes(kw)) {
+                // نص متغير عشوائي للتحفيز بعد الإجابة
+                const endings = [
+                    "نشكر ثقتك بموقعنا ونتمنى لك التوفيق دائمًا! 😊",
+                    "هل ترغب بمساعدة أخرى أو لديك سؤال آخر؟ أنا هنا لأساعدك! 🍋",
+                    "إذا احتجت لأي شيء آخر لا تتردد بالسؤال.",
+                    "سعيد بمساعدتك! هل هناك خدمة أخرى أقدمها لك؟",
+                    "نتمنى لك يومًا دراسيًا موفقًا! هل ترغب بمساعدة إضافية؟"
+                ];
+                const ending = endings[Math.floor(Math.random() * endings.length)];
+                return `<b>${event.title}</b><br>التاريخ: <span style="color:#388e3c">${event.date}</span><br>${event.details}<br><br><span style="color:#506400;font-weight:bold;">${ending}</span>`;
+            }
+        }
+    }
+    return null;
+}
+
+// دالة الرد
+function lemonBotReply(msg) {
+    msg = msg.trim();
+
+    // البحث في الأحداث أولاً
+    const eventReply = searchEvent(msg);
+    if (eventReply) return eventReply;
+
+    // ردود التحية
+    if (/^(مرحبا|السلام عليكم|اهلا|أهلاً|هلا|هاي|hi|hello)$/i.test(msg)) {
+        return 'أهلاً وسهلاً بك! كيف يمكنني مساعدتك اليوم؟ 😊';
+    }
+    if (/كيف حالك|كيفك|عامل ايه|اخبارك|كيف الحال/i.test(msg)) {
+        return 'أنا بخير! شكرًا لسؤالك. كيف يمكنني مساعدتك؟';
+    }
+    if (/مساعدة|ساعدني|احتاج مساعدة|محتاج مساعدة/i.test(msg)) {
+        return 'بالطبع! أخبرني بما تحتاجه أو اختر من الأقسام الرئيسية.';
+    }
+    // الردود السابقة
+    if (/الخطط|شجري|شجرية|خطة/i.test(msg)) {
+        return 'يمكنك الوصول إلى قسم <b>الخطط الشجرية</b> من القائمة الرئيسية أو <a href="#tree-plans" style="color:#f1c40f;text-decoration:underline;">بالضغط هنا</a>. ستجد فيه جميع الخطط الدراسية ومتطلباتها.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/المواد|تعليمي|تعليمية|دروس|ملخص|مواد|تبادل المواد |تبادل مواد/i.test(msg)) {
+return 'للمواد التعليمية والملخصات، يمكنك زيارة صفحة <a href="materials.html" style="color:#f1c40f; text-decoration:underline; font-weight:bold;">المواد الدراسية</a> مباشرة.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';    }
+    if (/بلاغ|دعم|مشكلة|مساعدة|فني/i.test(msg)) {
+        return 'للدعم الفني تواصل معنا عبر <a href="#contact-us" style="color:#f1c40f;text-decoration:underline;">نموذج التواصل</a>  أو عبر واتساب. يمكنك أيضاً زيارة قسم <b>الدعم الفني</b> <a href="#support-section" style="color:#f1c40f;text-decoration:underline;">من هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/الخدمات الإلكترونية|الكتروني|الكترونية|تسجيل|علامات|خدمات|تعلم/i.test(msg)) {
+        return 'جميع الخدمات الإلكترونية متوفرة في قسم <b>الخدمات الإلكترونية</b> <a href="#electronic-services-section" style="color:#f1c40f;text-decoration:underline;">اضغط هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/الباقات|الأسعار|اشتراك|سعر/i.test(msg)) {
+        return 'الموقع مجاني بالكامل ولا توجد باقات مدفوعة حالياً. جميع الخدمات متاحة للجميع!<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/تبادل|كتب|كتاب|مشاركة/i.test(msg)) {
+        return 'قسم <b>تبادل المواد</b> متاح لحجز أو مشاركة الكتب الجامعية. <a href="#materials-exchange" style="color:#f1c40f;text-decoration:underline;">انتقل للقسم</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/أذكار|اذكار|دعاء|ذكر/i.test(msg)) {
+        return 'تجد أذكار الصباح والمساء في قسم <b>أذكار الصباح والمساء</b> <a href="#morning-evening-dhikr" style="color:#f1c40f;text-decoration:underline;">اضغط هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/تواصل|اتصال|مراسلة|contact/i.test(msg)) {
+        return 'للتواصل معنا استخدم <a href="#contact-us" style="color:#f1c40f;text-decoration:underline;">نموذج التواصل</a> أو عبر وسائل التواصل الاجتماعي أسفل الصفحة.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/قصص|نجاح|بودكاست|امل/i.test(msg)) {
+        return 'استمع إلى قصص النجاح وجرعات الأمل في قسم <b>قصص النجاح</b> <a href="#success-stories" style="color:#f1c40f;text-decoration:underline;">من هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/أعمال|مشاريع|طلاب|عرض/i.test(msg)) {
+        return 'يمكنك عرض أعمالك الطلابية في قسم <b>الأعمال الطلابية</b> <a href="#student-work" style="color:#f1c40f;text-decoration:underline;">اضغط هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/تقويم|أحداث|عطل|مواعيد|الاحداث|الاحداث القادمة|التقويم|event/i.test(msg)) {
+        return 'جميع الأحداث الأكاديمية والعطل تجدها في قسم <b>الأحداث القادمة</b> <a href="#upcoming-events" style="color:#f1c40f;text-decoration:underline;">من هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/نظام العلامات|علامات|درجات|نظام|رموز|معدل/i.test(msg)) {
+        return 'تعرف على نظام العلامات وكيفية حساب المعدل في قسم <b>نظام العلامات</b> <a href="#grading-system" style="color:#f1c40f;text-decoration:underline;">اضغط هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/من نحن|عن الموقع/i.test(msg)) {
+        return 'نحن فريق من الطلاب والخريجين نسعى لتقديم أفضل الخدمات والمساعدات لطلاب جامعة البلقاء التطبيقية. هدفنا تسهيل العملية التعليمية وتوفير كل ما يحتاجه الطالب في مكان واحد.<br><br><span style="color:#506400;font-weight:bold;">  .... 😊</span>';
+    }
+    if (/مواد|اسئلة سنوات|ملخص|ملخصات|اسئلة|اسئله/i.test(msg)) {
+        return 'للمواد التعليمية والملخصات، توجه إلى قسم <b>المواد الدراسية</b> أو <a href="#quick-links" style="color:#f1c40f;text-decoration:underline;">خدمات الموقع </a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
+    if (/شكرا|شكر|ممتاز|رائع|يعطيك/i.test(msg)) {
+        return 'شكرًا لك! سعيد بمساعدتك 🍋🤖';
+    }
+    if (msg.length < 3) {
+        return 'يرجى كتابة سؤال أو كلمة مفتاحية للبحث.';
+    }
+    return 'لم أجد نتيجة دقيقة لسؤالك. جرب استخدام كلمات مفتاحية مثل: "المواد"، "الخدمات الإلكترونية"، "الدعم الفني"، أو تواصل معنا لأي استفسار! أو اختر من الاقتراحات بالأسفل.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span><br><span style="color:#d32f2f;">إذا لم تجد ما تبحث عنه أو واجهت عطل فني، يمكنك التواصل مع مطور الموقع عبر <a href="#contact-us" style="color:#1565c0;text-decoration:underline;">قسم تواصل معنا</a>.</span>';
+}
+
+// إضافة رسالة للمحادثة
+function lemonAddMsg(text, sender) {
+    var box = document.getElementById('lemon-chat-messages');
+    var div = document.createElement('div');
+    div.className = sender === 'user' ? 'lemon-msg-user' : 'lemon-msg-bot';
+    div.innerHTML = text;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+}
+
+// إرسال الرسالة مع عداد الإجابات
+let lemonAnsweredCount = 0;
+
+function lemonSend(e) {
+    e.preventDefault();
+    var input = document.getElementById('lemon-chat-input');
+    var msg = input.value.trim();
+    if (!msg) return;
+    lemonAddMsg(msg, 'user');
+    input.value = '';
+    setTimeout(function () {
+        const reply = lemonBotReply(msg);
+        lemonAddMsg(reply, 'bot');
+        lemonAnsweredCount++;
+        // بعد 5 إجابات أو أكثر، أرسل رسالة تقييم مع زر "لديك هدية" ينقلك للقسم المطلوب
+        if (lemonAnsweredCount === 5) {
+            setTimeout(function () {
+                lemonAddMsg(
+                    'نوجّه لك رسالة خاصة: <b>نسعد كثيرًا برأيك القيم حول الموقع! إذا كان لديك أي اقتراح أو ملاحظة شاركنا بها من فضلك.</b> 🌟<br>' +
+                    '<a href="#site-feedback" style="display:inline-block; margin:1rem 0 0; background:#f1c40f; color:#fff; padding:0.6rem 1.5rem; border-radius:18px; font-weight:bold; text-decoration:none; font-size:1.1rem; box-shadow:0 2px 8px #f1c40f44;">لديك هدية 🎁</a><br>' +
+                    'شكراً لاستخدامك مساعد ليمونة الطلابي 🍋',
+                    'bot'
+                );
+            }, 1200);
+        }
+        if (lemonAnsweredCount === 2) {
+            setTimeout(function () {
+                lemonAddMsg(
+                    'شكراً لك على استخدام مساعد ليمونة الطلابي! 🍋🤖<br>' +
+                    'إذا كان لديك أي استفسار أو تحتاج إلى مساعدة، لا تتردد في طرح سؤالك!<br><br>' +
+                    '<span style="color:#388e3c;font-weight:bold;">اليوم 1/7/2025: انطلاق أولى حملاتنا لتبادل المواد!</span><br>' +
+                    'سارع بحجز المواد التي تريدها في قسم <a href="#materials-exchange" style="color:#f1c40f;text-decoration:underline;font-weight:bold;">تبادل المواد</a> الآن.',
+                    'bot'
+                );
+            }, 700 + Math.random() * 600);
+}
+    }, 700 + Math.random() * 600);
+}
+
+// زر الاقتراح السريع
+function lemonQuick(q) {
+    document.getElementById('lemon-chat-input').value = q;
+    lemonSend({ preventDefault: function () {
+        } });
+}
+    </script>
+    </div>
+    <style>
+        .lemon-quick-btn {
+            background: #fffde4;
+            color: #f1c40f;
+            border: 1px solid #f1c40f;
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .lemon-quick-btn:hover {
+            background: #f1c40f;
+            color: #fff;
+        }
+
+        #lemon-chat-messages .lemon-msg-user {
+            background: #f1c40f;
+            color: #fff;
+            border-radius: 12px 12px 0 12px;
+            padding: 0.7rem 1rem;
+            margin: 0.3rem 0 0.3rem 1.5rem;
+            text-align: right;
+            max-width: 80%;
+            float: right;
+            clear: both;
+        }
+
+        #lemon-chat-messages .lemon-msg-bot {
+            background: #fffde4;
+            color: #333;
+            border-radius: 12px 12px 12px 0;
+            padding: 0.7rem 1rem;
+            margin: 0.3rem 1.5rem 0.3rem 0;
+            text-align: right;
+            max-width: 80%;
+            float: left;
+            clear: both;
+            border: 1px solid #f1c40f;
+        }
+    </style>
 </section>
+</div>
+
+<br>
 <br>
 
 <br>
