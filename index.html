@@ -385,6 +385,7 @@
 </div>
 
 
+
 <!-- قسم شات ليمونة) -->
 
 
@@ -711,17 +712,18 @@ function lemonSend(e) {
         const reply = lemonBotReply(msg);
         lemonAddMsg(reply, 'bot');
         lemonAnsweredCount++;
-        // بعد 5 إجابات أو أكثر، أرسل رسالة تقييم مع زر "لديك هدية" ينقلك للقسم المطلوب
-        if (lemonAnsweredCount === 5) {
-            setTimeout(function () {
-                lemonAddMsg(
-                    'نوجّه لك رسالة خاصة: <b>نسعد كثيرًا برأيك القيم حول الموقع! إذا كان لديك أي اقتراح أو ملاحظة شاركنا بها من فضلك.</b> 🌟<br>' +
-                    '<a href="#site-feedback" style="display:inline-block; margin:1rem 0 0; background:#f1c40f; color:#fff; padding:0.6rem 1.5rem; border-radius:18px; font-weight:bold; text-decoration:none; font-size:1.1rem; box-shadow:0 2px 8px #f1c40f44;">لديك هدية 🎁</a><br>' +
-                    'شكراً لاستخدامك مساعد ليمونة الطلابي 🍋',
-                    'bot'
-                );
-            }, 1200);
+        if (lemonAnsweredCount >= 5) {
+            lemonAddMsg('لقد أجبت على 5 أسئلة. إذا كنت بحاجة إلى مزيد من المساعدة، يمكنك التواصل معنا عبر <a href="#contact-us" style="color:#f1c40f;text-decoration:underline;">قسم تواصل معنا</a>.', 'bot');
+            lemonAnsweredCount = 0; // إعادة العداد
         }
+    }, 800 + Math.random() * 1200); // وقت رد عشوائي
+    // إعادة تعيين المؤشر
+    var cursor = document.getElementById('bot-type-cursor');
+    cursor.style.display = 'inline-block';
+    cursor.style.animation = 'none'; // إعادة تعيين الحركة
+    setTimeout(function () {
+        cursor.style.animation = 'blink 1s infinite'; // إعادة تعيين الحركة
+    }, 50);
 
 }
 
@@ -780,7 +782,6 @@ function lemonQuick(q) {
 
 <br>
 <br>
-
 <br>
 <br>
 <section id="upcoming-events" class="upcoming-events animated-section" style="margin-top: 3rem; padding: 2.5rem; background: linear-gradient(135deg, #f9f9f9, #e3f2fd); border-radius: 20px;  max-width: 90%; margin: 2rem auto; text-align: center; position: relative; border: none; overflow: hidden;">
@@ -1559,7 +1560,9 @@ function lemonQuick(q) {
 <br>
 <br>
 <section class="quick-links" style="position: relative; margin-top: 2rem; padding: 2rem; background-color: #f9f9f9; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); max-width: 90%; margin: 2rem auto; text-align: center; border: 2px solid #506400;">
-    <h2 style="color: #506400; margin-bottom: 1.5rem; font-size: 2rem; font-weight: bold; position: absolute; top: -15px; right: 15px; background: #ffffff; padding: 0 10px; border: 2px solid #506400; border-radius: 5px;">خدماتنا</h2>
+    <h2 style="color: #506400; margin-bottom: 1.5rem; font-size: 2rem; font-weight: bold; position: absolute; top: -15px; right: 15px; background: #ffffff; padding: 0 10px; border: 2px solid #506400; border-radius: 5px;">خدمات الموقع</h2>
+    
+
     <div class="quick-links-grid">
         <div class="quick-card">
             <i class="fas fa-book icon"></i>
@@ -1595,8 +1598,14 @@ function lemonQuick(q) {
             <i class="fas fa-door-open icon"></i>
             <h3>وصف قاعات</h3>
             <p>تعرف على تفاصيل القاعات الدراسية والمرافق، بما في ذلك مختبرات الكلية ومواقعها داخل الحرم الجامعي</p>
-            <button class="go-btn" onclick="window.location.href='ohsc.html'">قريباً</button>
-        </div>
+            <button class="go-btn" disabled style="display: block; width: 100%;">قريباً</button>        </div>
+        <div class="quick-card">
+            <i class="fas fa-arrows-rotate icon"></i>            <h3>تبادل المواد</h3>
+            <p>
+                يتيح لك هذا القسم فرصة تبادل المواد الدراسية مع زملائك في بداية كل فصل دراسي، وذلك خلال فترة السحب والإضافة ولمدة أسبوع من تاريخ الإعلان.
+            </p>
+            <button class="go-btn" disabled style="display: block; width: 100%;">قريباً</button>        </div>
+
     </div>
 </section>
 
