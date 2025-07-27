@@ -378,11 +378,13 @@
 <div style="display: flex; align-items: center; justify-content: center; padding: 10px; background-color: rgba(158, 153, 153, 0.392); border-radius: 10px; margin: 20px auto; max-width: 80%;">
     <span style="font-size: 2.2rem; margin-left: 10px; color: #ffffff; font-weight: bold; background-color: rgb(231, 9, 9); padding: 0 5px; border-radius: 5px;">عاجل</span>
     <marquee behavior="scroll" direction="right" scrollamount="10" loop="1" style="font-size: 2.2rem; color: white;" onfinish="this.loop = 1; this.start();">
-        <span style="margin-left: 20px; font-weight: bold;"></span>
+        <span style="margin-left: 20px; font-weight: bold;">الامتحان النصفي (Mid Term) السبت - 2 / 8 / 2025
+لجميع المراحل الدراسية يبدأ.
+</span>
     </marquee>
 </div>
 
-   
+
 <!-- قسم شات ليمونة) -->
 
 
@@ -428,7 +430,7 @@
 
             <!-- فقاعة عصرية برسالة واحدة متحركة -->
             <div id="bot-type-bubble"
-                style="background: linear-gradient(120deg,#fffde4 80%,#f1c40f33 100%); border-radius: 30px 30px 10px 20px; box-shadow: 0 2px 12px #ffe06633; padding: 1.0rem 8rem; color: #506400; font-size: 1.11rem; font-weight: bold; min-height: 60px; min-width: 400px; max-width: 400px; display: inline-block; border:1.5px dashed #f1c40f;">
+                style="background: linear-gradient(120deg,#fffde4 80%,#f1c40f33 100%); border-radius: 30px 30px 10px 20px; box-shadow: 0 2px 12px #ffe06633; padding: 1.0rem 8rem; color: #506400; font-size: 1.11rem; font-weight: bold; min-height: 60px; min-width: 670px; max-width: 440px; display: inline-block; border:1.5px dashed #f1c40f;">
                 <span id="bot-type-text"></span><span id="bot-type-cursor"
                     style="display:inline-block;width:10px;">|</span>
             </div>
@@ -504,6 +506,7 @@
     <button class="lemon-quick-btn" onclick="lemonQuick('الدعم الفني')">الدعم الفني</button>
     <button class="lemon-quick-btn" onclick="lemonQuick('أذكار الصباح والمساء')">أذكار</button>
     <button class="lemon-quick-btn" onclick="lemonQuick('تبادل المواد الدراسية')">تبادل المواد</button>
+    <button class="lemon-quick-btn" onclick="lemonQuick('المواد الدراسية')">مـكتبة المواد</button>
     <button class="lemon-quick-btn" onclick="lemonQuick('قصص النجاح')">قصص النجاح</button>
     <button class="lemon-quick-btn" onclick="lemonQuick('الأعمال الطلابية')">الأعمال الطلابية</button>
     <button class="lemon-quick-btn" onclick="lemonQuick('الأحداث القادمة')">الأحداث القادمة</button>
@@ -636,8 +639,11 @@ function lemonBotReply(msg) {
     if (/الخطط|شجري|شجرية|خطة/i.test(msg)) {
         return 'يمكنك الوصول إلى قسم <b>الخطط الشجرية</b> من القائمة الرئيسية أو <a href="#tree-plans" style="color:#f1c40f;text-decoration:underline;">بالضغط هنا</a>. ستجد فيه جميع الخطط الدراسية ومتطلباتها.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
     }
-    if (/المواد|تعليمي|تعليمية|دروس|ملخص|مواد|تبادل المواد |تبادل مواد/i.test(msg)) {
-return 'للمواد التعليمية والملخصات، يمكنك زيارة صفحة <a href="materials.html" style="color:#f1c40f; text-decoration:underline; font-weight:bold;">المواد الدراسية</a> مباشرة.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';    }
+    if (/تبادل المواد |كتاب|الكتب/i.test(msg)) {
+        return 'قسم <b>تبادل المواد</b> يتم نشره وتفعيله في بداية كل فصل خلال فترة السحب والإضافة ولمدة أسبوع من تاريخ النشر.';    }
+    if (/المواد|تعليمي|تعليمية|دروس|ملخص|مواد| مكتبة المواد | مواد/i.test(msg)) {
+        return 'للمواد التعليمية والملخصات، يمكنك زيارة صفحة <a href="materials.html" style="color:#f1c40f; text-decoration:underline; font-weight:bold;">المواد الدراسية</a> مباشرة.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
+    }
     if (/بلاغ|دعم|مشكلة|مساعدة|فني/i.test(msg)) {
         return 'للدعم الفني تواصل معنا عبر <a href="#contact-us" style="color:#f1c40f;text-decoration:underline;">نموذج التواصل</a>  أو عبر واتساب. يمكنك أيضاً زيارة قسم <b>الدعم الفني</b> <a href="#support-section" style="color:#f1c40f;text-decoration:underline;">من هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
     }
@@ -647,9 +653,7 @@ return 'للمواد التعليمية والملخصات، يمكنك زيار
     if (/الباقات|الأسعار|اشتراك|سعر/i.test(msg)) {
         return 'الموقع مجاني بالكامل ولا توجد باقات مدفوعة حالياً. جميع الخدمات متاحة للجميع!<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
     }
-    if (/تبادل|كتب|كتاب|مشاركة/i.test(msg)) {
-        return 'قسم <b>تبادل المواد</b> متاح لحجز أو مشاركة الكتب الجامعية. <a href="#materials-exchange" style="color:#f1c40f;text-decoration:underline;">انتقل للقسم</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
-    }
+
     if (/أذكار|اذكار|دعاء|ذكر/i.test(msg)) {
         return 'تجد أذكار الصباح والمساء في قسم <b>أذكار الصباح والمساء</b> <a href="#morning-evening-dhikr" style="color:#f1c40f;text-decoration:underline;">اضغط هنا</a>.<br><br><span style="color:#506400;font-weight:bold;">هل ترغب بمساعدة أخرى؟ 😊</span>';
     }
@@ -1213,6 +1217,8 @@ function lemonQuick(q) {
 
         <!-- الإعلان الأول -->        
         <div id="announcement4" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #4caf50; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.6s;">
+            <img src="images/ookoon.png" alt="شعار الموقع" style="position: absolute; bottom: 30px; left: 30px; width: 80px; opacity: 0.12; z-index: -1;">
+            <img src="images/جامعة-ل.png" alt="شعار الموقع" style="position: absolute; bottom: 30px; left: 120px; width: 80px; opacity: 0.12; z-index: -1;">
             <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #4caf50; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(76, 175, 80, 0.2);">إعلان مهم</div>
             <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
                 <div class="announcement-icon" style="width: 50px; height: 50px; background: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
@@ -1243,6 +1249,8 @@ function lemonQuick(q) {
             style="position: absolute; top: -10px; left: 20px; background: #e53935; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(229, 57, 53, 0.2);">
             <span style="color:#fff;">جديد</span>
         </div>
+        <img src="images/ookoon.png" alt="شعار الموقع" style="position: absolute; bottom: 30px; left: 30px; width: 80px; opacity: 0.12; z-index: -1;">
+        <img src="images/جامعة-ل.png" alt="شعار الموقع" style="position: absolute; bottom: 30px; left: 120px; width: 80px; opacity: 0.12; z-index: -1;">
         <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
             <div class="announcement-icon"
                 style="width: 50px; height: 50px; background: #ffebee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
@@ -1301,14 +1309,18 @@ function lemonQuick(q) {
         </div>
     </div> 
         <!-- الإعلان الثالث -->
-        <div id="announcement1" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #4caf50; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.3s;">
-            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #4caf50; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(76, 175, 80, 0.2);">إعلان مهم</div>
+        <div id="announcement1" class="announcement-card" style="background: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); text-align: right; position: relative; border-right: 5px solid #ff1a1a; opacity: 0; transform: translateY(30px); animation: fadeInAnnouncement 0.6s forwards; animation-delay: 0.3s;">
+            <div class="announcement-badge" style="position: absolute; top: -10px; left: 20px; background: #f91414; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 5px 10px rgba(76, 175, 80, 0.2);">إعلان مهم</div>
+            <img src="images/ookoon.png" alt="شعار الموقع" style="position: absolute; bottom: 30px; left: 30px; width: 80px; opacity: 0.12; z-index: -1;">
+            <img src="images/جامعة-ل.png" alt="شعار الموقع" style="position: absolute; bottom: 30px; left: 120px; width: 80px; opacity: 0.12; z-index: -1;">
+
             <div class="announcement-header" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+
                 <div class="announcement-icon" style="width: 50px; height: 50px; background: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 1rem;">
-                    <i class="fas fa-calendar-alt" style="font-size: 1.5rem; color: #4caf50;"></i>
+                    <i class="fas fa-calendar-alt" style="font-size: 1.5rem; color: #ff1b1b;"></i>
                 </div>
                 <div>
-                    <h3 style="margin: 0; color: #4caf50; font-size: 1.3rem;">بدء تقديم طلبات الإنتقال الداخلية والخارجية للفصل الدراسي الأول 2025/2026</h3>
+                    <h3 style="margin: 0; color: #ff1515; font-size: 1.3rem;">بدء تقديم طلبات الإنتقال الداخلية والخارجية للفصل الدراسي الأول 2025/2026</h3>
                     <span style="color: #777; font-size: 0.9rem;">تاريخ النشر: 2025/7/17</span>
                 </div>
             </div>
