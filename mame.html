@@ -406,6 +406,172 @@
         navLinks.style.display = "block";
     });
 </script>
+
+
+<section id="tree-plans" class="tree-plans" style="margin-top: 2rem; padding: 2rem; background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); max-width: 90%; margin: 2rem auto; text-align: center; position: relative; border: 2px solid #1565c0;">
+    <h2 style="color: #1565c0; margin-bottom: 2.5rem; font-size: 2rem; font-weight: bold; position: absolute; top: -15px; right: 15px; background: #ffffff; padding: 0 10px; border: 2px solid #1565c0; border-radius: 5px;">الخطة الارشادية</h2>
+    <br>
+<br>
+    <p style="color: #1c4a99; font-size: 1.2rem; margin-bottom: 1rem; text-align: center; font-weight: bold;">بالوقت الحالي تم اضافة خطة تحقيقات وسوف نعمل على إضافة باقي الخطط الكلية هنا.</p>
+    <p style="color: #333; font-size: 1rem; margin-bottom: 1rem;">أدخل اسم المادة التي ترغب في تنزيلها، وشاهد ما تفتحه من الخطة وما هو المطلب السابق لها.</p>
+        <!-- النص الكتابي المتحرك في المنتصف -->
+        <p id="typing-text" style="color: red; font-size: 1rem; margin: 1.5rem auto 1rem auto; direction: rtl; width: 350px; min-height: 1.5em; white-space: pre; text-align: center;"></p>
+        <script>
+        const text = " نعمل حالياً على إضافة خطة الأمن السيبراني، شكراً لصبركم.....";
+        let i = 0;
+        function typeWriter() {
+          if (i < text.length) {
+            document.getElementById("typing-text").innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 70);
+          } else {
+            setTimeout(() => {
+              document.getElementById("typing-text").innerHTML = "";
+              i = 0;
+              typeWriter();
+            }, 1000);
+          }
+        }
+        typeWriter();
+        </script>
+        <br>
+        
+        <form id="searchForm" style="text-align: center; margin-bottom: 2rem;" onsubmit="handleSearch(event)">
+        <input type="text" id="searchInput" placeholder="ادخل اسم مادة .." style="padding: 10px; width: 300px; border-radius: 5px; border: 1px solid #ccc;" list="courseSuggestions">
+        <datalist id="courseSuggestions"></datalist>
+        <button type="submit" style="padding: 10px 20px; background-color: #1565c0; color: white; border: none; border-radius: 5px; cursor: pointer;">بحث</button>
+    </form>
+    <div id="searchResults" style="text-align: right; margin-top: 1rem; font-size: 1rem; color: #333;"></div>
+
+    <script>
+        const courseData = {
+            "مهارات حاسوب 2 لطلبة الكليات العلمية": {
+                opens: ["مبادئ أمن معلومات والفضاء الإلكتروني", "برمجة موجهة للكائنات"],
+                prerequisite: "حاسوب استدراكي 99",
+                concurrent: ["مهارات حاسوب وتعليم الالكتروني", "مختبر مهارات حاسوب 2 لطلبة الكليات العلمية"]
+            },
+            "مبادئ أمن معلومات والفضاء الإلكتروني": {
+                opens: ["شبكات حاسوب 1", "اساسيات التشفير"],
+                prerequisite: "مهارات حاسوب 2 لطلبة الكليات العلمية"
+            },
+            "برمجة موجهة للكائنات": {
+                opens: ["هياكل البيانات"],
+                prerequisite: "مهارات حاسوب 2 لطلبة الكليات العلمية"
+            },
+            "هياكل بيانات": {
+                opens: ["تحليل وتصميم خوارزميات", "تصميم وادارة قواعد بيانات 1", "نظم تشغيل لتحقيقات جنائية"],
+                prerequisite: "برمجة موجهة للكائنات"
+            },
+            "تفاضل وتكامل 1": {
+                opens: ["تفاضل وتكامل 2", "احتمالات واحصاء", "الهياكل", "الرياضيات المنفصلة"],
+                prerequisite: "لا يوجد",
+                concurrent: "لا يوجد"
+            },
+            "تفاضل وتكامل 2": {
+                opens: ["مقدمة الى الذكاء الاصطناعي"],
+                prerequisite: "تفاضل وتكامل 1",
+                concurrent: "لا يوجد"
+            },
+            "مقدمة الى الذكاء الاصطناعي": {
+                opens: ["برمجة الذكاء الاصطناعي", "التعلم الآلة", "مختبر تعلم الآلة"],
+                prerequisite: "تفاضل وتكامل 2",
+                concurrent: "لا يوجد"
+            },
+            "التصميم المنطق الرقمي": {
+                opens: [],
+                prerequisite: "مهارات حاسوب 2 لطلبة الكليات العلمية",
+                concurrent: "لا يوجد"
+            },
+            "شبكات حاسوب 1": {
+                opens: ["خصوصية وحماية بيانات", "امن شبكات", "تحقيقات جنائية في الشبكات"],
+                prerequisite: "مبادئ أمن معلومات والفضاء الإلكتروني",
+                concurrent: "لا يوجد"
+            },
+            "تحقيقات جنائية في الشبكات": {
+                opens: ["تحقيقات الجنائية الرقمية", "العدالة الجنائية", "تحقيق الاحتيال الرقمي", "التحقيقات الاجهزه النقالة"],
+                prerequisite: "شبكات حاسوب 1",
+                concurrent: "لا يوجد"
+            },
+            "خصوصية وحماية بيانات": {
+                opens: ["قانون العقوبات قسم العام", "مدخل الى علم القانون", "جرائم تكنولوجيا المعلومات", "تحليل مخاطر السياسات الامنية", "التهديدات الامنية ومكافحتها"],
+                prerequisite: "شبكات حاسوب 1",
+                concurrent: "لا يوجد"
+            },
+            "تصميم وادارة قواعد بيانات 1": {
+                opens: ["تحقيقات جنائية قواعد بيانات", "استعادة بيانات"],
+                prerequisite: "هياكل بيانات",
+                concurrent: "لا يوجد"
+            },
+            "مقدمة إلى اليونكس": {
+                opens: [],
+                prerequisite: "لا يوجد",
+                concurrent: "لا يوجد"
+            },
+            "اللغة العربية التطبيقية": {
+                opens: [],
+                prerequisite: "عربي استدراكي 99",
+                concurrent: "لا يوجد"
+            },
+            "اللغة الإنجليزية التطبيقية 1": {
+                opens: ["اللغة الإنجليزية التطبيقية 2"],
+                prerequisite: "إنجليزي استدراكي 99",
+                concurrent: "لا يوجد"
+            },
+            "اللغة الإنجليزية التطبيقية 2": {
+                opens: [],
+                prerequisite: "اللغة الإنجليزية التطبيقية 1",
+                concurrent: "لا يوجد"
+            }
+        };
+
+        const searchInput = document.getElementById("searchInput");
+        const suggestions = document.getElementById("courseSuggestions");
+
+        // Populate suggestions dynamically
+        searchInput.addEventListener("input", function () {
+            const query = searchInput.value.trim().toLowerCase();
+            suggestions.innerHTML = "";
+
+            if (query) {
+                Object.keys(courseData).forEach(course => {
+                    if (course.toLowerCase().includes(query)) {
+                        const option = document.createElement("option");
+                        option.value = course;
+                        suggestions.appendChild(option);
+                    }
+                });
+            }
+        });
+
+        document.getElementById("searchForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const searchValue = searchInput.value.trim();
+            const resultsDiv = document.getElementById("searchResults");
+            resultsDiv.innerHTML = "";
+
+            if (courseData[searchValue]) {
+                const course = courseData[searchValue];
+                const opensList = course.opens.length > 0 
+                    ? course.opens.map(item => `<li>${item}</li>`).join("") 
+                    : "<li>لا يوجد</li>";
+                resultsDiv.innerHTML = `
+                    <div style="background-color: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px); padding: 1rem; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                        <h3 style="color: #1565c0; text-align: center;">${searchValue}</h3>
+                        <p><strong>المتطلب السابق:</strong> ${course.prerequisite || "لا يوجد"}</p>
+                        <p><strong>المتطلب المتزامن:</strong> ${course.concurrent || "لا يوجد"}</p>
+                        <p><strong>المواد التي تفتحها:</strong></p>
+                        <ul style="list-style: none; padding: 0; margin: 0; color: #333;">${opensList}</ul>
+                    </div>
+                `;
+            } else {
+                resultsDiv.innerHTML = `<div style="background-color: #ffe0e0; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); text-align: center; color: red;">عذرًا، لم يتم العثور على المادة "${searchValue}".</div>`;
+            }
+        });
+    </script>
+</section>
+<br>
+<br>
+    
 <section class="course-section" style="margin-top: 2rem; padding: 2rem; background-color: #f9f9f9; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); max-width: 90%; margin: 2rem auto; text-align: center; position: relative; border: 2px solid #506400;">
     <div style="position: absolute; top: 10px; left: 10px; cursor: pointer;" onclick="copySectionLink()">
         <i class="fas fa-ellipsis-h" style="font-size: 1.5rem; color: #506400;"></i>
