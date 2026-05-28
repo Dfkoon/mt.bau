@@ -1,0 +1,405 @@
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 5% 50px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80') center/cover no-repeat;
+    z-index: -2;
+    opacity: 0.6;
+    /* Adjusted to let the balls be more visible */
+}
+
+.ballpit-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.mouse-trail-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Laser Waving Flag Overlay for Jordanian Flag Day */
+.flag-wave-overlay {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+    /* Center the laser flag perfectly */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.laser-flag {
+    width: 100%;
+    height: 100%;
+    max-width: 800px;
+    max-height: 400px;
+    /* Removed opacity constraint so it shines fully */
+    animation: laserWaveMotion 4s ease-in-out infinite alternate;
+    /* Added overall glow to the container */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+
+.laser-line {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: drawLaser 5s ease-out forwards infinite;
+}
+
+.laser-black { 
+    stroke: #888; 
+    stroke-width: 8;
+    fill: none;
+    filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 15px #000) drop-shadow(0 0 30px #000); 
+}
+
+.laser-white { 
+    stroke: #ffffff; 
+    stroke-width: 8;
+    fill: none;
+    filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #fff); 
+}
+
+.laser-green { 
+    stroke: #00ff66; 
+    stroke-width: 8;
+    fill: none;
+    filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 20px #00ff66) drop-shadow(0 0 40px #00cc55); 
+}
+
+.laser-red { 
+    stroke: #ff2a40; 
+    stroke-width: 12;
+    fill: none;
+    filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 25px #ff2a40) drop-shadow(0 0 50px #cc0000); 
+}
+
+.laser-star {
+    stroke: #ffffff;
+    stroke-width: 6;
+    fill: rgba(255,255,255,1);
+    filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 15px #fff) drop-shadow(0 0 30px #fff);
+    /* Star stays constantly visible */
+    stroke-dasharray: none;
+    animation: pulseStar 2s ease-in-out infinite alternate;
+}
+
+@keyframes drawLaser {
+    0% { stroke-dashoffset: 2000; }
+    40% { stroke-dashoffset: 0; }
+    80% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -2000; }
+}
+
+@keyframes pulseStar {
+    0% { filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px #fff); transform: scale(0.98); }
+    100% { filter: drop-shadow(0 0 5px #fff) drop-shadow(0 0 20px #fff); transform: scale(1.02); }
+}
+
+@keyframes laserWaveMotion {
+    0% { transform: translateY(-2%); }
+    100% { transform: translateY(2%); }
+}
+
+[data-theme="light"] .flag-wave-overlay {
+    background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+/* Light mode specific laser overrides for MAX visibility */
+[data-theme="light"] .laser-black { 
+    stroke: #000000 !important; 
+    stroke-width: 10 !important;
+    fill: rgba(0,0,0,0.15) !important;
+    filter: drop-shadow(0 0 3px rgba(0,0,0,0.8)) !important; 
+}
+
+[data-theme="light"] .laser-white { 
+    stroke: #666666 !important; /* White stroke is invisible on light bg, use dark gray to outline the white band */
+    stroke-width: 10 !important;
+    fill: rgba(255,255,255,0.4) !important;
+    filter: drop-shadow(0 0 4px rgba(0,0,0,0.5)) !important; 
+}
+
+[data-theme="light"] .laser-green { 
+    stroke: #00882b !important; 
+    stroke-width: 10 !important;
+    fill: rgba(0,136,43,0.15) !important;
+    filter: drop-shadow(0 0 3px rgba(0,0,0,0.6)) !important; 
+}
+
+[data-theme="light"] .laser-red { 
+    stroke: #cc1122 !important; 
+    stroke-width: 14 !important;
+    fill: rgba(204,17,34,0.15) !important;
+    filter: drop-shadow(0 0 4px rgba(0,0,0,0.6)) !important; 
+}
+
+[data-theme="light"] .laser-star {
+    stroke: #aa0011 !important; /* Give the star a red outine to pop on light bg */
+    stroke-width: 6 !important;
+    fill: #ffffff !important;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.6)) !important;
+}
+
+.hero-background .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(var(--bg-dark-rgb), 0.2),
+            rgba(var(--bg-dark-rgb), 0.8));
+    z-index: 0;
+}
+
+/* Dark background for ballpit in light mode */
+[data-theme="light"] .ballpit-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(20, 20, 30, 0.85),
+            rgba(10, 10, 20, 0.95));
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Adjust overlay opacity in light mode for better ballpit visibility */
+[data-theme="light"] .hero-background .overlay {
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.3));
+}
+
+.hero-content {
+    max-width: 900px;
+    z-index: 10;
+    position: relative;
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-main);
+}
+
+.title-frame {
+    position: relative;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Corner decorations */
+.title-frame::before,
+.title-frame::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 3px solid var(--text-main);
+}
+
+/* Top-left corner */
+.title-frame::before {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+/* Top-right corner */
+.title-frame::after {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+}
+
+/* Bottom corners using pseudo elements on hero-title */
+.hero-section .hero-title::before,
+.hero-section .hero-title::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 3px solid var(--text-main);
+}
+
+/* Bottom-left corner */
+.hero-section .hero-title::before {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+}
+
+/* Bottom-right corner */
+.hero-section .hero-title::after {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+.hero-title .highlight {
+    color: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+}
+
+.hero-btns {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 4rem;
+}
+
+.btn-lg {
+    padding: 16px 40px;
+    font-size: 1.15rem;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-secondary:hover {
+    background: var(--glass-border);
+    transform: scale(1.05);
+}
+
+.hero-stats {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 1rem 2rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--primary-light);
+    margin-bottom: 0.2rem;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-glow {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 75, 43, 0.4);
+    transition: var(--transition);
+    animation: glow-pulse 2s infinite ease-in-out;
+}
+
+.btn-glow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 75, 43, 0.6);
+    filter: brightness(1.1);
+}
+
+@keyframes glow-pulse {
+    0% {
+        box-shadow: 0 0 5px rgba(255, 75, 43, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(255, 75, 43, 0.8), 0 0 10px rgba(255, 75, 43, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(255, 75, 43, 0.4);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-btns {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-stats {
+        /* Keep grid columns horizontal on mobile or use fewer columns if very tight, but user requested horizontal */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        padding: 1rem;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .stat-value {
+        font-size: 1rem;
+    }
+
+    .stat-label {
+        font-size: 0.6rem;
+    }
+}

@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Admin Helper Function
+    function isAdmin() {
+      return request.auth != null && 
+             request.auth.token.email in ['admin@koon.bau.jo', 'hussienaldayyat@gmail.com'];
+    }
+    
+    // Validation Helpers
+    function isValidMessage(data) {
+      let content = data.keys().hasAny(['message']) ? data.message :
+                    data.keys().hasAny(['text']) ? data.text :
+                    data.keys().hasAny(['content']) ? data.content :
+                    data.keys().hasAny(['quote']) ? data.quote : '';
+      
+      return content is string && content.size() >= 5 && content.size() <= 2000;
+    }
+    
+    function isValidEmail(email) {
+      return email is string && email.matches('.*@.*\\..*');
+    }
+
+    // Material Donations (Consolidated & Fixed)
+    match /materialDonations/{doc} {
+      // Allow public read access so the list shows up correctly
+      allow read: if true;
+      
+      // Allow students to create new donations
+      allow create: if true;
+      
+      // Allow booking updates or admin updates
+      // Allow booking updates (relaxed to allow multiple bookings on same doc)
+      allow update: if (
+        request.resource.data.status in ['reserved', 'approved']
+      ) || isAdmin();
+      
+      // Only admins can delete
+      allow delete: if isAdmin();
+    }
+    
+    // QnA / Suggestions
+    match /qna/{doc} {
+      allow read: if resource.data.isPublic == true || isAdmin();
+      allow create: if isValidMessage(request.resource.data) && (request.resource.data.type is string);
+      allow update, delete: if isAdmin();
+    }
+    
+    match /suggestions/{doc} {
+      allow read: if resource.data.isPublic == true || isAdmin();
+      allow create: if isValidMessage(request.resource.data) && (request.resource.data.type is string);
+      allow update, delete: if isAdmin();
+    }
+
+    // Question Reports
+    match /question_reports/{report} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isValidMessage(request.resource.data);
+    }
+
+    // Page Views
+    match /page_views/{view} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    // Subscribers
+    match /subscribers/{doc} {
+      allow read, delete: if isAdmin();
+      allow create: if isValidEmail(request.resource.data.email);
+    }
+
+    // Testimonials
+    match /testimonials/{doc} {
+      allow read: if resource.data.approved == true || isAdmin();
+      allow create: if isValidMessage(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    // Other Collections
+    match /quizContributions/{doc} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    match /nashmi_chat/{doc} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+    
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

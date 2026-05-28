@@ -1,0 +1,27 @@
+,
+            {
+                id: 7,
+                type: 'mcq',
+                questionEn: '<div style="font-family: Arial, sans-serif;"><p style="margin-bottom: 15px;">The following figure shows the ..................?</p><div style="display: flex; justify-content: center; margin: 20px 0;"><svg width="300" height="250" style="border: 2px solid #666; border-radius: 8px; background: white;"><line x1="30" y1="220" x2="280" y2="220" stroke="#333" stroke-width="2"/><line x1="30" y1="20" x2="30" y2="220" stroke="#333" stroke-width="2"/><circle cx="60" cy="180" r="4" fill="#2196F3"/><circle cx="80" cy="160" r="4" fill="#2196F3"/><circle cx="100" cy="150" r="4" fill="#2196F3"/><circle cx="120" cy="130" r="4" fill="#2196F3"/><circle cx="140" cy="120" r="4" fill="#2196F3"/><circle cx="160" cy="100" r="4" fill="#2196F3"/><circle cx="180" cy="90" r="4" fill="#2196F3"/><circle cx="200" cy="70" r="4" fill="#2196F3"/><circle cx="220" cy="60" r="4" fill="#2196F3"/><circle cx="240" cy="50" r="4" fill="#2196F3"/><line x1="40" y1="200" x2="260" y2="40" stroke="#F44336" stroke-width="2.5"/></svg></div></div>',
+                options: [
+                    { id: 'a', textEn: 'Mean Squared Error' },
+                    { id: 'b', textEn: 'Cost Function' },
+                    { id: 'c', textEn: 'Gradient Descent' },
+                    { id: 'd', textEn: 'Polynomial Regression' }
+                ],
+                correctAnswer: 'b',
+                marks: 3.0
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                questionEn: '<div style="font-family: Arial, sans-serif;"><p style="margin-bottom: 15px;">Calculate the entropy for the following data set:</p><div style="display: flex; justify-content: center; margin: 20px 0;"><table style="border-collapse: collapse; border: 2px solid #333; background: white;"><thead><tr><th style="border: 1px solid #333; padding: 8px 15px; background: #f0f0f0;">Weather</th><th style="border: 1px solid #333; padding: 8px 15px; background: #f0f0f0;">Class</th></tr></thead><tbody><tr><td style="border: 1px solid #333; padding: 6px 15px;">Sunny</td><td style="border: 1px solid #333; padding: 6px 15px;">No</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Sunny</td><td style="border: 1px solid #333; padding: 6px 15px;">No</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Overcast</td><td style="border: 1px solid #333; padding: 6px 15px;">Yes</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Rain</td><td style="border: 1px solid #333; padding: 6px 15px;">Yes</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Rain</td><td style="border: 1px solid #333; padding: 6px 15px;">Yes</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Rain</td><td style="border: 1px solid #333; padding: 6px 15px;">Yes</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Overcast</td><td style="border: 1px solid #333; padding: 6px 15px;">No</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Sunny</td><td style="border: 1px solid #333; padding: 6px 15px;">Yes</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Sunny</td><td style="border: 1px solid #333; padding: 6px 15px;">Yes</td></tr><tr><td style="border: 1px solid #333; padding: 6px 15px;">Rain</td><td style="border: 1px solid #333; padding: 6px 15px;">Yes</td></tr></tbody></table></div><p style="margin-top: 15px; font-weight: bold;">The Entropy is:</p></div>',
+                options: [
+                    { id: 'a', textEn: '0.97' },
+                    { id: 'b', textEn: '0.66' },
+                    { id: 'c', textEn: '0.30' },
+                    { id: 'd', textEn: '0.55' }
+                ],
+                correctAnswer: 'b',
+                marks: 3.0
+            }
