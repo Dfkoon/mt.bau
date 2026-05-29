@@ -302,72 +302,13 @@ export const coursesData = {
             }
         },
         {
-            id: 8,
-            name: 'تصميم المنطق الرقمي',
-            nameEn: 'Digital Logic Design',
-            icon: '🔌',
+            id: 14,
+            name: 'مبادئ أمن سيبراني',
+            nameEn: 'Principles of Cybersecurity',
+            icon: '🔒',
             files: {
-                book: 'https://drive.google.com/file/d/1ltJbq7wl7mRi0iJ2jW2Du_I7XGveXzjR/view',
-                pdf: 'https://drive.google.com/drive/folders/15CGqPxKxJpYf4KmPZDTMu3KPA8TzYpV9',
-                pdf2: 'https://drive.google.com/drive/folders/1OfQSXXB68C2nhVrFOivDSQYU_0PEqhGr',
-                questions: 'https://drive.google.com/drive/folders/15BUplwUrszcFKUDIr2gjUpRJeX1cIS_0',
-                video: 'https://youtu.be/uqTY4v_JTj8'
-            }
-        },
-        {
-            id: 9,
-            name: 'هياكل بيانات',
-            nameEn: 'Data Structures',
-            icon: '🗄️',
-            files: {
-                pdf: 'https://drive.google.com/drive/folders/1OCPGdIguKltQWZIx7Q20W3BuIb4KFA1T',
-                pdf2: 'https://drive.google.com/drive/folders/12YKFm_YdlxyeXcY4bfWhr_jnHM2BOA10',
-                pdf3: 'https://drive.google.com/drive/folders/1cnf_p5PcFQLk3SzK9u0n23RWCl27dlRG',
-                book: 'https://drive.google.com/drive/folders/1BBATpR5nntagfFVBZsgWoU-KmUxu5M19',
-                questions: 'https://drive.google.com/drive/folders/11x3oLn2BE9xYpug4VArNmoSm0X9uqUA9',
-                summary: 'https://drive.google.com/drive/folders/1u3_RKDKm5YmQhTU85lREOR3Hg7snWxE4',
-                video: 'https://docs.google.com/document/d/1KDZsMxHjXJKD_9XXXHzC1bw68x9VmeJkP6vscXfTOHI/edit'
-            }
-        },
-        {
-            id: 10,
-            name: 'قواعد بيانات',
-            nameEn: 'Databases',
-            icon: '🗃️',
-            files: {
-                book: 'https://drive.google.com/drive/folders/1B5zQmCP-WH9CLAjiQZVjxWLrQtoM2TJp',
-                pdf: 'https://drive.google.com/drive/folders/1QMxRhCCF-ova4Q0MBLRxOF8uxwRCowxk',
-                questions: 'https://drive.google.com/drive/folders/1u2eCUUY4JaFpw1BE_BzgXskRPdrnDna_',
-                summary: 'https://drive.google.com/drive/folders/18Jo0u6hIOfJpe-5UCIFSKbFvddU2Bu6V',
-                summary2: 'https://drive.google.com/drive/folders/1QziNRO3kzPXMy0x4MzwtC3YPUB0NZc8E',
-                video: 'https://drive.google.com/drive/folders/1t7BNfbPUoJAcvf1HXAYKzZ4CJDuDOX_J',
-                video2: 'https://t.me/ITLecturesBAU/3149'
-            }
-        },
-        {
-            id: 11,
-            name: 'تحليل وتصميم خوارزميات',
-            nameEn: 'Algorithms Analysis and Design',
-            icon: '🔢',
-            files: {
-                pdf: 'https://drive.google.com/drive/folders/1xRMkbD-ICSed89myzn42TwAXlu5OHA-0',
-                questions: 'https://drive.google.com/drive/folders/1qJucYNbNyvQuYPpCyX_NEtDUbg4x9UT9',
-                summary: 'https://drive.google.com/drive/folders/1utjKxGdt0ogR1yney13BSRvSi6t1Hgsy',
-                summary2: 'https://drive.google.com/drive/folders/1_8x12ZbfTo6ZkDP8ipf8pOgOctrHut00',
-                video: 'https://drive.google.com/drive/folders/105ZUR0rpaE7bkI9fP9NWPXc6H2C_OAvL',
-                solutions: 'https://drive.google.com/drive/folders/1hvxydh0cubQtCP4fmMTq88HXxN3QIWCw'
-            }
-        },
-        {
-            id: 12,
-            name: 'تعلم الآلة',
-            nameEn: 'Machine Learning',
-            icon: '🤖',
-            files: {
-                pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
-                questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
-                video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
-                video2: 'https://t.me/introtoai1/82'
+                pdf: 'https://drive.google.com/drive/folders/1r-G9sVIWVQbh-BHOx-3B7YBlSqTP_PGf?usp=drive_link',
+                questions: 'https://drive.google.com/drive/folders/1-DU_hblPN7ie0sdFHdPWmTPK9t1oLD34?usp=drive_link'
             }
         },
         {
@@ -467,6 +408,76 @@ export const coursesData = {
             icon: '🖥️',
             files: {
                 slides: 'https://drive.google.com/drive/folders/14u8_FOxuJH7EgyKZs5ticMsUCUnBtjHW?usp=drive_link'
+            }
+        },
+        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
+        {
+            id: 'shared_logic',
+            name: 'تصميم المنطق الرقمي',
+            nameEn: 'Digital Logic Design',
+            icon: '🔌',
+            files: {
+                book: 'https://drive.google.com/file/d/1ltJbq7wl7mRi0iJ2jW2Du_I7XGveXzjR/view',
+                pdf: 'https://drive.google.com/drive/folders/15CGqPxKxJpYf4KmPZDTMu3KPA8TzYpV9',
+                pdf2: 'https://drive.google.com/drive/folders/1OfQSXXB68C2nhVrFOivDSQYU_0PEqhGr',
+                questions: 'https://drive.google.com/drive/folders/15BUplwUrszcFKUDIr2gjUpRJeX1cIS_0',
+                video: 'https://youtu.be/uqTY4v_JTj8'
+            }
+        },
+        {
+            id: 'shared_ds',
+            name: 'هياكل بيانات',
+            nameEn: 'Data Structures',
+            icon: '🗄️',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1OCPGdIguKltQWZIx7Q20W3BuIb4KFA1T',
+                pdf2: 'https://drive.google.com/drive/folders/12YKFm_YdlxyeXcY4bfWhr_jnHM2BOA10',
+                pdf3: 'https://drive.google.com/drive/folders/1cnf_p5PcFQLk3SzK9u0n23RWCl27dlRG',
+                book: 'https://drive.google.com/drive/folders/1BBATpR5nntagfFVBZsgWoU-KmUxu5M19',
+                questions: 'https://drive.google.com/drive/folders/11x3oLn2BE9xYpug4VArNmoSm0X9uqUA9',
+                summary: 'https://drive.google.com/drive/folders/1u3_RKDKm5YmQhTU85lREOR3Hg7snWxE4',
+                video: 'https://docs.google.com/document/d/1KDZsMxHjXJKD_9XXXHzC1bw68x9VmeJkP6vscXfTOHI/edit'
+            }
+        },
+        {
+            id: 'shared_db',
+            name: 'قواعد بيانات',
+            nameEn: 'Databases',
+            icon: '🗃️',
+            files: {
+                book: 'https://drive.google.com/drive/folders/1B5zQmCP-WH9CLAjiQZVjxWLrQtoM2TJp',
+                pdf: 'https://drive.google.com/drive/folders/1QMxRhCCF-ova4Q0MBLRxOF8uxwRCowxk',
+                questions: 'https://drive.google.com/drive/folders/1u2eCUUY4JaFpw1BE_BzgXskRPdrnDna_',
+                summary: 'https://drive.google.com/drive/folders/18Jo0u6hIOfJpe-5UCIFSKbFvddU2Bu6V',
+                summary2: 'https://drive.google.com/drive/folders/1QziNRO3kzPXMy0x4MzwtC3YPUB0NZc8E',
+                video: 'https://drive.google.com/drive/folders/1t7BNfbPUoJAcvf1HXAYKzZ4CJDuDOX_J',
+                video2: 'https://t.me/ITLecturesBAU/3149'
+            }
+        },
+        {
+            id: 'shared_algo',
+            name: 'تحليل وتصميم خوارزميات',
+            nameEn: 'Algorithms Analysis and Design',
+            icon: '🔢',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1xRMkbD-ICSed89myzn42TwAXlu5OHA-0',
+                questions: 'https://drive.google.com/drive/folders/1qJucYNbNyvQuYPpCyX_NEtDUbg4x9UT9',
+                summary: 'https://drive.google.com/drive/folders/1utjKxGdt0ogR1yney13BSRvSi6t1Hgsy',
+                summary2: 'https://drive.google.com/drive/folders/1_8x12ZbfTo6ZkDP8ipf8pOgOctrHut00',
+                video: 'https://drive.google.com/drive/folders/105ZUR0rpaE7bkI9fP9NWPXc6H2C_OAvL',
+                solutions: 'https://drive.google.com/drive/folders/1hvxydh0cubQtCP4fmMTq88HXxN3QIWCw'
+            }
+        },
+        {
+            id: 'shared_ml',
+            name: 'تعلم الآلة',
+            nameEn: 'Machine Learning',
+            icon: '🤖',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
+                questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
+                video2: 'https://t.me/introtoai1/82'
             }
         }
     ],
@@ -638,14 +649,74 @@ export const coursesData = {
                 video2: 'https://t.me/introtoai1/95'
             }
         },
+        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
         {
-            id: 'principles_of_cybersecurity',
-            name: 'مبادئ أمن سيبراني',
-            nameEn: 'Principles of Cybersecurity',
-            icon: '🔒',
+            id: 'shared_logic',
+            name: 'تصميم المنطق الرقمي',
+            nameEn: 'Digital Logic Design',
+            icon: '🔌',
             files: {
-                pdf: 'https://drive.google.com/drive/folders/1r-G9sVIWVQbh-BHOx-3B7YBlSqTP_PGf?usp=drive_link',
-                questions: 'https://drive.google.com/drive/folders/1-DU_hblPN7ie0sdFHdPWmTPK9t1oLD34?usp=drive_link'
+                book: 'https://drive.google.com/file/d/1ltJbq7wl7mRi0iJ2jW2Du_I7XGveXzjR/view',
+                pdf: 'https://drive.google.com/drive/folders/15CGqPxKxJpYf4KmPZDTMu3KPA8TzYpV9',
+                pdf2: 'https://drive.google.com/drive/folders/1OfQSXXB68C2nhVrFOivDSQYU_0PEqhGr',
+                questions: 'https://drive.google.com/drive/folders/15BUplwUrszcFKUDIr2gjUpRJeX1cIS_0',
+                video: 'https://youtu.be/uqTY4v_JTj8'
+            }
+        },
+        {
+            id: 'shared_ds',
+            name: 'هياكل بيانات',
+            nameEn: 'Data Structures',
+            icon: '🗄️',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1OCPGdIguKltQWZIx7Q20W3BuIb4KFA1T',
+                pdf2: 'https://drive.google.com/drive/folders/12YKFm_YdlxyeXcY4bfWhr_jnHM2BOA10',
+                pdf3: 'https://drive.google.com/drive/folders/1cnf_p5PcFQLk3SzK9u0n23RWCl27dlRG',
+                book: 'https://drive.google.com/drive/folders/1BBATpR5nntagfFVBZsgWoU-KmUxu5M19',
+                questions: 'https://drive.google.com/drive/folders/11x3oLn2BE9xYpug4VArNmoSm0X9uqUA9',
+                summary: 'https://drive.google.com/drive/folders/1u3_RKDKm5YmQhTU85lREOR3Hg7snWxE4',
+                video: 'https://docs.google.com/document/d/1KDZsMxHjXJKD_9XXXHzC1bw68x9VmeJkP6vscXfTOHI/edit'
+            }
+        },
+        {
+            id: 'shared_db',
+            name: 'قواعد بيانات',
+            nameEn: 'Databases',
+            icon: '🗃️',
+            files: {
+                book: 'https://drive.google.com/drive/folders/1B5zQmCP-WH9CLAjiQZVjxWLrQtoM2TJp',
+                pdf: 'https://drive.google.com/drive/folders/1QMxRhCCF-ova4Q0MBLRxOF8uxwRCowxk',
+                questions: 'https://drive.google.com/drive/folders/1u2eCUUY4JaFpw1BE_BzgXskRPdrnDna_',
+                summary: 'https://drive.google.com/drive/folders/18Jo0u6hIOfJpe-5UCIFSKbFvddU2Bu6V',
+                summary2: 'https://drive.google.com/drive/folders/1QziNRO3kzPXMy0x4MzwtC3YPUB0NZc8E',
+                video: 'https://drive.google.com/drive/folders/1t7BNfbPUoJAcvf1HXAYKzZ4CJDuDOX_J',
+                video2: 'https://t.me/ITLecturesBAU/3149'
+            }
+        },
+        {
+            id: 'shared_algo',
+            name: 'تحليل وتصميم خوارزميات',
+            nameEn: 'Algorithms Analysis and Design',
+            icon: '🔢',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1xRMkbD-ICSed89myzn42TwAXlu5OHA-0',
+                questions: 'https://drive.google.com/drive/folders/1qJucYNbNyvQuYPpCyX_NEtDUbg4x9UT9',
+                summary: 'https://drive.google.com/drive/folders/1utjKxGdt0ogR1yney13BSRvSi6t1Hgsy',
+                summary2: 'https://drive.google.com/drive/folders/1_8x12ZbfTo6ZkDP8ipf8pOgOctrHut00',
+                video: 'https://drive.google.com/drive/folders/105ZUR0rpaE7bkI9fP9NWPXc6H2C_OAvL',
+                solutions: 'https://drive.google.com/drive/folders/1hvxydh0cubQtCP4fmMTq88HXxN3QIWCw'
+            }
+        },
+        {
+            id: 'shared_ml',
+            name: 'تعلم الآلة',
+            nameEn: 'Machine Learning',
+            icon: '🤖',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
+                questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
+                video2: 'https://t.me/introtoai1/82'
             }
         }
     ],
@@ -728,7 +799,78 @@ export const coursesData = {
     ],
 
     // 3. AI & Robotics (AI_Robo)
-    ai_robo_mandatory: [],
+    ai_robo_mandatory: [
+        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
+        {
+            id: 'shared_logic',
+            name: 'تصميم المنطق الرقمي',
+            nameEn: 'Digital Logic Design',
+            icon: '🔌',
+            files: {
+                book: 'https://drive.google.com/file/d/1ltJbq7wl7mRi0iJ2jW2Du_I7XGveXzjR/view',
+                pdf: 'https://drive.google.com/drive/folders/15CGqPxKxJpYf4KmPZDTMu3KPA8TzYpV9',
+                pdf2: 'https://drive.google.com/drive/folders/1OfQSXXB68C2nhVrFOivDSQYU_0PEqhGr',
+                questions: 'https://drive.google.com/drive/folders/15BUplwUrszcFKUDIr2gjUpRJeX1cIS_0',
+                video: 'https://youtu.be/uqTY4v_JTj8'
+            }
+        },
+        {
+            id: 'shared_ds',
+            name: 'هياكل بيانات',
+            nameEn: 'Data Structures',
+            icon: '🗄️',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1OCPGdIguKltQWZIx7Q20W3BuIb4KFA1T',
+                pdf2: 'https://drive.google.com/drive/folders/12YKFm_YdlxyeXcY4bfWhr_jnHM2BOA10',
+                pdf3: 'https://drive.google.com/drive/folders/1cnf_p5PcFQLk3SzK9u0n23RWCl27dlRG',
+                book: 'https://drive.google.com/drive/folders/1BBATpR5nntagfFVBZsgWoU-KmUxu5M19',
+                questions: 'https://drive.google.com/drive/folders/11x3oLn2BE9xYpug4VArNmoSm0X9uqUA9',
+                summary: 'https://drive.google.com/drive/folders/1u3_RKDKm5YmQhTU85lREOR3Hg7snWxE4',
+                video: 'https://docs.google.com/document/d/1KDZsMxHjXJKD_9XXXHzC1bw68x9VmeJkP6vscXfTOHI/edit'
+            }
+        },
+        {
+            id: 'shared_db',
+            name: 'قواعد بيانات',
+            nameEn: 'Databases',
+            icon: '🗃️',
+            files: {
+                book: 'https://drive.google.com/drive/folders/1B5zQmCP-WH9CLAjiQZVjxWLrQtoM2TJp',
+                pdf: 'https://drive.google.com/drive/folders/1QMxRhCCF-ova4Q0MBLRxOF8uxwRCowxk',
+                questions: 'https://drive.google.com/drive/folders/1u2eCUUY4JaFpw1BE_BzgXskRPdrnDna_',
+                summary: 'https://drive.google.com/drive/folders/18Jo0u6hIOfJpe-5UCIFSKbFvddU2Bu6V',
+                summary2: 'https://drive.google.com/drive/folders/1QziNRO3kzPXMy0x4MzwtC3YPUB0NZc8E',
+                video: 'https://drive.google.com/drive/folders/1t7BNfbPUoJAcvf1HXAYKzZ4CJDuDOX_J',
+                video2: 'https://t.me/ITLecturesBAU/3149'
+            }
+        },
+        {
+            id: 'shared_algo',
+            name: 'تحليل وتصميم خوارزميات',
+            nameEn: 'Algorithms Analysis and Design',
+            icon: '🔢',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1xRMkbD-ICSed89myzn42TwAXlu5OHA-0',
+                questions: 'https://drive.google.com/drive/folders/1qJucYNbNyvQuYPpCyX_NEtDUbg4x9UT9',
+                summary: 'https://drive.google.com/drive/folders/1utjKxGdt0ogR1yney13BSRvSi6t1Hgsy',
+                summary2: 'https://drive.google.com/drive/folders/1_8x12ZbfTo6ZkDP8ipf8pOgOctrHut00',
+                video: 'https://drive.google.com/drive/folders/105ZUR0rpaE7bkI9fP9NWPXc6H2C_OAvL',
+                solutions: 'https://drive.google.com/drive/folders/1hvxydh0cubQtCP4fmMTq88HXxN3QIWCw'
+            }
+        },
+        {
+            id: 'shared_ml',
+            name: 'تعلم الآلة',
+            nameEn: 'Machine Learning',
+            icon: '🤖',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
+                questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
+                video2: 'https://t.me/introtoai1/82'
+            }
+        }
+    ],
     ai_robo_elective: [],
 
     // 4. Virtual Reality (VR)
@@ -758,6 +900,62 @@ export const coursesData = {
             icon: '👁️',
             files: {
                 pdf: 'https://drive.google.com/drive/folders/17DxuxkT399lsoqaz44aFqoV5tuU_kO4r?usp=sharing'
+            }
+        },
+        // --- مواد متطلب تخصص إجبارية لجميع التخصصات (ما عدا تحليل وتصميم خوارزميات) ---
+        {
+            id: 'shared_logic',
+            name: 'تصميم المنطق الرقمي',
+            nameEn: 'Digital Logic Design',
+            icon: '🔌',
+            files: {
+                book: 'https://drive.google.com/file/d/1ltJbq7wl7mRi0iJ2jW2Du_I7XGveXzjR/view',
+                pdf: 'https://drive.google.com/drive/folders/15CGqPxKxJpYf4KmPZDTMu3KPA8TzYpV9',
+                pdf2: 'https://drive.google.com/drive/folders/1OfQSXXB68C2nhVrFOivDSQYU_0PEqhGr',
+                questions: 'https://drive.google.com/drive/folders/15BUplwUrszcFKUDIr2gjUpRJeX1cIS_0',
+                video: 'https://youtu.be/uqTY4v_JTj8'
+            }
+        },
+        {
+            id: 'shared_ds',
+            name: 'هياكل بيانات',
+            nameEn: 'Data Structures',
+            icon: '🗄️',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1OCPGdIguKltQWZIx7Q20W3BuIb4KFA1T',
+                pdf2: 'https://drive.google.com/drive/folders/12YKFm_YdlxyeXcY4bfWhr_jnHM2BOA10',
+                pdf3: 'https://drive.google.com/drive/folders/1cnf_p5PcFQLk3SzK9u0n23RWCl27dlRG',
+                book: 'https://drive.google.com/drive/folders/1BBATpR5nntagfFVBZsgWoU-KmUxu5M19',
+                questions: 'https://drive.google.com/drive/folders/11x3oLn2BE9xYpug4VArNmoSm0X9uqUA9',
+                summary: 'https://drive.google.com/drive/folders/1u3_RKDKm5YmQhTU85lREOR3Hg7snWxE4',
+                video: 'https://docs.google.com/document/d/1KDZsMxHjXJKD_9XXXHzC1bw68x9VmeJkP6vscXfTOHI/edit'
+            }
+        },
+        {
+            id: 'shared_db',
+            name: 'قواعد بيانات',
+            nameEn: 'Databases',
+            icon: '🗃️',
+            files: {
+                book: 'https://drive.google.com/drive/folders/1B5zQmCP-WH9CLAjiQZVjxWLrQtoM2TJp',
+                pdf: 'https://drive.google.com/drive/folders/1QMxRhCCF-ova4Q0MBLRxOF8uxwRCowxk',
+                questions: 'https://drive.google.com/drive/folders/1u2eCUUY4JaFpw1BE_BzgXskRPdrnDna_',
+                summary: 'https://drive.google.com/drive/folders/18Jo0u6hIOfJpe-5UCIFSKbFvddU2Bu6V',
+                summary2: 'https://drive.google.com/drive/folders/1QziNRO3kzPXMy0x4MzwtC3YPUB0NZc8E',
+                video: 'https://drive.google.com/drive/folders/1t7BNfbPUoJAcvf1HXAYKzZ4CJDuDOX_J',
+                video2: 'https://t.me/ITLecturesBAU/3149'
+            }
+        },
+        {
+            id: 'shared_ml',
+            name: 'تعلم الآلة',
+            nameEn: 'Machine Learning',
+            icon: '🤖',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
+                questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
+                video2: 'https://t.me/introtoai1/82'
             }
         }
     ],
@@ -807,6 +1005,76 @@ export const coursesData = {
             nameEn: 'Pattern Recognition (Dr. Wafaa)',
             icon: '🧩',
             files: { pdf: 'https://drive.google.com/drive/folders/1anTq3RMi-w6QbNTwBFRbgX-6jLIJ7vtw?usp=drive_link', slides: 'https://drive.google.com/drive/folders/1anTq3RMi-w6QbNTwBFRbgX-6jLIJ7vtw?usp=drive_link' }
+        },
+        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
+        {
+            id: 'shared_logic',
+            name: 'تصميم المنطق الرقمي',
+            nameEn: 'Digital Logic Design',
+            icon: '🔌',
+            files: {
+                book: 'https://drive.google.com/file/d/1ltJbq7wl7mRi0iJ2jW2Du_I7XGveXzjR/view',
+                pdf: 'https://drive.google.com/drive/folders/15CGqPxKxJpYf4KmPZDTMu3KPA8TzYpV9',
+                pdf2: 'https://drive.google.com/drive/folders/1OfQSXXB68C2nhVrFOivDSQYU_0PEqhGr',
+                questions: 'https://drive.google.com/drive/folders/15BUplwUrszcFKUDIr2gjUpRJeX1cIS_0',
+                video: 'https://youtu.be/uqTY4v_JTj8'
+            }
+        },
+        {
+            id: 'shared_ds',
+            name: 'هياكل بيانات',
+            nameEn: 'Data Structures',
+            icon: '🗄️',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1OCPGdIguKltQWZIx7Q20W3BuIb4KFA1T',
+                pdf2: 'https://drive.google.com/drive/folders/12YKFm_YdlxyeXcY4bfWhr_jnHM2BOA10',
+                pdf3: 'https://drive.google.com/drive/folders/1cnf_p5PcFQLk3SzK9u0n23RWCl27dlRG',
+                book: 'https://drive.google.com/drive/folders/1BBATpR5nntagfFVBZsgWoU-KmUxu5M19',
+                questions: 'https://drive.google.com/drive/folders/11x3oLn2BE9xYpug4VArNmoSm0X9uqUA9',
+                summary: 'https://drive.google.com/drive/folders/1u3_RKDKm5YmQhTU85lREOR3Hg7snWxE4',
+                video: 'https://docs.google.com/document/d/1KDZsMxHjXJKD_9XXXHzC1bw68x9VmeJkP6vscXfTOHI/edit'
+            }
+        },
+        {
+            id: 'shared_db',
+            name: 'قواعد بيانات',
+            nameEn: 'Databases',
+            icon: '🗃️',
+            files: {
+                book: 'https://drive.google.com/drive/folders/1B5zQmCP-WH9CLAjiQZVjxWLrQtoM2TJp',
+                pdf: 'https://drive.google.com/drive/folders/1QMxRhCCF-ova4Q0MBLRxOF8uxwRCowxk',
+                questions: 'https://drive.google.com/drive/folders/1u2eCUUY4JaFpw1BE_BzgXskRPdrnDna_',
+                summary: 'https://drive.google.com/drive/folders/18Jo0u6hIOfJpe-5UCIFSKbFvddU2Bu6V',
+                summary2: 'https://drive.google.com/drive/folders/1QziNRO3kzPXMy0x4MzwtC3YPUB0NZc8E',
+                video: 'https://drive.google.com/drive/folders/1t7BNfbPUoJAcvf1HXAYKzZ4CJDuDOX_J',
+                video2: 'https://t.me/ITLecturesBAU/3149'
+            }
+        },
+        {
+            id: 'shared_algo',
+            name: 'تحليل وتصميم خوارزميات',
+            nameEn: 'Algorithms Analysis and Design',
+            icon: '🔢',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1xRMkbD-ICSed89myzn42TwAXlu5OHA-0',
+                questions: 'https://drive.google.com/drive/folders/1qJucYNbNyvQuYPpCyX_NEtDUbg4x9UT9',
+                summary: 'https://drive.google.com/drive/folders/1utjKxGdt0ogR1yney13BSRvSi6t1Hgsy',
+                summary2: 'https://drive.google.com/drive/folders/1_8x12ZbfTo6ZkDP8ipf8pOgOctrHut00',
+                video: 'https://drive.google.com/drive/folders/105ZUR0rpaE7bkI9fP9NWPXc6H2C_OAvL',
+                solutions: 'https://drive.google.com/drive/folders/1hvxydh0cubQtCP4fmMTq88HXxN3QIWCw'
+            }
+        },
+        {
+            id: 'shared_ml',
+            name: 'تعلم الآلة',
+            nameEn: 'Machine Learning',
+            icon: '🤖',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
+                questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
+                video2: 'https://t.me/introtoai1/82'
+            }
         }
     ],
     ai_ds_elective: [
