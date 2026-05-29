@@ -637,6 +637,16 @@ export const coursesData = {
                 video: 'https://www.youtube.com/watch?v=NzyuxPtrRRM&list=PLxIvc-MGOs6ib0oK1z9C46DeKd9rRcSMY',
                 video2: 'https://t.me/introtoai1/95'
             }
+        },
+        {
+            id: 'principles_of_cybersecurity',
+            name: 'مبادئ أمن سيبراني',
+            nameEn: 'Principles of Cybersecurity',
+            icon: '🔒',
+            files: {
+                pdf: 'https://drive.google.com/drive/folders/1r-G9sVIWVQbh-BHOx-3B7YBlSqTP_PGf?usp=drive_link',
+                questions: 'https://drive.google.com/drive/folders/1-DU_hblPN7ie0sdFHdPWmTPK9t1oLD34?usp=drive_link'
+            }
         }
     ],
     ai_cyber_elective: [

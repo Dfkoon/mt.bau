@@ -85,6 +85,11 @@ export const courseNameToQuizMapping = {
     'Operating Systems for Digital Forensics': 'df_operating_systems',
     'نظم تشغيل للتحقيقات الجنائية': 'df_operating_systems',
     'نظم تشغيل للتحقيقات الجنائية الرقمية': 'df_operating_systems',
+
+    // --- Principles of Cybersecurity ---
+    'Principles of Cybersecurity': 'principles_of_cybersecurity',
+    'مبادئ أمن سيبراني': 'principles_of_cybersecurity',
+    'مبادئ الأمن السيبراني': 'principles_of_cybersecurity',
 };
 
 // Helper function to get quiz ID for a course by its name

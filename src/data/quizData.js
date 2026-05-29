@@ -5253,6 +5253,567 @@ export const quizData = {
             { id: 9, type: 'mcq', questionEn: 'Data cleaning is only required when handling small datasets.', options: [{id: 'a', textEn: 'True'}, {id: 'b', textEn: 'False'}], correctAnswer: 'b', marks: 1.0 },
             { id: 10, type: 'mcq', questionEn: 'Outliers can sometimes represent valid, significant variations in data.', options: [{id: 'a', textEn: 'True'}, {id: 'b', textEn: 'False'}], correctAnswer: 'a', marks: 1.0 }
         ]
+    },
+    principles_of_cybersecurity_quiz1: {
+        id: 'principles_of_cybersecurity_quiz1',
+        title: 'Principles of Cybersecurity - Quiz 1',
+        titleAr: 'مبادئ الأمن السيبراني - كويز 1',
+        icon: '🔒',
+        color: '#E91E63',
+        forceEnglish: true,
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                questionEn: 'What is the difference between identification and authentication?',
+                options: [
+                    { id: 'a', textEn: 'Identification claims an identity, authentication verifies it' },
+                    { id: 'b', textEn: 'Authentication claims identity, identification verifies it' },
+                    { id: 'c', textEn: 'Both mean the same thing' },
+                    { id: 'd', textEn: 'Identification encrypts data, authentication decrypts it' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                questionEn: 'Voice recognition is considered:',
+                options: [
+                    { id: 'a', textEn: 'Something the user does' },
+                    { id: 'b', textEn: 'Something the user knows' },
+                    { id: 'c', textEn: 'Something the user possesses' },
+                    { id: 'd', textEn: 'Something the user is' }
+                ],
+                correctAnswer: 'a',
+                explanation: 'Voice recognition is considered a behavioral biometric (something the user does), as opposed to static anatomical biometrics (something the user is) like fingerprints or iris patterns.',
+                marks: 1.0
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                questionEn: 'Which attack attempts the same common password across many accounts?',
+                options: [
+                    { id: 'a', textEn: 'Popular password attack' },
+                    { id: 'b', textEn: 'Offline dictionary attack' },
+                    { id: 'c', textEn: 'Specific account attack' },
+                    { id: 'd', textEn: 'Replay attack' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                questionEn: 'Fingerprint authentication is an example of:',
+                options: [
+                    { id: 'a', textEn: 'Static biometric' },
+                    { id: 'b', textEn: 'Dynamic biometric' },
+                    { id: 'c', textEn: 'Token-based authentication' },
+                    { id: 'd', textEn: 'Knowledge-based authentication' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                questionEn: 'Which of the following statements about a user ID is FALSE?',
+                options: [
+                    { id: 'a', textEn: 'It stores the user\'s password in plaintext' },
+                    { id: 'b', textEn: 'It determines authorization' },
+                    { id: 'c', textEn: 'It determines user privileges' },
+                    { id: 'd', textEn: 'It is used in discretionary access control' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                questionEn: 'What is the main goal of a complex password policy?',
+                options: [
+                    { id: 'a', textEn: 'Force users to choose strong, hard-to-guess passwords' },
+                    { id: 'b', textEn: 'Store passwords securely' },
+                    { id: 'c', textEn: 'Encrypt all passwords' },
+                    { id: 'd', textEn: 'Automatically generate passwords' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                questionEn: 'What is reactive password checking?',
+                options: [
+                    { id: 'a', textEn: 'System tries to crack existing passwords periodically' },
+                    { id: 'b', textEn: 'System rejects weak passwords at creation' },
+                    { id: 'c', textEn: 'System encrypts passwords' },
+                    { id: 'd', textEn: 'System deletes old passwords' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                questionEn: 'Which token can both store and process data?',
+                options: [
+                    { id: 'a', textEn: 'Smart card' },
+                    { id: 'b', textEn: 'Magnetic stripe card' },
+                    { id: 'c', textEn: 'Memory card' },
+                    { id: 'd', textEn: 'Embossed card' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                questionEn: 'What is the main goal of proactive password checking?',
+                options: [
+                    { id: 'a', textEn: 'Reject weak passwords at creation' },
+                    { id: 'b', textEn: 'Assign passwords automatically' },
+                    { id: 'c', textEn: 'Encrypt passwords' },
+                    { id: 'd', textEn: 'Monitor logins' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                questionEn: 'False nonmatch rate in biometric systems refers to:',
+                options: [
+                    { id: 'a', textEn: 'Rejecting a legitimate user' },
+                    { id: 'b', textEn: 'Accepting an impostor' },
+                    { id: 'c', textEn: 'System crash' },
+                    { id: 'd', textEn: 'Sensor malfunction' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            }
+        ]
+    },
+    principles_of_cybersecurity_quiz2: {
+        id: 'principles_of_cybersecurity_quiz2',
+        title: 'Principles of Cybersecurity - Quiz 2',
+        titleAr: 'مبادئ الأمن السيبراني - كويز 2',
+        icon: '🔒',
+        color: '#E91E63',
+        forceEnglish: true,
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                questionEn: 'A company installs multiple security protections such as firewalls, access controls, and monitoring systems. However, management knows that these controls cannot eliminate all possible security problems, and some level of risk will still exist. What is this remaining level of risk known as?',
+                options: [
+                    { id: 'a', textEn: 'Vulnerability' },
+                    { id: 'b', textEn: 'Exposure' },
+                    { id: 'c', textEn: 'Residual risk' },
+                    { id: 'd', textEn: 'Attack surface' }
+                ],
+                correctAnswer: 'c',
+                marks: 1.0
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                questionEn: 'An organization keeps backup systems and recovery plans to ensure operations continue after an attack. Which concept does this mainly support?',
+                options: [
+                    { id: 'a', textEn: 'Availability' },
+                    { id: 'b', textEn: 'Confidentiality' },
+                    { id: 'c', textEn: 'Authenticity' },
+                    { id: 'd', textEn: 'Integrity' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                questionEn: 'An organization installs backup systems and redundant servers so that services continue running even if one component fails. Which security objective is the company mainly trying to achieve?',
+                options: [
+                    { id: 'a', textEn: 'Improve integrity' },
+                    { id: 'b', textEn: 'Increase availability' },
+                    { id: 'c', textEn: 'Strengthen encryption' },
+                    { id: 'd', textEn: 'Reduce attack surface' }
+                ],
+                correctAnswer: 'b',
+                marks: 1.0
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                questionEn: 'An attacker finds and uses one weak point in a system to gain access, even though the rest of the system is secure. What does this situation demonstrate?',
+                options: [
+                    { id: 'a', textEn: 'Systems with multiple controls cannot be breached' },
+                    { id: 'b', textEn: 'Security eliminates all risks completely' },
+                    { id: 'c', textEn: 'Attackers only need one vulnerability to succeed' },
+                    { id: 'd', textEn: 'Strong security guarantees full protection' }
+                ],
+                correctAnswer: 'c',
+                marks: 1.0
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                questionEn: 'A company separates critical system functions so that no single user can perform all sensitive operations alone. Which security principle does this describe?',
+                options: [
+                    { id: 'a', textEn: 'Least astonishment' },
+                    { id: 'b', textEn: 'Separation of privilege' },
+                    { id: 'c', textEn: 'Encapsulation' },
+                    { id: 'd', textEn: 'Modularity' }
+                ],
+                correctAnswer: 'b',
+                marks: 1.0
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                questionEn: 'A company ensures that sensitive data is encrypted and verified at every step before being stored or transmitted. Which security principle does this demonstrate?',
+                options: [
+                    { id: 'a', textEn: 'Layering' },
+                    { id: 'b', textEn: 'Least privilege' },
+                    { id: 'c', textEn: 'Open design' },
+                    { id: 'd', textEn: 'Data integrity' }
+                ],
+                correctAnswer: 'd',
+                marks: 1.0
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                questionEn: 'A company installs security controls to prevent attacks, detect them, and recover after they occur. Which concept best describes this approach?',
+                options: [
+                    { id: 'a', textEn: 'Countermeasure strategy' },
+                    { id: 'b', textEn: 'Security policy' },
+                    { id: 'c', textEn: 'Attack surface' },
+                    { id: 'd', textEn: 'Vulnerability management' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                questionEn: 'An attacker gains authorized access to a system but then uses that access to perform actions that violate the organization\'s policies, such as running unauthorized programs or accessing resources for unintended purposes. What type of attack action does this represent?',
+                options: [
+                    { id: 'a', textEn: 'Misuse' },
+                    { id: 'b', textEn: 'Obstruction' },
+                    { id: 'c', textEn: 'Falsification' },
+                    { id: 'd', textEn: 'Corruption' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                questionEn: 'A hacker pretends to be a legitimate user to gain access to a system. What type of attack is this?',
+                options: [
+                    { id: 'a', textEn: 'Obstruction' },
+                    { id: 'b', textEn: 'Masquerade' },
+                    { id: 'c', textEn: 'Intrusion' },
+                    { id: 'd', textEn: 'Corruption' }
+                ],
+                correctAnswer: 'b',
+                marks: 1.0
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                questionEn: 'A system records all user activities so that actions can be traced back to a specific person. Which security concept does this support?',
+                options: [
+                    { id: 'a', textEn: 'Availability' },
+                    { id: 'b', textEn: 'Integrity' },
+                    { id: 'c', textEn: 'Confidentiality' },
+                    { id: 'd', textEn: 'Accountability' }
+                ],
+                correctAnswer: 'd',
+                marks: 1.0
+            }
+        ]
+    },
+    principles_of_cybersecurity_quiz3: {
+        id: 'principles_of_cybersecurity_quiz3',
+        title: 'Principles of Cybersecurity - Quiz 3',
+        titleAr: 'مبادئ الأمن السيبراني - كويز 3',
+        icon: '🔒',
+        color: '#E91E63',
+        forceEnglish: true,
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                questionEn: 'An employee opens a Word document that runs a script copying itself into other Word documents and emailing itself. This malware is best classified as:',
+                options: [
+                    { id: 'a', textEn: 'A backdoor' },
+                    { id: 'b', textEn: 'A worm' },
+                    { id: 'c', textEn: 'A macro virus' },
+                    { id: 'd', textEn: 'A rootkit' }
+                ],
+                correctAnswer: 'c',
+                marks: 1.0
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                questionEn: 'Thousands of office computers secretly receive commands from a central server to simultaneously flood a company\'s website with traffic. This coordinated network is best called:',
+                options: [
+                    { id: 'a', textEn: 'Adware' },
+                    { id: 'b', textEn: 'A macro virus' },
+                    { id: 'c', textEn: 'A virus' },
+                    { id: 'd', textEn: 'A botnet' }
+                ],
+                correctAnswer: 'd',
+                marks: 1.0
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                questionEn: 'A rootkit is primarily designed to:',
+                options: [
+                    { id: 'a', textEn: 'Hide its presence on a compromised system and maintain covert access for the attacker.' },
+                    { id: 'b', textEn: 'Speed up the computer\'s operating system.' },
+                    { id: 'c', textEn: 'Encrypt files and demand a ransom payment.' },
+                    { id: 'd', textEn: 'Send promotional emails to a user\'s contact list.' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                questionEn: 'Hidden code in a payroll system sits quietly for months, then deletes all salary records on the company\'s anniversary. This delayed malicious code is called:',
+                options: [
+                    { id: 'a', textEn: 'Adware' },
+                    { id: 'b', textEn: 'A backdoor' },
+                    { id: 'c', textEn: 'A logic bomb' },
+                    { id: 'd', textEn: 'Spyware' }
+                ],
+                correctAnswer: 'c',
+                marks: 1.0
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                questionEn: 'What is the main difference between a virus and a worm?',
+                options: [
+                    { id: 'a', textEn: 'A virus only infects smartphones, while a worm only infects computers.' },
+                    { id: 'b', textEn: 'A virus only spreads through email, while a worm spreads through USB drives.' },
+                    { id: 'c', textEn: 'A virus is always harmless, while a worm always causes damage.' },
+                    { id: 'd', textEn: 'A virus needs a host program to attach to, while a worm is an independent, self-contained program.' }
+                ],
+                correctAnswer: 'd',
+                marks: 1.0
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                questionEn: 'An Advanced Persistent Threat (APT) is best characterized by which of the following?',
+                options: [
+                    { id: 'a', textEn: 'A virus that only activates on a specific holiday each year.' },
+                    { id: 'b', textEn: 'A well-resourced, long-term, targeted attack often attributed to state-sponsored or criminal organizations.' },
+                    { id: 'c', textEn: 'A type of antivirus software that provides real-time protection.' },
+                    { id: 'd', textEn: 'A quick, automated attack that spreads randomly to as many systems as possible.' }
+                ],
+                correctAnswer: 'b',
+                marks: 1.0
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                questionEn: 'A student receives an email saying: \'Your bank account has been locked. Click here immediately to verify your identity.\' This leads to a fake website that looks exactly like the real bank login page. This attack is called:',
+                options: [
+                    { id: 'a', textEn: 'Phishing' },
+                    { id: 'b', textEn: 'A worm' },
+                    { id: 'c', textEn: 'A logic bomb' },
+                    { id: 'd', textEn: 'A rootkit' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                questionEn: 'A virus has three main components. The payload refers to:',
+                options: [
+                    { id: 'a', textEn: 'The event or condition that activates the virus.' },
+                    { id: 'b', textEn: 'The random encryption key used to disguise the virus.' },
+                    { id: 'c', textEn: 'What the virus does besides spreading (such as damaging files or stealing data).' },
+                    { id: 'd', textEn: 'The method the virus uses to hide from antivirus programs.' }
+                ],
+                correctAnswer: 'c',
+                marks: 1.0
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                questionEn: 'A Trojan horse is best described as:',
+                options: [
+                    { id: 'a', textEn: 'A tool used by programmers to debug software.' },
+                    { id: 'b', textEn: 'A type of firewall that blocks incoming malware.' },
+                    { id: 'c', textEn: 'A program that automatically replicates itself across a network.' },
+                    { id: 'd', textEn: 'A program that appears to have a useful function but contains hidden malicious code.' }
+                ],
+                correctAnswer: 'd',
+                marks: 1.0
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                questionEn: 'Which type of malware records every key pressed on the keyboard to steal passwords and sensitive information?',
+                options: [
+                    { id: 'a', textEn: 'Ransomware' },
+                    { id: 'b', textEn: 'Keylogger' },
+                    { id: 'c', textEn: 'Spyware' },
+                    { id: 'd', textEn: 'Adware' }
+                ],
+                correctAnswer: 'b',
+                marks: 1.0
+            }
+        ]
+    },
+    principles_of_cybersecurity_quiz4: {
+        id: 'principles_of_cybersecurity_quiz4',
+        title: 'Principles of Cybersecurity - Quiz 4',
+        titleAr: 'مبادئ الأمن السيبراني - كويز 4',
+        icon: '🔒',
+        color: '#E91E63',
+        forceEnglish: true,
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                questionEn: 'Eavesdropping is considered as an active attack?',
+                options: [
+                    { id: 'a', textEn: 'True' },
+                    { id: 'b', textEn: 'False' }
+                ],
+                correctAnswer: 'b',
+                explanation: 'Eavesdropping is a passive attack because it involves monitoring or listening to transmissions without modifying the data or affecting system resources.',
+                marks: 1.0
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                questionEn: 'One of the following is not a software asset in a computer system?',
+                options: [
+                    { id: 'a', textEn: 'System Utility' },
+                    { id: 'b', textEn: 'Applications' },
+                    { id: 'c', textEn: 'Password files' },
+                    { id: 'd', textEn: 'Operating System' }
+                ],
+                correctAnswer: 'c',
+                explanation: 'Password files are classified as Data assets, not software assets. Software assets include the operating system, system utilities, and application programs.',
+                marks: 1.0
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                questionEn: 'Which level of impact for loss has a severe adverse effect on organizational operations, organizational assets, or individuals?',
+                options: [
+                    { id: 'a', textEn: 'Low' },
+                    { id: 'b', textEn: 'Medium' },
+                    { id: 'c', textEn: 'High' }
+                ],
+                correctAnswer: 'c',
+                explanation: 'According to FIPS 199, a high-impact loss is defined as having a severe or catastrophic adverse effect on organizational operations, assets, or individuals.',
+                marks: 1.0
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                questionEn: 'Select the appropriate concept for the definition: "Generate the requirement for actions of an entity to be traced uniquely to that entity"',
+                options: [
+                    { id: 'a', textEn: 'Confidentiality' },
+                    { id: 'b', textEn: 'Integrity' },
+                    { id: 'c', textEn: 'Availability' },
+                    { id: 'd', textEn: 'Accountability' }
+                ],
+                correctAnswer: 'd',
+                marks: 1.0
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                questionEn: 'Select the appropriate concept for the definition: "Ensure timely and reliable access to and use of information"',
+                options: [
+                    { id: 'a', textEn: 'Confidentiality' },
+                    { id: 'b', textEn: 'Integrity' },
+                    { id: 'c', textEn: 'Availability' },
+                    { id: 'd', textEn: 'Accountability' }
+                ],
+                correctAnswer: 'c',
+                marks: 1.0
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                questionEn: 'One of the following is not a hardware asset in computer system?',
+                options: [
+                    { id: 'a', textEn: 'data storage' },
+                    { id: 'b', textEn: 'database' },
+                    { id: 'c', textEn: 'data communication device' },
+                    { id: 'd', textEn: 'router' }
+                ],
+                correctAnswer: 'b',
+                explanation: 'A database is a Data asset, not a Hardware asset. Data storage devices, data communication devices, and routers are physical hardware components.',
+                marks: 1.0
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                questionEn: 'Masquerade is considered as an active attack?',
+                options: [
+                    { id: 'a', textEn: 'True' },
+                    { id: 'b', textEn: 'False' }
+                ],
+                correctAnswer: 'a',
+                explanation: 'Yes, masquerade is an active attack where one entity pretends to be a different entity to gain unauthorized privileges.',
+                marks: 1.0
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                questionEn: 'Select the appropriate concept for the definition: "Preserve authorized restrictions on information access and disclosure, including means for protecting personal privacy and proprietary information"',
+                options: [
+                    { id: 'a', textEn: 'Confidentiality' },
+                    { id: 'b', textEn: 'Integrity' },
+                    { id: 'c', textEn: 'Availability' },
+                    { id: 'd', textEn: 'Authenticity' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                questionEn: 'Select the appropriate concept for the definition: "The property of being genuine and being able to be verified and trusted"',
+                options: [
+                    { id: 'a', textEn: 'Confidentiality' },
+                    { id: 'b', textEn: 'Integrity' },
+                    { id: 'c', textEn: 'Availability' },
+                    { id: 'd', textEn: 'Authenticity' }
+                ],
+                correctAnswer: 'd',
+                marks: 1.0
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                questionEn: 'Select the appropriate concept for the definition: "Guarding against improper information modification or destruction, and includes ensuring information non-repudiation and authenticity"',
+                options: [
+                    { id: 'a', textEn: 'Confidentiality' },
+                    { id: 'b', textEn: 'Integrity' },
+                    { id: 'c', textEn: 'Availability' },
+                    { id: 'd', textEn: 'Authenticity' }
+                ],
+                correctAnswer: 'b',
+                marks: 1.0
+            }
+        ]
     }
 };
 
@@ -5562,6 +6123,20 @@ export const quizCategories = [
         parts: [
             { id: 'df_os_quiz1', title: 'Quiz 1', titleAr: 'كويز 1' },
             { id: 'df_os_quiz2', title: 'Quiz 2', titleAr: 'كويز 2' }
+        ]
+    },
+    {
+        id: 'principles_of_cybersecurity',
+        name: 'Principles of Cybersecurity',
+        nameAr: 'مبادئ الأمن السيبراني',
+        icon: '🔒',
+        color: '#E91E63',
+        isNew: true,
+        parts: [
+            { id: 'principles_of_cybersecurity_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' },
+            { id: 'principles_of_cybersecurity_quiz2', title: 'Quiz 2', titleAr: 'الكويز الثاني' },
+            { id: 'principles_of_cybersecurity_quiz3', title: 'Quiz 3', titleAr: 'الكويز الثالث' },
+            { id: 'principles_of_cybersecurity_quiz4', title: 'Quiz 4', titleAr: 'الكويز الرابع' }
         ]
     }
 ];
