@@ -282,7 +282,7 @@ export const quizData = {
     oop_final: {
         id: 'oop_final',
         title: 'Final Past Papers',
-        titleAr: 'أسئلة سنوات فاينل',
+        titleAr: 'أسئلة فاينل',
         icon: '💻',
         color: '#2196F3',
         forceEnglish: true,
@@ -3276,7 +3276,7 @@ export const quizData = {
     ml_final: {
         id: 'ml_final',
         title: 'Final Past Papers',
-        titleAr: 'أسئلة سنوات فاينل',
+        titleAr: 'أسئلة فاينل',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -4330,6 +4330,2161 @@ export const quizData = {
             }
         ]
     },
+
+    intro_law_quizzes: {
+        id: 'intro_law_quizzes',
+        title: 'Introduction to Law - Quizzes',
+        titleAr: 'مدخل إلى علم القانون - الكويزات',
+        icon: '⚖️',
+        color: '#795548',
+        parts: [
+            { id: 'intro_law_quiz1', title: 'Quiz 1', titleAr: 'الجزء الأول' },
+            { id: 'intro_law_quiz2', title: 'Quiz 2', titleAr: 'الجزء الثاني' },
+            { id: 'intro_law_quiz3', title: 'Quiz 3', titleAr: 'الجزء الثالث' }
+        ]
+    },
+
+    intro_law_final: {
+        id: 'intro_law_final',
+        title: 'Introduction to Law Final Exam - Past Papers',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل',
+        icon: '⚖️',
+        color: '#795548',
+        parts: [
+            { id: 'intro_law_final_p1', title: 'Part 1', titleAr: 'الجزء الأول' },
+            { id: 'intro_law_final_p2', title: 'Part 2', titleAr: 'الجزء الثاني' },
+            { id: 'intro_law_final_p3', title: 'Part 3', titleAr: 'الجزء الثالث' },
+            { id: 'intro_law_final_p4', title: 'Part 4', titleAr: 'الجزء الرابع' },
+            { id: 'intro_law_final_p5', title: 'Part 5', titleAr: 'الجزء الخامس' },
+            { id: 'intro_law_final_p6', title: 'Part 6', titleAr: 'الجزء السادس' },
+            { id: 'intro_law_final_p7', title: 'Part 7', titleAr: 'الجزء السابع' },
+            { id: 'intro_law_final_p8', title: 'Part 8', titleAr: 'الجزء الثامن' }
+        ]
+    },
+
+    intro_law_final_p1: {
+        id: 'intro_law_final_p1',
+        title: 'Introduction to Law Final - Part 1 (Q1-20)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الأول',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يقصد بالقاعدة القانونية أنها:',
+                options: [
+                    { id: 'a', textAr: 'قاعدة سلوكية اجتماعية ملزمة' },
+                    { id: 'b', textAr: 'قاعدة أخلاقية غير ملزمة' },
+                    { id: 'c', textAr: 'قاعدة دينية فقط' },
+                    { id: 'd', textAr: 'قاعدة تنظيمية اختيارية' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'ما الجزاء المترتب على مخالفة القاعدة القانونية؟',
+                options: [
+                    { id: 'a', textAr: 'اللوم الاجتماعي' },
+                    { id: 'b', textAr: 'الجزاء القانوني' },
+                    { id: 'c', textAr: 'الجزاء الديني فقط' },
+                    { id: 'd', textAr: 'الجزاء الأخلاقي' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تتميز القاعدة القانونية بأنها:',
+                options: [
+                    { id: 'a', textAr: 'عامة ومجردة' },
+                    { id: 'b', textAr: 'شخصية' },
+                    { id: 'c', textAr: 'اختيارية' },
+                    { id: 'd', textAr: 'مؤقتة' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الفرق الجوهري بين القاعدة القانونية والقاعدة الأخلاقية هو:',
+                options: [
+                    { id: 'a', textAr: 'الجزاء' },
+                    { id: 'b', textAr: 'الغاية' },
+                    { id: 'c', textAr: 'المصدر' },
+                    { id: 'd', textAr: 'الزمن' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي مما يلي يعد من مصادر القاعدة القانونية الرسمية؟',
+                options: [
+                    { id: 'a', textAr: 'التشريع' },
+                    { id: 'b', textAr: 'الأخلاق' },
+                    { id: 'c', textAr: 'العادات الاجتماعية' },
+                    { id: 'd', textAr: 'الدين' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'التشريع هو:',
+                options: [
+                    { id: 'a', textAr: 'قاعدة تصدر عن السلطة المختصة' },
+                    { id: 'b', textAr: 'قاعدة عرفية' },
+                    { id: 'c', textAr: 'قاعدة دينية' },
+                    { id: 'd', textAr: 'قاعدة أخلاقية' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'العرف كمصدر للقانون يشترط فيه:',
+                options: [
+                    { id: 'a', textAr: 'الاعتياد والاعتقاد بالإلزام' },
+                    { id: 'b', textAr: 'الكتابة' },
+                    { id: 'c', textAr: 'صدوره عن البرلمان' },
+                    { id: 'd', textAr: 'الجزاء الأخلاقي' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يقصد بعمومية القاعدة القانونية:',
+                options: [
+                    { id: 'a', textAr: 'تطبق على الجميع دون تخصيص' },
+                    { id: 'b', textAr: 'تطبق على فئة معينة' },
+                    { id: 'c', textAr: 'تطبق مؤقتًا' },
+                    { id: 'd', textAr: 'تطبق على حالة فردية' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية مقرونة بجزاء:',
+                options: [
+                    { id: 'a', textAr: 'مادي توقعه السلطة العامة' },
+                    { id: 'b', textAr: 'أدبي فقط' },
+                    { id: 'c', textAr: 'ديني' },
+                    { id: 'd', textAr: 'اختياري' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون العام ينظم:',
+                options: [
+                    { id: 'a', textAr: 'علاقة الدولة بالأفراد' },
+                    { id: 'b', textAr: 'علاقة الأفراد ببعضهم' },
+                    { id: 'c', textAr: 'المعاملات التجارية فقط' },
+                    { id: 'd', textAr: 'الأحوال الشخصية فقط' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الخاص ينظم:',
+                options: [
+                    { id: 'a', textAr: 'علاقات الأفراد بعضهم ببعض' },
+                    { id: 'b', textAr: 'علاقات الدولة الدولية' },
+                    { id: 'c', textAr: 'الجرائم والعقوبات' },
+                    { id: 'd', textAr: 'السلطات العامة' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الدستوري يندرج ضمن:',
+                options: [
+                    { id: 'a', textAr: 'القانون العام' },
+                    { id: 'b', textAr: 'القانون الخاص' },
+                    { id: 'c', textAr: 'القانون المختلط' },
+                    { id: 'd', textAr: 'القانون الدولي' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الجزاء الجنائي يتمثل في:',
+                options: [
+                    { id: 'a', textAr: 'العقوبة' },
+                    { id: 'b', textAr: 'التعويض' },
+                    { id: 'c', textAr: 'البطلان' },
+                    { id: 'd', textAr: 'الفسخ' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الجزاء المدني يهدف إلى:',
+                options: [
+                    { id: 'a', textAr: 'جبر الضرر' },
+                    { id: 'b', textAr: 'العقاب' },
+                    { id: 'c', textAr: 'الردع العام' },
+                    { id: 'd', textAr: 'القصاص' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الجزاء الإداري يوقع على:',
+                options: [
+                    { id: 'a', textAr: 'الموظف العام' },
+                    { id: 'b', textAr: 'القاضي' },
+                    { id: 'c', textAr: 'الفرد العادي' },
+                    { id: 'd', textAr: 'المشرع' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية ملزمة لأنها:',
+                options: [
+                    { id: 'a', textAr: 'تصدر عن سلطة عامة' },
+                    { id: 'b', textAr: 'تتفق مع الأخلاق' },
+                    { id: 'c', textAr: 'تنسجم مع العرف' },
+                    { id: 'd', textAr: 'تحقق الرضا الاجتماعي فقط' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'من خصائص القاعدة القانونية أنها:',
+                options: [
+                    { id: 'a', textAr: 'اجتماعية' },
+                    { id: 'b', textAr: 'فردية' },
+                    { id: 'c', textAr: 'شخصية' },
+                    { id: 'd', textAr: 'استثنائية' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية تختلف عن القاعدة الدينية من حيث:',
+                options: [
+                    { id: 'a', textAr: 'الجزاء' },
+                    { id: 'b', textAr: 'المصدر الإلهي' },
+                    { id: 'c', textAr: 'السلوك' },
+                    { id: 'd', textAr: 'الغاية' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'التدرج في القواعد القانونية يعني:',
+                options: [
+                    { id: 'a', textAr: 'تفاوت قوتها الإلزامية' },
+                    { id: 'b', textAr: 'تعدد مصادرها' },
+                    { id: 'c', textAr: 'تشابهها' },
+                    { id: 'd', textAr: 'عدم تعارضها' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أسمى القواعد القانونية في الدولة هو:',
+                options: [
+                    { id: 'a', textAr: 'الدستور' },
+                    { id: 'b', textAr: 'القانون العادي' },
+                    { id: 'c', textAr: 'اللوائح' },
+                    { id: 'd', textAr: 'العرف' }
+                ],
+                correctAnswer: 'a'
+            }
+        ]
+    },
+
+    intro_law_final_p2: {
+        id: 'intro_law_final_p2',
+        title: 'Introduction to Law Final - Part 2 (Q21-40)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الثاني',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يُقصد بالقانون العام بأنه:',
+                options: [
+                    { id: 'a', textAr: 'العلاقات بين الأفراد' },
+                    { id: 'b', textAr: 'علاقة الدولة بالأفراد' },
+                    { id: 'c', textAr: 'العلاقات التجارية' },
+                    { id: 'd', textAr: 'العلاقات العائلية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يتميز القانون العام عن القانون الخاص بأن:',
+                options: [
+                    { id: 'a', textAr: 'يحقق مصلحة فردية' },
+                    { id: 'b', textAr: 'يحقق المصلحة العامة' },
+                    { id: 'c', textAr: 'يختص بالأفراد فقط' },
+                    { id: 'd', textAr: 'لا جزاء له' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'من فروع القانون العام الداخلي:',
+                options: [
+                    { id: 'a', textAr: 'القانون التجاري' },
+                    { id: 'b', textAr: 'القانون المدني' },
+                    { id: 'c', textAr: 'القانون الدستوري' },
+                    { id: 'd', textAr: 'قانون الأسرة' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الدستوري يختص بـ:',
+                options: [
+                    { id: 'a', textAr: 'تنظيم المعاملات' },
+                    { id: 'b', textAr: 'تنظيم شؤون الأسرة' },
+                    { id: 'c', textAr: 'تنظيم السلطة في الدولة' },
+                    { id: 'd', textAr: 'تنظيم العقود' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الإداري ينظم:',
+                options: [
+                    { id: 'a', textAr: 'العلاقات الدولية' },
+                    { id: 'b', textAr: 'نشاط الإدارة العامة' },
+                    { id: 'c', textAr: 'الجرائم والعقوبات' },
+                    { id: 'd', textAr: 'الأحوال الشخصية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'من خصائص القاعدة القانونية أنها:',
+                options: [
+                    { id: 'a', textAr: 'اختيارية' },
+                    { id: 'b', textAr: 'عامة ومجردة' },
+                    { id: 'c', textAr: 'أخلاقية' },
+                    { id: 'd', textAr: 'دينية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الجزاء في القاعدة القانونية يكون:',
+                options: [
+                    { id: 'a', textAr: 'أدبي' },
+                    { id: 'b', textAr: 'ديني' },
+                    { id: 'c', textAr: 'مادي توقعه الدولة' },
+                    { id: 'd', textAr: 'اجتماعي' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية ذات طبيعة:',
+                options: [
+                    { id: 'a', textAr: 'فردية' },
+                    { id: 'b', textAr: 'شخصية' },
+                    { id: 'c', textAr: 'عامة' },
+                    { id: 'd', textAr: 'استثنائية' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الفرق الأساسي بين القانون العام والخاص هو:',
+                options: [
+                    { id: 'a', textAr: 'نوع الجزاء' },
+                    { id: 'b', textAr: 'طبيعة الأطراف' },
+                    { id: 'c', textAr: 'مصدر القاعدة' },
+                    { id: 'd', textAr: 'شكل القاعدة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الجنائي يهدف إلى:',
+                options: [
+                    { id: 'a', textAr: 'تنظيم العقود' },
+                    { id: 'b', textAr: 'حماية المجتمع' },
+                    { id: 'c', textAr: 'تنظيم الأسرة' },
+                    { id: 'd', textAr: 'تنظيم الإدارة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'من مصادر القانون:',
+                options: [
+                    { id: 'a', textAr: 'العرف فقط' },
+                    { id: 'b', textAr: 'التشريع فقط' },
+                    { id: 'c', textAr: 'التشريع والعرف' },
+                    { id: 'd', textAr: 'القضاء فقط' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'العرف كمصدر للقانون يشترط فيه:',
+                options: [
+                    { id: 'a', textAr: 'الاستمرار فقط' },
+                    { id: 'b', textAr: 'القِدم فقط' },
+                    { id: 'c', textAr: 'الإلزام مع الاستقرار' },
+                    { id: 'd', textAr: 'العلنية' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية تختلف عن القاعدة الأخلاقية من حيث:',
+                options: [
+                    { id: 'a', textAr: 'الجزاء' },
+                    { id: 'b', textAr: 'المصدر' },
+                    { id: 'c', textAr: 'الهدف' },
+                    { id: 'd', textAr: 'النطاق' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الدولي العام ينظم:',
+                options: [
+                    { id: 'a', textAr: 'الأفراد داخل الدولة' },
+                    { id: 'b', textAr: 'العلاقات بين الدول' },
+                    { id: 'c', textAr: 'الجرائم' },
+                    { id: 'd', textAr: 'العقود' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الدولي الخاص يهتم بـ:',
+                options: [
+                    { id: 'a', textAr: 'العلاقات ذات العنصر الأجنبي' },
+                    { id: 'b', textAr: 'الجرائم الدولية' },
+                    { id: 'c', textAr: 'المعاهدات' },
+                    { id: 'd', textAr: 'حقوق الإنسان' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'السلطة العامة في الدولة تتمثل في:',
+                options: [
+                    { id: 'a', textAr: 'السلطة التشريعية فقط' },
+                    { id: 'b', textAr: 'السلطة التنفيذية فقط' },
+                    { id: 'c', textAr: 'السلطات الثلاث' },
+                    { id: 'd', textAr: 'السلطة القضائية فقط' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية عامة بمعنى أنها:',
+                options: [
+                    { id: 'a', textAr: 'تطبق على شخص معين' },
+                    { id: 'b', textAr: 'تطبق على فئة غير محددة' },
+                    { id: 'c', textAr: 'مؤقتة' },
+                    { id: 'd', textAr: 'اختيارية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية مجردة أي أنها:',
+                options: [
+                    { id: 'a', textAr: 'تخاطب حالة معينة' },
+                    { id: 'b', textAr: 'تطبق على واقعة مستقبلية غير محددة' },
+                    { id: 'c', textAr: 'فردية' },
+                    { id: 'd', textAr: 'استثنائية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الهدف الأساسي من سن القوانين هو:',
+                options: [
+                    { id: 'a', textAr: 'تحقيق العدالة والنظام' },
+                    { id: 'b', textAr: 'تحقيق الربح' },
+                    { id: 'c', textAr: 'تحقيق الأخلاق' },
+                    { id: 'd', textAr: 'تحقيق العادات' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الجزاء القانوني يهدف إلى:',
+                options: [
+                    { id: 'a', textAr: 'الانتقام' },
+                    { id: 'b', textAr: 'الردع والتنظيم' },
+                    { id: 'c', textAr: 'العقاب فقط' },
+                    { id: 'd', textAr: 'الإيذاء' }
+                ],
+                correctAnswer: 'b'
+            }
+        ]
+    },
+
+    intro_law_final_p3: {
+        id: 'intro_law_final_p3',
+        title: 'Introduction to Law Final - Part 3 (Q41-60)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الثالث',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يقصد بالتفسير التشريعي بأنه:',
+                options: [
+                    { id: 'a', textAr: 'تفسير يصدر عن القضاء' },
+                    { id: 'b', textAr: 'تفسير يصدر عن الفقه' },
+                    { id: 'c', textAr: 'تفسير يصدر عن المشرّع نفسه' },
+                    { id: 'd', textAr: 'تفسير عرفي' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'التفسير القضائي يتم بواسطة:',
+                options: [
+                    { id: 'a', textAr: 'السلطة التنفيذية' },
+                    { id: 'b', textAr: 'المشرّع' },
+                    { id: 'c', textAr: 'القاضي عند تطبيق القانون' },
+                    { id: 'd', textAr: 'الفقهاء فقط' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'من خصائص التفسير التشريعي:',
+                options: [
+                    { id: 'a', textAr: 'غير ملزم' },
+                    { id: 'b', textAr: 'ملزم وله قوة القانون' },
+                    { id: 'c', textAr: 'مؤقت' },
+                    { id: 'd', textAr: 'يقتصر على حالة واحدة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية غير المكتوبة تتمثل في:',
+                options: [
+                    { id: 'a', textAr: 'التشريع' },
+                    { id: 'b', textAr: 'القضاء' },
+                    { id: 'c', textAr: 'العرف' },
+                    { id: 'd', textAr: 'الدستور' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'العرف لا يُعتد به كمصدر قانوني إلا إذا:',
+                options: [
+                    { id: 'a', textAr: 'خالف التشريع' },
+                    { id: 'b', textAr: 'استقر وثبت واستمر' },
+                    { id: 'c', textAr: 'كان حديثاً' },
+                    { id: 'd', textAr: 'ورد في حكم قضائي' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'التدرج في القواعد القانونية يعني:',
+                options: [
+                    { id: 'a', textAr: 'تساوي القواعد القانونية' },
+                    { id: 'b', textAr: 'خضوع القاعدة الأدنى للأعلى' },
+                    { id: 'c', textAr: 'استقلال كل قاعدة' },
+                    { id: 'd', textAr: 'أولوية العرف' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أعلى مرتبة في القواعد القانونية هي:',
+                options: [
+                    { id: 'a', textAr: 'القانون العادي' },
+                    { id: 'b', textAr: 'النظام' },
+                    { id: 'c', textAr: 'الدستور' },
+                    { id: 'd', textAr: 'التعليمات' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'إذا تعارض القانون مع الدستور:',
+                options: [
+                    { id: 'a', textAr: 'يطبق القانون' },
+                    { id: 'b', textAr: 'يطبق الدستور' },
+                    { id: 'c', textAr: 'يطبق الأحدث' },
+                    { id: 'd', textAr: 'يطبق العرف' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'المقصود بإلغاء التشريع هو:',
+                options: [
+                    { id: 'a', textAr: 'تفسيره' },
+                    { id: 'b', textAr: 'تعديله جزئياً' },
+                    { id: 'c', textAr: 'إنهاء العمل به' },
+                    { id: 'd', textAr: 'نشره' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الإلغاء الصريح يكون عن طريق:',
+                options: [
+                    { id: 'a', textAr: 'العرف' },
+                    { id: 'b', textAr: 'حكم قضائي' },
+                    { id: 'c', textAr: 'نص تشريعي جديد' },
+                    { id: 'd', textAr: 'تفسير فقهي' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الإلغاء الضمني يحدث عندما:',
+                options: [
+                    { id: 'a', textAr: 'يذكر صراحة' },
+                    { id: 'b', textAr: 'يصدر تشريع جديد متعارض' },
+                    { id: 'c', textAr: 'يتوقف العمل بالقانون' },
+                    { id: 'd', textAr: 'ينقضي الزمن' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية تتصف بأنها:',
+                options: [
+                    { id: 'a', textAr: 'شخصية' },
+                    { id: 'b', textAr: 'مجردة وعامة' },
+                    { id: 'c', textAr: 'مؤقتة' },
+                    { id: 'd', textAr: 'اختيارية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'المصدر الرسمي الأصلي للقانون هو:',
+                options: [
+                    { id: 'a', textAr: 'العرف' },
+                    { id: 'b', textAr: 'القضاء' },
+                    { id: 'c', textAr: 'التشريع' },
+                    { id: 'd', textAr: 'الفقه' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'المصدر الاحتياطي للقانون هو:',
+                options: [
+                    { id: 'a', textAr: 'التشريع' },
+                    { id: 'b', textAr: 'القضاء' },
+                    { id: 'c', textAr: 'العرف' },
+                    { id: 'd', textAr: 'الدستور' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الفقه القانوني يقصد به:',
+                options: [
+                    { id: 'a', textAr: 'أحكام القضاء' },
+                    { id: 'b', textAr: 'آراء الفقهاء' },
+                    { id: 'c', textAr: 'العرف' },
+                    { id: 'd', textAr: 'الدستور' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'وظيفة التفسير هي:',
+                options: [
+                    { id: 'a', textAr: 'إنشاء قانون جديد' },
+                    { id: 'b', textAr: 'إلغاء النص' },
+                    { id: 'c', textAr: 'توضيح معنى النص' },
+                    { id: 'd', textAr: 'تعطيل النص' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'عند غموض النص يلجأ القاضي إلى:',
+                options: [
+                    { id: 'a', textAr: 'الامتناع عن الحكم' },
+                    { id: 'b', textAr: 'القياس والاجتهاد' },
+                    { id: 'c', textAr: 'إلغاء النص' },
+                    { id: 'd', textAr: 'العرف فقط' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'النص الخاص يقيد:',
+                options: [
+                    { id: 'a', textAr: 'النص الخاص' },
+                    { id: 'b', textAr: 'النص العام' },
+                    { id: 'c', textAr: 'العرف' },
+                    { id: 'd', textAr: 'الفقه' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'التشريع العادي يصدر عن:',
+                options: [
+                    { id: 'a', textAr: 'السلطة القضائية' },
+                    { id: 'b', textAr: 'السلطة التنفيذية' },
+                    { id: 'c', textAr: 'السلطة التشريعية' },
+                    { id: 'd', textAr: 'الفقهاء' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية الجزائية تتميز بأنها:',
+                options: [
+                    { id: 'a', textAr: 'اختيارية' },
+                    { id: 'b', textAr: 'أخلاقية' },
+                    { id: 'c', textAr: 'مقرونة بجزاء' },
+                    { id: 'd', textAr: 'غير ملزمة' }
+                ],
+                correctAnswer: 'c'
+            }
+        ]
+    },
+
+    intro_law_final_p4: {
+        id: 'intro_law_final_p4',
+        title: 'Introduction to Law Final - Part 4 (Q61-80)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الرابع',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'ما المقصود بالعرف كمصدر من مصادر القاعدة القانونية؟',
+                options: [
+                    { id: 'a', textAr: 'قاعدة مكتوبة تصدر عن السلطة التشريعية' },
+                    { id: 'b', textAr: 'سلوك اعتاد الناس على اتباعه مع الاعتقاد بإلزامه' },
+                    { id: 'c', textAr: 'اجتهاد قضائي صادر عن المحاكم' },
+                    { id: 'd', textAr: 'قاعدة فقهية غير ملزمة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'ما الركن المعنوي للعرف؟',
+                options: [
+                    { id: 'a', textAr: 'اعتياد الناس على سلوك معين' },
+                    { id: 'b', textAr: 'الاعتقاد بإلزام هذا السلوك' },
+                    { id: 'c', textAr: 'مرور مدة زمنية طويلة' },
+                    { id: 'd', textAr: 'عدم مخالفته للنظام العام' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يشترط في العرف حتى يكون ملزماً أن يكون:',
+                options: [
+                    { id: 'a', textAr: 'مكتوباً' },
+                    { id: 'b', textAr: 'قديماً فقط' },
+                    { id: 'c', textAr: 'عاماً ومستقراً' },
+                    { id: 'd', textAr: 'صادراً عن القضاء' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي مما يلي يعد من وظائف محكمة التمييز؟',
+                options: [
+                    { id: 'a', textAr: 'الفصل في الوقائع' },
+                    { id: 'b', textAr: 'تفسير القانون وتوحيد تطبيقه' },
+                    { id: 'c', textAr: 'إعادة سماع الشهود' },
+                    { id: 'd', textAr: 'تعديل الوقائع' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاضي عند غياب النص التشريعي يرجع أولاً إلى:',
+                options: [
+                    { id: 'a', textAr: 'الفقه' },
+                    { id: 'b', textAr: 'العرف' },
+                    { id: 'c', textAr: 'مبادئ العدالة' },
+                    { id: 'd', textAr: 'السوابق القضائية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي مما يلي لا يعد من مصادر القاعدة القانونية الرسمية؟',
+                options: [
+                    { id: 'a', textAr: 'التشريع' },
+                    { id: 'b', textAr: 'العرف' },
+                    { id: 'c', textAr: 'القضاء' },
+                    { id: 'd', textAr: 'الشريعة الإسلامية' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة التي تقرر عدم جواز الاعتذار بجهل القانون تعني:',
+                options: [
+                    { id: 'a', textAr: 'افتراض علم الجميع بالقانون' },
+                    { id: 'b', textAr: 'عدم نشر القوانين' },
+                    { id: 'c', textAr: 'جواز مخالفة القانون' },
+                    { id: 'd', textAr: 'عدم إلزام الأجانب بالقانون' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'متى يبدأ سريان القانون؟',
+                options: [
+                    { id: 'a', textAr: 'من تاريخ صدوره' },
+                    { id: 'b', textAr: 'من تاريخ نشره' },
+                    { id: 'c', textAr: 'من تاريخ العمل به' },
+                    { id: 'd', textAr: 'من تاريخ إقراره' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الأصل في تطبيق القانون من حيث الزمان هو:',
+                options: [
+                    { id: 'a', textAr: 'الأثر الرجعي' },
+                    { id: 'b', textAr: 'الأثر الفوري' },
+                    { id: 'c', textAr: 'الأثر المستقبلي فقط' },
+                    { id: 'd', textAr: 'الأثر الشخصي' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاعدة القانونية تتميز بأنها:',
+                options: [
+                    { id: 'a', textAr: 'اختيارية' },
+                    { id: 'b', textAr: 'ملزمة' },
+                    { id: 'c', textAr: 'فردية' },
+                    { id: 'd', textAr: 'مؤقتة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'العرف المكمل للتشريع يعني:',
+                options: [
+                    { id: 'a', textAr: 'إلغاء النص التشريعي' },
+                    { id: 'b', textAr: 'تفسير النص التشريعي' },
+                    { id: 'c', textAr: 'سد النقص في التشريع' },
+                    { id: 'd', textAr: 'مخالفة التشريع' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يشترط في العرف ألا يخالف:',
+                options: [
+                    { id: 'a', textAr: 'المصلحة الخاصة' },
+                    { id: 'b', textAr: 'النظام العام والآداب' },
+                    { id: 'c', textAr: 'إرادة الأفراد' },
+                    { id: 'd', textAr: 'القضاء' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'من نتائج مبدأ عدم رجعية القوانين:',
+                options: [
+                    { id: 'a', textAr: 'تطبيق القانون الجديد على الماضي' },
+                    { id: 'b', textAr: 'حماية الحقوق المكتسبة' },
+                    { id: 'c', textAr: 'إلغاء الأحكام السابقة' },
+                    { id: 'd', textAr: 'إهدار المراكز القانونية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القاضي في النظام اللاتيني:',
+                options: [
+                    { id: 'a', textAr: 'ينشئ القاعدة القانونية' },
+                    { id: 'b', textAr: 'يطبق القانون فقط' },
+                    { id: 'c', textAr: 'غير ملزم بالنص' },
+                    { id: 'd', textAr: 'يعتمد على السوابق' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القواعد التفسيرية للقانون تهدف إلى:',
+                options: [
+                    { id: 'a', textAr: 'تعديل النص' },
+                    { id: 'b', textAr: 'إلغاء النص' },
+                    { id: 'c', textAr: 'توضيح قصد المشرع' },
+                    { id: 'd', textAr: 'استبدال النص' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الفقه القانوني يتمثل في:',
+                options: [
+                    { id: 'a', textAr: 'آراء القضاة' },
+                    { id: 'b', textAr: 'آراء رجال القانون' },
+                    { id: 'c', textAr: 'القوانين المكتوبة' },
+                    { id: 'd', textAr: 'الأعراف' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تطبيق القانون من حيث المكان يعني:',
+                options: [
+                    { id: 'a', textAr: 'سريانه على المواطنين فقط' },
+                    { id: 'b', textAr: 'سريانه داخل إقليم الدولة' },
+                    { id: 'c', textAr: 'سريانه خارج الدولة' },
+                    { id: 'd', textAr: 'عدم سريانه على الأجانب' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي مما يلي يعد من عيوب العرف؟',
+                options: [
+                    { id: 'a', textAr: 'المرونة' },
+                    { id: 'b', textAr: 'البطء في النشوء' },
+                    { id: 'c', textAr: 'الاستقرار' },
+                    { id: 'd', textAr: 'الملاءمة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'محكمة التمييز لا تتدخل في:',
+                options: [
+                    { id: 'a', textAr: 'تفسير القانون' },
+                    { id: 'b', textAr: 'تطبيق القانون' },
+                    { id: 'c', textAr: 'تقدير الوقائع' },
+                    { id: 'd', textAr: 'توحيد الاجتهاد' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الأصل أن القاضي عند تعارض العرف مع التشريع:',
+                options: [
+                    { id: 'a', textAr: 'يطبق العرف' },
+                    { id: 'b', textAr: 'يطبق التشريع' },
+                    { id: 'c', textAr: 'يطبق العدالة' },
+                    { id: 'd', textAr: 'يوقف الدعوى' }
+                ],
+                correctAnswer: 'b'
+            }
+        ]
+    },
+
+    intro_law_final_p5: {
+        id: 'intro_law_final_p5',
+        title: 'Introduction to Law Final - Part 5 (Q81-100)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الخامس',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يقوم مبدأ عدم رجعية القوانين على أن:',
+                options: [
+                    { id: 'a', textAr: 'المستقبل فقط' },
+                    { id: 'b', textAr: 'الماضي فقط' },
+                    { id: 'c', textAr: 'الماضي والمستقبل' },
+                    { id: 'd', textAr: 'لا شيء مما ذكر' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'ما المقصود بالحق المكتسب في النظرية التقليدية؟',
+                options: [
+                    { id: 'a', textAr: 'أمل قانوني' },
+                    { id: 'b', textAr: 'مركز قانوني مكتمل' },
+                    { id: 'c', textAr: 'توقع مستقبلي' },
+                    { id: 'd', textAr: 'واقعة مادية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الأثر المباشر للقانون يعني:',
+                options: [
+                    { id: 'a', textAr: 'تطبيق القانون القديم' },
+                    { id: 'b', textAr: 'تطبيق القانون الجديد فوراً' },
+                    { id: 'c', textAr: 'الرجوع للماضي' },
+                    { id: 'd', textAr: 'إلغاء القوانين' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تسري القاعدة القانونية الجديدة من حيث الزمان على:',
+                options: [
+                    { id: 'a', textAr: 'الوقائع السابقة' },
+                    { id: 'b', textAr: 'الوقائع اللاحقة' },
+                    { id: 'c', textAr: 'جميع الوقائع' },
+                    { id: 'd', textAr: 'الوقائع المنتهية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يُقصد بمبدأ شخصية القانون أنه:',
+                options: [
+                    { id: 'a', textAr: 'يسري على المواطنين فقط' },
+                    { id: 'b', textAr: 'يسري على الإقليم' },
+                    { id: 'c', textAr: 'يسري على الأشخاص دون إقليم' },
+                    { id: 'd', textAr: 'يسري على الوقائع' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تُطبق القوانين الجنائية من حيث المكان وفق مبدأ:',
+                options: [
+                    { id: 'a', textAr: 'الشخصية' },
+                    { id: 'b', textAr: 'العينية' },
+                    { id: 'c', textAr: 'الإقليمية' },
+                    { id: 'd', textAr: 'العالمية' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الاستثناء على مبدأ عدم رجعية القوانين يكون في حالة:',
+                options: [
+                    { id: 'a', textAr: 'القانون المدني' },
+                    { id: 'b', textAr: 'القانون الأصلح للمتهم' },
+                    { id: 'c', textAr: 'القوانين المالية' },
+                    { id: 'd', textAr: 'القوانين الإدارية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'النظرية الحديثة في تنازع القوانين تقوم على:',
+                options: [
+                    { id: 'a', textAr: 'الحق المكتسب' },
+                    { id: 'b', textAr: 'الأثر الرجعي' },
+                    { id: 'c', textAr: 'الأثر الفوري' },
+                    { id: 'd', textAr: 'الإرادة' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الأهلية في القانون المدني تتعلق بـ:',
+                options: [
+                    { id: 'a', textAr: 'الشخص' },
+                    { id: 'b', textAr: 'المال' },
+                    { id: 'c', textAr: 'المكان' },
+                    { id: 'd', textAr: 'الزمان' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الواجب التطبيق على الشكل في التصرفات هو:',
+                options: [
+                    { id: 'a', textAr: 'قانون الموطن' },
+                    { id: 'b', textAr: 'قانون الجنسية' },
+                    { id: 'c', textAr: 'قانون مكان إبرام التصرف' },
+                    { id: 'd', textAr: 'قانون الإرادة' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'ما هو الأساس الذي تقوم عليه نظرية الحق المكتسب؟',
+                options: [
+                    { id: 'a', textAr: 'العدالة' },
+                    { id: 'b', textAr: 'الاستقرار' },
+                    { id: 'c', textAr: 'المصلحة' },
+                    { id: 'd', textAr: 'النظام العام' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'مبدأ إقليمية القانون يعني:',
+                options: [
+                    { id: 'a', textAr: 'تطبيق القانون على الإقليم' },
+                    { id: 'b', textAr: 'تطبيقه على المواطنين فقط' },
+                    { id: 'c', textAr: 'تطبيقه على الأجانب فقط' },
+                    { id: 'd', textAr: 'تطبيقه خارج الدولة' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تطبق القوانين المتعلقة بالنظام العام:',
+                options: [
+                    { id: 'a', textAr: 'دائماً' },
+                    { id: 'b', textAr: 'استثناءً' },
+                    { id: 'c', textAr: 'إذا نص القانون' },
+                    { id: 'd', textAr: 'لا تطبق' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الأصلح للمتهم يُطبق إذا:',
+                options: [
+                    { id: 'a', textAr: 'كان أصلح' },
+                    { id: 'b', textAr: 'كان أشد' },
+                    { id: 'c', textAr: 'مدنياً' },
+                    { id: 'd', textAr: 'إدارياً' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الفرق بين الأثر الفوري والأثر الرجعي هو:',
+                options: [
+                    { id: 'a', textAr: 'الزمن' },
+                    { id: 'b', textAr: 'التطبيق' },
+                    { id: 'c', textAr: 'النطاق' },
+                    { id: 'd', textAr: 'الأثر' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تطبق القوانين الإجرائية من حيث الزمان على:',
+                options: [
+                    { id: 'a', textAr: 'الوقائع السابقة' },
+                    { id: 'b', textAr: 'الوقائع المستقبلية' },
+                    { id: 'c', textAr: 'الدعوى' },
+                    { id: 'd', textAr: 'الحكم' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تنازع القوانين من حيث الزمان يحدث عندما:',
+                options: [
+                    { id: 'a', textAr: 'تعارض قوانين دول' },
+                    { id: 'b', textAr: 'تعارض قوانين زمنية' },
+                    { id: 'c', textAr: 'تعارض محاكم' },
+                    { id: 'd', textAr: 'تعارض أشخاص' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الجديد يسري على الوقائع المستقبلية وفق:',
+                options: [
+                    { id: 'a', textAr: 'الأثر الرجعي' },
+                    { id: 'b', textAr: 'الأثر الفوري' },
+                    { id: 'c', textAr: 'الاستثناء' },
+                    { id: 'd', textAr: 'الإلغاء' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القوانين المتعلقة بالإثبات تسري على:',
+                options: [
+                    { id: 'a', textAr: 'الوقائع الجديدة' },
+                    { id: 'b', textAr: 'الوقائع السابقة' },
+                    { id: 'c', textAr: 'الدعوى' },
+                    { id: 'd', textAr: 'الحكم' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'المركز القانوني المكتمل هو:',
+                options: [
+                    { id: 'a', textAr: 'لم يكتمل' },
+                    { id: 'b', textAr: 'مكتمل العناصر' },
+                    { id: 'c', textAr: 'احتمال' },
+                    { id: 'd', textAr: 'أمل' }
+                ],
+                correctAnswer: 'b'
+            }
+        ]
+    },
+
+    intro_law_final_p6: {
+        id: 'intro_law_final_p6',
+        title: 'Introduction to Law Final - Part 6 (Q101-120)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء السادس',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'مجموعة القواعد القانونية التي تحدد شكل الدولة ونظام الحكم فيها واختصاصات السلطات العامة هي:',
+                options: [
+                    { id: 'a', textAr: 'القانون الإداري.' },
+                    { id: 'b', textAr: 'القانون الدستوري.' },
+                    { id: 'c', textAr: 'القانون المدني.' },
+                    { id: 'd', textAr: 'القانون الدولي الخاص.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الجزاء الذي يقع عند الاعتداء على "الحق الخاص" ويتولى تنظيم أحكامه القانون المدني هو:',
+                options: [
+                    { id: 'a', textAr: 'الجزاء الجنائي.' },
+                    { id: 'b', textAr: 'الجزاء الإداري.' },
+                    { id: 'c', textAr: 'الجزاء المدني والتجاري.' },
+                    { id: 'd', textAr: 'الجزاء الإجرائي.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القواعد القانونية التي "لا يجوز" للأفراد الاتفاق على خالفها لتعلقها بالنظام العام تسمى:',
+                options: [
+                    { id: 'a', textAr: 'قواعد مكملة.' },
+                    { id: 'b', textAr: 'قواعد مفسرة.' },
+                    { id: 'c', textAr: 'قواعد آمرة.' },
+                    { id: 'd', textAr: 'قواعد مرنة.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'المعيار الذي يستند إلى "عبارة النص وألفاظه ذاتها" للتمييز بين القاعدة الآمرة والمكملة هو:',
+                options: [
+                    { id: 'a', textAr: 'المعيار الموضوعي.' },
+                    { id: 'b', textAr: 'المعيار المعنوي.' },
+                    { id: 'c', textAr: 'المعيار الشكلي (اللفظي).' },
+                    { id: 'd', textAr: 'المعيار التاريخي.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي مما يلي يعد من فروع القانون العام الداخلي؟',
+                options: [
+                    { id: 'a', textAr: 'القانون التجاري.' },
+                    { id: 'b', textAr: 'القانون المالي.' },
+                    { id: 'c', textAr: 'القانون البحري.' },
+                    { id: 'd', textAr: 'قانون العمل.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يُطلق على القانون المدني وصف "الشريعة العامة أو الأصلية" لأنه:',
+                options: [
+                    { id: 'a', textAr: 'ينظم علاقات الدول في السلم والحرب.' },
+                    { id: 'b', textAr: 'يحتوي على القواعد العامة التي تُطبق على أي نزاع سكت عنه المشرع في الفروع الأخرى.' },
+                    { id: 'c', textAr: 'ينظم السلطة القضائية وشروط تنصيب القضاة.' },
+                    { id: 'd', textAr: 'جميع قواعده تعتبر قواعد شكلية إجرائية.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي من المحاكم التالية تندرج تحت فئة "المحاكم النظامية" في الأردن؟',
+                options: [
+                    { id: 'a', textAr: 'محكمة الأحداث.' },
+                    { id: 'b', textAr: 'محكمة أمن الدولة.' },
+                    { id: 'c', textAr: 'محكمة البداية (والصلح والاستئناف).' },
+                    { id: 'd', textAr: 'المحكمة الشرعية.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'العنصر المعنوي في "العرف" يعني:',
+                options: [
+                    { id: 'a', textAr: 'اعتياد الناس على سلوك معين لمدة طويلة.' },
+                    { id: 'b', textAr: 'تدوين القواعد العرفية في وثيقة رسمية.' },
+                    { id: 'c', textAr: 'اعتقاد الناس بأن هذه العادة ملزمة لهم فقهياً وقانونياً.' },
+                    { id: 'd', textAr: 'إحالة المشرع رصاحة إلى قواعد العدالة.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'إذا لم يجد القاضي نصاً تشريعياً ولا عرفاً ولا فقهًا إسلامياً، فإنه يستند في حكمه إلى:',
+                options: [
+                    { id: 'a', textAr: 'القانون الدولي العام.' },
+                    { id: 'b', textAr: 'قواعد العدالة.' },
+                    { id: 'c', textAr: 'القانون الإداري.' },
+                    { id: 'd', textAr: 'الأوامر والقرارات الإدارية.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تنتهي القاعدة القانونية (بينما تنتهي الأوامر والقرارات بمجرد تطبيقها):',
+                options: [
+                    { id: 'a', textAr: 'بمجرد تطبيقها على شخص معين.' },
+                    { id: 'b', textAr: 'لا تنتهي بل تظل باقية ومستمرة بعد تطبيقها لأنها عامة ومجردة.' },
+                    { id: 'c', textAr: 'بوفاة الشخص المخاطب بها بذاته.' },
+                    { id: 'd', textAr: 'بمجرد صدور أمر إداري يخالفها.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'المكان الذي يباشر فيه الشخص تجارته أو حرفته يسمى قانوناً بـ:',
+                options: [
+                    { id: 'a', textAr: 'الموطن العام.' },
+                    { id: 'b', textAr: 'الموطن المختار.' },
+                    { id: 'c', textAr: 'الموطن الإلزامي.' },
+                    { id: 'd', textAr: 'الموطن الافتراضي (الحرفي).' }
+                ],
+                correctAnswer: 'd'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'صلاحية الشخص لكسب الحقوق وتحمل الالتزامات منذ ولادته تسمى:',
+                options: [
+                    { id: 'a', textAr: 'أهلية الأداء.' },
+                    { id: 'b', textAr: 'أهلية الوجوب.' },
+                    { id: 'c', textAr: 'الأهلية القانونية الناقصة.' },
+                    { id: 'd', textAr: 'الولاية القضائية.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الخلل الذي يصيب عقل الإنسان ويؤدي إلى نقصان إدراكه ويجعله قليل الفهم مختلط الكلام هو:',
+                options: [
+                    { id: 'a', textAr: 'الجنون.' },
+                    { id: 'b', textAr: 'العته (المعتوه).' },
+                    { id: 'c', textAr: 'السفه.' },
+                    { id: 'd', textAr: 'ذو الغفلة.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الأشياء التي تتفاوت أفرادها في الصفات أو القيمة تفاوتاً يعتد به ويندر وجود أفرادها في التعامل هي:',
+                options: [
+                    { id: 'a', textAr: 'الأشياء المثلية.' },
+                    { id: 'b', textAr: 'الأشياء القيمية.' },
+                    { id: 'c', textAr: 'الأشياء القابلة للاستهلاك.' },
+                    { id: 'd', textAr: 'العقارات بطبيعتها.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يعد "الالتصاق بفعل الإنسان" من مصادر:',
+                options: [
+                    { id: 'a', textAr: 'الحق الشخصي.' },
+                    { id: 'b', textAr: 'الحق العيني.' },
+                    { id: 'c', textAr: 'الحقوق السياسية.' },
+                    { id: 'd', textAr: 'الأهلية القانونية.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي من الخصائص التالية "لا تنطبق" على الاسم الشخصي للإنسان؟',
+                options: [
+                    { id: 'a', textAr: 'يجوز التصرف فيه والتنازل عنه للغير.' },
+                    { id: 'b', textAr: 'لا يسقط بالتقادم (عدم الاستعمال مده طويلة).' },
+                    { id: 'c', textAr: 'لا يجوز تبديله وتغييره إلا بمسوغ قانوني.' },
+                    { id: 'd', textAr: 'يظل الإنسان محتفظاً به ما بقيت شخصيته.' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'وفقاً للتشريعات، يكتسب القاصر الذي أتم السن القانونية "الإذن بالتجارة" بشرط:',
+                options: [
+                    { id: 'a', textAr: 'بلوغه سن 10 سنوات فقط.' },
+                    { id: 'b', textAr: 'صدور ترخيص وإذن من المحكمة (وأن يكون قد أتم 15 سنة).' },
+                    { id: 'c', textAr: 'موافقة أصدقائه في العمل.' },
+                    { id: 'd', textAr: 'لا يجوز منحه الإذن مطلقاً إلا عند سن 18.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يتميز "الحق الشخصي" عن "الحق العيني" بأن الحق الشخصي:',
+                options: [
+                    { id: 'a', textAr: 'سلطة مباشرة لشخص على شيء مادي.' },
+                    { id: 'b', textAr: 'رابطة قانونية بين شخصين أحدهما دائن والآخر مدين.' },
+                    { id: 'c', textAr: 'يعتبر من الحقوق المطلقة دائماً.' },
+                    { id: 'd', textAr: 'لا يسري عليه التقادم الزمني.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تعتبر "الشركات، والبلديات، والوقف، والطوائف الدينية" من أمثلة:',
+                options: [
+                    { id: 'a', textAr: 'الشخصية الطبيعية.' },
+                    { id: 'b', textAr: 'الشخصية الحكمية (الاعتبارية).' },
+                    { id: 'c', textAr: 'أهلية الأداء الكاملة.' },
+                    { id: 'd', textAr: 'الحقوق اللصيقة بالمرأة فقط.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'المنقول الذي يضعه مالكه في عقار يملكه رصدًا لخدمة هذا العقار واستغلاله يُعرف بـ:',
+                options: [
+                    { id: 'a', textAr: 'منقول بطبيعته.' },
+                    { id: 'b', textAr: 'عقار بالتخصيص.' },
+                    { id: 'c', textAr: 'منقول بحسب المآل.' },
+                    { id: 'd', textAr: 'مال عام.' }
+                ],
+                correctAnswer: 'b'
+            }
+        ]
+    },
+
+    intro_law_final_p7: {
+        id: 'intro_law_final_p7',
+        title: 'Introduction to Law Final - Part 7 (Q121-140)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء السابع',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'كسب ذمة شخص على حساب ذمة شخص آخر دون سبب قانوني يسمى فقهياً وقانونياً بـ:',
+                options: [
+                    { id: 'a', textAr: 'الفضالة.' },
+                    { id: 'b', textAr: 'الإثراء بلا سبب.' },
+                    { id: 'c', textAr: 'الفعل الضار.' },
+                    { id: 'd', textAr: 'الترصف الانفرادي.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يحتل المرتبة الأولى من حيث القوة والصدارة في أنواع التشريع:',
+                options: [
+                    { id: 'a', textAr: 'التشريع العادي (القانون).' },
+                    { id: 'b', textAr: 'التشريع الفرعي (الأنظمة).' },
+                    { id: 'c', textAr: 'التشريع الأساسي (الدستور).' },
+                    { id: 'd', textAr: 'التعليمات والقرارات.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تتكون السلطة التشريعية في المملكة الأردنية الهاشمية من:',
+                options: [
+                    { id: 'a', textAr: 'مجلس الوزراء فقط.' },
+                    { id: 'b', textAr: 'مجلس الأمة (الأعيان والنواب) وجلالة الملك.' },
+                    { id: 'c', textAr: 'المجلس الوطني والمحاكم النظامية.' },
+                    { id: 'd', textAr: 'ديوان التشريع والرأي منفصلاً.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'إذا تم اقتراح مشروع قانون من قبل "فريق من أعضاء مجلس الأمة" فإنه يسمى:',
+                options: [
+                    { id: 'a', textAr: 'لائحة بقانون.' },
+                    { id: 'b', textAr: 'مشروعاً بقانون.' },
+                    { id: 'c', textAr: 'اقتراحاً بقانون.' },
+                    { id: 'd', textAr: 'نظاماً تفعيلياً.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'مرحلة "نفاذ التشريع" (الإصدار والنشر في الجريدة الرسمية) تدخل ضمن اختصاصات السلطة:',
+                options: [
+                    { id: 'a', textAr: 'التشريعية.' },
+                    { id: 'b', textAr: 'القضائية.' },
+                    { id: 'c', textAr: 'التنفيذية.' },
+                    { id: 'd', textAr: 'التأسيسية.' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يتميز "الدستور الجامد" عن "الدستور المرن" بأنه:',
+                options: [
+                    { id: 'a', textAr: 'لا يمكن تعديله نهائياً.' },
+                    { id: 'b', textAr: 'يتطلب تعديله إجراءات خاصة معقدة أشد من إجراءات تعديل القوانين العادية.' },
+                    { id: 'c', textAr: 'يتم تعديله بنفس إجراءات القوانين العادية تماماً.' },
+                    { id: 'd', textAr: 'يصدر دائماً بمنحة دون استفتاء.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الغائب الذي لا يُعلم حاله أهو حي أم ميت يُعرف قانوناً بـ:',
+                options: [
+                    { id: 'a', textAr: 'ناقص الأهلية.' },
+                    { id: 'b', textAr: 'المفقود.' },
+                    { id: 'c', textAr: 'المعتوه.' },
+                    { id: 'd', textAr: 'الجنين المستكن.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'مفهوم "الإفلاس" في القانون التجاري يختلف عن "الإعسار" في المدني لأنه يتطلب:',
+                options: [
+                    { id: 'a', textAr: 'زيادة ديون الشخص عن أمواله فقط.' },
+                    { id: 'b', textAr: 'توقف التاجر عن دفع دين مستحق الأداء بعد إخطاره بصرف النظر عما يملكه.' },
+                    { id: 'c', textAr: 'سلامة قلب الشخص وضعف إدراكه.' },
+                    { id: 'd', textAr: 'إثبات الضرر المادي والأدبي معاً.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'قانون أصول المحاكمات المدنية يعتبر قانوناً:',
+                options: [
+                    { id: 'a', textAr: 'موضوعياً ينظم أصل الحق.' },
+                    { id: 'b', textAr: 'شكلياً ينظم إجراءات سير العدالة وكيفية التقاضي.' },
+                    { id: 'c', textAr: 'جنائياً يحدد العقوبات والجرائم.' },
+                    { id: 'd', textAr: 'دولياً خارجياً يحكم المعاهدات.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'تعدد الزوجات وفقاً للتفصيل الفقهي في الأردن يعتبر:',
+                options: [
+                    { id: 'a', textAr: 'مخالفاً للنظام العام.' },
+                    { id: 'b', textAr: 'جزءاً من النظام العام ويجوز قانوناً.' },
+                    { id: 'c', textAr: 'قاعدة مكملة يجوز الاتفاق على حظرها مطلقاً في المجتمع.' },
+                    { id: 'd', textAr: 'تصرفاً انفرادياً باطلاً.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'القانون الذي يعين المحكمة المختصة والقانون الواجب التطبيق في القضايا المشوبة بـ"عنصر أجنبي" هو:',
+                options: [
+                    { id: 'a', textAr: 'القانون الدولي العام.' },
+                    { id: 'b', textAr: 'القانون الدولي الخاص.' },
+                    { id: 'c', textAr: 'قانون أصول المحاكمات الجزائية.' },
+                    { id: 'd', textAr: 'القانون التجاري الجوي.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'الحد الأدنى للأجور وساعات العمل في قانون العمل تُعد قواعد:',
+                options: [
+                    { id: 'a', textAr: 'مكملة يجوز للعامل التنازل عنها.' },
+                    { id: 'b', textAr: 'آمرة متصلة بالنظام العام لا يجوز الاتفاق على الانتقاص منها.' },
+                    { id: 'c', textAr: 'شكلية لا يلتزم بها رب العمل.' },
+                    { id: 'd', textAr: 'عرفية غير مكتوبة.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'يقصد بـ "مبنى التراي الإداري" أو "أعمال الإدارة" اليومية العادية القواعد التي تنظمها أحكام:',
+                options: [
+                    { id: 'a', textAr: 'القانون الدستوري.' },
+                    { id: 'b', textAr: 'القانون الإداري.' },
+                    { id: 'c', textAr: 'القانون الجنائي.' },
+                    { id: 'd', textAr: 'قانون أصول المحاكمات المدنية.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'أي مما يلي يعتبر من العقوبات الجنائية البدنية أو السالبة والمقيدة للحرية؟',
+                options: [
+                    { id: 'a', textAr: 'الإنذار والتوبيخ.' },
+                    { id: 'b', textAr: 'الحبس والأشغال الشاقة المؤقتة أو المؤبدة.' },
+                    { id: 'c', textAr: 'الغرامة المالية فقط في كل الأحوال.' },
+                    { id: 'd', textAr: 'التعويض المدني التضميني.' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                marks: 1.0,
+                questionAr: 'عند صعود القرابة المباشرة للأصل، تُحسب درجة القرابة بـ:',
+                options: [
+                    { id: 'a', textAr: 'اعتبار كل فرع درجة، صعوداً للأصل مع خروج هذا الأصل من الحساب.' },
+                    { id: 'b', textAr: 'ضرب عدد الفروع في اثنين.' },
+                    { id: 'c', textAr: 'حساب الأصل المشترك مرتين.' },
+                    { id: 'd', textAr: 'عَدّ الدرجات نزولاً فقط.' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 16,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'القانون العام ينظم العلاقات بين الأفراد والأفراد أو بين الأفراد والدولة باعتبارها شخصاً عادياً لا صاحبة سلطة وسيادة.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذا القانون الخاص'
+            },
+            {
+                id: 17,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'القانون الإداري يبين كيف رُكبت أجزاء الآلة الحكومية، بينما القانون الدستوري يبين كيف تسير ميكانيكية عملها اليومي.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: العكس هو الصحيح'
+            },
+            {
+                id: 18,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'من عيوب العرف أنه أداة بطيئة في إنتاج القواعد القانونية لأنه يحتاج إلى فترة طويلة حتى يشعر الناس بإلزاميته.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 19,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'الجزاء الجنائي يقع عند الاعتداء على المجتمع كله، ويتولى قانون العقوبات بيان هذا الجزاء.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 20,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'القواعد الإجرائية (الشكلية) هي القواعد التي تضع تنظيماً موضوعياً للعلاقات كقواعد القانون المدني والتجاري.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذه القواعد الموضوعية'
+            }
+        ]
+    },
+
+    intro_law_final_p8: {
+        id: 'intro_law_final_p8',
+        title: 'Introduction to Law Final - Part 8 (Q141-170)',
+        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الثامن',
+        icon: '⚖️',
+        color: '#795548',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'المعيار الموضوعي للتمييز بين القواعد هو الذي يستند إلى دلالة الألفاظ مثل استخدام المشرع لفظ "لا يجوز" أو "يقع باطلاً".',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذا المعيار الشكلي/اللفظي'
+            },
+            {
+                id: 2,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'فكرة النظام العام هي فكرة مرنة نسبية وليست مطلقة، تتغير وتتفاوت باختلاف الزمان والمكان داخل الدولة.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 3,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'العرف يكمل التشريع في كل فروع القانون العام والخاص باستثناء القانون الجنائي لوجود قاعدة "لا جريمة ولا عقوبة إلا بنص".',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 4,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'المصدر الوحيد للقانون المالي هو التشريع، إذ لا يجوز فرض ضريبة أو رسم أو الإعفاء منهما إلا بنص القانون.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 5,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'القسم الخاص من قانون العقوبات يتناول الأحكام العامة التي تسري على جميع الجرائم كتعريف الجريمة وأركانها.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذا القسم العام'
+            },
+            {
+                id: 6,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'تشمل الجرائم من حيث جسامتها ثلاثة أنواع هي: الجنايات، والجنح، والمخالفات.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 7,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'يشترط لتطبيق القانون على الشخص أن يكون بكامل قواه العقلية، ويرتبط ذلك بالشخص كامل الأهلية.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 8,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'مبدأ إقليمية القانون يعني أن قانون الدولة يطبق على جميع المنتمين لها داخلها وخارجها.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذا مبدأ شخصية القانون'
+            },
+            {
+                id: 9,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'الجزاء المدني لا يُقاس بمقدار الحق المعتدى عليه، بل بما ينطوي عليه من إخلال بنظام المجتمع لأنه حق عام.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذا وصف الجزاء الجنائي'
+            },
+            {
+                id: 10,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'قواعد الأخلاق تقتصر على بيان الواجبات فقط دون أن يتجاوز ذلك إلى تقرير الحقوق المقابلة لها.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 11,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'النية تعتبر في قانون العقوبات الأردني سبباً من أسباب تشديد العقاب في بعض الجرائم مثل جريمة القتل قصداً.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 12,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'دائرة القانون أوسع شمولاً من دائرة الأخلاق لأن القانون يهتم بالسرائر والبواعث الداخلية للنفس.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: دائرة الأخلاق هي الأوسع وتشمل البواطن'
+            },
+            {
+                id: 13,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'الجزاء في القاعدة الدينية جزاء مزدوج (دنيوي وأخروي)، بينما جزاء القاعدة القانونية دنيوي مادي حال فقط.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 14,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'القوانين غير المكتوبة (مثل الأعراف المستقرة في الأذهان) تحتاج دائماً إلى التفسير لاستخلاص عباراتها وتصحيح غموضها.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: القوانين المكتوبة هي التي تحتاج للتفسير'
+            },
+            {
+                id: 15,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'يلتزم القاضي بتطبيق القواعد القانونية الآمرة من تلقاء نفسه دون الالتفات إلى أي اتفاق بين الخصوم على خلافها.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 16,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'تعتبر أموال الدولة الخاصة مخصصة للمنفعة العامة مثل الطرق العامة والجسور.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: الأموال العامة هي المخصصة للمنفعة العامة'
+            },
+            {
+                id: 17,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'يجوز للموظف العام وفقاً لقواعد القانون الإداري أن يتنازل عن وظيفته أو إجازته المرشية لشخص آخر بموجب اتفاق خاص.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: لا يجوز لأنها من النظام العام'
+            },
+            {
+                id: 18,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'قانون العمل ينظم علاقات العمل "التابع" الفردية والجماعية حيث يعمل العامل تحت إشراف وتوجيه ورقابة صاحب العمل.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 19,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'الدستور المرن هو الدستور الذي يحتاج تعديله إلى إجراءات خاصة صعبة ومعقدة تختلف عن تعديل القوانين العادية.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذا الدستور الجامد'
+            },
+            {
+                id: 20,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'في المملكة الأردنية الهاشمية، يتم تعيين أعضاء مجلس الأعيان من قبل جلالة الملك مباشرة ضمن شروط حددها الدستور.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 21,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'إذا رد جلالة الملك مشروع القانون ولم يصدق عليه، وأقره مجلسا الأعيان والنواب مرة ثانية بموافقة ثلثي الأعضاء يصبح مصدقاً وجب إصداره.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 22,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'تبدأ الشخصية الطبيعية للإنسان بتمام ولادته حياً وتنتهي قانوناً بموته.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 23,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'يثبت للجنين المستكن (الحمل المستكن) في بطن أمه حقوق عيَّنها القانون مثل حقه في النسب، والإرث، والوصية صالحه.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 24,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'أهلية الأداء لا علاقة لها بإرادة الإنسان ولا تتأثر بعوارض الأهلية كالجنون والعته.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: أهلية الوجوب هي التي لا تتأثر، أما الأداء فتتأثر بالعوارض'
+            },
+            {
+                id: 25,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'ينفسخ عقد البيع ويسترد المشتري ما أداه من الثمن إذا هلك المبيع قبل التسليم بسبب لا يد لأحد المتبايعين فيه.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 26,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'الأشياء المثلية هي ما تتفاوت أفرادها في الصفات أو القيمة تفاوتاً يعتد به ويندر وجود أفرادها في التعامل.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: هذه الأشياء القيمية'
+            },
+            {
+                id: 27,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'العقارات بطبيعتها تشمل الأراضي، والمباني، والنباتات المستقرة في مكانها.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 28,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'لا يجوز للشخص أن يصطنع الدليل لنفسه، كما لا يجوز إجبار الخصم على تقديم دليل ضد نفسه كأصل عام في الإثبات.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            },
+            {
+                id: 29,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'في المعاملات المدنية بالأردن، يجوز الإثبات بالبينة الشخصية (الشهادة) مهما بلغت قيمة الالتزام التعاقدي دون قيود.',
+                correctAnswer: false,
+                explanationAr: 'خطأ. تصحيح: لا يجوز إذا تجاوزت قيمة الالتزام عشرة دنانير ما لم يوجد دليل كتابي'
+            },
+            {
+                id: 30,
+                type: 'tf',
+                marks: 1.0,
+                questionAr: 'الجزاء الإداري (أو التأديبي) يتم فرضه من قبل الرئيس الإداري أو الهيئة المشرفة على المهنة دون أن يُوكل للقضاء دائماً.',
+                correctAnswer: true,
+                explanationAr: 'صحيح.'
+            }
+        ]
+    },
+
     digital_logic_design_quiz1: {
         id: 'digital_logic_design_quiz1',
         title: 'Quiz 1: Final Exam Archive',
@@ -5814,6 +7969,639 @@ export const quizData = {
                 marks: 1.0
             }
         ]
+    },
+    criminal_law_general_quizzes: {
+        id: 'criminal_law_general_quizzes',
+        title: 'Penal Code - Quizzes',
+        titleAr: 'قانون العقوبات - الكويزات',
+        icon: '📜',
+        color: '#F44336',
+        parts: [
+            { id: 'criminal_law_general_quiz1', title: 'Quiz 1', titleAr: 'الجزء الأول' }
+        ]
+    },
+
+    criminal_law_general_final: {
+        id: 'criminal_law_general_final',
+        title: 'Penal Code Final Exam - Past Papers',
+        titleAr: 'قانون العقوبات - أسئلة فاينل',
+        icon: '📜',
+        color: '#F44336',
+        parts: [
+            { id: 'criminal_law_general_final_p1', title: 'Part 1', titleAr: 'الجزء الأول' },
+            { id: 'criminal_law_general_final_p2', title: 'Part 2', titleAr: 'الجزء الثاني' },
+            { id: 'criminal_law_general_final_p3', title: 'Part 3', titleAr: 'الجزء الثالث' }
+        ]
+    },
+
+    criminal_law_general_final_p1: {
+        id: 'criminal_law_general_final_p1',
+        title: 'Penal Code Final - Part 1 (Q1-18)',
+        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الأول',
+        icon: '📜',
+        color: '#F44336',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 1, type: 'mcq', marks: 1.0,
+                questionAr: 'مبدأ الشرعية يوجب أن يكون النص التشريعي كاملاً ومستنداً على العمل غير المشروع والجزاء، وتحديداً في النص المفترض أن يكون:',
+                options: [
+                    { id: 'a', textAr: 'صادراً قبل ارتكاب الفعل المراد تجريمه' },
+                    { id: 'b', textAr: 'صادراً بعد وقوع الجريمة لضمان العدالة' },
+                    { id: 'c', textAr: 'قابلاً للتفسير الواسع من المحاكم' },
+                    { id: 'd', textAr: 'مقتصراً على العقوبات الجسيمة' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 2, type: 'mcq', marks: 1.0,
+                questionAr: 'أُصدر قانون جديد يغير صفة التجريم عن فعل وجاء بعقوبة أخف، فأيهما تطبق على جرائم الاعتداء اللاحقة لنفاذ القانون الجديد؟',
+                options: [
+                    { id: 'a', textAr: 'القانون القديم لأنه الأصل' },
+                    { id: 'b', textAr: 'القانون الجديد يسري من تاريخ نفاذه على جميع الأفعال اللاحقة' },
+                    { id: 'c', textAr: 'يطبق القانون الأصلح للمتهم في جميع الأحوال' },
+                    { id: 'd', textAr: 'القانون الجديد على الأفعال اللاحقة حتى لو كانت عقوبته أشد من السابق' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 3, type: 'mcq', marks: 1.0,
+                questionAr: 'مع المستجد بخصوص القانون الجديد في حالتين، إحداهما أن يصدر القانون الجديد قبل انتهاء حالة الاستمرار، والحالة الثانية هي:',
+                options: [
+                    { id: 'a', textAr: 'أن يكون مرتكب الجريمة ناصراً' },
+                    { id: 'b', textAr: 'أن يتحقق الركن المادي بكل فئاته' },
+                    { id: 'c', textAr: 'أن تكون الجريمة من جرائم الجنايات فقط' },
+                    { id: 'd', textAr: 'أن يصدر القانون الجديد قبل صدور الحكم النهائي' }
+                ],
+                correctAnswer: 'd'
+            },
+            {
+                id: 4, type: 'mcq', marks: 1.0,
+                questionAr: 'مبدأ إقليمية القوانين يعني أن الأردن يطبق قانونه الجزائي على الجرائم المرتكبة على إقليمه، ويطبق القاضي الأردني قانون بلده.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 5, type: 'mcq', marks: 1.0,
+                questionAr: 'جريمة الاعتياد يشترط لتجريمها وللمعاقبة عليها تكرار العمل المادي المكون للجريمة، ولا يكتفى بوقوعها مرة واحدة.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 6, type: 'mcq', marks: 1.0,
+                questionAr: 'نائب الأمة (النواب والأعيان) يتمتع بحصانة برلمانية تحول دون مساءلته جزائياً أو تطبيق قانون العقوبات عليه أثناء قيامه بمهامه الدستورية. هذه الحصانة هي:',
+                options: [
+                    { id: 'a', textAr: 'مطلقة تشمل جميع الأفعال داخل الأردن وخارجه' },
+                    { id: 'b', textAr: 'نسبية تشمل الجرائم التي يرتكبها أثناء قيامه بمهامه الدستورية شريطة ارتكابها أثناء قيامه بها' },
+                    { id: 'c', textAr: 'دائمة تستمر بعد انتهاء عضويته في المجلس' },
+                    { id: 'd', textAr: 'تسقط بمجرد طلب مدعي عام المحكمة' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 7, type: 'mcq', marks: 1.0,
+                questionAr: 'الشروع في الجريمة يُعاقب عليه في:',
+                options: [
+                    { id: 'a', textAr: 'الجنايات والجنح والمخالفات' },
+                    { id: 'b', textAr: 'الجنايات فقط' },
+                    { id: 'c', textAr: 'الجنايات فقط ولا عقاب عليه في الجنح' },
+                    { id: 'd', textAr: 'الجنايات والجنح ولا عقاب عليه في المخالفات' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 8, type: 'mcq', marks: 1.0,
+                questionAr: 'مكان وقوع الجريمة في الأردن هو الذي يعتمد بحيث يكون الاختصاص المكاني للمحكمة التي وقع الجرم في دائرتها، ولا يشترط لاعتبار الجريمة مرتكبة في الأردن:',
+                options: [
+                    { id: 'a', textAr: 'أن يتحقق فيها السلوك الإجرامي أو النتيجة الإجرامية' },
+                    { id: 'b', textAr: 'أن تتحقق النتيجة والسلوك معاً داخل الأردن' },
+                    { id: 'c', textAr: 'أن يكون أي عنصر مادي من عناصرها قد تحقق في الأردن' },
+                    { id: 'd', textAr: 'أن يعلن جنسية الجاني عند المحاكمة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 9, type: 'mcq', marks: 1.0,
+                questionAr: 'الحالات التي يجوز فيها الدفاع الشرعي هي:',
+                options: [
+                    { id: 'a', textAr: 'الدفاع عن النفس والعرض في كل الحالات' },
+                    { id: 'b', textAr: 'الدفاع عن النفس والمال في كل الحالات' },
+                    { id: 'c', textAr: 'الدفاع عن النفس والعرض والمال في كل الحالات' },
+                    { id: 'd', textAr: 'الدفاع عن المال والعرض في كل الحالات' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 10, type: 'mcq', marks: 1.0,
+                questionAr: 'شروط الدفاع الشرعي المتعلقة بالاعتداء المبرر للدفاع هي أن يكون الاعتداء:',
+                options: [
+                    { id: 'a', textAr: 'حالاً أو وشيكاً وغير مشروع ومهدداً للنفس أو المال' },
+                    { id: 'b', textAr: 'ماضياً أو محتملاً في المستقبل' },
+                    { id: 'c', textAr: 'صادراً من شخص كامل الأهلية فقط' },
+                    { id: 'd', textAr: 'موجهاً لخصم وأنه على المتهم الدفاع' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 11, type: 'mcq', marks: 1.0,
+                questionAr: 'شروط الدفاع الشرعي أن يكون الدفاع متناسباً مع الاعتداء، ويعني ذلك أن:',
+                options: [
+                    { id: 'a', textAr: 'يكون الدفاع مساوياً تماماً لقوة الاعتداء' },
+                    { id: 'b', textAr: 'لا يتجاوز الدفاع ما هو ضروري لرد الاعتداء' },
+                    { id: 'c', textAr: 'يستخدم المدافع نفس الأداة التي استخدمها المعتدي' },
+                    { id: 'd', textAr: 'يكون الدفاع أشد من الاعتداء لضمان الردع' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 12, type: 'mcq', marks: 1.0,
+                questionAr: 'الدفاع الشرعي ضد اعتداء صادر من شخص فاقد الأهلية كالمجنون والصغير:',
+                options: [
+                    { id: 'a', textAr: 'صح (لا غبار على نظرية الاعتداء لـ فاقد الأهلية)' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 13, type: 'mcq', marks: 1.0,
+                questionAr: 'دور وجود الدفاع الشرعي يعتبر:',
+                options: [
+                    { id: 'a', textAr: 'سبباً مبيحاً كاملاً يرفع المسؤولية الجزائية' },
+                    { id: 'b', textAr: 'ظرفاً مخففاً للعقوبة لا غير' },
+                    { id: 'c', textAr: 'جريمة مستقلة بعقوبة مخففة' },
+                    { id: 'd', textAr: 'مانعاً من موانع المسؤولية يعفي من العقاب كلياً' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 14, type: 'mcq', marks: 1.0,
+                questionAr: 'الدفاع الشرعي عن النفس ضد اعتداء صادر من موظف عام يؤدي عمله بصورة مشروعة ومأذون له بها قانوناً:',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ (لا يجوز الدفاع الشرعي ضد موظف يمارس عمله المشروع)' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 15, type: 'mcq', marks: 1.0,
+                questionAr: 'الشخص الذي يعتمد استقرار أمر أمني عليه ثم يدعى الدفاع الشرعي:',
+                options: [
+                    { id: 'a', textAr: 'يحق له التدرج بالدفاع الشرعي إلى الاعتداء ولو فعلاً' },
+                    { id: 'b', textAr: 'لا يحق له التدرج بالدفاع الشرعي لأن الخطر نشأ عن فعله' },
+                    { id: 'c', textAr: 'يحق له الدفاع عن ماله فقط لا نفسه' },
+                    { id: 'd', textAr: 'يعفى من العقاب إذا كان الاعتداء أشد من الاستمرار' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 16, type: 'mcq', marks: 1.0,
+                questionAr: 'هل للمعتدي دفاعاً شرعياً ضد من يدافع عن المال في جميع الأحوال؟',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 17, type: 'mcq', marks: 1.0,
+                questionAr: 'المسؤولية الجنائية لا تتحقق إلا مع وجود الاختيار والإدراك والتمييز المخصصة لدى مرتكب الجريمة.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 18, type: 'mcq', marks: 1.0,
+                questionAr: 'المسؤولية الجنائية لا تقام للغير دون سن البلوغ والشباب استقلالاً عن هؤلاء المعافين لأساس:',
+                options: [
+                    { id: 'a', textAr: 'الإلزام الإجرامي والنفس الجنائي' },
+                    { id: 'b', textAr: 'التمييز لديهم' },
+                    { id: 'c', textAr: 'الوعي بالقانون الجنائي' },
+                    { id: 'd', textAr: 'الشخصية الإرادية' }
+                ],
+                correctAnswer: 'b'
+            }
+        ]
+    },
+
+    criminal_law_general_final_p2: {
+        id: 'criminal_law_general_final_p2',
+        title: 'Penal Code Final - Part 2 (Q19-36)',
+        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الثاني',
+        icon: '📜',
+        color: '#E53935',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 19, type: 'mcq', marks: 1.0,
+                questionAr: 'المسؤولية الأخلاقية والالمسؤولية الجنائية تشترك كلاهما مع توافر حرية الاختيار، والمسؤولية الجنائية تتطلب الإدراك والتمييز كذلك، لكنهما تختلفان في أن:',
+                options: [
+                    { id: 'a', textAr: 'المسؤولية الجنائية تقتصر على الأفراد الراشدين فقط' },
+                    { id: 'b', textAr: 'المسؤولية الأخلاقية كفيلها الضمير وهي مسؤولية الذات بينما العدالة مظهرها القضاء' },
+                    { id: 'c', textAr: 'المسؤولية الجنائية تتقبل الأشخاص المعنوية' },
+                    { id: 'd', textAr: 'المسؤولية الأخلاقية أشد من الجنائية في العقوبة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 20, type: 'mcq', marks: 1.0,
+                questionAr: 'حالة الإكراه المعنوي (التهديد) كمانع من موانع المسؤولية يشترط فيه أن:',
+                options: [
+                    { id: 'a', textAr: 'يكون التهديد إيذاء نفسياً كشر غير الفكري' },
+                    { id: 'b', textAr: 'يكون الخطر حالاً أو وشيكاً وجسيماً ولا سبيل لتفاديه إلا بارتكاب الجريمة' },
+                    { id: 'c', textAr: 'يكون مكتوباً ومؤكداً كإنذار مانعاً للمسؤولية' },
+                    { id: 'd', textAr: 'يكون صادراً من شخص ذي سلطة رسمية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 21, type: 'mcq', marks: 1.0,
+                questionAr: 'الغلط في الوقائع يُعد مانعاً من موانع المسؤولية إذا كان غلطاً جوهرياً غير ناتج عن الإهمال.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 22, type: 'mcq', marks: 1.0,
+                questionAr: 'الجهل بالقانون الجنائي يعفي من المسؤولية الجنائية.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 23, type: 'mcq', marks: 1.0,
+                questionAr: 'القصد الجرمي (أو النية الجرمية) له أهمية قصوى في الجنايات لأنه:',
+                options: [
+                    { id: 'a', textAr: 'يحدد صلاحية المحكمة للمحاكمة' },
+                    { id: 'b', textAr: 'يفرق بين الجرائم المقصودة وغير المقصودة' },
+                    { id: 'c', textAr: 'يُحدد الإقليم الذي وقعت فيه الجريمة' },
+                    { id: 'd', textAr: 'يُحدد نوع الجريمة جناية أم جنحة أم مخالفة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 24, type: 'mcq', marks: 1.0,
+                questionAr: 'الجريمة المقصودة هي كل جريمة يريد الجاني ارتكابها وتحقيق نتيجتها بحيث يتوافر القصد الجرمي بعنصريه:',
+                options: [
+                    { id: 'a', textAr: 'الإرادة والقبول للنتيجة' },
+                    { id: 'b', textAr: 'العلم والإرادة' },
+                    { id: 'c', textAr: 'الاختيار والقدرة على الفهم' },
+                    { id: 'd', textAr: 'الدافع والنية الإجرامية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 25, type: 'mcq', marks: 1.0,
+                questionAr: 'الجريمة غير المقصودة تقوم على ركن الخطأ، حيث يكون الخطأ بثلاث صور وهي:',
+                options: [
+                    { id: 'a', textAr: 'الإهمال وقلة الاحتراز وعدم مراعاة القوانين والأنظمة' },
+                    { id: 'b', textAr: 'الغضب والانفعال وفقدان السيطرة' },
+                    { id: 'c', textAr: 'الجهل والعمى وضعف الشخصية' },
+                    { id: 'd', textAr: 'الإدراك والتمييز وانعدام الإرادة' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 26, type: 'mcq', marks: 1.0,
+                questionAr: 'لا اشتراك ولا تدخل في الجرائم غير المقصودة.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 27, type: 'mcq', marks: 1.0,
+                questionAr: 'الركن المادي للجريمة يتكون من عناصر ثلاثة أساسية هي:',
+                options: [
+                    { id: 'a', textAr: 'الفعل الإجرامي والقصد الجنائي والعقوبة' },
+                    { id: 'b', textAr: 'السلوك الإجرامي والنتيجة وعلاقة السببية بينهما' },
+                    { id: 'c', textAr: 'الجاني والمجني عليه وأدوات الجريمة' },
+                    { id: 'd', textAr: 'التجريم والعقوبة والمسؤولية' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 28, type: 'mcq', marks: 1.0,
+                questionAr: 'مدة تقادم الدعوى العمومية في الجنايات في الأردن هي:',
+                options: [
+                    { id: 'a', textAr: '10 سنوات' },
+                    { id: 'b', textAr: '15 سنة' },
+                    { id: 'c', textAr: '20 سنة' },
+                    { id: 'd', textAr: '30 سنة' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 29, type: 'mcq', marks: 1.0,
+                questionAr: 'في جرائم الاعتداء يبدأ ميعاد التقادم من:',
+                options: [
+                    { id: 'a', textAr: 'تاريخ أول فعل في سلسلة أفعال الاعتداء' },
+                    { id: 'b', textAr: 'اليوم التالي لآخر فعل من الأفعال' },
+                    { id: 'c', textAr: 'تاريخ علم المجني عليه بالجريمة' },
+                    { id: 'd', textAr: 'تاريخ إلقاء القبض على المتهم' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 30, type: 'mcq', marks: 1.0,
+                questionAr: 'تقادم الجريمة لا يزيد عن:',
+                options: [
+                    { id: 'a', textAr: 'خمس سنوات' },
+                    { id: 'b', textAr: 'عشر سنوات' },
+                    { id: 'c', textAr: 'خمس عشرة سنة' },
+                    { id: 'd', textAr: 'عشرين سنة' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 31, type: 'mcq', marks: 1.0,
+                questionAr: 'جريمة احتجاز الرهائن التي تهدد أمن الدولة الأردنية ارتكبها أجنبي في دولة أجنبية، أي مبدأ يمنح الأردن الاختصاص بمحاكمته؟',
+                options: [
+                    { id: 'a', textAr: 'مبدأ الاختصاص الإقليمي' },
+                    { id: 'b', textAr: 'مبدأ الاختصاص الشخصي' },
+                    { id: 'c', textAr: 'مبدأ الاختصاص العيني' },
+                    { id: 'd', textAr: 'مبدأ الاختصاص الشمولي' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 32, type: 'mcq', marks: 1.0,
+                questionAr: 'سائق سيارة تجاوز الإشارة الحمراء مخالفاً قواعد السير وأدى ذلك إلى إصابة شخص بجروح بالغة. هذه الجريمة هي:',
+                options: [
+                    { id: 'a', textAr: 'جريومة مقصودة لأنه علم بخطورة تجاوز الإشارة' },
+                    { id: 'b', textAr: 'جريمة غير مقصودة (خطأ جنائي) لعدم توافر القصد الجرمي رغم وجود الركن المادي' },
+                    { id: 'c', textAr: 'جريمة شروع في القتل' },
+                    { id: 'd', textAr: 'ليست جريمة لأنها حادث عرضي' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 33, type: 'mcq', marks: 1.0,
+                questionAr: 'تمتاز أسباب التبرير في قانون العقوبات بأنها ذات طابع:',
+                explanationAr: 'أسباب التبرير موضوعية؛ لأنها ترفع الصفة الجرمية عن الفعل وتجعله مشروعاً، وبالتالي يستفيد منها كل من ساهم في الجريمة (فاعل، شريك، متدخل).',
+                options: [
+                    { id: 'a', textAr: 'شخصي يتعلق بصفة الجاني ومسؤوليته' },
+                    { id: 'b', textAr: 'موضوعي ينصرف إلى الفعل نفسه فيجرده من الصفة الجرمية' },
+                    { id: 'c', textAr: 'تقديري يترك بالكامل لملائمة المحكمة دون نص' },
+                    { id: 'd', textAr: 'نسبي يقتصر أثره على الفاعل الأصلي دون الشركاء' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 34, type: 'mcq', marks: 1.0,
+                questionAr: 'أصاب لاعب كرة قدم مدافع لاعباً مهاجماً بجرح بليغ أثناء محاولته منع هدف، وكان قد التزم وراعى قواعد اللعب المعترف بها. لا يُعاقب المدافع لأن فعله يندرج تحت:',
+                explanationAr: 'ممارسة الألعاب الرياضية تندرج تحت سبب التبرير الخاص بـ "استعمال الحق" أو "ممارسة حق أفرزه وقرره القانون" ما دامت القواعد الرياضية مرعية.',
+                options: [
+                    { id: 'a', textAr: 'أداء الواجب المكلف به' },
+                    { id: 'b', textAr: 'حالة الدفاع الشرعي' },
+                    { id: 'c', textAr: 'استعمال حق أجازه وقرره القانون (ممارسة الألعاب الرياضية)' },
+                    { id: 'd', textAr: 'حالة الضرورة القصوى' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 35, type: 'mcq', marks: 1.0,
+                questionAr: 'أجرى طبيب جراح عملية جراحية عاجلة لمريض وفق الأصول الطبية المعتمدة بقصد شفاءه، فنتج عن العملية إصابة جسدية أو وفاة المريض. ما هو الوضع القانوني للطبيب؟',
+                explanationAr: 'ممارسة العمل الطبي وفق الأصول الطبية وبقصد الشفاء يعتبر استعمالاً لحق قرره القانون كسبب تبرير يمنع المسؤولية الجنائية والمدنية.',
+                options: [
+                    { id: 'a', textAr: 'يسأل جنائياً لأنه سبب أذىً مادياً للمريض' },
+                    { id: 'b', textAr: 'يسأل مدنياً بالتعويض فقط دون المسؤولية الجنائية' },
+                    { id: 'c', textAr: 'لا يسأل جنائياً ولا مدنياً لأن فعله يندرج ضمن أسباب التبرير' },
+                    { id: 'd', textAr: 'يسأل جنائياً إذا لم تنجح العملية في تحقيق الشفاء التام' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 36, type: 'mcq', marks: 1.0,
+                questionAr: 'لكي يقوم حق الدفاع الشرعي لرد اعتداء غير مشروع يهدد النفس أو المال، يشترط في خطر الاعتداء أن يكون:',
+                explanationAr: 'شروط الخطر في الدفاع الشرعي أن يكون حالاً أو وشيك الوقوع وغير مشروع؛ فإذا انقضى الخطر فلا محل للدفاع الشرعي.',
+                options: [
+                    { id: 'a', textAr: 'محتملاً في المستقبل البعيد' },
+                    { id: 'b', textAr: 'حالاً أو على وشك الحلول ولا يمكن دفعه بوسيلة أخرى' },
+                    { id: 'c', textAr: 'صادراً عن جهة حكومية تنفذ أمراً قضائياً' },
+                    { id: 'd', textAr: 'جسيماً دائماً بحيث يؤدي إلى الموت حتماً' }
+                ],
+                correctAnswer: 'b'
+            }
+        ]
+    },
+    criminal_law_general_final_p3: {
+        id: 'criminal_law_general_final_p3',
+        title: 'Penal Code Final - Part 3 (Q37-54)',
+        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الثالث',
+        icon: '📜',
+        color: '#E53935',
+        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        questions: [
+            {
+                id: 37, type: 'mcq', marks: 1.0,
+                questionAr: 'إذا وقع تجاوز في حدود الدفاع الشرعي بحسن نية نتيجة الرعب والضغط النفسي، فإن المحكمة:',
+                explanationAr: 'التجاوز بحسن نية في الدفاع الشرعي يخرج الفعل من الإباحة الكاملة، ولكنه يمنح عذراً مخففاً أو إعفاءً طبقاً لأحكام القانون.',
+                options: [
+                    { id: 'a', textAr: 'تعاقب الفاعل بعقوبة الجريمة كاملة دون أي تخفيف' },
+                    { id: 'b', textAr: 'يمكنها إعفاء فاعل الجريمة كلياً من العقاب أو تخفيفها إذا توافرت شروط المادة 89 من قانون العقوبات' },
+                    { id: 'c', textAr: 'تعتبر الفعل جريمة مقصودة مشددة' },
+                    { id: 'd', textAr: 'تحكم ببراءة الفاعل لتوفر سبب التبرير كاملاً دون قيد' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 38, type: 'mcq', marks: 1.0,
+                questionAr: 'تختلف حالة الضرورة عن الدفاع الشرعي في أن حالة الضرورة:',
+                explanationAr: 'في الدفاع الشرعي يوجه الفعل للمعتدي الظالم، أما في حالة الضرورة يوجه الفعل لبريء لإنقاذ النفس من خطر محدق كحريق أو غرق، ولذلك يظل التعويض المدني قائماً.',
+                options: [
+                    { id: 'a', textAr: 'توجّه ضد اعتداء بشري عدواني وغير مشروع من شخص معين' },
+                    { id: 'b', textAr: 'الخطر فيها يهدد مال الغير فقط ولا يهدد النفس' },
+                    { id: 'c', textAr: 'الخطر فيها ينشأ عادة من قوى طبيعية، ويُضحى ببريء لدفع الخطر' },
+                    { id: 'd', textAr: 'تعتبر سبباً من أسباب التبرير المطلقة وتمنع التعويض المدني' }
+                ],
+                correctAnswer: 'c'
+            },
+            {
+                id: 39, type: 'mcq', marks: 1.0,
+                questionAr: 'يتميز الشروع التام (الجريمة الخائبة) عن الشروع الناقص (الجريمة الموقوفة) بأن الفاعل في الشروع التام:',
+                explanationAr: 'الشروع التام يعني أن الجاني قام بكل ما بوسعه لكنه لم يصب المجني عليه، أما الناقص فيتم قطعه قبل استكمال السلوك المادي.',
+                options: [
+                    { id: 'a', textAr: 'يستنفد كل الأفعال المادية اللازمة للجريمة لكن النتيجة لا تتحقق لأسباب خارجة عن إرادته' },
+                    { id: 'b', textAr: 'يتوقف باختياره وعدوله الطوعي قبل إتمام الأفعال التنفيذية' },
+                    { id: 'c', textAr: 'يتم وقف نشاطه المادي قسراً من قبل رجال الأمن قبل إتمام السلوك' },
+                    { id: 'd', textAr: 'يرتكب سلوكاً يستحيل معه تحقيق النتيجة مطلقاً لعدم صلاحية الوسيلة' }
+                ],
+                correctAnswer: 'a'
+            },
+            {
+                id: 40, type: 'mcq', marks: 1.0,
+                questionAr: 'إذا قام شخص بإطلاق النار على سرير يعتقد أن خصمه نائم فيه بقصد قتله، فتبين أن الخصم كان قد توفي قبل ذلك بساعات، فإن هذه الحالة تعتبر:',
+                explanationAr: 'إطلاق النار على جثة يعتبر جريمة مستحيلة لاستحالة محل الجريمة (الإنسان الحي)، والقانون يعاقب على الجريمة المستحيلة باعتبارها شروعاً.',
+                options: [
+                    { id: 'a', textAr: 'جريمة تامة؛ لأن القصد الجرمي متوفر' },
+                    { id: 'b', textAr: 'شروعاً في جريمة مستحيلة معاقب عليها كشروع' },
+                    { id: 'c', textAr: 'عدولاً اختيارياً يمنع العقاب' },
+                    { id: 'd', textAr: 'جريمة غير مقصودة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 41, type: 'mcq', marks: 1.0,
+                questionAr: 'يتكون القصد الجرمي العام (الركن المعنوي في الجرائم المقصودة) من عنصرين أساسيين هما:',
+                explanationAr: 'القصد الجرمي يقوم قانوناً على توفر العلم بالوقائع وعناصر النموذج القانوني للجريمة، واتجاه الإرادة الحرة إلى ارتكاب الفعل وتحقيق النتيجة الإجرامية.',
+                options: [
+                    { id: 'a', textAr: 'الباعث والدافع النفسي' },
+                    { id: 'b', textAr: 'العلم والإرادة' },
+                    { id: 'c', textAr: 'الخطأ والإهمال' },
+                    { id: 'd', textAr: 'التوقع والاحتمال فقط دون إرادة السلوك' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 42, type: 'mcq', marks: 1.0,
+                questionAr: 'تجاوز سائق سيارة الإشارة الضوئية الحمراء مخالفاً قواعد السير، مما أدى إلى صدم أحد المارة وإصابته بجروح. توصف هذه الجريمة بأنها:',
+                explanationAr: 'الجريمة غير عمدية؛ لأن إرادة السائق اتجهت للسلوك (تجاوز الإشارة) ولكنها لم تتجه إلى تحقيق النتيجة (إصابة الشخص).',
+                options: [
+                    { id: 'a', textAr: 'جريمة مقصودة؛ لأن السائق علم بخطورة تجاوز الإشارة وتوقع النتيجة' },
+                    { id: 'b', textAr: 'جريمة غير مقصودة (خطأ غير عمدي)؛ لتوافر الركن المادي والخطأ دون اتجاه إرادته للنتيجة' },
+                    { id: 'c', textAr: 'شروع في القتل العمد' },
+                    { id: 'd', textAr: 'لا تعد جريمة؛ لأنها حادث عرضي بحت' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 43, type: 'mcq', marks: 1.0,
+                questionAr: 'يُعد فاعلاً أصلياً (مساهماً أصلياً) في الجريمة كل من:',
+                explanationAr: 'المساهم الأصلي (الفاعل) هو من ينفذ الركن المادي أو يساهم في تنفيذه مباشرة، أما تقديم السلاح فهو تدخل، وإيواء الجاني هو جريمة إخفاء مستقلة.',
+                options: [
+                    { id: 'a', textAr: 'يقتصر دوره على تقديم السلاح المستعمل في الجريمة قبل ارتكابها' },
+                    { id: 'b', textAr: 'يقوم بالأعمال المكونة للركن المادي للجريمة أو يرتكبها بالاشتراك المباشر مع غيره' },
+                    { id: 'c', textAr: 'يوجه نصائح وإرشادات عامة للجاني دون التدخل في التنفيذ المادي' },
+                    { id: 'd', textAr: 'يخبئ الجاني في بيته بعد إتمام الجريمة هرباً من العدالة' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 44, type: 'mcq', marks: 1.0,
+                questionAr: 'يشترط لقيام القصد الجرمي في المساهمة التبعية (المتدخل والشريك) أن:',
+                explanationAr: 'القصد الجرمي للمتدخل يقوم على وحدة المصلحة أو "التضامن الإجرامي"، أي علمه بما ينوي الفاعل القيام به وتوجيه إرادته لمساعدته.',
+                options: [
+                    { id: 'a', textAr: 'يكون المتدخل جاهلاً بنية الفاعل الأصلي ومخططه الإجرامي' },
+                    { id: 'b', textAr: 'يتوفر لديه العلم بالجريمة التي يرتكبها الفاعل الأصلي وتتجه إرادته لتقديم المساعدة' },
+                    { id: 'c', textAr: 'يرتكب المتدخل الفعل تحت تأثير القوة القاهرة والضرورة القصوى' },
+                    { id: 'd', textAr: 'يقتصر علمه على المخالفات البسيطة دون الجنايات والجنح' }
+                ],
+                correctAnswer: 'b'
+            },
+            {
+                id: 45, type: 'mcq', marks: 1.0,
+                questionAr: 'تتميز أسباب التبرير في قانون العقوبات بأنها ذات طابع موضوعي يزيل الصفة الجرمية عن الفعل كلياً، بخلاف موانع المسؤولية (كالجنون أو الصغر) التي لها طابع شخصي ترفع العقاب عن الشخص مع بقاء الفعل جريمة.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a',
+                explanationAr: 'صحيح. أسباب التبرير موضوعية تزيل صفة الجريمة عن الفعل ذاته، أما موانع المسؤولية فشخصية ترفع العقاب عن الشخص فقط.'
+            },
+            {
+                id: 46, type: 'mcq', marks: 1.0,
+                questionAr: 'يجوز للمجني عليه المطالبة بالتعويض المدني في حالة الفعل المبرر (كالطبيب الذي يعالج مريضاً أو المدافع شرعاً) لأن الفعل يظل غير مشروع مدنياً.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'b',
+                explanationAr: 'خطأ. الفعل المبرر يصبح مباحاً ومشروعاً جنائياً ومدنياً، فلا مسؤولية ولا تعويض عليه.'
+            },
+            {
+                id: 47, type: 'mcq', marks: 1.0,
+                questionAr: 'نظم المشرع الأردني أحكام الدفاع الشرعي في المواد 340-343 من قانون العقوبات، وأجازه للشخص لرد اعتداء غير مشروع يهدد نفسه أو نفس غيره، أو ماله أو مال غيره.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a',
+                explanationAr: 'صحيح. الدفاع الشرعي منظم في قانون العقوبات الأردني ويشمل الدفاع عن النفس والمال لصاحبهما ولغيره.'
+            },
+            {
+                id: 48, type: 'mcq', marks: 1.0,
+                questionAr: 'يعتبر الشخص في حالة دفاع شرعي إذا قام بضرب شخص آخر انتقاماً منه بعد أن انتهى الاعتداء وتمكن رجال الأمن من القبض على المعتدي.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'b',
+                explanationAr: 'خطأ. الدفاع الشرعي يهدف لصد خطر "حال" أو "وشيك"؛ أما الضرب بعد انتهاء الخطر فيعد انتقاماً وجريمة مستقلة.'
+            },
+            {
+                id: 49, type: 'mcq', marks: 1.0,
+                questionAr: 'رضاء المجني عليه لا يعتبر سبباً عاماً للتبرير في قانون العقوبات إلا في أحوال ضيقة أجازها القانون، فلا يملك الشخص التنازل عن حقه في الحياة (كالقتل رحمة).',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a',
+                explanationAr: 'صحيح. الرضا لا يُبيح القتل أو الإيذاء الجسيم لأن الحق في الحياة وسلامة الجسد من الحقوق التي لا يملك الشخص التنازل عنها.'
+            },
+            {
+                id: 50, type: 'mcq', marks: 1.0,
+                questionAr: 'لا يعاقب القانون الأردني على الشروع في الجريمة إذا توقف الفاعل قسراً بسبب صراخ المجني عليه أو قدوم الشرطة.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'b',
+                explanationAr: 'خطأ. هذا التوقف قسري وخارج عن إرادة الجاني، وهو صلب تعريف "الشروع" المعاقب عليه قانوناً.'
+            },
+            {
+                id: 51, type: 'mcq', marks: 1.0,
+                questionAr: 'تعتبر الجريمة مستحيلة ويعاقب عليها كشروع إذا استحال تحقيق النتيجة بسبب ظروف مادية يجهلها الجاني، مثل محاولة سرقة خزنة يظنها مليئة بالنقود وتبين أنها فارغة.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a',
+                explanationAr: 'صحيح. الجريمة المستحيلة يُعاقب عليها كشروع لوجود الخطورة الإجرامية وبدء التنفيذ رغم استحالة النتيجة.'
+            },
+            {
+                id: 52, type: 'mcq', marks: 1.0,
+                questionAr: 'يتوفر القصد الجرمي دائماً بمجرد حدوث النتيجة الضارة، حتى لو ثبت أن الجاني كان يجهل تماماً عنصراً أساسياً من عناصر الجريمة وقت ارتكابها.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'b',
+                explanationAr: 'خطأ. الجهل بالوقائع الجوهرية ينفي العلم، وإذا انتفى العلم انتفى القصد الجرمي.'
+            },
+            {
+                id: 53, type: 'mcq', marks: 1.0,
+                questionAr: 'في المساهمة التبعية (التدخل)، يستعير المتدخل صفته الإجرامية من الفعل الأصلي؛ فإذا كان فعل الفاعل الأصلي مباحاً بسبب سبب تبرير، فلا يعاقب المتدخل أيضاً.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a',
+                explanationAr: 'صحيح. أسباب التبرير موضوعية تنصرف إلى الفعل، فإذا كان الفعل مباحاً انتفى التجريم عن كل المساهمين.'
+            },
+            {
+                id: 54, type: 'mcq', marks: 1.0,
+                questionAr: 'يتطلب القصد الجرمي في المساهمة التبعية علم المتدخل بالنشاط الإجرامي للفاعل الأصلي واتجاه إرادته إلى معونة الفاعل في تحقيق هذه الجريمة.',
+                options: [
+                    { id: 'a', textAr: 'صح' },
+                    { id: 'b', textAr: 'خطأ' }
+                ],
+                correctAnswer: 'a',
+                explanationAr: 'صحيح. لا تقوم المساهمة التبعية إلا بتوافر العلم بالجريمة وإرادة المساعدة في تحقيقها.'
+            }
+        ]
     }
 };
 
@@ -5827,7 +8615,7 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'oop_midterm', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' },
-            { id: 'oop_final', title: 'Final Past Papers', titleAr: 'أسئلة سنوات فاينل' },
+            { id: 'oop_final', title: 'Final Past Papers', titleAr: 'أسئلة فاينل' },
             { id: 'oop_quizzes', title: 'Quizzes', titleAr: 'كويزات' }
         ]
     },
@@ -5968,7 +8756,7 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'ml_midterm', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' },
-            { id: 'ml_final', title: 'Final Past Papers', titleAr: 'أسئلة سنوات فاينل' },
+            { id: 'ml_final', title: 'Final Past Papers', titleAr: 'أسئلة فاينل' },
             { id: 'ml_quizzes', title: 'Quizzes', titleAr: 'كويزات' }
         ]
     },
@@ -6019,9 +8807,8 @@ export const quizCategories = [
         color: '#795548',
         isNew: true,
         parts: [
-            { id: 'intro_law_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' },
-            { id: 'intro_law_quiz2', title: 'Quiz 2', titleAr: 'الكويز الثاني' },
-            { id: 'intro_law_quiz3', title: 'Quiz 3', titleAr: 'الكويز الثالث' }
+            { id: 'intro_law_quizzes', title: 'Quizzes', titleAr: 'الكويزات' },
+            { id: 'intro_law_final', title: 'Final Exam', titleAr: 'أسئلة فاينل' }
         ]
     },
     {
@@ -6032,7 +8819,8 @@ export const quizCategories = [
         color: '#F44336',
         isNew: true,
         parts: [
-            { id: 'criminal_law_general_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' }
+            { id: 'criminal_law_general_quizzes', title: 'Quizzes', titleAr: 'الكويزات' },
+            { id: 'criminal_law_general_final', title: 'Final Exam', titleAr: 'أسئلة فاينل' }
         ]
     },
     {

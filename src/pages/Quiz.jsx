@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { quizData, quizCategories } from '../data/quizData';
 import FileUploader from '../components/FileUploader';
@@ -219,6 +219,7 @@ const Quiz = () => {
     const { language, t } = useLanguage();
     const { quizId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showUploader, setShowUploader] = useState(false);
@@ -239,9 +240,23 @@ const Quiz = () => {
     const currentQuiz = quizId ? quizData[quizId] : null;
 
     // Find the parent subject/category for the current quiz (used in breadcrumbs)
-    const currentSubject = quizId ? quizCategories.find(cat =>
-        cat.id === quizId || (cat.parts && cat.parts.some(p => p.id === quizId))
-    ) : null;
+    const currentSubject = quizId ? quizCategories.find(cat => {
+        // Level 1: Direct match
+        if (cat.id === quizId) return true;
+        
+        // Level 2: Match in parts
+        if (cat.parts && cat.parts.some(p => p.id === quizId)) return true;
+        
+        // Level 3: Match in sub-parts of parts
+        if (cat.parts) {
+            return cat.parts.some(p => {
+                const partObj = quizData[p.id];
+                return partObj && partObj.parts && partObj.parts.some(subPart => subPart.id === quizId);
+            });
+        }
+        
+        return false;
+    }) : null;
     const currentSubjectName = currentSubject
         ? (language === 'ar' ? (currentSubject.nameAr || currentSubject.name) : currentSubject.name)
         : '';
@@ -276,6 +291,20 @@ const Quiz = () => {
             setTimeLeft(0);
         }
     }, [quizId, currentQuiz]);
+
+    // Handle back navigation state to restore selected subject category
+    useEffect(() => {
+        if (!quizId) {
+            if (location.state?.selectedCategoryId) {
+                const cat = quizCategories.find(c => c.id === location.state.selectedCategoryId);
+                if (cat) {
+                    setSelectedCategory(cat);
+                }
+            } else {
+                setSelectedCategory(null);
+            }
+        }
+    }, [quizId, location.state]);
 
     // Timer countdown effect
     useEffect(() => {
@@ -468,7 +497,16 @@ const Quiz = () => {
 
                     <div className="quiz-selection-container">
                         <div className="parts-selection fade-in">
-                            <button className="back-btn" onClick={() => navigate('/quiz')}>
+                            <button 
+                                className="back-btn" 
+                                onClick={() => {
+                                    if (currentSubject) {
+                                        navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } });
+                                    } else {
+                                        navigate('/quiz');
+                                    }
+                                }}
+                            >
                                 {language === 'ar' ? '← العودة' : '← Back'}
                             </button>
                             <h2 className="selection-title">
@@ -531,11 +569,17 @@ const Quiz = () => {
 
                         {/* Moodle Breadcrumbs */}
                         <div className="moodle-breadcrumbs no-print">
-                            <Link to="/quiz" className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاختبارات القصيرة' : 'Quizzes'}</Link>
+                            <Link to="/quiz" state={{ selectedCategoryId: currentSubject?.id }} className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاختبارات القصيرة' : 'Quizzes'}</Link>
                             {currentSubjectName && currentSubject && currentSubject.id !== quizId && (
                                 <>
                                     <span className="moodle-breadcrumb-separator">/</span>
-                                    <span className="moodle-breadcrumb-item" style={{ color: '#0f6cbf', cursor: 'pointer' }} onClick={() => window.history.back()}>{currentSubjectName}</span>
+                                    <span 
+                                        className="moodle-breadcrumb-item" 
+                                        style={{ color: '#0f6cbf', cursor: 'pointer' }} 
+                                        onClick={() => navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } })}
+                                    >
+                                        {currentSubjectName}
+                                    </span>
                                 </>
                             )}
                             <span className="moodle-breadcrumb-separator">/</span>
@@ -626,7 +670,16 @@ const Quiz = () => {
                             </table>
 
                             <div className="moodle-back-btn-container" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: language === 'ar' ? 'flex-end' : 'flex-start', marginTop: '1.5rem' }}>
-                                <button onClick={() => navigate('/quiz')} className="moodle-back-btn">
+                                <button 
+                                    onClick={() => {
+                                        if (currentSubject) {
+                                            navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } });
+                                        } else {
+                                            navigate('/quiz');
+                                        }
+                                    }} 
+                                    className="moodle-back-btn"
+                                >
                                     {language === 'ar' ? 'العودة إلى المقرر الدراسي' : 'Back to the course'}
                                 </button>
                                 <button onClick={restartQuiz} className="moodle-back-btn" style={{ backgroundColor: '#0f6cbf', color: 'white', borderColor: '#0a4a84' }}>
@@ -879,6 +932,12 @@ const Quiz = () => {
                                                                     ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
                                                                     : (q.correctAnswer === true ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
                                                         </div>
+                                                        {(q.explanation || q.explanationAr) && (
+                                                            <div className="explanation" style={{ marginTop: '1rem', borderLeft: language === 'en' ? '4px solid #FFC107' : 'none', borderRight: language === 'ar' ? '4px solid #FFC107' : 'none' }}>
+                                                                <strong>{language === 'ar' ? 'التعليل: ' : 'Explanation: '}</strong>
+                                                                {renderTextWithCode(displayLang === 'ar' ? (q.explanationAr || q.explanation) : (q.explanation || q.explanationAr))}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -976,11 +1035,17 @@ const Quiz = () => {
 
                 {/* Moodle Breadcrumbs */}
                 <div className="moodle-breadcrumbs no-print">
-                    <Link to="/quiz" className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاختبارات القصيرة' : 'Quizzes'}</Link>
+                    <Link to="/quiz" state={{ selectedCategoryId: currentSubject?.id }} className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاختبارات القصيرة' : 'Quizzes'}</Link>
                     {currentSubjectName && currentSubject && currentSubject.id !== quizId && (
                         <>
                             <span className="moodle-breadcrumb-separator">/</span>
-                            <span className="moodle-breadcrumb-item" style={{ color: '#0f6cbf', cursor: 'pointer' }} onClick={() => window.history.back()}>{currentSubjectName}</span>
+                            <span 
+                                className="moodle-breadcrumb-item" 
+                                style={{ color: '#0f6cbf', cursor: 'pointer' }} 
+                                onClick={() => navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } })}
+                            >
+                                {currentSubjectName}
+                            </span>
                         </>
                     )}
                     <span className="moodle-breadcrumb-separator">/</span>
@@ -1003,6 +1068,21 @@ const Quiz = () => {
                 <div className="moodle-review-layout">
                     {/* Main Quiz Content */}
                     <div className="moodle-questions-column">
+                        {/* AI Note Banner - only shown when noteAr is set on the quiz */}
+                        {currentQuiz.noteAr && (
+                            <div className="quiz-instructional-banner fade-in no-print" style={{
+                                background: 'linear-gradient(135deg, rgba(244,67,54,0.12), rgba(255,152,0,0.10))',
+                                borderLeft: '4px solid #F44336',
+                                borderRadius: '10px',
+                                marginBottom: '0.75rem'
+                            }}>
+                                <div className="banner-icon">🤖</div>
+                                <div className="banner-text" style={{ fontWeight: 600, color: 'var(--text-primary, #333)' }}>
+                                    {currentQuiz.noteAr}
+                                </div>
+                            </div>
+                        )}
+
                         {/* Instructional Notice Banner */}
                         <div className="quiz-instructional-banner fade-in no-print">
                             <div className="banner-icon">💡</div>
@@ -1257,7 +1337,7 @@ const Quiz = () => {
                                             setCurrentQuestionIndex(0);
                                             setFlaggedQuestions(new Set());
                                             setSelectedCategory(null);
-                                            navigate('/quiz'); 
+                                            navigate('/quiz', { state: { selectedCategoryId: currentSubject?.id } }); 
                                         }
                                     }}
                                 >

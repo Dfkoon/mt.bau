@@ -476,6 +476,7 @@ export const coursesData = {
             files: {
                 pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
                 questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                questions2: 'https://drive.google.com/drive/folders/13qkTZcVp5WH5dr5kEqu3W5GufNYujO3w?usp=drive_link',
                 video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
                 video2: 'https://t.me/introtoai1/82'
             }
@@ -715,6 +716,7 @@ export const coursesData = {
             files: {
                 pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
                 questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                questions2: 'https://drive.google.com/drive/folders/13qkTZcVp5WH5dr5kEqu3W5GufNYujO3w?usp=drive_link',
                 video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
                 video2: 'https://t.me/introtoai1/82'
             }
@@ -866,6 +868,7 @@ export const coursesData = {
             files: {
                 pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
                 questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                questions2: 'https://drive.google.com/drive/folders/13qkTZcVp5WH5dr5kEqu3W5GufNYujO3w?usp=drive_link',
                 video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
                 video2: 'https://t.me/introtoai1/82'
             }
@@ -954,6 +957,7 @@ export const coursesData = {
             files: {
                 pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
                 questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                questions2: 'https://drive.google.com/drive/folders/13qkTZcVp5WH5dr5kEqu3W5GufNYujO3w?usp=drive_link',
                 video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
                 video2: 'https://t.me/introtoai1/82'
             }
@@ -1072,6 +1076,7 @@ export const coursesData = {
             files: {
                 pdf: 'https://drive.google.com/drive/folders/122kwhRIoPdZ6qUcDbxUBX0T0RiaqEatC',
                 questions: 'https://drive.google.com/drive/folders/166CY0DqNCwP1-LoLXTed45DvUzHVLFI0',
+                questions2: 'https://drive.google.com/drive/folders/13qkTZcVp5WH5dr5kEqu3W5GufNYujO3w?usp=drive_link',
                 video: 'https://docs.google.com/document/d/1M-v4cC0vdDNazHJ2tyABCbaQiZx_Bm2PTG87_T9PeN8/edit',
                 video2: 'https://t.me/introtoai1/82'
             }

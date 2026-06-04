@@ -52,7 +52,7 @@ const translations = {
         'quiz.hero.subtitle': 'اختبر معلوماتك في مختلف المواد المتاحة',
         'quiz.selection.title': 'اختر الاختبار',
         'quiz.selection.note': 'قم بتحديث الصفحة أو زيارة الموقع باستمرار، فنحن نقوم بإضافة المواد التي تصلنا تباعاً.',
-        'quiz.selection.questions': 'أسئلة',
+        'quiz.selection.questions': 'سؤال',
         'quiz.selection.start': 'ابدأ الاختبار',
         'quiz.not_found.title': 'الاختبار غير موجود',
         'quiz.not_found.back': 'العودة للاختبارات',

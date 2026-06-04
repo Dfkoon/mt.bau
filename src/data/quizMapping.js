@@ -71,6 +71,7 @@ export const courseNameToQuizMapping = {
     'مدخل الى علم القانون': 'intro_law',
     'Penal Code - General Section': 'criminal_law_general',
     'قانون العقوبات القسم العام': 'criminal_law_general',
+    'قانون العقوبات قسم العام': 'criminal_law_general',
     
     // --- College Specific ---
     'Computer Skills (2) for Scientific Colleges': 'comp_skills_2_science',

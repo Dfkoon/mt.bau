@@ -136,7 +136,8 @@ const MaterialExchange = () => {
                 const docSnap = await getDoc(settingsRef);
                 if (docSnap.exists()) {
                     setSystemSettings({
-                        isExchangeActive: docSnap.data().isExchangeActive ?? false,
+                        // Force false until campaign starts (requested by user). To restore firebase control, use: docSnap.data().isExchangeActive ?? false
+                        isExchangeActive: false,
                         exchangeSuspendedMessageAr: docSnap.data().exchangeSuspendedMessageAr || 'تفتح الحملة أبوابها مع بداية كل فصل دراسي جديد تزامناً مع فترة السحب والإضافة.',
                         exchangeSuspendedMessageEn: docSnap.data().exchangeSuspendedMessageEn || 'It resumes at the start of each new semester during the add and drop period.'
                     });

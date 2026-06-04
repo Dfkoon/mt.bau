@@ -289,7 +289,7 @@ const StudyMaterials = () => {
                                         <span className="expand-icon">◀</span>
                                     </div>
 
-                                    {expandedCourse === courseUniqueId && Object.keys(course.files).length > 0 && (
+                                    {expandedCourse === courseUniqueId && (Object.keys(course.files).length > 0 || getQuizForCourse(course)) && (
                                         <div className="course-links">
                                             {Object.entries(course.files).map(([type, url]) => (
                                                 <a
@@ -321,7 +321,7 @@ const StudyMaterials = () => {
                                         </div>
                                     )}
 
-                                    {expandedCourse === courseUniqueId && Object.keys(course.files).length === 0 && (
+                                    {expandedCourse === courseUniqueId && Object.keys(course.files).length === 0 && !getQuizForCourse(course) && (
                                         <div className="course-links">
                                             <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
                                                 {t('materials.no_sources')}
