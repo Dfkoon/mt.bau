@@ -1,10 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import AnimatedLogo from './AnimatedLogo';
 import './Footer.css';
 
 const Footer = () => {
     const { t, language } = useLanguage();
+    const isAr = language === 'ar';
+    const location = useLocation();
+
+    // Secret coordinator gateway states
+    const [showGatewayInput, setShowGatewayInput] = useState(false);
+    const [gatewayCode, setGatewayCode] = useState('');
+    const [gatewayError, setGatewayError] = useState(false);
+
+    const handleGatewaySubmit = (e) => {
+        e.preventDefault();
+        if (gatewayCode.trim() === 'makanak2025') {
+            // Success: dispatch custom event to open coordinator login modal
+            window.dispatchEvent(new CustomEvent('open-staff-login'));
+            setGatewayCode('');
+            setShowGatewayInput(false);
+            setGatewayError(false);
+        } else {
+            setGatewayError(true);
+            setGatewayCode('');
+            // Reset error state after animation completes
+            setTimeout(() => setGatewayError(false), 800);
+        }
+    };
+
+    const handleMarkDoubleClick = () => {
+        setShowGatewayInput(prev => !prev);
+        setGatewayCode('');
+        setGatewayError(false);
+    };
+
     return (
         <footer id="contact" className="footer">
             <div className="footer-container">
@@ -31,6 +62,37 @@ const Footer = () => {
                             <li><a href="#events">{t('nav.calendar')}</a></li>
                             <li><a href="#updates">{t('nav.materials')}</a></li>
                             <li><a href="#services">{t('nav.plans')}</a></li>
+                            {location.pathname === '/exchange' && (
+                                <li className="coordinator-footer-item">
+                                    <div className="coordinator-trigger-row">
+                                        <span className="coordinator-label">
+                                            {isAr ? 'دخول المنسقين' : 'Coordinator Login'}
+                                        </span>
+                                        <span 
+                                            className="coordinator-mark" 
+                                            onDoubleClick={handleMarkDoubleClick}
+                                            title={isAr ? 'انقر مرتين للوصول' : 'Double click to access'}
+                                        >
+                                            🔒
+                                        </span>
+                                    </div>
+                                    {showGatewayInput && (
+                                        <form onSubmit={handleGatewaySubmit} className="coordinator-gateway-form">
+                                            <input
+                                                type="password"
+                                                className={`coordinator-gateway-input ${gatewayError ? 'shake-err' : ''}`}
+                                                value={gatewayCode}
+                                                onChange={e => setGatewayCode(e.target.value)}
+                                                placeholder={isAr ? 'كود الدخول' : 'Access code'}
+                                                autoComplete="new-password"
+                                                autoFocus
+                                                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleGatewaySubmit(e); } }}
+                                            />
+                                            <button type="submit" style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: 0, height: 0, overflow: 'hidden' }} tabIndex={-1} aria-hidden="true" />
+                                        </form>
+                                    )}
+                                </li>
+                            )}
                         </ul>
                     </div>
 

@@ -1,0 +1,457 @@
+{
+  "label": "الفصل الدراسي الثاني 2025",
+  "archivedAt": "2026-06-15T07:08:11.043Z",
+  "totalDonations": 14,
+  "donationsData": [
+    {
+      "id": "86oqr617ZA0y0OT9Flic",
+      "studentName": "مي احمد",
+      "phoneNumber": "0791016176",
+      "studentGender": "",
+      "status": "approved",
+      "materials": [
+        {
+          "name": "الثقافة الاسلامية",
+          "description": "الثقافة الاسلامية اول شابترين ونص الثالث",
+          "status": "pending",
+          "takerInfo": null
+        },
+        {
+          "name": "الرياضة والصحة للجميع",
+          "description": "",
+          "status": "pending",
+          "takerInfo": null
+        },
+        {
+          "name": "مقدمة الذكاء الاصطناعي",
+          "description": "",
+          "status": "completed",
+          "takerInfo": {
+            "name": "تالا الجرادات",
+            "phone": "0792228706",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1771093223, nanoseconds=349000000)"
+    },
+    {
+      "id": "9t7rBlWwgUf3fdbSux1G",
+      "studentName": "علي الزعبي",
+      "phoneNumber": "0772472126",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "مهارات حاسوب و تعليم الإلكتروني",
+          "description": "الكتاب كامل",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "محمد تحسين",
+            "phone": "0789098766",
+            "gender": ""
+          }
+        },
+        {
+          "name": "دوسية كالكولس 1",
+          "description": "دوسية الكابتن عباده الهباهبة كالكولس 1",
+          "status": "completed",
+          "takerInfo": {
+            "name": "لمار عماد",
+            "phone": "0776499376",
+            "gender": ""
+          }
+        },
+        {
+          "name": "مقدمة الذكاء الاصطناعي",
+          "description": "اول 6 شباتر (مادة المد)",
+          "status": "completed",
+          "takerInfo": {
+            "name": "تالا الجرادات ",
+            "phone": "0792228706",
+            "gender": ""
+          }
+        },
+        {
+          "name": "اللغة الانجليزية الاستدراكية 99",
+          "description": "المادة كاملة",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "بيسان محمد عزات عساف",
+            "phone": "0782995230",
+            "gender": ""
+          }
+        },
+        {
+          "name": "اللغة انجليزية تطبيقية(1)",
+          "description": "المادة كاملة",
+          "status": "completed",
+          "takerInfo": {
+            "name": "احمد الشوبكي ",
+            "phone": "0780454678",
+            "gender": ""
+          }
+        },
+        {
+          "name": "لغة انجليزية تطبيقية(1)",
+          "description": "مادة المد",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "لمار عماد",
+            "phone": "0776499376",
+            "gender": ""
+          }
+        },
+        {
+          "name": "التفاضل والتكامل 2",
+          "description": "مادة المد",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "سامي محمد ابو هديب",
+            "phone": "0790248584",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770819450, nanoseconds=27000000)"
+    },
+    {
+      "id": "AlXM67mlO8SCk7bzQVWn",
+      "studentName": "Test User 2",
+      "phoneNumber": "0780000000",
+      "studentGender": "male",
+      "status": "approved",
+      "materials": [
+        {
+          "name": "استدراكي",
+          "description": "",
+          "status": "pending",
+          "takerInfo": null
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1781505702, nanoseconds=481000000)"
+    },
+    {
+      "id": "DYsuM3HZWJzJ3Vc18oRl",
+      "studentName": "محمد الزغول",
+      "phoneNumber": "0775165828",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "الهياكل والرياضيات المنفصلة ",
+          "description": "",
+          "status": "reserved",
+          "takerInfo": null
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770797713, nanoseconds=209000000)"
+    },
+    {
+      "id": "DqV33tcFUC95VH6iJS3J",
+      "studentName": "الادمن حسين",
+      "phoneNumber": "0782934685",
+      "studentGender": "",
+      "status": "completed",
+      "materials": [
+        {
+          "name": "المقدمة الى اليونكس",
+          "description": "",
+          "status": "completed",
+          "takerInfo": null
+        },
+        {
+          "name": "قواعد بيانات",
+          "description": "",
+          "status": "completed",
+          "takerInfo": null
+        },
+        {
+          "name": "برمجة الذكاء الاصطناعي",
+          "description": "",
+          "status": "completed",
+          "takerInfo": null
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770790028, nanoseconds=591000000)"
+    },
+    {
+      "id": "LA7sTut7r3exYEe9wO9w",
+      "studentName": "سامي محمد ابوهديب",
+      "phoneNumber": "0790248584",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "القانون والاعلام والمجتمع",
+          "description": "",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "محمد الزغلول",
+            "phone": "0775165828",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770805920, nanoseconds=305000000)"
+    },
+    {
+      "id": "MyrnPaiuJE03cBsmTjsU",
+      "studentName": "ديما حمزه العناسوه",
+      "phoneNumber": "0779170252",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "مقدمه الى اليونكس",
+          "description": "سلايدات الماده",
+          "status": "completed",
+          "takerInfo": {
+            "name": "سدين حمدي خليفات",
+            "phone": "0795336260",
+            "gender": ""
+          }
+        },
+        {
+          "name": "التفاضل والتكامل 2",
+          "description": "سلايدات الماده",
+          "status": "completed",
+          "takerInfo": {
+            "name": "سدين حمدي خليفات",
+            "phone": "0795336260",
+            "gender": ""
+          }
+        },
+        {
+          "name": "الهياكل والرياضيات المنفصله",
+          "description": "",
+          "status": "completed",
+          "takerInfo": {
+            "name": "سدين حمدي خليفات ",
+            "phone": "0795336260",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770901281, nanoseconds=809000000)"
+    },
+    {
+      "id": "SCqUZR3ecPSkIOJAfoC7",
+      "studentName": "انس الدعيجي",
+      "phoneNumber": "0796770493",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "اللغة العربية التطبيقية",
+          "description": "سلايدات كاملة ",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "اسماء الربيع",
+            "phone": "0782553839",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770806044, nanoseconds=80000000)"
+    },
+    {
+      "id": "bvuQc6qxTTZ4FiqJdzA8",
+      "studentName": "خالد عبيدات",
+      "phoneNumber": "0780205254",
+      "studentGender": "",
+      "status": "approved",
+      "materials": [
+        {
+          "name": "مبادئ امن المعلومات والفضاء الإلكتروني",
+          "description": "5 شباتر",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "عبدالله حمزة خريسات",
+            "phone": "0779725490",
+            "gender": ""
+          }
+        },
+        {
+          "name": "مقدمة في الذكاء الاصطناعي",
+          "description": "المادة كاملة 10شباتر",
+          "status": "pending",
+          "takerInfo": null
+        },
+        {
+          "name": "كتاب مجتمع رقمي",
+          "description": "",
+          "status": "pending",
+          "takerInfo": null
+        },
+        {
+          "name": "البرمجة الموجهة للكائنات",
+          "description": "5 شباتر",
+          "status": "completed",
+          "takerInfo": {
+            "name": "حنان السيد",
+            "phone": "0781288822",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1772480763, nanoseconds=25000000)"
+    },
+    {
+      "id": "gOmASkZ7AJqJbGiJivmk",
+      "studentName": "انس الدعيجي",
+      "phoneNumber": "0796770493",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "التفاضل والتكامل 1",
+          "description": "سلايدات كاملة ",
+          "status": "completed",
+          "takerInfo": {
+            "name": "احمد الشوبكي",
+            "phone": "+962 7 8045 4678",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770806193, nanoseconds=917000000)"
+    },
+    {
+      "id": "i6IirOk9fjzwmRg6tqVY",
+      "studentName": "سندس السعودي",
+      "phoneNumber": "0797880384",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "مبادئ امن المعلومات والفضاء الالكتروني",
+          "description": "",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "وسيم مسلم",
+            "phone": "0795852171",
+            "gender": ""
+          }
+        },
+        {
+          "name": "مختبر البرمجة الموجهة للكائنات",
+          "description": "",
+          "status": "completed",
+          "takerInfo": {
+            "name": "سدين حمدي خليفات",
+            "phone": "0795336260",
+            "gender": ""
+          }
+        },
+        {
+          "name": "الهياكل والرياضيات المنفصلة",
+          "description": "",
+          "status": "reserved",
+          "takerInfo": {
+            "name": "سدين حمدي خليفات",
+            "phone": "0795336260",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770919464, nanoseconds=80000000)"
+    },
+    {
+      "id": "qZR1Ysj2VJSth8vbsP5a",
+      "studentName": "سرى الجراح",
+      "phoneNumber": "0797972522",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "الاحتمالات والاحصاء",
+          "description": "كتاب الماده + سلايدات الدكتورة اماني الماده كامله",
+          "status": "reserved",
+          "takerInfo": null
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770848507, nanoseconds=1000000)"
+    },
+    {
+      "id": "y1mSTeYhwGDuJd2t1Tex",
+      "studentName": "حسين الديات ",
+      "phoneNumber": "0782934685",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "تربية وطنية وسلوك جامعي",
+          "description": "",
+          "status": "completed",
+          "takerInfo": {
+            "name": "سجى خطاب",
+            "phone": "0778590699",
+            "gender": ""
+          }
+        },
+        {
+          "name": "الزراعة في الاردن",
+          "description": "",
+          "status": "completed",
+          "takerInfo": {
+            "name": "ضد مجهول",
+            "phone": "077777777",
+            "gender": ""
+          }
+        },
+        {
+          "name": "مفاهيم اقتصادية",
+          "description": "",
+          "status": "completed",
+          "takerInfo": {
+            "name": "احمد الشوبكي",
+            "phone": "+962 7 8045 4678",
+            "gender": ""
+          }
+        },
+        {
+          "name": "الجرائم التكنولوجيا المعلومات",
+          "description": "",
+          "status": "completed",
+          "takerInfo": {
+            "name": "ضد مجهول",
+            "phone": "077777777",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1770788855, nanoseconds=168000000)"
+    },
+    {
+      "id": "yzlqbwTcDaOYj2e5ksJJ",
+      "studentName": "سرى الجراح",
+      "phoneNumber": "0797972522",
+      "studentGender": "",
+      "status": "reserved",
+      "materials": [
+        {
+          "name": "هياكل البيانات",
+          "description": "الماده كامله سلايدات الدكتوره ارياف",
+          "status": "completed",
+          "takerInfo": {
+            "name": "احمد الشوبكي ",
+            "phone": "0780454678",
+            "gender": ""
+          }
+        },
+        {
+          "name": "مبادئ آمن المعلومات والفضاء الالكتروني",
+          "description": "الماده كامله شابتر 1.2.3.5.6",
+          "status": "completed",
+          "takerInfo": {
+            "name": "اسماء الربيع",
+            "phone": "0782553839",
+            "gender": ""
+          }
+        }
+      ],
+      "createdAt": "Timestamp(seconds=1772298669, nanoseconds=325000000)"
+    }
+  ]
+}

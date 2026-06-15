@@ -20,8 +20,11 @@ export const sendDonationToSheets = async (donationData) => {
             type: 'donation',
             studentName: donationData.studentName,
             phoneNumber: donationData.phoneNumber,
+            studentGender: donationData.studentGender || '',
             email: donationData.email || '',
-            materials: Array.isArray(donationData.materials) ? donationData.materials.join(', ') : donationData.materials,
+            materials: Array.isArray(donationData.materials)
+                ? donationData.materials.map(m => typeof m === 'object' ? m.name : m).join(', ')
+                : donationData.materials,
             status: donationData.status
         });
 
@@ -57,6 +60,7 @@ export const sendBookingToSheets = async (bookingData) => {
             type: 'booking',
             studentName: bookingData.studentName,
             phoneNumber: bookingData.phoneNumber,
+            studentGender: bookingData.studentGender || '',
             email: bookingData.email || '',
             materialName: bookingData.materialName,
             donorName: bookingData.donorName,

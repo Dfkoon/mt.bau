@@ -24,20 +24,7 @@ service cloud.firestore {
 
     // Material Donations (Consolidated & Fixed)
     match /materialDonations/{doc} {
-      // Allow public read access so the list shows up correctly
-      allow read: if true;
-      
-      // Allow students to create new donations
-      allow create: if true;
-      
-      // Allow booking updates or admin updates
-      // Allow booking updates (relaxed to allow multiple bookings on same doc)
-      allow update: if (
-        request.resource.data.status in ['reserved', 'approved']
-      ) || isAdmin();
-      
-      // Only admins can delete
-      allow delete: if isAdmin();
+      allow read, write: if true;
     }
     
     // QnA / Suggestions
@@ -90,6 +77,16 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow create: if true;
       allow update, delete: if isAdmin();
+    }
+
+    // Campaign Archives
+    match /campaignArchives/{doc} {
+      allow read, write: if true;
+    }
+
+    // System Configs
+    match /system_configs/{doc} {
+      allow read, write: if true;
     }
     
     // Default Deny
