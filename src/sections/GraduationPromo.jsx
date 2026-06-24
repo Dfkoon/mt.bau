@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import './GraduationPromo.css';
 
 const GraduationPromo = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const ads = [

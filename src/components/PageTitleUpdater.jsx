@@ -1,10 +1,18 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { logPageView } from '../services/analyticsService';
 
 const PageTitleUpdater = () => {
     const location = useLocation();
-    const { t, language } = useLanguage();
+    let languageContext = null;
+    try {
+        languageContext = useLanguage();
+    } catch (e) {
+        console.warn('PageTitleUpdater: LanguageContext not found. Make sure LanguageProvider wraps the app.');
+    }
+    const t = languageContext?.t || ((key) => key);
+    const language = languageContext?.language || 'ar';
 
     useEffect(() => {
         const path = location.pathname;
@@ -24,6 +32,11 @@ const PageTitleUpdater = () => {
         const siteName = language === 'ar' ? 'مكانك الجامعي' : 'Makanak Al-Jami\'i';
 
         document.title = `${pageTitle} | ${siteName}`;
+
+        // Log this page visit to Firestore for analytics (skip admin dashboard itself)
+        if (!path.startsWith('/admin-dashboard')) {
+            logPageView(path, { type: 'visit' });
+        }
     }, [location, language, t]);
 
     return null;

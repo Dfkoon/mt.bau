@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { db } from '../config/firebase';
-import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, setDoc, deleteDoc, limit } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, setDoc, deleteDoc, limit, arrayUnion } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import exchangeHero from '../assets/heros/exchange_hero.png';
 import { sendDonationToSheets, sendBookingToSheets } from '../services/googleSheetsService';
+import { saveCourseDonation, saveCourseBooking } from '../services/courseStatusService';
+import emailjs from '@emailjs/browser';
+import AdminDashboard from './AdminDashboard';
 import './MaterialExchange.css';
+
 
 // Campaign timing is now dynamic — loaded from Firestore system_configs/global_settings
 
 const STAFF_USERS = {
-    admin: { role: 'admin',       nameAr: 'الأدمن', nameEn: 'Admin', gender: null     },
-    ahmad: { role: 'coordinator', nameAr: 'أحمد',   nameEn: 'Ahmad', gender: 'male'   },
-    sara:  { role: 'coordinator', nameAr: 'سارة',   nameEn: 'Sara',  gender: 'female' }
+    admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
+    ahmad: { role: 'coordinator', nameAr: 'أحمد', nameEn: 'Ahmad', gender: 'male' },
+    sara: { role: 'coordinator', nameAr: 'سارة', nameEn: 'Sara', gender: 'female' }
 };
 
 const MaterialExchange = () => {
@@ -33,18 +37,38 @@ const MaterialExchange = () => {
         exchangeSuspendedMessageEn: 'It resumes at the start of each new semester during the add and drop period.',
         adminPassword: 'admin2024',
         ahmadPassword: 'ahmad2024',
-        saraPassword:  'sara2024',
-        ahmadNameAr:   'أحمد',
-        ahmadNameEn:   'Ahmad',
-        saraNameAr:    'سارة',
-        saraNameEn:    'Sara',
-        coordinatorMaleTasks:    '',
-        coordinatorFemaleTasks:  '',
-        sharedCoordinatorTasks:  '',
-        donationEndTime:  '',   // ISO datetime string — end of collection/donation period
+        saraPassword: 'sara2024',
+        ahmadNameAr: 'أحمد',
+        ahmadNameEn: 'Ahmad',
+        saraNameAr: 'سارة',
+        saraNameEn: 'Sara',
+        ahmadEmail: '',
+        saraEmail: '',
+        allowCoordinatorEditDelete: false,
+        coordinatorPermissions: {
+            ahmad: {
+                editDonation: false,
+                deleteDonation: false,
+                completeBooking: false,
+                cancelBooking: false
+            },
+            sara: {
+                editDonation: false,
+                deleteDonation: false,
+                completeBooking: false,
+                cancelBooking: false
+            }
+        },
+        coordinatorMaleTasks: '',
+        coordinatorFemaleTasks: '',
+        sharedCoordinatorTasks: '',
+        taskAutoDeleteHours: 24,
+        materialTrackerEnabled: false,
+        donationEndTime: '',   // ISO datetime string — end of collection/donation period
         bookingStartTime: ''    // ISO datetime string — start of booking/exchange period
     });
     const [settingsLoaded, setSettingsLoaded] = useState(false);
+    const [permissionsSelection, setPermissionsSelection] = useState('ahmad');
     const [bookingOpen, setBookingOpen] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const [showBookingModal, setShowBookingModal] = useState(false);
@@ -59,10 +83,36 @@ const MaterialExchange = () => {
     // ── ADMIN / COORDINATOR FILTERS ──────────────────────────────
     const [adminSubFilter, setAdminSubFilter] = useState('all'); // 'all' | 'ahmad' | 'sara'
     const [coordinatorSubTab, setCoordinatorSubTab] = useState('delegated'); // 'main' | 'delegated'
+    const [staffSubTab, setStaffSubTab] = useState('donations'); // 'donations' | 'bookings'
+    const [staffSearchQuery, setStaffSearchQuery] = useState('');
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedDonationForEdit, setSelectedDonationForEdit] = useState(null);
+    const [editCoordinatorNotes, setEditCoordinatorNotes] = useState('');
     const [showDelegateModal, setShowDelegateModal] = useState(false);
     const [donationToDelegate, setDonationToDelegate] = useState(null);
+    const [showApprovalRequestsModal, setShowApprovalRequestsModal] = useState(false);
+    const [selectedDonationForRequests, setSelectedDonationForRequests] = useState(null);
+
+    // ── Action Request Modal State ──
+    const [showActionRequestModal, setShowActionRequestModal] = useState(false);
+    const [actionRequestData, setActionRequestData] = useState({
+        donationId: null,
+        actionType: null, // 'edit', 'delete', 'completeBooking', 'cancelBooking'
+        materialIndex: null,
+        donationDetails: null,
+        coordinatorNotes: ''
+    });
+
+    // ── Admin Response Modal State ──
+    const [showAdminResponseModal, setShowAdminResponseModal] = useState(false);
+    const [adminResponseData, setAdminResponseData] = useState({
+        donationId: null,
+        request: null,
+        adminAction: 'approve', // 'approve', 'reject', 'suspend'
+        adminNotes: ''
+    });
+
+
 
     // ── STAFF AUTH STATE ──────────────────────────────────────────
     const [loggedInUser, setLoggedInUser] = useState(() => {
@@ -70,24 +120,43 @@ const MaterialExchange = () => {
         catch { return null; }
     });
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const [loginStep, setLoginStep] = useState(1); // 1 = secret code, 2 = credentials
+    const [loginStep, setLoginStep] = useState(1); // 1 = secret code, 2 = credentials, 3 = email verification
     const [secretCodeInput, setSecretCodeInput] = useState('');
     const [secretCodeError, setSecretCodeError] = useState(false);
     const [loginForm, setLoginForm] = useState({ username: '', password: '' });
     const [loginError, setLoginError] = useState('');
-    
+    const [showPassword, setShowPassword] = useState(false);
+    const [showSecretCode, setShowSecretCode] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
+    const [verificationCodeInput, setVerificationCodeInput] = useState('');
+    const [verificationCodeError, setVerificationCodeError] = useState(false);
+    const [pendingStaffKey, setPendingStaffKey] = useState('');
+    const [pendingStaffEmail, setPendingStaffEmail] = useState('');
+    const [pendingStaffName, setPendingStaffName] = useState('');
+
     // ── CAPTCHA STATE ──────────────────────────────────────────────
     const [captchaText, setCaptchaText] = useState('');
     const [captchaInput, setCaptchaInput] = useState('');
     const [captchaError, setCaptchaError] = useState(false);
     const canvasRef = useRef(null);
 
+    // New states and refs for student forms
+    const [donationCaptchaText, setDonationCaptchaText] = useState('');
+    const [donationCaptchaInput, setDonationCaptchaInput] = useState('');
+    const [donationCaptchaError, setDonationCaptchaError] = useState(false);
+    const donationCanvasRef = useRef(null);
+
+    const [bookingCaptchaText, setBookingCaptchaText] = useState('');
+    const [bookingCaptchaInput, setBookingCaptchaInput] = useState('');
+    const [bookingCaptchaError, setBookingCaptchaError] = useState(false);
+    const bookingCanvasRef = useRef(null);
+
     const SECRET_GATEWAY_CODE = 'makanak2025';
 
     // ── DASHBOARD STATE ───────────────────────────────────────────
     const [activeTab, setActiveTab] = useState('donations');
     const [allDonations, setAllDonations] = useState([]);
-    const [checkedTasks, setCheckedTasks] = useState(new Set());
+    const [taskCompletions, setTaskCompletions] = useState({ ahmad: {}, sara: {} }); // { username: { taskKey: isoTimestamp } }
     const [dashboardLoading, setDashboardLoading] = useState(false);
     const [settingsSaving, setSettingsSaving] = useState(false);
     const [sectionSaving, setSectionSaving] = useState('');
@@ -103,26 +172,46 @@ const MaterialExchange = () => {
     const [showArchiveModal, setShowArchiveModal] = useState(false);
     const [selectedArchive, setSelectedArchive] = useState(null);
     const [archivesLoading, setArchivesLoading] = useState(false);
-    const generateCaptcha = () => {
+    const generateCaptchaText = () => {
         const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         let result = '';
         for (let i = 0; i < 5; i++) {
             result += chars.charAt(Math.floor(Math.random() * chars.length));
         }
-        setCaptchaText(result);
+        return result;
+    };
+
+    const generateCaptcha = () => {
+        const text = generateCaptchaText();
+        setCaptchaText(text);
         setCaptchaInput('');
         setCaptchaError(false);
     };
 
-    const drawCaptcha = () => {
-        const canvas = canvasRef.current;
+    const generateDonationCaptcha = () => {
+        const text = generateCaptchaText();
+        setDonationCaptchaText(text);
+        setDonationCaptchaInput('');
+        setDonationCaptchaError(false);
+        drawCaptchaOnCanvas(donationCanvasRef.current, text);
+    };
+
+    const generateBookingCaptcha = () => {
+        const text = generateCaptchaText();
+        setBookingCaptchaText(text);
+        setBookingCaptchaInput('');
+        setBookingCaptchaError(false);
+        drawCaptchaOnCanvas(bookingCanvasRef.current, text);
+    };
+
+    const drawCaptchaOnCanvas = (canvas, text) => {
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        
+
         ctx.fillStyle = isDark ? '#1f2937' : '#f3f4f6';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -158,33 +247,41 @@ const MaterialExchange = () => {
             ctx.fill();
         }
 
-        ctx.font = 'bold 28px Courier New, monospace';
+        const fontSize = Math.floor(canvas.height * 0.55);
+        ctx.font = `bold ${fontSize}px Courier New, monospace`;
         ctx.textBaseline = 'middle';
-        
-        const colors = isDark 
+        ctx.textAlign = 'center';
+
+        const colors = isDark
             ? ['#ff7675', '#74b9ff', '#55efc4', '#ffeaa7', '#a29bfe', '#ff9ff3', '#00d2d3']
             : ['#d63031', '#0984e3', '#00b894', '#fdcb6e', '#6c5ce7', '#db0a5b', '#018576'];
 
-        for (let i = 0; i < captchaText.length; i++) {
-            const char = captchaText[i];
+        const charSpacing = canvas.width / (text.length + 1);
+
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
             ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
-            
+
             ctx.save();
-            const x = 20 + i * 28 + Math.random() * 5;
-            const y = canvas.height / 2 + (Math.random() - 0.5) * 8;
-            const angle = (Math.random() - 0.5) * 0.4;
-            
+            const x = charSpacing * 0.85 + i * charSpacing + (Math.random() - 0.5) * (charSpacing * 0.15);
+            const y = canvas.height / 2 + (Math.random() - 0.5) * (canvas.height * 0.12);
+            const angle = (Math.random() - 0.5) * 0.35;
+
             ctx.translate(x, y);
             ctx.rotate(angle);
-            
+
             const scaleX = 0.9 + Math.random() * 0.2;
             const scaleY = 0.9 + Math.random() * 0.2;
             ctx.scale(scaleX, scaleY);
-            
-            ctx.fillText(char, -10, 0);
+
+            ctx.fillText(char, 0, 0);
             ctx.restore();
         }
     };
+
+    const drawCaptcha = () => drawCaptchaOnCanvas(canvasRef.current, captchaText);
+    const drawDonationCaptcha = () => drawCaptchaOnCanvas(donationCanvasRef.current, donationCaptchaText);
+    const drawBookingCaptcha = () => drawCaptchaOnCanvas(bookingCanvasRef.current, bookingCaptchaText);
     // ── EFFECTS ───────────────────────────────────────────────────
     useEffect(() => {
         const targetISO = systemSettings.bookingStartTime || systemSettings.donationEndTime || '';
@@ -198,8 +295,8 @@ const MaterialExchange = () => {
             const difference = target - now;
             if (difference > 0) {
                 setTimeLeft({
-                    days:    Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    hours:   Math.floor((difference / (1000 * 60 * 60)) % 24),
+                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
                     minutes: Math.floor((difference / 1000 / 60) % 60),
                     seconds: Math.floor((difference / 1000) % 60)
                 });
@@ -222,42 +319,93 @@ const MaterialExchange = () => {
                     const phase = data.campaignPhase || 'suspended';
                     setSystemSettings(prev => ({
                         ...prev,
-                        campaignPhase:           phase,
-                        isExchangeActive:        phase !== 'suspended',
-                        secretGatewayCode:       data.secretGatewayCode       || 'makanak2025',
+                        campaignPhase: phase,
+                        isExchangeActive: phase !== 'suspended',
+                        secretGatewayCode: data.secretGatewayCode || 'makanak2025',
                         exchangeSuspendedMessageAr: data.exchangeSuspendedMessageAr || prev.exchangeSuspendedMessageAr,
                         exchangeSuspendedMessageEn: data.exchangeSuspendedMessageEn || prev.exchangeSuspendedMessageEn,
-                        adminPassword:           data.adminPassword           || prev.adminPassword,
-                        ahmadPassword:           data.ahmadPassword           || prev.ahmadPassword,
-                        saraPassword:            data.saraPassword            || prev.saraPassword,
-                        ahmadNameAr:             data.ahmadNameAr             || prev.ahmadNameAr,
-                        ahmadNameEn:             data.ahmadNameEn             || prev.ahmadNameEn,
-                        saraNameAr:              data.saraNameAr              || prev.saraNameAr,
-                        saraNameEn:              data.saraNameEn              || prev.saraNameEn,
-                        coordinatorMaleTasks:    data.coordinatorMaleTasks    || '',
-                        coordinatorFemaleTasks:  data.coordinatorFemaleTasks  || '',
-                        sharedCoordinatorTasks:  data.sharedCoordinatorTasks  || '',
-                        donationEndTime:         data.donationEndTime         || '',
-                        bookingStartTime:        data.bookingStartTime        || ''
+                        adminPassword: data.adminPassword || prev.adminPassword,
+                        ahmadPassword: data.ahmadPassword || prev.ahmadPassword,
+                        saraPassword: data.saraPassword || prev.saraPassword,
+                        ahmadNameAr: data.ahmadNameAr || prev.ahmadNameAr,
+                        ahmadNameEn: data.ahmadNameEn || prev.ahmadNameEn,
+                        saraNameAr: data.saraNameAr || prev.saraNameAr,
+                        saraNameEn: data.saraNameEn || prev.saraNameEn,
+                        ahmadEmail: data.ahmadEmail || '',
+                        saraEmail: data.saraEmail || '',
+                        allowCoordinatorEditDelete: data.allowCoordinatorEditDelete !== undefined ? data.allowCoordinatorEditDelete : false,
+                        coordinatorPermissions: data.coordinatorPermissions || {
+                            ahmad: {
+                                editDonation: false,
+                                deleteDonation: false,
+                                completeBooking: false,
+                                cancelBooking: false
+                            },
+                            sara: {
+                                editDonation: false,
+                                deleteDonation: false,
+                                completeBooking: false,
+                                cancelBooking: false
+                            }
+                        },
+                        coordinatorMaleTasks: data.coordinatorMaleTasks || '',
+                        coordinatorFemaleTasks: data.coordinatorFemaleTasks || '',
+                        sharedCoordinatorTasks: data.sharedCoordinatorTasks || '',
+                        taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
+                        materialTrackerEnabled: data.materialTrackerEnabled !== undefined ? data.materialTrackerEnabled : false,
+                        donationEndTime: data.donationEndTime || '',
+                        bookingStartTime: data.bookingStartTime || ''
                     }));
+                    // Load task completions (with auto-delete of old entries)
+                    const rawCompletions = data.taskCompletions || { ahmad: {}, sara: {} };
+                    const autoDeleteHours = data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24;
+                    const cutoff = Date.now() - autoDeleteHours * 3600 * 1000;
+                    const cleaned = {};
+                    for (const [user, tasks] of Object.entries(rawCompletions)) {
+                        cleaned[user] = {};
+                        for (const [key, ts] of Object.entries(tasks)) {
+                            if (new Date(ts).getTime() >= cutoff) cleaned[user][key] = ts;
+                        }
+                    }
+                    setTaskCompletions(cleaned);
                     setBookingOpen(phase === 'exchange');
                     setEditSettings({
-                        campaignPhase:              phase,
-                        secretGatewayCode:          data.secretGatewayCode          || 'makanak2025',
-                        adminPassword:              data.adminPassword              || 'admin2024',
-                        ahmadPassword:              data.ahmadPassword              || 'ahmad2024',
-                        saraPassword:               data.saraPassword               || 'sara2024',
-                        ahmadNameAr:                data.ahmadNameAr                || 'أحمد',
-                        ahmadNameEn:                data.ahmadNameEn                || 'Ahmad',
-                        saraNameAr:                 data.saraNameAr                 || 'سارة',
-                        saraNameEn:                 data.saraNameEn                 || 'Sara',
-                        coordinatorMaleTasks:       data.coordinatorMaleTasks       || '',
-                        coordinatorFemaleTasks:     data.coordinatorFemaleTasks     || '',
-                        sharedCoordinatorTasks:     data.sharedCoordinatorTasks     || '',
+                        campaignPhase: phase,
+                        secretGatewayCode: data.secretGatewayCode || 'makanak2025',
+                        adminPassword: data.adminPassword || 'admin2024',
+                        ahmadPassword: data.ahmadPassword || 'ahmad2024',
+                        saraPassword: data.saraPassword || 'sara2024',
+                        ahmadNameAr: data.ahmadNameAr || 'أحمد',
+                        ahmadNameEn: data.ahmadNameEn || 'Ahmad',
+                        saraNameAr: data.saraNameAr || 'سارة',
+                        saraNameEn: data.saraNameEn || 'Sara',
+                        ahmadEmail: data.ahmadEmail || '',
+                        saraEmail: data.saraEmail || '',
+                        allowCoordinatorEditDelete: data.allowCoordinatorEditDelete !== undefined ? data.allowCoordinatorEditDelete : false,
+                        coordinatorPermissions: data.coordinatorPermissions || {
+                            ahmad: {
+                                editDonation: false,
+                                deleteDonation: false,
+                                completeBooking: false,
+                                cancelBooking: false
+                            },
+                            sara: {
+                                editDonation: false,
+                                deleteDonation: false,
+                                completeBooking: false,
+                                cancelBooking: false
+                            }
+                        },
+                        coordinatorMaleTasks: data.coordinatorMaleTasks || '',
+                        coordinatorFemaleTasks: data.coordinatorFemaleTasks || '',
+                        sharedCoordinatorTasks: data.sharedCoordinatorTasks || '',
+                        taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
+                        materialTrackerEnabled: data.materialTrackerEnabled !== undefined ? data.materialTrackerEnabled : false,
                         exchangeSuspendedMessageAr: data.exchangeSuspendedMessageAr || '',
                         exchangeSuspendedMessageEn: data.exchangeSuspendedMessageEn || '',
-                        donationEndTime:            data.donationEndTime            || '',
-                        bookingStartTime:           data.bookingStartTime           || ''
+                        donationEndTime: data.donationEndTime || '',
+                        bookingStartTime: data.bookingStartTime || '',
+                        taskCompletions: data.taskCompletions || { ahmad: {}, sara: {} }
                     });
                 }
             } catch (error) {
@@ -271,18 +419,21 @@ const MaterialExchange = () => {
         fetchArchives();
     }, []);
 
+    // Derived at top level so useEffect hooks can access it
+    const isAdminUser = loggedInUser?.role === 'admin';
+
     useEffect(() => {
         if (loggedInUser) {
             fetchAllDonations();
-            fetchAuditLogs();
+            if (isAdminUser) fetchAuditLogs();
         }
-    }, [loggedInUser]);
+    }, [loggedInUser, isAdminUser]);
 
     useEffect(() => {
-        if (activeTab === 'logs') {
+        if (activeTab === 'logs' && isAdminUser) {
             fetchAuditLogs();
         }
-    }, [activeTab]);
+    }, [activeTab, isAdminUser]);
 
     useEffect(() => {
         const handleOpenStaffLogin = () => {
@@ -305,16 +456,135 @@ const MaterialExchange = () => {
         }
     }, [showLoginModal, loginStep]);
 
+    const generateVerificationCode = () => {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    };
+
+    const maskEmail = (email) => {
+        if (!email) return '';
+        const [local, domain] = email.split('@');
+        if (!domain) return email;
+        const visiblePart = local.slice(0, 2);
+        return `${visiblePart}***@${domain}`;
+    };
+
+    const sendStaffVerificationCodeEmail = async (email, staffName, code) => {
+        const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+        const templateId = import.meta.env.VITE_EMAILJS_LOGIN_TEMPLATE_ID || import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+        const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+        if (!serviceId || !templateId || !publicKey) {
+            console.warn('EmailJS login verification environment variables are missing. Verification email will not be sent.');
+            return false;
+        }
+
+        const templateParams = {
+            to_name: staffName,
+            to_email: email,
+            verification_code: code,
+            subject: isAr ? 'رمز التحقق لتسجيل دخول المنسق' : 'Coordinator login verification code',
+            message: isAr
+                ? `رمز التحقق الخاص بك هو ${code}. الرجاء إدخاله لإكمال تسجيل الدخول.`
+                : `Your verification code is ${code}. Please enter it to complete login.`
+        };
+
+        try {
+            await emailjs.send(serviceId, templateId, templateParams, publicKey);
+            return true;
+        } catch (error) {
+            console.error('Email verification send failed:', error);
+            return false;
+        }
+    };
+
     useEffect(() => {
         if (showLoginModal && loginStep === 2 && captchaText) {
             drawCaptcha();
         }
     }, [captchaText, showLoginModal, loginStep]);
 
+    // Student Captcha Hooks
+    useEffect(() => {
+        if (publicActiveTab === 'donate' && settingsLoaded && systemSettings.isExchangeActive) {
+            generateDonationCaptcha();
+        }
+    }, [publicActiveTab, settingsLoaded, systemSettings.isExchangeActive]);
+
+    useEffect(() => {
+        if (publicActiveTab === 'donate' && donationCaptchaText && donationCanvasRef.current) {
+            drawDonationCaptcha();
+        }
+    }, [donationCaptchaText, publicActiveTab, settingsLoaded, systemSettings.isExchangeActive]);
+
+    useEffect(() => {
+        if (showBookingModal) {
+            generateBookingCaptcha();
+        }
+    }, [showBookingModal]);
+
+    useEffect(() => {
+        if (showBookingModal && bookingCaptchaText && bookingCanvasRef.current) {
+            drawBookingCaptcha();
+        }
+    }, [bookingCaptchaText, showBookingModal]);
+
+    // ── EMAILJS NOTIFICATION FUNCTION ────────────────────────────
+    const sendCoordinatorEmailNotification = async (type, data) => {
+        const gender = data.studentGender || data.gender;
+        const coordEmail = gender === 'female'
+            ? systemSettings.saraEmail
+            : systemSettings.ahmadEmail;
+        const coordName = gender === 'female'
+            ? (systemSettings.saraNameAr || 'سارة')
+            : (systemSettings.ahmadNameAr || 'أحمد');
+
+        if (!coordEmail) {
+            console.log('No email configured for this coordinator. Skipping notification.');
+            return;
+        }
+
+        const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+        const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+        const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+        if (!serviceId || !templateId || !publicKey) {
+            console.warn('EmailJS environment variables are missing.');
+            return;
+        }
+
+        const isDonation = type === 'donation';
+        const actionText = isDonation ? 'تبرع جديد بمواد دراسية' : 'حجز جديد لمادة دراسية';
+
+        let detailsText = '';
+        if (isDonation) {
+            detailsText = `المواد المتبرع بها:\n` + (data.materials || []).map((m, i) => `${i + 1}. ${typeof m === 'object' ? m.name : m}`).join('\n');
+        } else {
+            detailsText = `المادة المحجوزة: ${data.materialName}\nصاحب المادة (المتبرع): ${data.donorName} (${data.donorPhone})`;
+        }
+
+        const templateParams = {
+            to_name: coordName,
+            to_email: coordEmail,
+            student_name: data.studentName,
+            student_phone: data.phoneNumber || data.phone || 'غير متوفر',
+            student_gender: gender === 'female' ? 'أنثى' : 'ذكر',
+            action_type: actionText,
+            details: detailsText,
+            message: `مرحباً ${coordName}،\n\nيوجد ${actionText} في منصة مكانك الجامعي.\n\nتفاصيل الطالب:\n- الاسم: ${data.studentName}\n- الهاتف: ${data.phoneNumber || data.phone || 'غير متوفر'}\n\n${detailsText}\n\nيرجى الدخول إلى لوحة التحكم للمتابعة والتنسيق.`
+        };
+
+        try {
+            await emailjs.send(serviceId, templateId, templateParams, publicKey);
+            console.log(`Notification email sent successfully to ${coordName} (${coordEmail})`);
+        } catch (error) {
+            console.error('Failed to send notification email:', error);
+        }
+    };
+
     // ── PUBLIC FUNCTIONS ──────────────────────────────────────────
     const toEnglishNumerals = (str) => {
-        const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-        const en = ['0','1','2','3','4','5','6','7','8','9'];
+        const ar = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        const en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         let result = str;
         ar.forEach((a, i) => { result = result.replace(new RegExp(a, 'g'), en[i]); });
         return result;
@@ -339,12 +609,16 @@ const MaterialExchange = () => {
     };
 
     const handleTrackRequest = () => {
+        if (!systemSettings.materialTrackerEnabled) {
+            toast.error(isAr ? 'خدمة تتبع حالة المواد غير متاحة حالياً.' : 'Material tracking service is currently unavailable.');
+            return;
+        }
         if (!trackerSearchQuery.trim()) {
             toast.error(isAr ? 'يرجى إدخال رقم الهاتف أو البريد الإلكتروني' : 'Please enter phone number or email');
             return;
         }
         const queryStr = toEnglishNumerals(trackerSearchQuery.trim().toLowerCase());
-        
+
         // Find donor matches or taker matches in allMaterials
         const results = [];
         allMaterials.forEach(m => {
@@ -352,22 +626,30 @@ const MaterialExchange = () => {
             const donorEmail = (m.email || '').trim().toLowerCase();
             const takerPhone = (m.materialItem?.takerInfo?.phone || '').trim().toLowerCase();
             const takerEmail = (m.materialItem?.takerInfo?.email || '').trim().toLowerCase();
-            
+
             const isDonor = donorPhone === queryStr || donorEmail === queryStr;
             const isTaker = takerPhone === queryStr || takerEmail === queryStr;
-            
-            const coordName = m.studentGender === 'male' 
-                ? (systemSettings.ahmadNameAr || 'أحمد') 
+
+            const coordName = m.studentGender === 'male'
+                ? (systemSettings.ahmadNameAr || 'أحمد')
                 : (systemSettings.saraNameAr || 'سارة');
-                
+
             if (isDonor) {
+                const takerInfo = m.materialItem?.takerInfo;
+                const bookedAt = takerInfo?.bookedAt
+                    ? (takerInfo.bookedAt.seconds ? takerInfo.bookedAt.seconds * 1000 : new Date(takerInfo.bookedAt).getTime())
+                    : null;
                 results.push({
                     userRole: 'donor',
                     materialName: m.materialItem.name,
                     materialDescription: m.materialItem.description || '',
                     itemStatus: m.materialItem.status || m.status,
-                    createdAt: m.createdAt ? (m.createdAt.seconds * 1000 || new Date(m.createdAt).getTime()) : Date.now(),
-                    coordinatorName: coordName
+                    createdAt: m.createdAt ? (m.createdAt.seconds ? m.createdAt.seconds * 1000 : new Date(m.createdAt).getTime()) : Date.now(),
+                    coordinatorName: coordName,
+                    // Booking / delivery details for the donor
+                    takerName: takerInfo?.name || null,
+                    bookedAt: bookedAt,
+                    donationStatus: m.status  // overall donation status
                 });
             }
             if (isTaker) {
@@ -376,16 +658,25 @@ const MaterialExchange = () => {
                     materialName: m.materialItem.name,
                     materialDescription: m.materialItem.description || '',
                     itemStatus: m.materialItem.status || m.status,
-                    createdAt: m.materialItem.takerInfo?.bookedAt ? (m.materialItem.takerInfo.bookedAt.seconds * 1000 || new Date(m.materialItem.takerInfo.bookedAt).getTime()) : Date.now(),
+                    createdAt: m.materialItem.takerInfo?.bookedAt ? (m.materialItem.takerInfo.bookedAt.seconds ? m.materialItem.takerInfo.bookedAt.seconds * 1000 : new Date(m.materialItem.takerInfo.bookedAt).getTime()) : Date.now(),
                     coordinatorName: coordName
                 });
             }
         });
-        
+
         // Sort by date descending
         results.sort((a, b) => b.createdAt - a.createdAt);
         setTrackerResults(results);
     };
+
+    const trackerSummary = (trackerResults && trackerResults.length > 0) ? {
+        total: trackerResults.length,
+        reserved: trackerResults.filter(item => item.itemStatus === 'reserved').length,
+        delivered: trackerResults.filter(item => item.itemStatus === 'completed').length,
+        available: trackerResults.filter(item => ['approved', 'pending'].includes(item.itemStatus)).length,
+        booked: trackerResults.filter(item => item.userRole === 'booker').length,
+        donorItems: trackerResults.filter(item => item.userRole === 'donor').length
+    } : null;
 
     const fetchDonations = async () => {
         setLoading(true);
@@ -462,6 +753,12 @@ const MaterialExchange = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (donationCaptchaInput.trim().toUpperCase() !== donationCaptchaText) {
+            setDonationCaptchaError(true);
+            toast.error(isAr ? 'رمز التحقق غير صحيح' : 'Incorrect verification code');
+            generateDonationCaptcha();
+            return;
+        }
         if (!formData.studentName.trim() || !formData.phoneNumber.trim() || !formData.studentGender || formData.materials.length === 0) {
             toast.error(isAr ? 'يرجى ملء جميع الحقول واختيار الجنس وإضافة مادة واحدة على الأقل' : 'Please fill all fields, select gender, and add at least one material');
             return;
@@ -504,10 +801,33 @@ const MaterialExchange = () => {
                 materials: formData.materials,
                 status: 'pending'
             }).catch(err => console.warn('Google Sheets backup failed:', err));
+
+            // Send EmailJS Notification to coordinator
+            sendCoordinatorEmailNotification('donation', {
+                studentName: formData.studentName.trim(),
+                phoneNumber: formData.phoneNumber.trim(),
+                email: formData.email?.trim() || '',
+                studentGender: formData.studentGender,
+                materials: materialsObjects
+            }).catch(err => console.warn('Email notification failed:', err));
+
             toast.success(isAr ? 'تم استلام طلب التبرع بنجاح! سيتم مراجعته من قبل المسؤولين' : 'Donation request received! It will be reviewed by admins');
+            await saveCourseDonation({
+                donorName: formData.studentName.trim(),
+                phoneNumber: formData.phoneNumber.trim(),
+                courseNames: formData.materials.map(m => (typeof m === 'object' ? m.name : m)),
+                faculty: '',
+                notes: '',
+                email: formData.email?.trim() || '',
+                resourcesOffered: formData.materials.map(m => ({
+                    name: typeof m === 'object' ? m.name : m,
+                    description: typeof m === 'object' ? m.description : ''
+                }))
+            });
             setFormData({ studentName: '', phoneNumber: '', email: '', studentGender: '', materials: [] });
             setCurrentMaterial({ name: '', description: '' });
             setAgreedToTerms(false);
+            generateDonationCaptcha();
             fetchDonations();
         } catch (error) {
             console.error('Error adding donation:', error);
@@ -539,6 +859,12 @@ const MaterialExchange = () => {
 
     const handleBookingSubmit = async (e) => {
         e.preventDefault();
+        if (bookingCaptchaInput.trim().toUpperCase() !== bookingCaptchaText) {
+            setBookingCaptchaError(true);
+            toast.error(isAr ? 'رمز التحقق غير صحيح' : 'Incorrect verification code');
+            generateBookingCaptcha();
+            return;
+        }
         if (bookingData.name.trim().split(/\s+/).length < 2) {
             toast.error(isAr ? 'يرجى إدخال الاسم الثنائي على الأقل' : 'Please enter at least two parts of your name');
             return;
@@ -598,9 +924,31 @@ const MaterialExchange = () => {
                 donorPhone: selectedMaterial.donorPhone || 'Unknown',
                 status: 'reserved'
             }).catch(err => console.warn('Google Sheets backup failed:', err));
+
+            // Send EmailJS Notification to coordinator
+            sendCoordinatorEmailNotification('booking', {
+                studentName: bookingData.name.trim(),
+                phone: bookingData.phone.trim(),
+                email: bookingData.email?.trim() || '',
+                gender: bookingData.gender,
+                materialName: selectedMaterial.materialName,
+                donorName: selectedMaterial.donorName || 'Unknown',
+                donorPhone: selectedMaterial.donorPhone || 'Unknown'
+            }).catch(err => console.warn('Email notification failed:', err));
+
+            await saveCourseBooking({
+                studentName: bookingData.name.trim(),
+                phoneNumber: bookingData.phone.trim(),
+                courseName: selectedMaterial?.materialName || '',
+                courseCode: selectedMaterial?.courseCode || '',
+                faculty: selectedMaterial?.faculty || '',
+                notes: '',
+                email: bookingData.email?.trim() || ''
+            });
             toast.success(isAr ? 'تم حجز المادة بنجاح!' : 'Material booked successfully!', { duration: 5000 });
             setShowBookingModal(false);
             setBookingData({ name: '', phone: '', gender: '' });
+            generateBookingCaptcha();
             fetchDonations();
         } catch (error) {
             console.error('Error booking material:', error);
@@ -616,9 +964,9 @@ const MaterialExchange = () => {
     };
 
     // ── STAFF FUNCTIONS ───────────────────────────────────────────
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        
+
         // 1. Verify CAPTCHA first
         if (captchaInput.trim().toUpperCase() !== captchaText) {
             setCaptchaError(true);
@@ -631,12 +979,12 @@ const MaterialExchange = () => {
         const passwords = {
             admin: systemSettings.adminPassword || 'admin2024',
             ahmad: systemSettings.ahmadPassword || 'ahmad2024',
-            sara:  systemSettings.saraPassword  || 'sara2024'
+            sara: systemSettings.saraPassword || 'sara2024'
         };
         const staffUsersDynamic = {
-            admin: { role: 'admin',       nameAr: 'الأدمن', nameEn: 'Admin', gender: null     },
-            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male'   },
-            sara:  { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara',  gender: 'female' }
+            admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
+            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
+            sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
         };
 
         const inputUserTrimmed = username.trim().toLowerCase();
@@ -660,9 +1008,35 @@ const MaterialExchange = () => {
         }
 
         if (matchedKey && passwords[matchedKey] === password) {
-            const user = { ...staffUsersDynamic[matchedKey], username: matchedKey };
-            setLoggedInUser(user);
-            sessionStorage.setItem('exchange_staff', JSON.stringify(user));
+            const user = staffUsersDynamic[matchedKey];
+            const coordinatorEmail = matchedKey === 'ahmad'
+                ? systemSettings.ahmadEmail
+                : matchedKey === 'sara'
+                    ? systemSettings.saraEmail
+                    : null;
+
+            if (matchedKey !== 'admin' && coordinatorEmail) {
+                const code = generateVerificationCode();
+                setVerificationCode(code);
+                setVerificationCodeInput('');
+                setVerificationCodeError(false);
+                setPendingStaffKey(matchedKey);
+                setPendingStaffEmail(coordinatorEmail);
+                setPendingStaffName(user.nameAr || user.nameEn || matchedKey);
+
+                const emailSent = await sendStaffVerificationCodeEmail(coordinatorEmail, user.nameAr || user.nameEn || matchedKey, code);
+                if (emailSent) {
+                    toast.success(isAr ? 'تم إرسال رمز التحقق إلى بريد المنسق' : 'Verification code sent to coordinator email');
+                    setLoginStep(3);
+                    return;
+                }
+
+                toast.error(isAr ? 'لم يتم إرسال رمز التحقق. تحقق من إعدادات البريد.' : 'Failed to send verification code. Check email settings.');
+                return;
+            }
+
+            setLoggedInUser({ ...user, username: matchedKey });
+            sessionStorage.setItem('exchange_staff', JSON.stringify({ ...user, username: matchedKey }));
             setShowLoginModal(false);
             setLoginForm({ username: '', password: '' });
             setLoginError('');
@@ -671,6 +1045,51 @@ const MaterialExchange = () => {
         } else {
             setLoginError(isAr ? 'اسم المستخدم أو كلمة المرور غير صحيحة' : 'Incorrect username or password');
             generateCaptcha();
+        }
+    };
+
+    const handleVerificationSubmit = (e) => {
+        e.preventDefault();
+        if (verificationCodeInput.trim() !== verificationCode) {
+            setVerificationCodeError(true);
+            toast.error(isAr ? 'رمز التحقق غير صحيح' : 'Incorrect verification code');
+            return;
+        }
+
+        const staffUsersDynamic = {
+            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
+            sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
+        };
+        const user = staffUsersDynamic[pendingStaffKey] || { role: 'coordinator', nameAr: pendingStaffName, nameEn: pendingStaffName, gender: null };
+
+        setLoggedInUser({ ...user, username: pendingStaffKey });
+        sessionStorage.setItem('exchange_staff', JSON.stringify({ ...user, username: pendingStaffKey }));
+        setShowLoginModal(false);
+        setLoginStep(1);
+        setLoginForm({ username: '', password: '' });
+        setLoginError('');
+        setCaptchaInput('');
+        setCaptchaError(false);
+        setVerificationCode('');
+        setVerificationCodeInput('');
+        setVerificationCodeError(false);
+        setPendingStaffKey('');
+        setPendingStaffEmail('');
+        setPendingStaffName('');
+    };
+
+    const handleResendVerificationCode = async () => {
+        if (!pendingStaffKey || !pendingStaffEmail) return;
+        const newCode = generateVerificationCode();
+        setVerificationCode(newCode);
+        setVerificationCodeInput('');
+        setVerificationCodeError(false);
+
+        const emailSent = await sendStaffVerificationCodeEmail(pendingStaffEmail, pendingStaffName, newCode);
+        if (emailSent) {
+            toast.success(isAr ? 'تم إعادة إرسال رمز التحقق' : 'Verification code resent successfully');
+        } else {
+            toast.error(isAr ? 'فشل إعادة إرسال رمز التحقق. تحقق من إعدادات البريد.' : 'Failed to resend verification code. Check email settings.');
         }
     };
 
@@ -685,12 +1104,12 @@ const MaterialExchange = () => {
             await updateDoc(doc(db, 'materialDonations', donationId), { status: 'approved' });
             toast.success(isAr ? 'تمت الموافقة على التبرع' : 'Donation approved');
             fetchAllDonations();
-            
+
             const don = allDonations.find(d => d.id === donationId);
             const donorName = don ? don.studentName : '';
             addAuditLog(
-                `وافق على تبرع الطالب (${donorName}) بالكامل`, 
-                `Approved the entire donation from student (${donorName})`, 
+                `وافق على تبرع الطالب (${donorName}) بالكامل`,
+                `Approved the entire donation from student (${donorName})`,
                 { donationId, donorName }
             );
         } catch {
@@ -698,18 +1117,218 @@ const MaterialExchange = () => {
         }
     };
 
-    const handleSaveEditDonation = async (e) => {
-        e.preventDefault();
-        if (!selectedDonationForEdit) return;
-        setLoading(true);
+    // ── Generate Direct WhatsApp Link ──
+    const generateWhatsAppLink = (data, type) => {
         try {
-            const donationRef = doc(db, 'materialDonations', selectedDonationForEdit.id);
-            const materials = selectedDonationForEdit.materials || [];
+            if (!data) return '#';
+
+            const rawName = loggedInUser?.name || '';
+            const coordinatorName = rawName || (isAr ? 'فريق مكانك' : 'Makanak Team');
+            const coordinatorLabel = rawName
+                ? (isAr ? `المنسق ${rawName}` : `Coordinator ${rawName}`)
+                : (isAr ? 'فريق حملة تبادل المواد' : 'Material Exchange Team');
+            let phone = '';
+            let name = '';
+            let messageText = '';
+            let materials = [];
+
+            // Helper to normalize phone numbers
+            const normalizePhone = (p) => {
+                if (!p) return '';
+                return String(p).replace(/\D/g, '');
+            };
+
+            const phonesMatch = (a, b) => {
+                const na = normalizePhone(a);
+                const nb = normalizePhone(b);
+                if (!na || !nb) return false;
+                return na.slice(-9) === nb.slice(-9);
+            };
+
+            if (type === 'donor') {
+                name = data.studentName || '';
+                phone = String(data.phoneNumber || data.studentPhone || '').replace(/\D/g, '');
+                
+                const donorItems = allDonations.filter(item => 
+                    phonesMatch(item.phoneNumber || item.studentPhone, phone)
+                );
+
+                                                const delivered = [];
+                const remaining = [];
+
+                donorItems.forEach(don => {
+                    const rawMaterials = Array.isArray(don.materials) ? don.materials : [];
+                    rawMaterials.forEach(m => {
+                        const matName = typeof m === 'object' ? (m.name || '') : String(m || '');
+                        const status = typeof m === 'object' ? (m.status || 'pending') : 'pending';
+
+                        if (status === 'completed') {
+                            delivered.push(`- ${matName}`);
+                        } else {
+                            let statusStr = '';
+                            if (status === 'reserved') {
+                                statusStr = isAr ? ' — بانتظار التسليم' : ' — Pending Delivery';
+                            } else if (status === 'approved') {
+                                statusStr = isAr ? ' — متاح للاستلام' : ' — Available for Pickup';
+                            } else if (status === 'pending') {
+                                statusStr = isAr ? ' — قيد المراجعة' : ' — Under Review';
+                            }
+                            remaining.push(`- ${matName}${statusStr}`);
+                        }
+                    });
+                });
+
+                const deliveredText = delivered.length > 0
+                    ? (isAr
+                        ? `\n\n*المواد التي تم تسليمها بنجاح*:\n\n${delivered.join('\n')}`
+                        : `\n\n*Delivered Materials*:\n\n${delivered.join('\n')}`)
+                    : '';
+                const remainingText = remaining.length > 0
+                    ? (isAr
+                        ? `\n\n*المواد المتبقية وبانتظار التسليم*:\n\n${remaining.join('\n')}`
+                        : `\n\n*Pending Materials*:\n\n${remaining.join('\n')}`)
+                    : '';
+
+                if (isAr) {
+                    messageText = `السلام عليكم ورحمة الله وبركاته،
+الأخ/الأخت الفاضل/ة ${name}،
+
+تقرير مُحدّث لحالة المواد المتبرع بها من قبلكم عبر موقع "مكانك":${deliveredText}${remainingText}
+
+لمتابعة حالة المواد وتفاصيل التسليم:
+https://makanak.netlify.app/exchange#track-status
+
+جزاكم الله خيراً على مساهمتكم الكريمة لدعم الطلاب.`;
+                } else {
+                    messageText = `Dear ${name},
+
+Here is an updated report on your donated materials on Makanak:${deliveredText}${remainingText}
+
+To track your materials anytime:
+https://makanak.netlify.app/exchange#track-status
+
+Thank you for your generous contribution to support your fellow students.`;
+                }
+
+                materials = delivered.concat(remaining);
+
+            } else if (type === 'booker') {
+                name = data.takerInfo?.name || '';
+                phone = String(data.takerInfo?.phone || '').replace(/\D/g, '');
+
+                const bookerDelivered = [];
+                const bookerRemaining = [];
+
+                allDonations.forEach(don => {
+                    if (don.materials && Array.isArray(don.materials)) {
+                        don.materials.forEach(m => {
+                            if (typeof m === 'object' && m && m.takerInfo && m.takerInfo.phone) {
+                                if (phonesMatch(m.takerInfo.phone, phone)) {
+                                    const matName = m.name || '';
+                                    const status = m.status || 'reserved';
+
+                                    if (status === 'completed') {
+                                        bookerDelivered.push(`- ${matName}`);
+                                    } else if (status === 'reserved') {
+                                        bookerRemaining.push(`- ${matName}`);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+                if (bookerDelivered.length === 0 && bookerRemaining.length === 0) {
+                    const matName = data.materialName || '';
+                    if (data.status === 'completed') {
+                        bookerDelivered.push(`- ${matName}`);
+                    } else {
+                        bookerRemaining.push(`- ${matName}`);
+                    }
+                }
+
+                const bookerDeliveredText = bookerDelivered.length > 0
+                    ? (isAr
+                        ? `\n\n*المواد التي تم استلامها بنجاح*:\n\n${bookerDelivered.join('\n')}`
+                        : `\n\n*Successfully Received Materials*:\n\n${bookerDelivered.join('\n')}`)
+                    : '';
+                const bookerRemainingText = bookerRemaining.length > 0
+                    ? (isAr
+                        ? `\n\n*المواد المحجوزة وبانتظار الاستلام*:\n\n${bookerRemaining.join('\n')}`
+                        : `\n\n*Booked Materials – Pending Pickup*:\n\n${bookerRemaining.join('\n')}`)
+                    : '';
+
+                if (isAr) {
+                    messageText = `السلام عليكم ورحمة الله وبركاته،
+الأخ/الأخت الفاضل/ة ${name}،
+
+تقرير مُحدّث لحالة المواد المحجوزة من قبلكم عبر موقع "مكانك":${bookerDeliveredText}${bookerRemainingText}
+
+لمتابعة حالة الحجوزات وتفاصيل الاستلام:
+https://makanak.netlify.app/exchange#track-status
+
+يرجى التواصل معنا لتنسيق موعد الاستلام. شكراً لتعاونكم.`;
+                } else {
+                    messageText = `Dear ${name},
+
+Here is an updated report on your booked materials on Makanak:${bookerDeliveredText}${bookerRemainingText}
+
+To track your bookings anytime:
+https://makanak.netlify.app/exchange#track-status
+
+Please contact us to coordinate the pickup. Thank you.`;
+                }
+
+                materials = bookerDelivered.concat(bookerRemaining);
+            }
+
+            // Build final phone number
+            let finalPhone = normalizePhone(phone);
+            if (finalPhone.startsWith('00962')) {
+                finalPhone = finalPhone.substring(2);
+            }
+            if (finalPhone.length === 10 && finalPhone.startsWith('0')) {
+                finalPhone = '962' + finalPhone.substring(1);
+            } else if (finalPhone.length === 9 && (finalPhone.startsWith('7') || finalPhone.startsWith('8') || finalPhone.startsWith('9'))) {
+                finalPhone = '962' + finalPhone;
+            }
+
+            if (!finalPhone) return '#';
+
+            const whatsappUrl = `https://wa.me/${finalPhone}?text=${encodeURIComponent(messageText)}`;
+            return whatsappUrl;
+        } catch (error) {
+            console.error('Error generating WhatsApp link:', error);
+            return '#';
+        }
+    };
+
+    const handleCompleteBooking = async (donationId, materialIndex) => {
+        const isAdmin = loggedInUser?.role === 'admin';
+        const coordinatorPerms = systemSettings.coordinatorPermissions || {};
+        const currentCoordinatorPerms = coordinatorPerms[loggedInUser?.username] || {};
+        // Coordinators ALWAYS go through approval — only admins can complete bookings directly
+        const canCompleteDirectly = isAdmin;
+
+        if (!canCompleteDirectly) {
+            await handleRequestAdminApproval({ donationId, materialIndex, actionType: 'completeBooking' });
+            return;
+        }
+        try {
+            const donationRef = doc(db, 'materialDonations', donationId);
+            const donationDoc = await getDoc(donationRef);
+            if (!donationDoc.exists()) return;
+            const data = donationDoc.data();
+            const materials = [...(data.materials || [])];
+            if (materials[materialIndex]) {
+                materials[materialIndex].status = 'completed';
+            }
+
             let overallStatus = 'pending';
             const hasApproved = materials.some(m => m.status === 'approved');
             const hasReserved = materials.some(m => m.status === 'reserved');
             const hasCompleted = materials.some(m => m.status === 'completed');
-            
+
             if (hasCompleted && !hasReserved && !hasApproved && !materials.some(m => m.status === 'pending')) {
                 overallStatus = 'completed';
             } else if (hasReserved || hasCompleted) {
@@ -717,7 +1336,149 @@ const MaterialExchange = () => {
             } else if (hasApproved) {
                 overallStatus = 'approved';
             }
-            
+
+            await updateDoc(donationRef, {
+                materials,
+                status: overallStatus,
+                lastUpdated: new Date()
+            });
+            toast.success(isAr ? 'تم تسليم المادة بنجاح! ✅' : 'Material delivered successfully! ✅');
+            fetchAllDonations();
+
+            addAuditLog(
+                `سلّم المادة (${materials[materialIndex].name}) للحاجز (${materials[materialIndex].takerInfo?.name || 'مجهول'})`,
+                `Delivered material (${materials[materialIndex].name}) to booker (${materials[materialIndex].takerInfo?.name || 'Unknown'})`,
+                { donationId, materialIndex }
+            );
+        } catch (error) {
+            console.error('Error completing booking:', error);
+            toast.error(isAr ? 'فشل إتمام عملية التسليم' : 'Failed to complete delivery');
+        }
+    };
+
+    const handleCancelBooking = async (donationId, materialIndex) => {
+        const isAdmin = loggedInUser?.role === 'admin';
+        const coordinatorPerms = systemSettings.coordinatorPermissions || {};
+        const currentCoordinatorPerms = coordinatorPerms[loggedInUser?.username] || {};
+        // Coordinators ALWAYS go through approval — only admins can cancel bookings directly
+        const canCancelDirectly = isAdmin;
+
+        if (!canCancelDirectly) {
+            await handleRequestAdminApproval({ donationId, materialIndex, actionType: 'cancelBooking' });
+            return;
+        }
+        try {
+            const donationRef = doc(db, 'materialDonations', donationId);
+            const donationDoc = await getDoc(donationRef);
+            if (!donationDoc.exists()) return;
+            const data = donationDoc.data();
+            const materials = [...(data.materials || [])];
+            if (materials[materialIndex]) {
+                materials[materialIndex].status = 'approved';
+                delete materials[materialIndex].takerInfo;
+            }
+
+            let overallStatus = 'pending';
+            const hasApproved = materials.some(m => m.status === 'approved');
+            const hasReserved = materials.some(m => m.status === 'reserved');
+            const hasCompleted = materials.some(m => m.status === 'completed');
+
+            if (hasCompleted && !hasReserved && !hasApproved && !materials.some(m => m.status === 'pending')) {
+                overallStatus = 'completed';
+            } else if (hasReserved || hasCompleted) {
+                overallStatus = 'reserved';
+            } else if (hasApproved) {
+                overallStatus = 'approved';
+            }
+
+            await updateDoc(donationRef, {
+                materials,
+                status: overallStatus,
+                lastUpdated: new Date()
+            });
+            toast.success(isAr ? 'تم إلغاء الحجز بنجاح وإعادة المادة للمستودع 🔓' : 'Booking cancelled and material returned to pool 🔓');
+            fetchAllDonations();
+
+            addAuditLog(
+                `ألغى حجز المادة (${materials[materialIndex].name})`,
+                `Cancelled booking for material (${materials[materialIndex].name})`,
+                { donationId, materialIndex }
+            );
+        } catch (error) {
+            console.error('Error cancelling booking:', error);
+            toast.error(isAr ? 'فشل إلغاء الحجز' : 'Failed to cancel booking');
+        }
+    };
+
+    const handleSaveEditDonation = async (e) => {
+        e.preventDefault();
+        if (loading) return;
+        if (!selectedDonationForEdit) return;
+        setLoading(true);
+        try {
+            const isAdmin = loggedInUser?.role === 'admin';
+            const coordinatorPerms = systemSettings.coordinatorPermissions || {};
+            const currentCoordinatorPerms = coordinatorPerms[loggedInUser?.username] || {};
+            // Coordinators ALWAYS go through approval — only admins can edit directly
+            const canEditDirectly = isAdmin;
+
+            // For coordinator: save edit request with modified data for admin approval if not allowed directly
+            if (!canEditDirectly) {
+                const updatedData = {
+                    studentName: selectedDonationForEdit.studentName.trim(),
+                    phoneNumber: selectedDonationForEdit.phoneNumber.trim(),
+                    studentGender: selectedDonationForEdit.studentGender,
+                    materials: selectedDonationForEdit.materials,
+                    publishedToCoordinators: selectedDonationForEdit.publishedToCoordinators || false
+                };
+
+                const requestId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+                await updateDoc(doc(db, 'materialDonations', selectedDonationForEdit.id), {
+                    adminApprovalRequests: arrayUnion({
+                        requestId,
+                        type: 'editDonation',
+                        requestedBy: loggedInUser.username,
+                        requestedByName: loggedInUser.nameAr || loggedInUser.nameEn || loggedInUser.username,
+                        requestedAt: new Date(),
+                        status: 'pending',
+                        proposedChanges: updatedData,
+                        coordinatorNotes: editCoordinatorNotes.trim()
+                    })
+                });
+
+                await addAuditLog(
+                    `طلب تعديل تفاصيل التبرع (${selectedDonationForEdit.studentName})`,
+                    `Requested edit for donation details (${selectedDonationForEdit.studentName})`,
+                    { donationId: selectedDonationForEdit.id, donorName: selectedDonationForEdit.studentName }
+                );
+
+                toast.success(isAr ? '📨 تم إرسال طلب التعديل — بانتظار موافقة الإدارة' : '📨 Edit request sent — Waiting for admin approval');
+                toast.info(isAr ? 'لم تتغير البيانات بعد — ستُطبّق عند موافقة الأدمن' : 'Data not changed yet — will apply upon admin approval');
+                
+                setShowEditModal(false);
+                setSelectedDonationForEdit(null);
+                setEditCoordinatorNotes('');
+                fetchAllDonations();
+                setLoading(false);
+                return;
+            }
+
+            // apply edit directly
+            const donationRef = doc(db, 'materialDonations', selectedDonationForEdit.id);
+            const materials = selectedDonationForEdit.materials || [];
+            let overallStatus = 'pending';
+            const hasApproved = materials.some(m => m.status === 'approved');
+            const hasReserved = materials.some(m => m.status === 'reserved');
+            const hasCompleted = materials.some(m => m.status === 'completed');
+
+            if (hasCompleted && !hasReserved && !hasApproved && !materials.some(m => m.status === 'pending')) {
+                overallStatus = 'completed';
+            } else if (hasReserved || hasCompleted) {
+                overallStatus = 'reserved';
+            } else if (hasApproved) {
+                overallStatus = 'approved';
+            }
+
             const updateFields = {
                 studentName: selectedDonationForEdit.studentName.trim(),
                 phoneNumber: selectedDonationForEdit.phoneNumber.trim(),
@@ -726,18 +1487,18 @@ const MaterialExchange = () => {
                 status: overallStatus,
                 lastUpdated: new Date()
             };
-            
+
             if (selectedDonationForEdit.publishedToCoordinators !== undefined) {
                 updateFields.publishedToCoordinators = selectedDonationForEdit.publishedToCoordinators;
             }
-            
+
             await updateDoc(donationRef, updateFields);
             toast.success(isAr ? 'تم حفظ التعديلات بنجاح ✅' : 'Changes saved successfully ✅');
             setShowEditModal(false);
             setSelectedDonationForEdit(null);
             fetchAllDonations();
             fetchDonations();
-            
+
             addAuditLog(
                 `قام بتعديل تفاصيل تبرع الطالب (${selectedDonationForEdit.studentName}) وتحديث حالة المواد`,
                 `Edited donation details for student (${selectedDonationForEdit.studentName}) and updated materials status`,
@@ -745,7 +1506,7 @@ const MaterialExchange = () => {
             );
         } catch (error) {
             console.error('Error saving edited donation:', error);
-            toast.error(isAr ? 'حدث خطأ أثناء حفظ التعديلات' : 'Error saving changes');
+            toast.error(isAr ? `حدث خطأ أثناء حفظ التعديلات: ${error.message}` : `Error saving changes: ${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -769,7 +1530,7 @@ const MaterialExchange = () => {
             setShowDelegateModal(false);
             setDonationToDelegate(null);
             fetchAllDonations();
-            
+
             const don = allDonations.find(d => d.id === donationId);
             const donorName = don ? don.studentName : '';
             addAuditLog(
@@ -791,7 +1552,7 @@ const MaterialExchange = () => {
             });
             toast.success(isAr ? '🔄 تم إلغاء التفويض' : '🔄 Delegation revoked');
             fetchAllDonations();
-            
+
             const don = allDonations.find(d => d.id === donationId);
             const donorName = don ? don.studentName : '';
             addAuditLog(
@@ -807,13 +1568,23 @@ const MaterialExchange = () => {
 
     const handleDeleteDonation = async (donationId) => {
         if (!window.confirm(isAr ? 'هل أنت متأكد من الحذف؟' : 'Are you sure you want to delete?')) return;
+        const isAdmin = loggedInUser?.role === 'admin';
+        const coordinatorPerms = systemSettings.coordinatorPermissions || {};
+        const currentCoordinatorPerms = coordinatorPerms[loggedInUser?.username] || {};
+        // Coordinators ALWAYS go through approval — only admins can delete directly
+        const canDeleteDirectly = isAdmin;
+
+        if (!canDeleteDirectly) {
+            await handleRequestAdminApproval({ donationId, actionType: 'deleteDonation' });
+            return;
+        }
         try {
             const don = allDonations.find(d => d.id === donationId);
             const donorName = don ? don.studentName : '';
             await deleteDoc(doc(db, 'materialDonations', donationId));
             toast.success(isAr ? 'تم حذف التبرع' : 'Donation deleted');
             fetchAllDonations();
-            
+
             addAuditLog(
                 `حذف تبرع الطالب (${donorName}) نهائياً`,
                 `Deleted donation from student (${donorName}) permanently`,
@@ -821,6 +1592,305 @@ const MaterialExchange = () => {
             );
         } catch {
             toast.error(isAr ? 'فشل الحذف' : 'Failed to delete');
+        }
+    };
+
+    const handleRequestAdminApproval = async ({ donationId, materialIndex = null, actionType }) => {
+        if (!loggedInUser) return;
+        const donation = allDonations.find(d => d.id === donationId);
+        if (!donation) return;
+        if (hasPendingApprovalRequest(donation, actionType)) {
+            toast.info(isAr ? '⚠️ الطلب قيد الانتظار بالفعل' : '⚠️ A request for this action is already pending');
+            return;
+        }
+        if (actionType === 'editDonation' && isCoordinatorApprovedToEdit(donation)) {
+            toast.info(isAr ? '✅ تمت الموافقة على التعديل مسبقاً' : '✅ Edit already approved');
+            return;
+        }
+        try {
+            const requestId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            await updateDoc(doc(db, 'materialDonations', donationId), {
+                adminApprovalRequests: arrayUnion({
+                    requestId,
+                    type: actionType,
+                    requestedBy: loggedInUser.username,
+                    requestedByName: loggedInUser.nameAr || loggedInUser.nameEn || loggedInUser.username,
+                    requestedAt: new Date(),
+                    materialIndex,
+                    status: 'pending'
+                })
+            });
+            toast.success(isAr ? '✅ تم إرسال طلب موافقة للإدارة' : '✅ Admin approval requested');
+            fetchAllDonations();
+            addAuditLog(
+                `طلب موافقة الإدارة (${actionType}) للتبرع ${donationId}`,
+                `Requested admin approval (${actionType}) for donation ${donationId}`,
+                { donationId, actionType, materialIndex }
+            );
+        } catch (error) {
+            console.error('Error requesting admin approval:', error);
+            toast.error(isAr ? 'فشل إرسال طلب الموافقة' : 'Failed to request admin approval');
+        }
+    };
+
+    const getApprovalRequestTypeLabel = (type) => {
+        const labels = {
+            editDonation: isAr ? 'طلب تعديل مادة' : 'Edit Request',
+            deleteDonation: isAr ? 'طلب حذف مادة' : 'Delete Request',
+            completeBooking: isAr ? 'طلب تسليم مادة' : 'Delivery Request',
+            cancelBooking: isAr ? 'طلب إلغاء حجز' : 'Cancel Booking Request'
+        };
+        return labels[type] || type;
+    };
+
+    const updateApprovalRequestStatus = async (donationId, requestId, status) => {
+        try {
+            const donationRef = doc(db, 'materialDonations', donationId);
+            const donationSnap = await getDoc(donationRef);
+            if (!donationSnap.exists()) return;
+            const requests = donationSnap.data().adminApprovalRequests || [];
+            const updatedRequests = requests.map(req => req.requestId === requestId ? {
+                ...req,
+                status,
+                reviewedBy: loggedInUser?.username || 'admin',
+                reviewedAt: new Date()
+            } : req);
+            await updateDoc(donationRef, { adminApprovalRequests: updatedRequests });
+        } catch (error) {
+            console.error('Error updating approval request status:', error);
+            throw error;
+        }
+    };
+
+    const processAdminApprovalRequest = async (donationId, request) => {
+        switch (request.type) {
+            case 'deleteDonation': {
+                await deleteDoc(doc(db, 'materialDonations', donationId));
+                addAuditLog(
+                    `وافق على حذف تبرع الطالب (${request.requestedByName})`,
+                    `Approved delete request for donation by ${request.requestedByName}`,
+                    { donationId, requestId: request.requestId }
+                );
+                await fetchAllDonations();
+                return;
+            }
+            case 'completeBooking': {
+                await handleCompleteBooking(donationId, request.materialIndex);
+                return;
+            }
+            case 'cancelBooking': {
+                await handleCancelBooking(donationId, request.materialIndex);
+                return;
+            }
+            case 'editDonation': {
+                // Apply the proposed changes that were submitted with the request
+                if (request.proposedChanges) {
+                    const materials = request.proposedChanges.materials || [];
+                    let overallStatus = 'pending';
+                    const hasApproved = materials.some(m => m.status === 'approved');
+                    const hasReserved = materials.some(m => m.status === 'reserved');
+                    const hasCompleted = materials.some(m => m.status === 'completed');
+
+                    if (hasCompleted && !hasReserved && !hasApproved && !materials.some(m => m.status === 'pending')) {
+                        overallStatus = 'completed';
+                    } else if (hasReserved || hasCompleted) {
+                        overallStatus = 'reserved';
+                    } else if (hasApproved) {
+                        overallStatus = 'approved';
+                    }
+
+                    await updateDoc(doc(db, 'materialDonations', donationId), {
+                        studentName: request.proposedChanges.studentName,
+                        phoneNumber: request.proposedChanges.phoneNumber,
+                        studentGender: request.proposedChanges.studentGender,
+                        materials: request.proposedChanges.materials,
+                        status: overallStatus,
+                        lastUpdated: new Date(),
+                        publishedToCoordinators: request.proposedChanges.publishedToCoordinators
+                    });
+                }
+                addAuditLog(
+                    `وافق على تعديل التبرع (${donationId}) من ${request.requestedByName} وطبق التعديلات`,
+                    `Approved and applied edit request for donation (${donationId}) from ${request.requestedByName}`,
+                    { donationId, requestId: request.requestId }
+                );
+                return;
+            }
+            default:
+                throw new Error(`Unknown approval request type: ${request.type}`);
+        }
+    };
+
+    const handleApproveApprovalRequest = async (donationId, request) => {
+        try {
+            // Process the request based on its type
+            await processAdminApprovalRequest(donationId, request);
+
+            // Update request status to approved with admin notes
+            const donation = allDonations.find(d => d.id === donationId);
+            const updatedRequests = donation.adminApprovalRequests.map(req =>
+                req.requestId === request.requestId
+                    ? { ...req, status: 'approved', adminNotes: adminResponseData.adminNotes || '', adminApprovedAt: new Date() }
+                    : req
+            );
+
+            await updateDoc(doc(db, 'materialDonations', donationId), {
+                adminApprovalRequests: updatedRequests
+            });
+
+            toast.success(isAr ? '✅ تمت الموافقة على الطلب' : '✅ Request approved');
+            closeApprovalRequestsModal();
+            closeAdminResponseModal();
+            fetchAllDonations();
+            addAuditLog(
+                `وافق على طلب (${request.type}) - مع ملاحظات الأدمن`,
+                `Approved request (${request.type}) - with admin notes`,
+                { donationId, requestId: request.requestId, adminNotes: adminResponseData.adminNotes }
+            );
+        } catch (error) {
+            console.error('Error approving request:', error);
+            toast.error(isAr ? 'فشل موافقة الطلب' : 'Failed to approve request');
+        }
+    };
+
+    const handleRejectApprovalRequest = async (donationId, request) => {
+        try {
+            const donation = allDonations.find(d => d.id === donationId);
+            const updatedRequests = donation.adminApprovalRequests.map(req =>
+                req.requestId === request.requestId
+                    ? { ...req, status: 'rejected', adminNotes: adminResponseData.adminNotes || '', adminRejectedAt: new Date() }
+                    : req
+            );
+
+            await updateDoc(doc(db, 'materialDonations', donationId), {
+                adminApprovalRequests: updatedRequests
+            });
+
+            toast.success(isAr ? '❌ تم رفض الطلب' : '❌ Request rejected');
+            closeApprovalRequestsModal();
+            closeAdminResponseModal();
+            fetchAllDonations();
+            addAuditLog(
+                `رفض طلب (${request.type}) - مع ملاحظات الأدمن`,
+                `Rejected request (${request.type}) - with admin notes`,
+                { donationId, requestId: request.requestId, adminNotes: adminResponseData.adminNotes }
+            );
+        } catch (error) {
+            console.error('Error rejecting request:', error);
+            toast.error(isAr ? 'فشل رفض الطلب' : 'Failed to reject request');
+        }
+    };
+
+    const handleSuspendApprovalRequest = async (donationId, request) => {
+        try {
+            const donation = allDonations.find(d => d.id === donationId);
+            const updatedRequests = donation.adminApprovalRequests.map(req =>
+                req.requestId === request.requestId
+                    ? { ...req, status: 'suspended', adminNotes: adminResponseData.adminNotes || '', adminSuspendedAt: new Date() }
+                    : req
+            );
+
+            await updateDoc(doc(db, 'materialDonations', donationId), {
+                adminApprovalRequests: updatedRequests
+            });
+
+            toast.success(isAr ? '⏸️ تم إيقاف الطلب' : '⏸️ Request suspended');
+            closeApprovalRequestsModal();
+            closeAdminResponseModal();
+            fetchAllDonations();
+            addAuditLog(
+                `أوقف طلب (${request.type}) - مع ملاحظات الأدمن`,
+                `Suspended request (${request.type}) - with admin notes`,
+                { donationId, requestId: request.requestId, adminNotes: adminResponseData.adminNotes }
+            );
+        } catch (error) {
+            console.error('Error suspending request:', error);
+            toast.error(isAr ? 'فشل إيقاف الطلب' : 'Failed to suspend request');
+        }
+    };
+
+    const openApprovalRequestsModal = (donation) => {
+        setSelectedDonationForRequests(donation);
+        setShowApprovalRequestsModal(true);
+    };
+
+    const closeApprovalRequestsModal = () => {
+        setShowApprovalRequestsModal(false);
+        setSelectedDonationForRequests(null);
+    };
+
+    const openAdminResponseModal = (donationId, request) => {
+        setAdminResponseData({
+            donationId,
+            request,
+            adminAction: 'approve',
+            adminNotes: ''
+        });
+        setShowAdminResponseModal(true);
+    };
+
+    const closeAdminResponseModal = () => {
+        setShowAdminResponseModal(false);
+        setAdminResponseData({
+            donationId: null,
+            request: null,
+            adminAction: 'approve',
+            adminNotes: ''
+        });
+    };
+
+    // ── Action Request Modal Handlers ──────────────────────────
+    const openActionRequestModal = (donationId, actionType, materialIndex = null, donationDetails = null) => {
+        setActionRequestData({
+            donationId,
+            actionType,
+            materialIndex,
+            donationDetails,
+            coordinatorNotes: ''
+        });
+        setShowActionRequestModal(true);
+    };
+
+    const closeActionRequestModal = () => {
+        setShowActionRequestModal(false);
+        setActionRequestData({
+            donationId: null,
+            actionType: null,
+            materialIndex: null,
+            donationDetails: null,
+            coordinatorNotes: ''
+        });
+    };
+
+    const handleSubmitActionRequest = async () => {
+        try {
+            const { donationId, actionType, materialIndex, coordinatorNotes } = actionRequestData;
+            if (!donationId || !actionType) return;
+
+            await updateDoc(doc(db, 'materialDonations', donationId), {
+                adminApprovalRequests: arrayUnion({
+                    requestId: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+                    type: actionType,
+                    requestedBy: loggedInUser.username,
+                    requestedByName: loggedInUser.nameAr || loggedInUser.nameEn || loggedInUser.username,
+                    requestedAt: new Date(),
+                    materialIndex,
+                    coordinatorNotes,
+                    status: 'pending'
+                })
+            });
+
+            toast.success(isAr ? '✅ تم إرسال الطلب للموافقة' : '✅ Request submitted for approval');
+            closeActionRequestModal();
+            fetchAllDonations();
+            addAuditLog(
+                `طلب إجراء (${actionType}) - ${coordinatorNotes ? 'مع ملاحظات' : 'بدون ملاحظات'}`,
+                `Action request (${actionType}) ${coordinatorNotes ? 'with notes' : 'without notes'}`,
+                { donationId, actionType, materialIndex, coordinatorNotes }
+            );
+        } catch (error) {
+            console.error('Error submitting action request:', error);
+            toast.error(isAr ? 'فشل إرسال الطلب' : 'Failed to submit request');
         }
     };
 
@@ -836,7 +1906,7 @@ const MaterialExchange = () => {
             const settingsRef = doc(db, 'system_configs', 'global_settings');
             await setDoc(settingsRef, { campaignPhase: newPhase }, { merge: true });
             toast.success(isAr ? 'تم تحديث حالة الحملة بنجاح ✅' : 'Campaign status updated successfully ✅');
-            
+
             addAuditLog(
                 `غيّر حالة مرحلة الحملة إلى (${newPhase === 'suspended' ? 'موقوفة 🛑' : newPhase === 'collection' ? 'جمع وتبرع 📥' : 'تبادل وحجز 🔄'})`,
                 `Changed campaign phase status to (${newPhase})`,
@@ -856,7 +1926,7 @@ const MaterialExchange = () => {
             const settingsRef = doc(db, 'system_configs', 'global_settings');
             await setDoc(settingsRef, editSettings, { merge: true });
             toast.success(isAr ? 'تم حفظ الإعدادات بنجاح ✅' : 'Settings saved successfully ✅');
-            
+
             addAuditLog(
                 `قام بتحديث الإعدادات العامة للحملة`,
                 `Updated general campaign settings`
@@ -882,7 +1952,7 @@ const MaterialExchange = () => {
             // setDoc with merge works even if the document doesn't exist yet
             await setDoc(settingsRef, updateData, { merge: true });
             toast.success(isAr ? 'تم الحفظ بنجاح ✅' : 'Saved ✅');
-            
+
             addAuditLog(
                 `قام بتحديث إعدادات القسم (${sectionId})`,
                 `Updated settings for section (${sectionId})`,
@@ -931,7 +2001,7 @@ const MaterialExchange = () => {
         setLogsLoading(true);
         try {
             const q = query(
-                collection(db, 'materialExchangeLogs'), 
+                collection(db, 'materialExchangeLogs'),
                 orderBy('timestamp', 'desc'),
                 limit(50)
             );
@@ -991,7 +2061,7 @@ const MaterialExchange = () => {
             fetchArchives();
             fetchDonations();
             fetchAllDonations();
-            
+
             addAuditLog(
                 `قام بأرشفة كافة التبرعات (${allDonations.length}) تحت اسم الأرشيف "${archiveName.trim()}" وبدء دورة جديدة`,
                 `Archived all active donations (${allDonations.length}) under archive label "${archiveName.trim()}" and started a new cycle`,
@@ -1005,22 +2075,33 @@ const MaterialExchange = () => {
 
     // ── EXPORT FUNCTIONS ──────────────────────────────────────────
     const exportToCSV = (donations, filename) => {
-        const headersAr = ['الاسم', 'الهاتف', 'الجنس', 'المواد', 'الحالة'];
-        const headersEn = ['Name', 'Phone', 'Gender', 'Materials', 'Status'];
+        const headersAr = ['الاسم', 'الهاتف', 'البريد الإلكتروني', 'الجنس', 'المواد', 'الملاحظات', 'الحالة'];
+        const headersEn = ['Name', 'Phone', 'Email', 'Gender', 'Materials', 'Notes', 'Status'];
         const headers = isAr ? headersAr : headersEn;
         const statusMap = {
-            pending:   isAr ? 'معلق' : 'Pending',
-            approved:  isAr ? 'معتمد' : 'Approved',
-            reserved:  isAr ? 'محجوز' : 'Reserved',
+            pending: isAr ? 'معلق' : 'Pending',
+            approved: isAr ? 'معتمد' : 'Approved',
+            reserved: isAr ? 'محجوز' : 'Reserved',
             completed: isAr ? 'مكتمل' : 'Completed'
         };
-        const rows = donations.map(d => [
-            d.studentName || '',
-            d.phoneNumber || '',
-            d.studentGender === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female'),
-            (d.materials || []).map(m => typeof m === 'object' ? m.name : m).join(' | '),
-            statusMap[d.status] || d.status || ''
-        ]);
+        const rows = donations.map(d => {
+            const materialLabels = (d.materials || []).map(m => {
+                if (typeof m === 'object') {
+                    return m.description ? `${m.name} (${m.description})` : m.name;
+                }
+                return m;
+            }).join(' | ');
+            const materialNotes = (d.materials || []).map(m => typeof m === 'object' ? (m.description || '') : '').filter(Boolean).join(' | ');
+            return [
+                d.studentName || '',
+                d.phoneNumber || '',
+                d.email || '',
+                d.studentGender === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female'),
+                materialLabels,
+                materialNotes,
+                statusMap[d.status] || d.status || ''
+            ];
+        });
         const csv = [headers, ...rows]
             .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
             .join('\n');
@@ -1036,44 +2117,152 @@ const MaterialExchange = () => {
 
     const exportToPDF = (donations, filename) => {
         const statusMap = {
-            pending:   isAr ? 'معلق' : 'Pending',
-            approved:  isAr ? 'معتمد' : 'Approved',
-            reserved:  isAr ? 'محجوز' : 'Reserved',
+            pending: isAr ? 'معلق' : 'Pending',
+            approved: isAr ? 'معتمد' : 'Approved',
+            reserved: isAr ? 'محجوز' : 'Reserved',
             completed: isAr ? 'مكتمل' : 'Completed'
         };
-        const tableRows = donations.map(d => `
+        const tableRows = donations.map(d => {
+            const materialLabels = (d.materials || []).map(m => {
+                if (typeof m === 'object') {
+                    return m.description ? `${m.name} (${m.description})` : m.name;
+                }
+                return m;
+            }).join(', ');
+            const materialNotes = (d.materials || []).map(m => typeof m === 'object' ? (m.description || '') : '').filter(Boolean).join(' | ');
+            return `
             <tr>
                 <td>${d.studentName || ''}</td>
                 <td dir="ltr">${d.phoneNumber || ''}</td>
+                <td dir="ltr">${d.email || ''}</td>
                 <td>${d.studentGender === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female')}</td>
-                <td>${(d.materials || []).map(m => typeof m === 'object' ? m.name : m).join(', ')}</td>
+                <td>${materialLabels}</td>
+                <td>${materialNotes}</td>
                 <td>${statusMap[d.status] || d.status || ''}</td>
-            </tr>`).join('');
+            </tr>`;
+        }).join('');
         const title = isAr ? 'جدول تبرعات المواد الدراسية' : 'Material Donations Table';
         const dateStr = new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US');
         const win = window.open('', '_blank');
         win.document.write(`<!DOCTYPE html><html dir="${isAr ? 'rtl' : 'ltr'}">
 <head><meta charset="utf-8"><title>${filename}</title><style>
-body{font-family:'Arial',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};}
-h2{color:#2c3e50;border-bottom:3px solid #27ae60;padding-bottom:8px;}
-.meta{color:#666;margin-bottom:16px;font-size:14px;}
-table{width:100%;border-collapse:collapse;margin-top:12px;}
-th{background:linear-gradient(135deg,#27ae60,#2ecc71);color:#fff;padding:10px 8px;text-align:${isAr ? 'right' : 'left'};}
-td{padding:9px 8px;border-bottom:1px solid #eee;}
-tr:nth-child(even){background:#f8fffe;}
+body{font-family:'Tahoma','Arial',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};color:#222;background:#f2f4f7;}
+.page-shell{max-width:1120px;margin:0 auto;background:#fff;padding:28px 32px;border:1px solid #d8dde6;box-shadow:0 18px 55px rgba(15,23,42,0.08);}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+.header-row h2{margin:0;font-size:24px;color:#1f3d69;letter-spacing:0.02em;text-transform:uppercase;}
+.meta{margin:8px 0 0;color:#4f5b74;font-size:14px;line-height:1.65;}
+.table-note{margin-top:16px;padding:16px 18px;background:#f5f9ff;border-left:4px solid #1f4e79;color:#254061;font-size:13px;}
+table{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;border:1px solid #c7d2df;box-shadow:0 8px 20px rgba(15,23,42,0.05);}
+th,td{padding:14px 12px;border:1px solid #d4dae3;vertical-align:top;}
+th{background:#1f4e79;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;text-align:${isAr ? 'right' : 'left'};}
+tr:nth-child(even){background:#f8fbff;}
+td{color:#2f3d4f;}
+tfoot td{background:#f0f4fb;font-weight:700;}
 .no-print{margin-bottom:16px;}
-@media print{.no-print{display:none;} body{padding:0;}}
+.print-button{padding:10px 22px;background:#1f4e79;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:600;}
+@media print{.no-print{display:none;} body{padding:0;background:#fff;} .page-shell{box-shadow:none;border:none;margin:0;padding:0;}}
 </style></head>
 <body>
-<button class="no-print" onclick="window.print()" style="padding:8px 20px;background:#27ae60;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:15px;">
+<div class="page-shell">
+<button class="no-print print-button" onclick="window.print()">
 🖨️ ${isAr ? 'طباعة / حفظ PDF' : 'Print / Save as PDF'}</button>
-<h2>📚 ${title}</h2>
-<p class="meta">📅 ${isAr ? 'تاريخ التصدير:' : 'Export Date:'} ${dateStr} &nbsp;|&nbsp; 📦 ${isAr ? 'عدد التبرعات:' : 'Total:'} ${donations.length}</p>
+<div class="header-row"><h2>📚 ${title}</h2><div class="meta">${isAr ? 'تاريخ التصدير:' : 'Export Date:'} ${dateStr}<br>${isAr ? 'عدد التبرعات:' : 'Total:'} ${donations.length}</div></div>
+<div class="table-note">${isAr ? 'هذا الجدول معد للطباعة ويعرض السجلات بطريقة رسمية مناسبة للتوثيق.' : 'This table is formatted for printing and displays records in a formal layout suitable for documentation.'}</div>
 <table><thead><tr>
 <th>${isAr ? 'الاسم' : 'Name'}</th><th>${isAr ? 'الهاتف' : 'Phone'}</th>
-<th>${isAr ? 'الجنس' : 'Gender'}</th><th>${isAr ? 'المواد' : 'Materials'}</th>
+<th>${isAr ? 'البريد الإلكتروني' : 'Email'}</th><th>${isAr ? 'الجنس' : 'Gender'}</th>
+<th>${isAr ? 'المواد' : 'Materials'}</th>
+<th>${isAr ? 'الملاحظات' : 'Notes'}</th>
 <th>${isAr ? 'الحالة' : 'Status'}</th>
 </tr></thead><tbody>${tableRows}</tbody></table>
+</div>
+</body></html>`);
+        win.document.close();
+        toast.success(isAr ? '✅ تم فتح نافذة الطباعة' : '✅ Print window opened');
+    };
+
+    const exportBookingsToCSV = (bookings, filename) => {
+        const headersAr = ['اسم الحاجز', 'هاتف الحاجز', 'البريد الإلكتروني', 'الجنس', 'المادة', 'ملاحظات المادة', 'اسم المتبرع', 'بريد المتبرع', 'الحالة'];
+        const headersEn = ['Booker Name', 'Booker Phone', 'Booker Email', 'Gender', 'Material', 'Material Notes', 'Donor Name', 'Donor Email', 'Status'];
+        const headers = isAr ? headersAr : headersEn;
+        const statusMap = {
+            reserved: isAr ? 'محجوز' : 'Reserved',
+            completed: isAr ? 'تم التسليم' : 'Delivered'
+        };
+        const rows = bookings.map(b => [
+            b.takerInfo?.name || '',
+            b.takerInfo?.phone || '',
+            b.takerEmail || '',
+            (b.takerInfo?.gender || b.donorGender) === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female'),
+            b.materialName || '',
+            b.materialDescription || '',
+            b.donorName || '',
+            b.donorEmail || '',
+            statusMap[b.status] || b.status || ''
+        ]);
+        const csv = [headers, ...rows]
+            .map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${filename}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success(isAr ? '✅ تم تصدير ملف Excel/CSV' : '✅ CSV exported');
+    };
+
+    const exportBookingsToPDF = (bookings, filename) => {
+        const statusMap = {
+            reserved: isAr ? 'محجوز' : 'Reserved',
+            completed: isAr ? 'تم التسليم' : 'Delivered'
+        };
+        const tableRows = bookings.map(b => `
+            <tr>
+                <td>${b.takerInfo?.name || ''}</td>
+                <td dir="ltr">${b.takerInfo?.phone || ''}</td>
+                <td dir="ltr">${b.takerEmail || ''}</td>
+                <td>${(b.takerInfo?.gender || b.donorGender) === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female')}</td>
+                <td>${b.materialName || ''}</td>
+                <td>${b.materialDescription || ''}</td>
+                <td>${b.donorName || ''}</td>
+                <td dir="ltr">${b.donorEmail || ''}</td>
+                <td>${statusMap[b.status] || b.status || ''}</td>
+            </tr>`).join('');
+        const title = isAr ? 'جدول الحجوزات الطلابية' : 'Student Bookings Table';
+        const dateStr = new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US');
+        const win = window.open('', '_blank');
+        win.document.write(`<!DOCTYPE html><html dir="${isAr ? 'rtl' : 'ltr'}">
+<head><meta charset="utf-8"><title>${filename}</title><style>
+body{font-family:'Tahoma','Arial',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};color:#222;background:#f2f4f7;}
+.page-shell{max-width:1120px;margin:0 auto;background:#fff;padding:28px 32px;border:1px solid #d8dde6;box-shadow:0 18px 55px rgba(15,23,42,0.08);}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+.header-row h2{margin:0;font-size:24px;color:#1b3b6b;letter-spacing:0.02em;text-transform:uppercase;}
+.meta{margin:8px 0 0;color:#4f5b74;font-size:14px;line-height:1.65;}
+.table-note{margin-top:16px;padding:16px 18px;background:#eef7ff;border-left:4px solid #2f72b7;color:#244a6e;font-size:13px;}
+table{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;border:1px solid #c7d2df;box-shadow:0 8px 20px rgba(15,23,42,0.05);}
+th,td{padding:14px 12px;border:1px solid #d4dae3;vertical-align:top;}
+th{background:#2f72b7;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;text-align:${isAr ? 'right' : 'left'};}
+tr:nth-child(even){background:#f7f9ff;}
+td{color:#2f3d4f;}
+.no-print{margin-bottom:16px;}
+.print-button{padding:10px 22px;background:#2f72b7;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:600;}
+@media print{.no-print{display:none;} body{padding:0;background:#fff;} .page-shell{box-shadow:none;border:none;margin:0;padding:0;}}
+</style></head>
+<body>
+<div class="page-shell">
+<button class="no-print print-button" onclick="window.print()">
+🖨️ ${isAr ? 'طباعة / حفظ PDF' : 'Print / Save as PDF'}</button>
+<div class="header-row"><h2>📚 ${title}</h2><div class="meta">${isAr ? 'تاريخ التصدير:' : 'Export Date:'} ${dateStr}<br>${isAr ? 'عدد الحجوزات:' : 'Total:'} ${bookings.length}</div></div>
+<div class="table-note">${isAr ? 'هذا الجدول معد للطباعة ويعرض الحجوزات بطريقة رسمية وواضحة.' : 'This table is formatted for printing and displays bookings in a formal and clear manner.'}</div>
+<table><thead><tr>
+<th>${isAr ? 'اسم الحاجز' : 'Booker Name'}</th><th>${isAr ? 'الهاتف' : 'Phone'}</th>
+<th>${isAr ? 'البريد الإلكتروني' : 'Email'}</th><th>${isAr ? 'الجنس' : 'Gender'}</th>
+<th>${isAr ? 'المادة' : 'Material'}</th><th>${isAr ? 'ملاحظات المادة' : 'Material Notes'}</th>
+<th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th><th>${isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
+<th>${isAr ? 'الحالة' : 'Status'}</th>
+</tr></thead><tbody>${tableRows}</tbody></table>
+</div>
 </body></html>`);
         win.document.close();
         toast.success(isAr ? '✅ تم فتح نافذة الطباعة' : '✅ Print window opened');
@@ -1082,14 +2271,71 @@ tr:nth-child(even){background:#f8fffe;}
     const getCoordinatorTasks = () => {
         if (!loggedInUser) return [];
         let tasksStr = systemSettings.sharedCoordinatorTasks || '';
-        if (loggedInUser.gender === 'male')   tasksStr += '\n' + (systemSettings.coordinatorMaleTasks   || '');
-        if (loggedInUser.gender === 'female')  tasksStr += '\n' + (systemSettings.coordinatorFemaleTasks || '');
+        if (loggedInUser.gender === 'male') tasksStr += '\n' + (systemSettings.coordinatorMaleTasks || '');
+        if (loggedInUser.gender === 'female') tasksStr += '\n' + (systemSettings.coordinatorFemaleTasks || '');
         if (loggedInUser.role === 'admin') {
             tasksStr = '👥 مهام عامة:\n' + (systemSettings.sharedCoordinatorTasks || '—') +
-                       '\n♂️ مهام أحمد:\n' + (systemSettings.coordinatorMaleTasks   || '—') +
-                       '\n♀️ مهام سارة:\n' + (systemSettings.coordinatorFemaleTasks  || '—');
+                '\n♂️ مهام أحمد:\n' + (systemSettings.coordinatorMaleTasks || '—') +
+                '\n♀️ مهام سارة:\n' + (systemSettings.coordinatorFemaleTasks || '—');
         }
         return tasksStr.split('\n').map(t => t.trim()).filter(Boolean);
+    };
+
+    const getTasksForUser = (username) => {
+        let tasksStr = systemSettings.sharedCoordinatorTasks || '';
+        if (username === 'ahmad') {
+            tasksStr += '\n' + (systemSettings.coordinatorMaleTasks || '');
+        } else if (username === 'sara') {
+            tasksStr += '\n' + (systemSettings.coordinatorFemaleTasks || '');
+        }
+        return tasksStr.split('\n').map(t => t.trim()).filter(Boolean);
+    };
+
+    const handleToggleCoordinatorTask = async (taskKey) => {
+        if (!loggedInUser) return;
+        const username = loggedInUser.username;
+        const currentCompletions = { ...taskCompletions };
+        const userCompletions = { ...currentCompletions[username] };
+
+        if (userCompletions[taskKey]) {
+            delete userCompletions[taskKey];
+        } else {
+            userCompletions[taskKey] = new Date().toISOString();
+        }
+
+        const newCompletions = {
+            ...currentCompletions,
+            [username]: userCompletions
+        };
+
+        setTaskCompletions(newCompletions);
+
+        try {
+            const settingsRef = doc(db, 'system_configs', 'global_settings');
+            await setDoc(settingsRef, { taskCompletions: newCompletions }, { merge: true });
+            toast.success(isAr ? 'تم تحديث حالة المهمة' : 'Task status updated');
+        } catch (error) {
+            console.error('Error toggling task completion:', error);
+            toast.error(isAr ? 'فشل تحديث حالة المهمة في قاعدة البيانات' : 'Failed to update task status in database');
+            setTaskCompletions(currentCompletions);
+        }
+    };
+
+    const handleClearAllTaskCompletions = async () => {
+        const clearedCompletions = { ahmad: {}, sara: {} };
+        const currentCompletions = taskCompletions;
+
+        setTaskCompletions(clearedCompletions);
+
+        try {
+            const settingsRef = doc(db, 'system_configs', 'global_settings');
+            await setDoc(settingsRef, { taskCompletions: clearedCompletions }, { merge: true });
+            toast.success(isAr ? 'تم مسح جميع الإنجازات' : 'All completions cleared');
+        } catch (error) {
+            console.error('Error clearing task completions:', error);
+            toast.error(isAr ? 'فشل مسح الإنجازات من قاعدة البيانات' : 'Failed to clear completions from database');
+            setTaskCompletions(currentCompletions);
+        }
     };
 
     const getDashboardAlerts = () => {
@@ -1102,13 +2348,24 @@ tr:nth-child(even){background:#f8fffe;}
                 text: isAr ? `${pending.length} طلب تبرع بانتظار المراجعة` : `${pending.length} donation(s) pending review`
             });
         }
-        const tasks = getCoordinatorTasks();
-        const unchecked = tasks.filter((_, i) => !checkedTasks.has(i));
-        if (unchecked.length > 0) {
+        const pendingApprovalRequests = allDonations.flatMap((donation) => (donation.adminApprovalRequests || [])
+            .filter(req => req.status === 'pending'));
+        if (pendingApprovalRequests.length > 0) {
+            alerts.push({
+                type: 'warning',
+                icon: '🔔',
+                text: isAr ? `هناك ${pendingApprovalRequests.length} طلبات منتظرة` : `${pendingApprovalRequests.length} pending requests`
+            });
+        }
+        const sharedHandoverCount = allDonations.reduce((count, donation) => {
+            if (!donation.materials) return count;
+            return count + (donation.materials || []).filter(m => typeof m === 'object' && (m.status === 'reserved' || m.status === 'completed') && donation.studentGender && m.takerInfo?.gender && m.takerInfo.gender !== donation.studentGender).length;
+        }, 0);
+        if (sharedHandoverCount > 0) {
             alerts.push({
                 type: 'info',
-                icon: '📋',
-                text: isAr ? `لديك ${unchecked.length} مهمة لم تكتمل بعد` : `You have ${unchecked.length} incomplete task(s)`
+                icon: '🤝',
+                text: isAr ? `هناك ${sharedHandoverCount} تسليم مشترك يحتاج متابعة` : `${sharedHandoverCount} cross-gender handover(s) need attention`
             });
         }
         return alerts;
@@ -1116,22 +2373,29 @@ tr:nth-child(even){background:#f8fffe;}
 
     // Derived
     const availableMaterials = allMaterials.filter(m => !m.isReserved && ['approved', 'pending'].includes(m.materialItem.status));
-    const reservedMaterials  = allMaterials.filter(m => m.materialItem.status === 'reserved');
+    const reservedMaterials = allMaterials.filter(m => m.materialItem.status === 'reserved');
 
     // ── STAFF DASHBOARD ───────────────────────────────────────────
     if (loggedInUser) {
         const staffUsersDynamic = {
-            admin: { role: 'admin',       nameAr: 'الأدمن', nameEn: 'Admin', gender: null     },
-            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male'   },
-            sara:  { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara',  gender: 'female' }
+            admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
+            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
+            sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
         };
-        const isAdminUser       = loggedInUser.role === 'admin';
-        const totalDonations    = allDonations.length;
-        const pendingDonations  = allDonations.filter(d => d.status === 'pending');
+        const isAdminUser = loggedInUser.role === 'admin';
+        const canViewArchive = loggedInUser && (isAdminUser || loggedInUser.role === 'coordinator');
+        const isCoordinatorApprovedToEdit = (donation) => !isAdminUser && (donation.adminApprovalRequests || []).some(req => req.type === 'editDonation' && req.requestedBy === loggedInUser.username && req.status === 'approved');
+        const hasPendingApprovalRequest = (donation, type) => (donation.adminApprovalRequests || []).some(req => req.type === type && req.status === 'pending');
+        const totalDonations = allDonations.length;
+        const pendingDonations = allDonations.filter(d => d.status === 'pending');
         const approvedDonations = allDonations.filter(d => d.status === 'approved');
-        const coordinatorTasks  = getCoordinatorTasks();
-        const dashAlerts        = getDashboardAlerts();
-        const reservedCount     = allDonations.reduce((acc, d) => {
+        const pendingApprovalRequests = allDonations.flatMap(donation => (donation.adminApprovalRequests || [])
+            .filter(req => req.status === 'pending')
+            .map(req => ({ ...req, donationId: donation.id, donation }))
+        );
+        const pendingApprovalRequestCount = pendingApprovalRequests.length;
+        const dashAlerts = getDashboardAlerts();
+        const reservedCount = allDonations.reduce((acc, d) => {
             const mats = d.materials || [];
             return acc + mats.filter(m => (typeof m === 'object' ? m.status : d.status) === 'reserved').length;
         }, 0);
@@ -1170,28 +2434,28 @@ tr:nth-child(even){background:#f8fffe;}
 
                     {/* ─── Stats Row ────────────────────────────── */}
                     <div className="dashboard-stats-row">
-                        <div className="stat-card" style={{'--stat-color':'#3498db','--stat-rgb':'52,152,219'}}>
+                        <div className="stat-card" style={{ '--stat-color': '#3498db', '--stat-rgb': '52,152,219' }}>
                             <div className="stat-icon">📦</div>
                             <div className="stat-info">
                                 <span className="stat-value">{totalDonations}</span>
                                 <span className="stat-label">{isAr ? 'إجمالي التبرعات' : 'Total Donations'}</span>
                             </div>
                         </div>
-                        <div className="stat-card" style={{'--stat-color':'#f39c12','--stat-rgb':'243,156,18'}}>
+                        <div className="stat-card" style={{ '--stat-color': '#f39c12', '--stat-rgb': '243,156,18' }}>
                             <div className="stat-icon">⏳</div>
                             <div className="stat-info">
                                 <span className="stat-value">{pendingDonations.length}</span>
                                 <span className="stat-label">{isAr ? 'بانتظار المراجعة' : 'Pending'}</span>
                             </div>
                         </div>
-                        <div className="stat-card" style={{'--stat-color':'#2ecc71','--stat-rgb':'46,204,113'}}>
+                        <div className="stat-card" style={{ '--stat-color': '#2ecc71', '--stat-rgb': '46,204,113' }}>
                             <div className="stat-icon">✅</div>
                             <div className="stat-info">
                                 <span className="stat-value">{approvedDonations.length}</span>
                                 <span className="stat-label">{isAr ? 'معتمدة' : 'Approved'}</span>
                             </div>
                         </div>
-                        <div className="stat-card" style={{'--stat-color':'#9b59b6','--stat-rgb':'155,89,182'}}>
+                        <div className="stat-card" style={{ '--stat-color': '#9b59b6', '--stat-rgb': '155,89,182' }}>
                             <div className="stat-icon">🔒</div>
                             <div className="stat-info">
                                 <span className="stat-value">{reservedCount}</span>
@@ -1200,54 +2464,131 @@ tr:nth-child(even){background:#f8fffe;}
                         </div>
                     </div>
 
-                    {/* ─── Alerts & Tasks ───────────────────────── */}
-                    <div className="dashboard-alerts-board">
-                        <div className="alerts-board-header">
-                            <span className="alerts-board-icon">🔔</span>
-                            <h2>{isAr ? 'الإشعارات والمهام المطلوبة' : 'Notifications & Required Tasks'}</h2>
-                        </div>
-                        <div className="alerts-board-body">
-                            {dashAlerts.length > 0 && (
-                                <div className="alerts-list">
-                                    {dashAlerts.map((alert, i) => (
-                                        <div key={i} className={`alert-item alert-${alert.type}`}>
-                                            <span className="alert-icon">{alert.icon}</span>
-                                            <span className="alert-text">{alert.text}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
+                    {/* ─── Alerts & Tasks Board ─────────────────── */}
 
-                            {coordinatorTasks.length > 0 ? (
-                                <div className="tasks-checklist">
-                                    <h3 className="tasks-title">
-                                        📋 {isAr ? 'مهامك' : 'Your Tasks'}
-                                    </h3>
-                                    <ul className="tasks-list">
-                                        {coordinatorTasks.map((task, i) => (
-                                            <li
-                                                key={i}
-                                                className={`task-item ${checkedTasks.has(i) ? 'task-done' : ''}`}
-                                                onClick={() => setCheckedTasks(prev => {
-                                                    const next = new Set(prev);
-                                                    next.has(i) ? next.delete(i) : next.add(i);
-                                                    return next;
-                                                })}
-                                            >
-                                                <span className="task-checkbox">{checkedTasks.has(i) ? '✅' : '⬜'}</span>
-                                                <span className="task-text">{task}</span>
-                                            </li>
+                    {/* ADMIN: full alerts + per-coordinator task panels */}
+                    {isAdminUser && (
+                        <div className="dashboard-alerts-board">
+                            <div className="alerts-board-header">
+                                <span className="alerts-board-icon">🔔</span>
+                                <h2>{isAr ? 'الإشعارات والمهام' : 'Notifications & Tasks'}</h2>
+                            </div>
+                            <div className="alerts-board-body">
+                                {/* Alerts — admin only */}
+                                {dashAlerts.length > 0 && (
+                                    <div className="alerts-list">
+                                        {dashAlerts.map((alert, i) => (
+                                            <div key={i} className={`alert-item alert-${alert.type}`}>
+                                                <span className="alert-icon">{alert.icon}</span>
+                                                <span className="alert-text">{alert.text}</span>
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
+                                )}
+
+                                {/* Per-coordinator task panels */}
+                                <div className="coordinator-tasks-grid">
+                                    {[
+                                        { username: 'ahmad', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', icon: '♂️' },
+                                        { username: 'sara', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', icon: '♀️' }
+                                    ].map(({ username, nameAr, nameEn, icon }) => {
+                                        const tasks = getTasksForUser(username);
+                                        const userCompletions = taskCompletions[username] || {};
+                                        const doneCount = tasks.filter(t => !!userCompletions[t]).length;
+                                        return (
+                                            <div key={username} className="coordinator-task-panel">
+                                                <div className="coord-task-panel-header">
+                                                    <span className="coord-task-icon">{icon}</span>
+                                                    <div>
+                                                        <h4>{isAr ? `مهام ${nameAr}` : `${nameEn}'s Tasks`}</h4>
+                                                        <span className="coord-task-progress">
+                                                            {doneCount}/{tasks.length} {isAr ? 'منجزة' : 'done'}
+                                                        </span>
+                                                    </div>
+                                                    <div className="coord-task-bar-wrap">
+                                                        <div className="coord-task-bar" style={{ width: tasks.length ? `${(doneCount / tasks.length) * 100}%` : '0%' }} />
+                                                    </div>
+                                                </div>
+                                                {tasks.length === 0 ? (
+                                                    <p className="no-tasks-msg">{isAr ? 'لا توجد مهام' : 'No tasks assigned'}</p>
+                                                ) : (
+                                                    <ul className="coord-task-list">
+                                                        {tasks.map((task, idx) => {
+                                                            const isDone = !!userCompletions[task];
+                                                            const doneAt = userCompletions[task];
+                                                            return (
+                                                                <li key={idx} className={`coord-task-item ${isDone ? 'task-done' : ''}`}>
+                                                                    <span className="task-checkbox">{isDone ? '✅' : '⬜'}</span>
+                                                                    <span className="task-text">{task}</span>
+                                                                    {isDone && doneAt && (
+                                                                        <span className="task-done-time">
+                                                                            {new Date(doneAt).toLocaleString(isAr ? 'ar-SA' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}
+                                                                        </span>
+                                                                    )}
+                                                                </li>
+                                                            );
+                                                        })}
+                                                    </ul>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                            ) : (
-                                <div className="no-tasks-placeholder">
-                                    <span>💼</span>
-                                    <p>{isAr ? 'لا توجد مهام محددة حالياً' : 'No tasks assigned yet'}</p>
+
+                                {/* Clear completions button */}
+                                <div className="tasks-admin-actions">
+                                    <button className="clear-tasks-btn" onClick={handleClearAllTaskCompletions}>
+                                        🗑️ {isAr ? 'مسح جميع الإنجازات' : 'Clear All Completions'}
+                                    </button>
+                                    <span className="tasks-auto-delete-hint">
+                                        ⏱️ {isAr
+                                            ? `تُحذف الإنجازات القديمة تلقائياً بعد ${systemSettings.taskAutoDeleteHours || 24} ساعة`
+                                            : `Completions auto-clear after ${systemSettings.taskAutoDeleteHours || 24}h`}
+                                    </span>
                                 </div>
-                            )}
+                            </div>
                         </div>
-                    </div>
+                    )}
+
+                    {/* COORDINATOR: own tasks only — no alerts */}
+                    {!isAdminUser && (() => {
+                        const myTasks = getTasksForUser(loggedInUser.username);
+                        const myCompletions = taskCompletions[loggedInUser.username] || {};
+                        const myDone = myTasks.filter(t => !!myCompletions[t]).length;
+                        return (
+                            <div className="dashboard-alerts-board coordinator-tasks-only">
+                                <div className="alerts-board-header">
+                                    <span className="alerts-board-icon">📋</span>
+                                    <h2>{isAr ? 'مهامك المطلوبة' : 'Your Required Tasks'}</h2>
+                                    <span className="coord-my-progress">{myDone}/{myTasks.length} {isAr ? 'منجزة' : 'done'}</span>
+                                </div>
+                                <div className="alerts-board-body">
+                                    {myTasks.length === 0 ? (
+                                        <div className="no-tasks-placeholder">
+                                            <span>💼</span>
+                                            <p>{isAr ? 'لا توجد مهام محددة حالياً' : 'No tasks assigned yet'}</p>
+                                        </div>
+                                    ) : (
+                                        <ul className="tasks-list">
+                                            {myTasks.map((task, i) => {
+                                                const isDone = !!myCompletions[task];
+                                                return (
+                                                    <li
+                                                        key={i}
+                                                        className={`task-item ${isDone ? 'task-done' : ''}`}
+                                                        onClick={() => handleToggleCoordinatorTask(task)}
+                                                    >
+                                                        <span className="task-checkbox">{isDone ? '✅' : '⬜'}</span>
+                                                        <span className="task-text">{task}</span>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })()}
 
                     {/* ─── Tabs ─────────────────────────────────── */}
                     <div className="dashboard-tabs">
@@ -1262,13 +2603,24 @@ tr:nth-child(even){background:#f8fffe;}
                         </button>
                         {isAdminUser && (
                             <button
+                                className={`tab-btn ${activeTab === 'approvalRequests' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('approvalRequests')}
+                            >
+                                🔔 {isAr ? 'الطلبات المنتظرة' : 'Pending Requests'}
+                                {pendingApprovalRequestCount > 0 && (
+                                    <span className="tab-badge approval-badge">{pendingApprovalRequestCount}</span>
+                                )}
+                            </button>
+                        )}
+                        {isAdminUser && (
+                            <button
                                 className={`tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
                                 onClick={() => setActiveTab('settings')}
                             >
                                 ⚙️ {isAr ? 'الإعدادات' : 'Settings'}
                             </button>
                         )}
-                        {isAdminUser && (
+                        {canViewArchive && (
                             <button
                                 className={`tab-btn ${activeTab === 'archive' ? 'active' : ''}`}
                                 onClick={() => { setActiveTab('archive'); fetchArchives(); }}
@@ -1279,6 +2631,14 @@ tr:nth-child(even){background:#f8fffe;}
                                 )}
                             </button>
                         )}
+                        {isAdminUser && (
+                            <button
+                                className={`tab-btn ${activeTab === 'analytics' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('analytics')}
+                            >
+                                📊 {isAr ? 'إحصائيات النظام' : 'System Analytics'}
+                            </button>
+                        )}
                     </div>
 
                     {/* ─── Tab Content ──────────────────────────── */}
@@ -1287,23 +2647,51 @@ tr:nth-child(even){background:#f8fffe;}
                         {/* DONATIONS TAB */}
                         {activeTab === 'donations' && (
                             <div className="donations-management">
-                                
-                                {/* ─── Sub-Filters / Selection Group ─── */}
+
+                                {/* ─── Sub-Tabs ─── */}
+                                <div className="staff-sub-tabs">
+                                    <button
+                                        className={`sub-tab-btn ${staffSubTab === 'main' ? 'active' : ''}`}
+                                        onClick={() => setStaffSubTab('main')}
+                                    >
+                                        📊 {isAr ? 'الجدول الرسمي الرئيسي' : 'Main Official Table'}
+                                    </button>
+                                    <button
+                                        className={`sub-tab-btn ${staffSubTab === 'donations' ? 'active' : ''}`}
+                                        onClick={() => setStaffSubTab('donations')}
+                                    >
+                                        📦 {isAr ? 'تبرعات الطلاب' : 'Student Donations'}
+                                    </button>
+                                    <button
+                                        className={`sub-tab-btn ${staffSubTab === 'bookings' ? 'active' : ''}`}
+                                        onClick={() => setStaffSubTab('bookings')}
+                                    >
+                                        🔒 {isAr ? 'حجوزات الطلاب (الحاجزين)' : 'Student Bookings'}
+                                    </button>
+                                    <button
+                                        className={`sub-tab-btn ${staffSubTab === 'shared' ? 'active' : ''}`}
+                                        onClick={() => setStaffSubTab('shared')}
+                                    >
+                                        ⚡ {isAr ? 'الجدول المشترك (للتسليم)' : 'Shared Table (Handover)'}
+                                    </button>
+                                </div>
+
+                                {/* ─── Sub-Filters ─── */}
                                 {isAdminUser ? (
                                     <div className="admin-gender-filter">
-                                        <button 
+                                        <button
                                             className={`filter-pill ${adminSubFilter === 'all' ? 'active' : ''}`}
                                             onClick={() => setAdminSubFilter('all')}
                                         >
                                             👥 {isAr ? 'كل التبرعات' : 'All Donations'}
                                         </button>
-                                        <button 
+                                        <button
                                             className={`filter-pill ${adminSubFilter === 'ahmad' ? 'active' : ''}`}
                                             onClick={() => setAdminSubFilter('ahmad')}
                                         >
                                             ♂️ {isAr ? `قسم الذكور (المنسق: ${systemSettings.ahmadNameAr || 'أحمد'})` : `Male Section (${systemSettings.ahmadNameEn || 'Ahmad'})`}
                                         </button>
-                                        <button 
+                                        <button
                                             className={`filter-pill ${adminSubFilter === 'sara' ? 'active' : ''}`}
                                             onClick={() => setAdminSubFilter('sara')}
                                         >
@@ -1311,25 +2699,34 @@ tr:nth-child(even){background:#f8fffe;}
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="coordinator-tabs-group">
-                                        <button 
-                                            className={`coord-tab-btn ${coordinatorSubTab === 'delegated' ? 'active' : ''}`}
-                                            onClick={() => setCoordinatorSubTab('delegated')}
-                                        >
-                                            ⚡ {isAr ? 'المواد المفوضة لي (صلاحية كاملة)' : 'My Delegated Materials (Full Control)'}
-                                        </button>
-                                        <button 
-                                            className={`coord-tab-btn ${coordinatorSubTab === 'main' ? 'active' : ''}`}
-                                            onClick={() => setCoordinatorSubTab('main')}
-                                        >
-                                            👁️ {isAr ? 'الجدول الرئيسي لقسمك (للاطلاع فقط)' : 'Main Section Table (View Only)'}
-                                        </button>
-                                    </div>
+                                    <>
+                                        <div className="coordinator-tabs-group">
+                                            <button
+                                                className={`coord-tab-btn ${coordinatorSubTab === 'delegated' ? 'active' : ''}`}
+                                                onClick={() => setCoordinatorSubTab('delegated')}
+                                            >
+                                                ⚡ {isAr ? 'المواد المفوضة لي (صلاحية كاملة)' : 'My Delegated Materials (Full Control)'}
+                                            </button>
+                                            <button
+                                                className={`coord-tab-btn ${coordinatorSubTab === 'main' ? 'active' : ''}`}
+                                                onClick={() => setCoordinatorSubTab('main')}
+                                            >
+                                                👁️ {isAr ? 'الجدول الرئيسي لقسمك (للاطلاع فقط)' : 'Main Section Table (View Only)'}
+                                            </button>
+                                        </div>
+                                        <div className="coordinator-mode-note">
+                                            {coordinatorSubTab === 'delegated' ? (
+                                                <p>{isAr ? 'أنت في وضع المنسق المفوض: يمكنك تعديل وحذف المواد المفوضة لك بالكامل.' : 'You are in Delegated mode: you can edit and delete materials delegated to you.'}</p>
+                                            ) : (
+                                                <p>{isAr ? 'أنت في وضع العرض فقط: لا يمكنك تعديل أو حذف دون طلب موافقة الإدارة.' : 'You are in Main section view-only mode: edits require admin approval.'}</p>
+                                            )}
+                                        </div>
+                                    </>
                                 )}
 
                                 {/* ─── Export Toolbar ─── */}
                                 {(() => {
-                                    const exportDonations = isAdminUser
+                                    const filteredDonations = isAdminUser
                                         ? (adminSubFilter === 'all'
                                             ? allDonations
                                             : adminSubFilter === 'ahmad'
@@ -1339,25 +2736,88 @@ tr:nth-child(even){background:#f8fffe;}
                                             coordinatorSubTab === 'delegated'
                                                 ? d.delegatedTo === loggedInUser.username
                                                 : d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)
-                                          );
+                                        );
+
+                                    const bookings = [];
+                                    allDonations.forEach(donation => {
+                                        const passFilter = isAdminUser
+                                            ? (adminSubFilter === 'all'
+                                                ? true
+                                                : adminSubFilter === 'ahmad'
+                                                    ? donation.studentGender === 'male'
+                                                    : donation.studentGender === 'female')
+                                            : (coordinatorSubTab === 'delegated'
+                                                ? donation.delegatedTo === loggedInUser.username
+                                                : donation.studentGender === loggedInUser.gender && (!donation.delegatedTo || donation.delegatedTo === loggedInUser.username));
+
+                                        if (passFilter && donation.materials) {
+                                            donation.materials.forEach((m, idx) => {
+                                                if (typeof m === 'object' && (m.status === 'reserved' || m.status === 'completed')) {
+                                                    bookings.push({
+                                                        id: `${donation.id}_booking_${idx}`,
+                                                        donationId: donation.id,
+                                                        materialIndex: idx,
+                                                        materialName: m.name,
+                                                        materialDescription: m.description || '',
+                                                        status: m.status,
+                                                        takerInfo: m.takerInfo || {},
+                                                        takerEmail: m.takerInfo?.email || '',
+                                                        donorName: donation.studentName,
+                                                        donorPhone: donation.phoneNumber,
+                                                        donorEmail: donation.email || '',
+                                                        donorGender: donation.studentGender,
+                                                        delegatedTo: donation.delegatedTo,
+                                                        publishedToCoordinators: donation.publishedToCoordinators,
+                                                        approvalRequests: donation.adminApprovalRequests || [],
+                                                        createdAt: m.takerInfo?.bookedAt || donation.lastUpdated || donation.createdAt
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+
                                     const exportLabel = isAdminUser
-                                        ? (adminSubFilter === 'all' ? 'all' : adminSubFilter === 'ahmad' ? (systemSettings.ahmadNameAr || 'أحمد') : (systemSettings.saraNameAr || 'سارة'))
+                                        ? (adminSubFilter === 'all' ? (isAr ? 'الكل' : 'all') : adminSubFilter === 'ahmad' ? (systemSettings.ahmadNameAr || 'أحمد') : (systemSettings.saraNameAr || 'سارة'))
                                         : (isAr ? loggedInUser.nameAr : loggedInUser.nameEn);
+
+                                    const recordsCount = staffSubTab === 'donations' ? filteredDonations.length : bookings.length;
+
                                     return (
                                         <div className="export-toolbar">
                                             <span className="export-toolbar-label">
-                                                📊 {isAr ? `تصدير (${exportDonations.length} سجل)` : `Export (${exportDonations.length} records)`}
+                                                📊 {isAr ? `تصدير (${recordsCount} سجل)` : `Export (${recordsCount} records)`}
                                             </span>
+                                            <div className="staff-search-wrapper">
+                                                <input
+                                                    type="search"
+                                                    value={staffSearchQuery}
+                                                    onChange={(e) => setStaffSearchQuery(e.target.value)}
+                                                    placeholder={isAr ? 'ابحث باسم الطالب، المادة، الهاتف أو البريد' : 'Search donor, material, phone, or email'}
+                                                    className="staff-search-input"
+                                                />
+                                            </div>
                                             <button
                                                 className="export-btn export-csv-btn"
-                                                onClick={() => exportToCSV(exportDonations, `donations-${exportLabel}`)}
+                                                onClick={() => {
+                                                    if (staffSubTab === 'donations') {
+                                                        exportToCSV(filteredDonations, `donations-${exportLabel}`);
+                                                    } else {
+                                                        exportBookingsToCSV(bookings, `bookings-${exportLabel}`);
+                                                    }
+                                                }}
                                                 title={isAr ? 'تصدير إلى Excel/CSV' : 'Export to Excel/CSV'}
                                             >
                                                 📊 {isAr ? 'تصدير Excel' : 'Export Excel'}
                                             </button>
                                             <button
                                                 className="export-btn export-pdf-btn"
-                                                onClick={() => exportToPDF(exportDonations, `donations-${exportLabel}`)}
+                                                onClick={() => {
+                                                    if (staffSubTab === 'donations') {
+                                                        exportToPDF(filteredDonations, `donations-${exportLabel}`);
+                                                    } else {
+                                                        exportBookingsToPDF(bookings, `bookings-${exportLabel}`);
+                                                    }
+                                                }}
                                                 title={isAr ? 'طباعة / تصدير PDF' : 'Print / Export PDF'}
                                             >
                                                 🖨️ {isAr ? 'طباعة / PDF' : 'Print / PDF'}
@@ -1371,253 +2831,668 @@ tr:nth-child(even){background:#f8fffe;}
                                         <div className="loading-spinner"></div>
                                         <p>{isAr ? 'جاري التحميل...' : 'Loading...'}</p>
                                     </div>
-                                ) : (
-                                    <>
-                                        {/* Pending */}
-                                        <div className="donations-section">
-                                            <h3 className="section-label pending-label">
-                                                ⏳ {isAr ? 'طلبات بانتظار المراجعة' : 'Pending Review'}
-                                                <span className="count-badge">
-                                                    {
-                                                        isAdminUser 
-                                                            ? (adminSubFilter === 'all' 
-                                                                ? allDonations.filter(d => d.status === 'pending').length 
-                                                                : adminSubFilter === 'ahmad' 
-                                                                    ? allDonations.filter(d => d.status === 'pending' && d.studentGender === 'male').length
-                                                                    : allDonations.filter(d => d.status === 'pending' && d.studentGender === 'female').length)
-                                                            : (coordinatorSubTab === 'delegated'
-                                                                ? allDonations.filter(d => d.status === 'pending' && d.delegatedTo === loggedInUser.username).length
-                                                                : allDonations.filter(d => d.status === 'pending' && d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)).length)
-                                                    }
-                                                </span>
-                                            </h3>
-                                            {
-                                                ((isAdminUser && adminSubFilter === 'all' && allDonations.filter(d => d.status === 'pending').length === 0) ||
-                                                 (isAdminUser && adminSubFilter === 'ahmad' && allDonations.filter(d => d.status === 'pending' && d.studentGender === 'male').length === 0) ||
-                                                 (isAdminUser && adminSubFilter === 'sara' && allDonations.filter(d => d.status === 'pending' && d.studentGender === 'female').length === 0) ||
-                                                 (!isAdminUser && coordinatorSubTab === 'delegated' && allDonations.filter(d => d.status === 'pending' && d.delegatedTo === loggedInUser.username).length === 0) ||
-                                                 (!isAdminUser && coordinatorSubTab === 'main' && allDonations.filter(d => d.status === 'pending' && d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)).length === 0)) ? (
-                                                    <div className="empty-state">✅ {isAr ? 'لا توجد طلبات معلقة' : 'No pending requests'}</div>
-                                                ) : (
-                                                <div className="donations-table-wrapper">
-                                                    <table className="donations-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>{isAr ? 'الطالب المتبرع' : 'Donor Student'}</th>
-                                                                <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                <th>{isAr ? 'الهاتف' : 'Phone'}</th>
-                                                                <th>{isAr ? 'المواد' : 'Materials'}</th>
-                                                                <th>{isAr ? 'حالة التبرع' : 'Donation Status'}</th>
-                                                                {isAdminUser && <th>{isAr ? 'التفويض للمنسقين' : 'Coordinators Delegation'}</th>}
-                                                                <th>{isAr ? 'إجراءات' : 'Actions'}</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {(isAdminUser 
-                                                                ? (adminSubFilter === 'all' 
-                                                                    ? allDonations.filter(d => d.status === 'pending')
-                                                                    : adminSubFilter === 'ahmad' 
-                                                                        ? allDonations.filter(d => d.status === 'pending' && d.studentGender === 'male')
-                                                                        : allDonations.filter(d => d.status === 'pending' && d.studentGender === 'female'))
-                                                                : (coordinatorSubTab === 'delegated' ? allDonations.filter(d => d.status === 'pending' && d.delegatedTo === loggedInUser.username) : allDonations.filter(d => d.status === 'pending' && d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)))
-                                                            ).map(donation => (
-                                                                <tr key={donation.id}>
-                                                                    <td><strong>{donation.studentName}</strong></td>
-                                                                    <td>
-                                                                        <span className={`gender-badge gender-${donation.studentGender}`}>
-                                                                            {donation.studentGender === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td dir="ltr">{donation.phoneNumber}</td>
-                                                                    <td>
-                                                                        {(donation.materials || []).map((m, i) => (
-                                                                            <span key={i} className="material-chip">
-                                                                                {typeof m === 'object' ? m.name : m}
-                                                                            </span>
-                                                                        ))}
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className="status-badge status-pending">
-                                                                            {isAr ? 'معلق' : 'Pending'}
-                                                                        </span>
-                                                                    </td>
-                                                                    {isAdminUser && (
-                                                                        <td>
-                                                                            {donation.publishedToCoordinators ? (
-                                                                                <div className="delegation-cell">
-                                                                                    <span className="delegated-to-badge">
-                                                                                        {donation.delegatedTo === 'ahmad'
-                                                                                            ? `♂️ ${systemSettings.ahmadNameAr || 'أحمد'}`
-                                                                                            : donation.delegatedTo === 'sara'
-                                                                                                ? `♀️ ${systemSettings.saraNameAr || 'سارة'}`
-                                                                                            : '📢 مفوّض'}
-                                                                                    </span>
-                                                                                    <button
-                                                                                        className="action-btn revoke-btn"
-                                                                                        onClick={() => handleRevokeDelegation(donation.id)}
-                                                                                    >
-                                                                                        🔄 {isAr ? 'إلغاء' : 'Revoke'}
-                                                                                    </button>
-                                                                                </div>
-                                                                            ) : (
-                                                                                <button
-                                                                                    className="action-btn publish-btn"
-                                                                                    onClick={() => handleOpenDelegateModal(donation)}
-                                                                                >
-                                                                                    📢 {isAr ? 'تفويض للمنسق' : 'Delegate'}
-                                                                                </button>
-                                                                            )}
-                                                                        </td>
-                                                                    )}
-                                                                    <td className="actions-cell">
-                                                                        {(isAdminUser || (!isAdminUser && coordinatorSubTab === 'delegated')) ? (
-                                                                            <>
-                                                                                <button className="action-btn approve-btn" onClick={() => handleApproveDonation(donation.id)}>
-                                                                                    ✅ {isAr ? 'موافقة' : 'Approve'}
-                                                                                </button>
-                                                                                <button className="action-btn edit-btn" onClick={() => { setSelectedDonationForEdit(JSON.parse(JSON.stringify(donation))); setShowEditModal(true); }}>
-                                                                                    ✏️ {isAr ? 'تعديل' : 'Edit'}
-                                                                                </button>
-                                                                                <button className="action-btn delete-btn" onClick={() => handleDeleteDonation(donation.id)}>
-                                                                                    🗑️ {isAr ? 'حذف' : 'Delete'}
-                                                                                </button>
-                                                                            </>
-                                                                        ) : (
-                                                                            <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
-                                                                        )}
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            )}
-                                        </div>
+                                ) : (() => {
+                                    // ── compute filtered data ──
+                                    const searchTerm = staffSearchQuery.trim().toLowerCase();
+                                    const donationMatchesSearch = (donation) => {
+                                        if (!searchTerm) return true;
+                                        const materialText = (donation.materials || []).map(m => {
+                                            if (typeof m === 'object' && m !== null) {
+                                                return `${m.name || ''} ${m.description || ''} ${m.status || ''} ${m.takerInfo?.name || ''} ${m.takerInfo?.phone || ''} ${m.takerInfo?.email || ''}`;
+                                            }
+                                            return `${m || ''}`;
+                                        }).join(' ');
+                                        const paymentText = `${donation.studentName || ''} ${donation.phoneNumber || ''} ${donation.email || ''} ${donation.studentGender || ''} ${donation.status || ''} ${materialText}`;
+                                        return paymentText.toLowerCase().includes(searchTerm);
+                                    };
+                                    const bookingMatchesSearch = (booking) => {
+                                        if (!searchTerm) return true;
+                                        const bookingText = `${booking.materialName || ''} ${booking.materialDescription || ''} ${booking.donorName || ''} ${booking.donorPhone || ''} ${booking.donorEmail || ''} ${booking.takerInfo?.name || ''} ${booking.takerInfo?.phone || ''} ${booking.takerInfo?.email || ''} ${booking.status || ''}`;
+                                        return bookingText.toLowerCase().includes(searchTerm);
+                                    };
+                                    const sharedBookingMatchesSearch = (booking) => {
+                                        if (!searchTerm) return true;
+                                        const sharedText = `${booking.donorName || ''} ${booking.donorPhone || ''} ${booking.donorEmail || ''} ${booking.materialName || ''} ${booking.materialDescription || ''} ${booking.takerName || ''} ${booking.takerPhone || ''} ${booking.takerEmail || ''} ${booking.materialStatus || ''}`;
+                                        return sharedText.toLowerCase().includes(searchTerm);
+                                    };
+                                    const filteredDonations = isAdminUser
+                                        ? (adminSubFilter === 'all'
+                                            ? allDonations
+                                            : adminSubFilter === 'ahmad'
+                                                ? allDonations.filter(d => d.studentGender === 'male')
+                                                : allDonations.filter(d => d.studentGender === 'female'))
+                                        : allDonations.filter(d =>
+                                            coordinatorSubTab === 'delegated'
+                                                ? d.delegatedTo === loggedInUser.username
+                                                : d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)
+                                        ).filter(donationMatchesSearch);
 
-                                        {/* Approved & Reserved */}
-                                        <div className="donations-section">
-                                            <h3 className="section-label approved-label">
-                                                ✅ {isAr ? 'التبرعات المعتمدة، المحجوزة والمستلمة' : 'Approved, Reserved & Completed Donations'}
-                                                <span className="count-badge">
-                                                    {
-                                                        isAdminUser 
-                                                            ? (adminSubFilter === 'all' 
-                                                                ? allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status)).length 
-                                                                : adminSubFilter === 'ahmad' 
-                                                                    ? allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === 'male').length
-                                                                    : allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === 'female').length)
-                                                            : (coordinatorSubTab === 'delegated' ? allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.delegatedTo === loggedInUser.username).length : allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)).length)
+                                    const filteredBookings = [];
+                                    allDonations.forEach(donation => {
+                                        const passFilter = isAdminUser
+                                            ? (adminSubFilter === 'all'
+                                                ? true
+                                                : adminSubFilter === 'ahmad'
+                                                    ? donation.studentGender === 'male'
+                                                    : donation.studentGender === 'female')
+                                            : (coordinatorSubTab === 'delegated'
+                                                ? donation.delegatedTo === loggedInUser.username
+                                                : donation.studentGender === loggedInUser.gender && (!donation.delegatedTo || donation.delegatedTo === loggedInUser.username));
+                                        if (passFilter && donation.materials) {
+                                            donation.materials.forEach((m, idx) => {
+                                                if (typeof m === 'object' && (m.status === 'reserved' || m.status === 'completed')) {
+                                                    const bookingRecord = {
+                                                        id: `${donation.id}_booking_${idx}`,
+                                                        donationId: donation.id,
+                                                        donation,
+                                                        materialIndex: idx,
+                                                        materialName: m.name,
+                                                        materialDescription: m.description || '',
+                                                        status: m.status,
+                                                        takerInfo: m.takerInfo || {},
+                                                        takerEmail: m.takerInfo?.email || '',
+                                                        donorName: donation.studentName,
+                                                        donorPhone: donation.phoneNumber,
+                                                        donorEmail: donation.email || '',
+                                                        donorGender: donation.studentGender,
+                                                        delegatedTo: donation.delegatedTo,
+                                                        publishedToCoordinators: donation.publishedToCoordinators,
+                                                        approvalRequests: donation.adminApprovalRequests || [],
+                                                        createdAt: m.takerInfo?.bookedAt || donation.lastUpdated || donation.createdAt
+                                                    };
+                                                    if (bookingMatchesSearch(bookingRecord)) {
+                                                        filteredBookings.push(bookingRecord);
                                                     }
-                                                </span>
-                                            </h3>
-                                            {
-                                                ((isAdminUser && adminSubFilter === 'all' && allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status)).length === 0) ||
-                                                 (isAdminUser && adminSubFilter === 'ahmad' && allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === 'male').length === 0) ||
-                                                 (isAdminUser && adminSubFilter === 'sara' && allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === 'female').length === 0) ||
-                                                 (!isAdminUser && coordinatorSubTab === 'delegated' && allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.delegatedTo === loggedInUser.username).length === 0) || (!isAdminUser && coordinatorSubTab === 'main' && allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)).length === 0)) ? (
-                                                    <div className="empty-state">📦 {isAr ? 'لا توجد تبرعات معتمدة بعد' : 'No approved donations yet'}</div>
-                                                ) : (
-                                                <div className="donations-table-wrapper">
-                                                    <table className="donations-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>{isAr ? 'الطالب المتبرع' : 'Donor Student'}</th>
-                                                                <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                <th>{isAr ? 'الهاتف' : 'Phone'}</th>
-                                                                <th>{isAr ? 'المواد' : 'Materials'}</th>
-                                                                <th>{isAr ? 'الحالة' : 'Status'}</th>
-                                                                {isAdminUser && <th>{isAr ? 'التفويض للمنسقين' : 'Coordinators Delegation'}</th>}
-                                                                <th>{isAr ? 'إجراءات' : 'Actions'}</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {(isAdminUser 
-                                                                ? (adminSubFilter === 'all' 
-                                                                    ? allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status))
-                                                                    : adminSubFilter === 'ahmad' 
-                                                                        ? allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === 'male')
-                                                                        : allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === 'female'))
-                                                                : (coordinatorSubTab === 'delegated' ? allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.delegatedTo === loggedInUser.username) : allDonations.filter(d => ['approved', 'reserved', 'completed'].includes(d.status) && d.studentGender === loggedInUser.gender && (!d.delegatedTo || d.delegatedTo === loggedInUser.username)))
-                                                            ).map(donation => (
-                                                                <tr key={donation.id}>
-                                                                    <td><strong>{donation.studentName}</strong></td>
-                                                                    <td>
-                                                                        <span className={`gender-badge gender-${donation.studentGender}`}>
-                                                                            {donation.studentGender === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td dir="ltr">{donation.phoneNumber}</td>
-                                                                    <td>
-                                                                        {(donation.materials || []).map((m, i) => {
-                                                                            const status = typeof m === 'object' ? m.status : '';
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                    const coordinatorPerms = systemSettings.coordinatorPermissions || {};
+                                    const currentCoordinatorPerms = coordinatorPerms[loggedInUser?.username] || {};
+                                    // Only admins can act directly on bookings
+                                    const canCompleteBooking = isAdminUser;
+                                    const canCancelBooking = isAdminUser;
+                                    // Only admins can edit/delete directly — coordinators always request approval
+                                    const canEditDonation = (donation) => isAdminUser;
+                                    const canDeleteDonation = isAdminUser;
+
+                                    return (
+                                        <>
+                                            {/* ─── الجدول الرسمي الرئيسي ─── */}
+                                            {staffSubTab === 'main' && (
+                                                <div className="formal-table-wrapper">
+                                                    <div className="formal-table-header">
+                                                        <span className="formal-table-title">
+                                                            📊 {isAr ? 'الجدول الرسمي الرئيسي' : 'Main Official Table'}
+                                                            {!isAdminUser && <span style={{ marginRight: '8px', color: 'rgba(255,255,255,0.7)' }}>👁️ {isAr ? '(للاطلاع فقط)' : '(View Only)'}</span>}
+                                                        </span>
+                                                        <span className="formal-table-count">{isAr ? `إجمالي: ${filteredDonations.length} تبرع` : `Total: ${filteredDonations.length} donations`}</span>
+                                                    </div>
+                                                    {filteredDonations.length === 0 ? (
+                                                        <div className="empty-state">📭 {isAr ? 'لا توجد بيانات' : 'No data found'}</div>
+                                                    ) : (
+                                                        <div className="formal-table-scroll">
+                                                            <table className="formal-table main-official-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                                        <th>{isAr ? 'رقم الهاتف' : 'Phone'}</th>
+                                                                        <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
+                                                                        <th>{isAr ? 'الجنس' : 'Gender'}</th>
+                                                                        <th>{isAr ? 'اسم المادة' : 'Material Name'}</th>
+                                                                        <th>{isAr ? 'وصف المادة' : 'Description'}</th>
+                                                                        <th>{isAr ? 'حالة المادة' : 'Material Status'}</th>
+                                                                        <th>{isAr ? 'اسم الحاجز' : 'Booker (if reserved)'}</th>
+                                                                        <th>{isAr ? 'هاتف الحاجز' : 'Booker Phone'}</th>
+                                                                        <th>{isAr ? 'حالة الحجز' : 'Booking Status'}</th>
+                                                                        <th>{isAr ? 'تاريخ التبرع' : 'Donation Date'}</th>
+                                                                        {isAdminUser && <th>{isAr ? 'الحالة العامة' : 'Overall Status'}</th>}
+                                                                        {isAdminUser && <th>{isAr ? 'المفوّض' : 'Delegated To'}</th>}
+                                                                        {isAdminUser && <th>{isAr ? 'الإجراءات' : 'Actions'}</th>}
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {filteredDonations.map((donation, donIdx) => {
+                                                                        const donDate = donation.createdAt?.toDate ? donation.createdAt.toDate() : donation.createdAt ? new Date(donation.createdAt) : null;
+                                                                        const materialsWithIndex = (donation.materials || []).map((m, idx) => ({ ...m, materialIndex: idx, donationId: donation.id, donation }));
+
+                                                                        return materialsWithIndex.map((material, matIdx) => {
+                                                                            const materialObj = typeof material === 'object' ? material : { name: material, status: donation.status };
+                                                                            const matStatus = materialObj.status || donation.status;
+                                                                            const takerInfo = materialObj.takerInfo || {};
+                                                                            const bookingStatus = materialObj.status === 'reserved' ? (isAr ? '🔒 محجوز' : '🔒 Reserved')
+                                                                                : materialObj.status === 'completed' ? (isAr ? '✅ مُسلّم' : '✅ Delivered')
+                                                                                    : (isAr ? '⏳ بانتظار' : '⏳ Pending');
+
                                                                             return (
-                                                                                <span key={i} className={`material-chip ${status === 'reserved' ? 'chip-reserved' : status === 'completed' ? 'chip-completed' : ''}`}>
-                                                                                    {typeof m === 'object' ? m.name : m}
-                                                                                    {status === 'reserved' && ' 🔒'}
-                                                                                    {status === 'completed' && ' ✅'}
-                                                                                </span>
+                                                                                <tr key={`${donation.id}-${matIdx}`} className={`formal-row status-row-${matStatus}`}>
+                                                                                    <td className="row-num">{donIdx + 1}.{matIdx + 1}</td>
+                                                                                    <td className="donor-name-cell"><strong>{donation.studentName}</strong></td>
+                                                                                    <td dir="ltr" className="phone-cell">{donation.phoneNumber}</td>
+                                                                                    <td dir="ltr" className="email-cell">{donation.email || '—'}</td>
+                                                                                    <td>
+                                                                                        <span className={`gender-badge gender-${donation.studentGender}`}>
+                                                                                            {donation.studentGender === 'male' ? (isAr ? '♂️ ذكر' : '♂️ M') : (isAr ? '♀️ أنثى' : '♀️ F')}
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td className="material-name-cell"><strong>{materialObj.name || '—'}</strong></td>
+                                                                                    <td className="description-cell">{materialObj.description || '—'}</td>
+                                                                                    <td>
+                                                                                        <span className={`status-badge status-${matStatus}`}>
+                                                                                            {matStatus === 'pending' && (isAr ? '⏳ معلق' : '⏳ Pending')}
+                                                                                            {matStatus === 'reserved' && (isAr ? '🔒 محجوز' : '🔒 Reserved')}
+                                                                                            {matStatus === 'completed' && (isAr ? '✅ مُسلّم' : '✅ Delivered')}
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td>{takerInfo?.name || '—'}</td>
+                                                                                    <td dir="ltr" className="phone-cell">{takerInfo?.phone || '—'}</td>
+                                                                                    <td>{bookingStatus}</td>
+                                                                                    <td className="date-cell">{donDate ? donDate.toLocaleDateString(isAr ? 'ar-JO' : 'en-US') : '—'}</td>
+                                                                                    {isAdminUser && (
+                                                                                        <td>
+                                                                                            <span className={`status-badge status-${donation.status}`}>
+                                                                                                {donation.status === 'pending' && (isAr ? '⏳ معلق' : '⏳ Pending')}
+                                                                                                {donation.status === 'approved' && (isAr ? '✅ معتمد' : '✅ Approved')}
+                                                                                                {donation.status === 'reserved' && (isAr ? '🔒 محجوز' : '🔒 Reserved')}
+                                                                                                {donation.status === 'completed' && (isAr ? '📦 مكتمل' : '📦 Completed')}
+                                                                                            </span>
+                                                                                        </td>
+                                                                                    )}
+                                                                                    {isAdminUser && (
+                                                                                        <td className="delegation-cell-formal">
+                                                                                            {donation.publishedToCoordinators ? (
+                                                                                                <span className="delegated-to-badge">
+                                                                                                    {donation.delegatedTo === 'ahmad'
+                                                                                                        ? `♂️ ${systemSettings.ahmadNameAr || 'أحمد'}`
+                                                                                                        : donation.delegatedTo === 'sara'
+                                                                                                            ? `♀️ ${systemSettings.saraNameAr || 'سارة'}`
+                                                                                                            : '📢 مفوّض'}
+                                                                                                </span>
+                                                                                            ) : (
+                                                                                                <span style={{ fontSize: '0.9em', color: 'rgba(255,255,255,0.5)' }}>—</span>
+                                                                                            )}
+                                                                                        </td>
+                                                                                    )}
+                                                                                    {isAdminUser && (
+                                                                                        <td className="actions-cell">
+                                                                                            {donation.status === 'pending' && !donation.adminApprovalRequests?.some(req => req.status === 'pending') && (
+                                                                                                <button className="action-btn approve-btn" style={{ fontSize: '0.85em', padding: '6px 10px' }} onClick={() => handleApproveDonation(donation.id)}>
+                                                                                                    ✅ {isAr ? 'اعتماد' : 'Approve'}
+                                                                                                </button>
+                                                                                            )}
+                                                                                            {donation.adminApprovalRequests?.some(req => req.status === 'pending') && (
+                                                                                                <button className="action-btn request-review-btn" style={{ fontSize: '0.85em', padding: '6px 10px' }} onClick={() => openApprovalRequestsModal(donation)}>
+                                                                                                    🔔 {isAr ? 'طلبات' : 'Requests'}
+                                                                                                </button>
+                                                                                            )}
+                                                                                        </td>
+                                                                                    )}
+                                                                                </tr>
                                                                             );
-                                                                        })}
-                                                                    </td>
-                                                                    <td>
-                                                                        <span className={`status-badge status-${donation.status}`}>
-                                                                            {donation.status === 'reserved' ? (isAr ? '🔒 محجوز' : '🔒 Reserved') :
-                                                                             donation.status === 'approved' ? (isAr ? '✅ معتمد' : '✅ Approved') :
-                                                                             donation.status === 'completed' ? (isAr ? '📦 تم التسليم' : '📦 Completed') :
-                                                                             donation.status}
-                                                                        </span>
-                                                                    </td>
-                                                                    {isAdminUser && (
-                                                                        <td>
-                                                                            {donation.publishedToCoordinators ? (
-                                                                                <div className="delegation-cell">
-                                                                                    <span className="delegated-to-badge">
-                                                                                        {donation.delegatedTo === 'ahmad'
-                                                                                            ? `♂️ ${systemSettings.ahmadNameAr || 'أحمد'}`
-                                                                                            : donation.delegatedTo === 'sara'
-                                                                                                ? `♀️ ${systemSettings.saraNameAr || 'سارة'}`
-                                                                                            : '📢 مفوّض'}
-                                                                                    </span>
-                                                                                    <button
-                                                                                        className="action-btn revoke-btn"
-                                                                                        onClick={() => handleRevokeDelegation(donation.id)}
-                                                                                    >
-                                                                                        🔄 {isAr ? 'إلغاء' : 'Revoke'}
-                                                                                    </button>
-                                                                                </div>
-                                                                            ) : (
-                                                                                <button
-                                                                                    className="action-btn publish-btn"
-                                                                                    onClick={() => handleOpenDelegateModal(donation)}
-                                                                                >
-                                                                                    📢 {isAr ? 'تفويض للمنسق' : 'Delegate'}
-                                                                                </button>
-                                                                            )}
-                                                                        </td>
-                                                                    )}
-                                                                    <td className="actions-cell">
-                                                                        {(isAdminUser || (!isAdminUser && coordinatorSubTab === 'delegated')) ? (
-                                                                            <>
-                                                                                <button className="action-btn edit-btn" onClick={() => { setSelectedDonationForEdit(JSON.parse(JSON.stringify(donation))); setShowEditModal(true); }}>
-                                                                                    ✏️ {isAr ? 'تعديل' : 'Edit'}
-                                                                                </button>
-                                                                                <button className="action-btn delete-btn" onClick={() => handleDeleteDonation(donation.id)}>
-                                                                                    🗑️ {isAr ? 'حذف' : 'Delete'}
-                                                                                </button>
-                                                                            </>
-                                                                        ) : (
-                                                                            <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
-                                                                        )}
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
+                                                                        });
+                                                                    })}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
-                                        </div>
-                                    </>
-                                )}
+
+                                            {/* ─── جدول التبرعات ─── */}
+                                            {staffSubTab === 'donations' && (
+                                                <div className="formal-table-wrapper">
+                                                    <div className="formal-table-header">
+                                                        <span className="formal-table-title">📦 {isAr ? 'جدول تبرعات الطلاب' : 'Student Donations Table'}</span>
+                                                        <span className="formal-table-count">{isAr ? `إجمالي: ${filteredDonations.length} سجل` : `Total: ${filteredDonations.length} records`}</span>
+                                                    </div>
+                                                    {filteredDonations.length === 0 ? (
+                                                        <div className="empty-state">📭 {isAr ? 'لا توجد تبرعات' : 'No donations found'}</div>
+                                                    ) : (
+                                                        <div className="formal-table-scroll">
+                                                            <table className="formal-table donations-formal-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>{isAr ? '#' : '#'}</th>
+                                                                        <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                                        <th>{isAr ? 'رقم الهاتف' : 'Phone'}</th>
+                                                                        <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
+                                                                        <th>{isAr ? 'الجنس' : 'Gender'}</th>
+                                                                        <th>{isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</th>
+                                                                        <th>{isAr ? 'حالة الطلب' : 'Status'}</th>
+                                                                        <th>{isAr ? 'تاريخ التقديم' : 'Submitted'}</th>
+                                                                        {isAdminUser && <th>{isAr ? 'التفويض' : 'Delegation'}</th>}
+                                                                        <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {filteredDonations.map((donation, idx) => {
+                                                                        const donDate = donation.createdAt?.toDate ? donation.createdAt.toDate() : donation.createdAt ? new Date(donation.createdAt) : null;
+                                                                        return (
+                                                                            <tr key={donation.id} className={`formal-row status-row-${donation.status}`}>
+                                                                                <td className="row-num">{idx + 1}</td>
+                                                                                <td className="donor-name-cell"><strong>{donation.studentName}</strong></td>
+                                                                                <td dir="ltr" className="phone-cell">{donation.phoneNumber}</td>
+                                                                                <td dir="ltr" className="email-cell">{donation.email || '—'}</td>
+                                                                                <td>
+                                                                                    <span className={`gender-badge gender-${donation.studentGender}`}>
+                                                                                        {donation.studentGender === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td className="materials-cell">
+                                                                                    <ul className="materials-list-formal">
+                                                                                        {(donation.materials || []).map((m, i) => (
+                                                                                            <li key={i} className="donation-material-item">
+                                                                                                <span className={`mat-status-dot status-dot-${typeof m === 'object' ? m.status : donation.status}`}></span>
+                                                                                                <div className="material-item-content">
+                                                                                                    <strong>{typeof m === 'object' ? m.name : m}</strong>
+                                                                                                    {typeof m === 'object' && m.description && (
+                                                                                                        <small>{m.description}</small>
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        ))}
+                                                                                    </ul>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <span className={`status-badge status-${donation.status}`}>
+                                                                                        {donation.status === 'pending' && (isAr ? '⏳ معلق' : '⏳ Pending')}
+                                                                                        {donation.status === 'approved' && (isAr ? '✅ معتمد' : '✅ Approved')}
+                                                                                        {donation.status === 'reserved' && (isAr ? '🔒 محجوز' : '🔒 Reserved')}
+                                                                                        {donation.status === 'completed' && (isAr ? '📦 مكتمل' : '📦 Completed')}
+                                                                                    </span>
+                                                                                    {donation.status === 'pending' && isAdminUser && !donation.adminApprovalRequests?.some(req => req.status === 'pending') && (
+                                                                                        <button className="action-btn approve-btn" style={{ marginTop: '4px', display: 'block' }} onClick={() => handleApproveDonation(donation.id)}>
+                                                                                            ✅ {isAr ? 'اعتماد' : 'Approve'}
+                                                                                        </button>
+                                                                                    )}
+                                                                                </td>
+                                                                                <td className="date-cell">{donDate ? donDate.toLocaleDateString(isAr ? 'ar-JO' : 'en-US') : '—'}</td>
+                                                                                {isAdminUser && (
+                                                                                    <td className="delegation-cell-formal">
+                                                                                        {donation.publishedToCoordinators ? (
+                                                                                            <div className="delegation-cell">
+                                                                                                <span className="delegated-to-badge">
+                                                                                                    {donation.delegatedTo === 'ahmad'
+                                                                                                        ? `♂️ ${systemSettings.ahmadNameAr || 'أحمد'}`
+                                                                                                        : donation.delegatedTo === 'sara'
+                                                                                                            ? `♀️ ${systemSettings.saraNameAr || 'سارة'}`
+                                                                                                            : '📢 مفوّض'}
+                                                                                                </span>
+                                                                                                <button className="action-btn revoke-btn" onClick={() => handleRevokeDelegation(donation.id)}>
+                                                                                                    🔄 {isAr ? 'إلغاء' : 'Revoke'}
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        ) : (
+                                                                                            <button className="action-btn publish-btn" onClick={() => handleOpenDelegateModal(donation)}>
+                                                                                                📢 {isAr ? 'تفويض' : 'Delegate'}
+                                                                                            </button>
+                                                                                        )}
+                                                                                    </td>
+                                                                                )}
+                                                                                <td className="actions-cell">
+                                                                                    {isAdminUser && donation.adminApprovalRequests?.some(req => req.status === 'pending') && (
+                                                                                        <button className="action-btn request-review-btn" onClick={() => openApprovalRequestsModal(donation)}>
+                                                                                            🔔 {isAr ? 'مراجعة طلبات الإدارة' : 'Review Admin Requests'}
+                                                                                        </button>
+                                                                                    )}
+                                                                                    {canEditDonation(donation) && (
+                                                                                        <button className="action-btn edit-btn" onClick={() => { setSelectedDonationForEdit(JSON.parse(JSON.stringify(donation))); setShowEditModal(true); }}>
+                                                                                            ✏️ {isAr ? 'تعديل' : 'Edit'}
+                                                                                        </button>
+                                                                                    )}
+                                                                                    {!canEditDonation(donation) && (
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            className="action-btn request-approval-btn"
+                                                                                            onClick={() => {
+                                                                                                // Open edit modal so coordinator fills proposed changes — submitted for admin approval
+                                                                                                setSelectedDonationForEdit(JSON.parse(JSON.stringify(donation)));
+                                                                                                setShowEditModal(true);
+                                                                                            }}
+                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
+                                                                                        >
+                                                                                            📝 {isAr ? 'طلب تعديل' : 'Request Edit'}
+                                                                                        </button>
+                                                                                    )}
+                                                                                    <a
+                                                                                        href={generateWhatsAppLink(donation, 'donor')}
+                                                                                        target="_blank"
+                                                                                        rel="noopener noreferrer"
+                                                                                        className="action-btn message-btn"
+                                                                                        onClick={(e) => {
+                                                                                            const link = generateWhatsAppLink(donation, 'donor');
+                                                                                            if (link === '#') {
+                                                                                                e.preventDefault();
+                                                                                                toast.error(isAr ? 'رقم الهاتف غير متوفر أو غير صالح' : 'Phone number is invalid or missing');
+                                                                                            } else {
+                                                                                                toast.success(isAr ? 'جاري فتح واتساب...' : 'Opening WhatsApp...');
+                                                                                            }
+                                                                                        }}
+                                                                                        style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                                                    >
+                                                                                        💬 {isAr ? 'رسالة واتس' : 'WhatsApp'}
+                                                                                    </a>
+                                                                                    {canDeleteDonation && (
+                                                                                        <button className="action-btn delete-btn" onClick={() => handleDeleteDonation(donation.id)}>
+                                                                                            🗑️ {isAr ? 'حذف' : 'Delete'}
+                                                                                        </button>
+                                                                                    )}
+                                                                                    {!canDeleteDonation && (
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            className="action-btn request-approval-btn"
+                                                                                            onClick={() => {
+                                                                                                openActionRequestModal(donation.id, 'deleteDonation', null, donation);
+                                                                                            }}
+                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
+                                                                                        >
+                                                                                            ⚠️ {isAr ? 'طلب حذف' : 'Request Delete'}
+                                                                                        </button>
+                                                                                    )}
+                                                                                </td>
+                                                                            </tr>
+                                                                        );
+                                                                    })}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* ─── جدول الحجوزات ─── */}
+                                            {staffSubTab === 'bookings' && (
+                                                <div className="formal-table-wrapper">
+                                                    <div className="formal-table-header">
+                                                        <span className="formal-table-title">🔒 {isAr ? 'جدول حجوزات الطلاب (الحاجزين)' : 'Student Bookings Table'}</span>
+                                                        <span className="formal-table-count">{isAr ? `إجمالي: ${filteredBookings.length} حجز` : `Total: ${filteredBookings.length} bookings`}</span>
+                                                    </div>
+                                                    {filteredBookings.length === 0 ? (
+                                                        <div className="empty-state">📭 {isAr ? 'لا توجد حجوزات بعد' : 'No bookings yet'}</div>
+                                                    ) : (
+                                                        <div className="formal-table-scroll">
+                                                            <table className="formal-table bookings-formal-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>{isAr ? 'اسم الحاجز' : 'Booker Name'}</th>
+                                                                        <th>{isAr ? 'هاتف الحاجز' : 'Booker Phone'}</th>
+                                                                        <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
+                                                                        <th>{isAr ? 'الجنس' : 'Gender'}</th>
+                                                                        <th>{isAr ? 'المادة المحجوزة' : 'Booked Material'}</th>
+                                                                        <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                                        <th>{isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
+                                                                        <th>{isAr ? 'حالة الحجز' : 'Booking Status'}</th>
+                                                                        <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {filteredBookings.map((booking, idx) => (
+                                                                        <tr key={booking.id} className={`formal-row status-row-${booking.status}`}>
+                                                                            <td className="row-num">{idx + 1}</td>
+                                                                            <td className="donor-name-cell"><strong>{booking.takerInfo?.name || '—'}</strong></td>
+                                                                            <td dir="ltr" className="phone-cell">{booking.takerInfo?.phone || '—'}</td>
+                                                                            <td dir="ltr" className="email-cell">{booking.takerInfo?.email || '—'}</td>
+                                                                            <td>
+                                                                                <span className={`gender-badge gender-${booking.takerInfo?.gender || booking.donorGender}`}>
+                                                                                    {(booking.takerInfo?.gender || booking.donorGender) === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td className="materials-cell">
+                                                                                <strong>{booking.materialName}</strong>
+                                                                                {booking.materialDescription && <p className="material-note">{booking.materialDescription}</p>}
+                                                                            </td>
+                                                                            <td>{booking.donorName}</td>
+                                                                            <td dir="ltr" className="email-cell">{booking.donorEmail || '—'}</td>
+                                                                            <td>
+                                                                                <span className={`status-badge status-${booking.status}`}>
+                                                                                    {booking.status === 'reserved' && (isAr ? '🔒 محجوز — بانتظار التسليم' : '🔒 Reserved')}
+                                                                                    {booking.status === 'completed' && (isAr ? '✅ تم التسليم' : '✅ Delivered')}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td className="actions-cell">
+                                                                                {isAdminUser ? (
+                                                                                    <>
+                                                                                        {booking.status === 'reserved' && (
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                className="action-btn approve-btn"
+                                                                                                onClick={() => handleCompleteBooking(booking.donationId, booking.materialIndex)}
+                                                                                                style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
+                                                                                            >
+                                                                                                ✅ {isAr ? 'تم التسليم' : 'Mark Delivered'}
+                                                                                            </button>
+                                                                                        )}
+                                                                                        <a
+                                                                                            href={generateWhatsAppLink(booking, 'booker')}
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer"
+                                                                                            className="action-btn message-btn"
+                                                                                            onClick={(e) => {
+                                                                                                const link = generateWhatsAppLink(booking, 'booker');
+                                                                                                if (link === '#') {
+                                                                                                    e.preventDefault();
+                                                                                                    toast.error(isAr ? 'رقم الهاتف غير متوفر أو غير صالح' : 'Phone number is invalid or missing');
+                                                                                                } else {
+                                                                                                    toast.success(isAr ? 'جاري فتح واتساب...' : 'Opening WhatsApp...');
+                                                                                                }
+                                                                                            }}
+                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                                                        >
+                                                                                            💬 {isAr ? 'رسالة واتس' : 'WhatsApp'}
+                                                                                        </a>
+                                                                                        {(isAdminUser || isCoordinatorApprovedToEdit({ id: booking.donationId }) || (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking)) && (
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                className="action-btn delete-btn"
+                                                                                                onClick={() => {
+                                                                                                    if (isAdminUser || (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking)) {
+                                                                                                        handleCancelBooking(booking.donationId, booking.materialIndex);
+                                                                                                    } else {
+                                                                                                        openActionRequestModal(booking.donationId, 'cancelBooking', booking.materialIndex, booking);
+                                                                                                    }
+                                                                                                }}
+                                                                                                style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
+                                                                                            >
+                                                                                                🔓 {isAr ? 'إلغاء الحجز' : 'Cancel Booking'}
+                                                                                            </button>
+                                                                                        )}
+                                                                                    </>
+                                                                                ) : (
+                                                                                    <div className="view-only-actions-row">
+                                                                                        <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
+                                                                                        {!isAdminUser && (
+                                                                                            <>
+                                                                                                {booking.status === 'reserved' && (
+                                                                                                    <button className="action-btn request-approval-btn" onClick={() => handleRequestAdminApproval({ donationId: booking.donationId, materialIndex: booking.materialIndex, actionType: 'completeBooking' })}>
+                                                                                                        ⚠️ {isAr ? 'طلب موافقة تسليم' : 'Request Delivery Approval'}
+                                                                                                    </button>
+                                                                                                )}
+                                                                                                <button className="action-btn request-approval-btn" onClick={() => handleRequestAdminApproval({ donationId: booking.donationId, materialIndex: booking.materialIndex, actionType: 'cancelBooking' })}>
+                                                                                                    ⚠️ {isAr ? 'طلب موافقة إلغاء' : 'Request Cancel Approval'}
+                                                                                                </button>
+                                                                                            </>
+                                                                                        )}
+                                                                                    </div>
+                                                                                )}
+                                                                            </td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* ─── الجدول المشترك (حجوزات بين الجنسين) ─── */}
+                                            {staffSubTab === 'shared' && (
+                                                <div className="formal-table-wrapper">
+                                                    <div className="formal-table-header">
+                                                        <span className="formal-table-title">
+                                                            ⚡ {isAr ? 'الجدول المشترك (تسليم بين المنسقين)' : 'Shared Table (Cross-Gender Handover)'}
+                                                        </span>
+                                                        <span className="formal-table-count">
+                                                            {isAr ? 'حجوزات مشتركة بين الجنسين' : 'Cross-gender reservations'}
+                                                        </span>
+                                                    </div>
+                                                    {(() => {
+                                                        // Filter bookings where donor gender ≠ taker gender
+                                                        const sharedBookings = [];
+                                                        allDonations.forEach(donation => {
+                                                            if (donation.materials) {
+                                                                donation.materials.forEach((m, idx) => {
+                                                                    if (typeof m === 'object' && (m.status === 'reserved' || m.status === 'completed')) {
+                                                                        const takerGender = m.takerInfo?.gender;
+                                                                        const donorGender = donation.studentGender;
+
+                                                                        // Only include if genders are different (cross-gender)
+                                                                        if (takerGender && donorGender && takerGender !== donorGender) {
+                                                                            const sharedBookingRecord = {
+                                                                                id: `${donation.id}_shared_${idx}`,
+                                                                                donationId: donation.id,
+                                                                                materialIndex: idx,
+                                                                                donation,
+                                                                                material: m,
+                                                                                donorName: donation.studentName,
+                                                                                donorGender: donation.studentGender,
+                                                                                donorPhone: donation.phoneNumber,
+                                                                                donorEmail: donation.email,
+                                                                                takerName: m.takerInfo?.name || '—',
+                                                                                takerGender: m.takerInfo?.gender,
+                                                                                takerPhone: m.takerInfo?.phone || '—',
+                                                                                takerEmail: m.takerInfo?.email || '—',
+                                                                                materialName: m.name,
+                                                                                materialDescription: m.description || '—',
+                                                                                materialStatus: m.status,
+                                                                                coordinatorAssigned: donation.delegatedTo || null
+                                                                            };
+                                                                            if (sharedBookingMatchesSearch(sharedBookingRecord)) {
+                                                                                sharedBookings.push(sharedBookingRecord);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+
+                                                        return sharedBookings.length === 0 ? (
+                                                            <div className="empty-state">✅ {isAr ? 'لا توجد حجوزات مشتركة حالياً' : 'No shared bookings at the moment'}</div>
+                                                        ) : (
+                                                            <div className="formal-table-scroll">
+                                                                <table className="formal-table shared-handover-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>{isAr ? 'المتبرع (الجهة الأولى)' : 'Donor (First Party)'}</th>
+                                                                            <th>{isAr ? 'جنس المتبرع' : "Donor's Gender"}</th>
+                                                                            <th>{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</th>
+                                                                            <th>{isAr ? 'المادة' : 'Material'}</th>
+                                                                            <th>{isAr ? 'حالة التسليم' : 'Delivery Status'}</th>
+                                                                            <th>{isAr ? 'الحاجز (الجهة الثانية)' : 'Taker (Second Party)'}</th>
+                                                                            <th>{isAr ? 'جنس الحاجز' : "Taker's Gender"}</th>
+                                                                            <th>{isAr ? 'هاتف الحاجز' : 'Taker Phone'}</th>
+                                                                            <th>{isAr ? 'المنسق المكلّف' : 'Assigned Coordinator'}</th>
+                                                                            <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {sharedBookings.map((booking, idx) => (
+                                                                            <tr key={booking.id} className={`formal-row status-row-${booking.materialStatus}`}>
+                                                                                <td className="row-num">{idx + 1}</td>
+                                                                                <td className="donor-name-cell"><strong>{booking.donorName}</strong></td>
+                                                                                <td>
+                                                                                    <span className={`gender-badge gender-${booking.donorGender}`}>
+                                                                                        {booking.donorGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td dir="ltr" className="phone-cell">{booking.donorPhone}</td>
+                                                                                <td className="material-name-cell">
+                                                                                    <strong>{booking.materialName}</strong>
+                                                                                    {booking.materialDescription !== '—' && <small>{booking.materialDescription}</small>}
+                                                                                </td>
+                                                                                <td>
+                                                                                    <span className={`status-badge status-${booking.materialStatus}`}>
+                                                                                        {booking.materialStatus === 'reserved' ? (isAr ? '🔒 محجوز' : '🔒 Reserved') : (isAr ? '✅ مُسلّم' : '✅ Delivered')}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td className="taker-name-cell"><strong>{booking.takerName}</strong></td>
+                                                                                <td>
+                                                                                    <span className={`gender-badge gender-${booking.takerGender}`}>
+                                                                                        {booking.takerGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td dir="ltr" className="phone-cell">{booking.takerPhone}</td>
+                                                                                <td>
+                                                                                    {booking.coordinatorAssigned ? (
+                                                                                        <span className="delegated-to-badge">
+                                                                                            {booking.coordinatorAssigned === 'ahmad'
+                                                                                                ? `♂️ ${systemSettings.ahmadNameAr || 'أحمد'}`
+                                                                                                : booking.coordinatorAssigned === 'sara'
+                                                                                                    ? `♀️ ${systemSettings.saraNameAr || 'سارة'}`
+                                                                                                    : booking.coordinatorAssigned}
+                                                                                        </span>
+                                                                                    ) : (
+                                                                                        <span style={{ color: 'rgba(255,100,100,1)', fontWeight: 'bold' }}>
+                                                                                            {isAr ? '⚠️ لم يُعيّن' : '⚠️ Not assigned'}
+                                                                                        </span>
+                                                                                    )}
+                                                                                </td>
+                                                                                <td className="actions-cell">
+                                                                                    {isAdminUser && !booking.coordinatorAssigned && (
+                                                                                        <>
+                                                                                            <button
+                                                                                                className="action-btn approve-btn"
+                                                                                                onClick={() => {
+                                                                                                    handleUpdateDelegation(booking.donationId, 'ahmad');
+                                                                                                    toast.success(isAr ? '✅ تم التعيين للمنسق' : '✅ Assigned');
+                                                                                                }}
+                                                                                                title={`Assign to ${systemSettings.ahmadNameAr || 'Ahmad'}`}
+                                                                                                style={{ marginRight: '4px' }}
+                                                                                            >
+                                                                                                ♂️
+                                                                                            </button>
+                                                                                            <button
+                                                                                                className="action-btn approve-btn"
+                                                                                                onClick={() => {
+                                                                                                    handleUpdateDelegation(booking.donationId, 'sara');
+                                                                                                    toast.success(isAr ? '✅ تم التعيين للمنسقة' : '✅ Assigned');
+                                                                                                }}
+                                                                                                title={`Assign to ${systemSettings.saraNameAr || 'Sara'}`}
+                                                                                            >
+                                                                                                ♀️
+                                                                                            </button>
+                                                                                        </>
+                                                                                    )}
+                                                                                    {isAdminUser && booking.coordinatorAssigned && (
+                                                                                        <button
+                                                                                            className="action-btn delete-btn"
+                                                                                            onClick={() => {
+                                                                                                handleUpdateDelegation(booking.donationId, null);
+                                                                                                toast.success(isAr ? '✅ تم إلغاء التعيين' : '✅ Unassigned');
+                                                                                            }}
+                                                                                        >
+                                                                                            🔄 {isAr ? 'إعادة تعيين' : 'Reassign'}
+                                                                                        </button>
+                                                                                    )}
+                                                                                    {!isAdminUser && (
+                                                                                        <span className="view-only-tag">👁️ {isAr ? 'للاطلاع' : 'View Only'}</span>
+                                                                                    )}
+                                                                                </td>
+                                                                            </tr>
+                                                                        ))}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            )}
+                                        </>
+                                    );
+                                })()}
                             </div>
                         )}
 
@@ -1686,6 +3561,86 @@ tr:nth-child(even){background:#f8fffe;}
                                             {systemSettings.campaignPhase === 'exchange' && <span className="phase-active-dot"></span>}
                                         </button>
                                     </div>
+                                    <div className="live-status-row">
+                                        <div className="settings-field live-control-field">
+                                            <label className="permission-toggle-label">
+                                                <span className="permission-icon">🔴</span>
+                                                <div className="permission-text-block">
+                                                    <strong>{isAr ? 'تشغيل الحملة الآن' : 'Campaign Live Now'}</strong>
+                                                    <small>{isAr ? 'شغّل أو أوقف الحملة بالكامل دون تغيير الجدول.' : 'Turn the campaign on or off instantly without changing the schedule.'}</small>
+                                                </div>
+                                                <div className="toggle-switch-wrapper">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="toggleCampaignLive"
+                                                        className="toggle-checkbox"
+                                                        checked={systemSettings.isExchangeActive}
+                                                        onChange={() => handleUpdateCampaignPhase(systemSettings.isExchangeActive ? 'suspended' : 'collection')}
+                                                    />
+                                                    <label htmlFor="toggleCampaignLive" className="toggle-label-switch"></label>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div className="settings-field live-control-field">
+                                            <label className="permission-toggle-label">
+                                                <span className="permission-icon">🟢</span>
+                                                <div className="permission-text-block">
+                                                    <strong>{isAr ? 'فتح الحجز الآن' : 'Booking Open Now'}</strong>
+                                                    <small>{isAr ? 'فعِّل وضع الحجز مباشرةً عندما تكون الحملة فعّالة.' : 'Enable booking directly when the campaign is active.'}</small>
+                                                </div>
+                                                <div className="toggle-switch-wrapper">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="toggleBookingOpen"
+                                                        className="toggle-checkbox"
+                                                        checked={bookingOpen}
+                                                        onChange={() => handleUpdateCampaignPhase(bookingOpen ? 'collection' : 'exchange')}
+                                                    />
+                                                    <label htmlFor="toggleBookingOpen" className="toggle-label-switch"></label>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div className="settings-field live-control-field">
+                                            <label className="permission-toggle-label">
+                                                <span className="permission-icon">🔎</span>
+                                                <div className="permission-text-block">
+                                                    <strong>{isAr ? 'تتبع المواد' : 'Material Tracker'}</strong>
+                                                    <small>{isAr ? 'يمكنك تفعيل نموذج تتبع حالة المواد من قبل الأدمن.' : 'Enable the material tracker form from the exchange control panel.'}</small>
+                                                </div>
+                                                <div className="toggle-switch-wrapper">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="toggleMaterialTracker"
+                                                        className="toggle-checkbox"
+                                                        checked={systemSettings.materialTrackerEnabled}
+                                                        onChange={async () => {
+                                                            const enabled = !systemSettings.materialTrackerEnabled;
+                                                            setSystemSettings(prev => ({ ...prev, materialTrackerEnabled: enabled }));
+                                                            setEditSettings(prev => ({ ...prev, materialTrackerEnabled: enabled }));
+                                                            try {
+                                                                const settingsRef = doc(db, 'system_configs', 'global_settings');
+                                                                await setDoc(settingsRef, { materialTrackerEnabled: enabled }, { merge: true });
+                                                                toast.success(isAr ? 'تم تحديث حالة التتبع بنجاح ✅' : 'Material tracker status updated successfully ✅');
+                                                                addAuditLog(
+                                                                    enabled
+                                                                        ? (isAr ? 'قام بتفعيل تتبع المواد' : 'Enabled material tracker')
+                                                                        : (isAr ? 'قام بإيقاف تتبع المواد' : 'Disabled material tracker'),
+                                                                    enabled
+                                                                        ? 'Enabled material tracker'
+                                                                        : 'Disabled material tracker',
+                                                                    { materialTrackerEnabled: enabled }
+                                                                );
+                                                            } catch (error) {
+                                                                console.error('Error updating tracker status:', error);
+                                                                toast.error(isAr ? 'فشل تحديث حالة التتبع' : 'Failed to update tracker status');
+                                                            }
+                                                        }}
+                                                    />
+                                                    <label htmlFor="toggleMaterialTracker" className="toggle-label-switch"></label>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
 
                                     {/* Campaign messages in-place editor */}
                                     <div className="campaign-messages-row">
@@ -1705,7 +3660,7 @@ tr:nth-child(even){background:#f8fffe;}
                                     <div className="card-save-row">
                                         <button
                                             className="card-save-btn"
-                                            onClick={() => handleSaveSectionSettings('messages', ['exchangeSuspendedMessageAr','exchangeSuspendedMessageEn'])}
+                                            onClick={() => handleSaveSectionSettings('messages', ['exchangeSuspendedMessageAr', 'exchangeSuspendedMessageEn'])}
                                             disabled={sectionSaving === 'messages'}
                                         >
                                             {sectionSaving === 'messages' ? '⏳' : '💾'} {isAr ? 'حفظ الرسائل' : 'Save Messages'}
@@ -1736,6 +3691,7 @@ tr:nth-child(even){background:#f8fffe;}
                                             </label>
                                             <input
                                                 type="datetime-local"
+                                                step="60"
                                                 className="settings-input schedule-input"
                                                 value={editSettings.donationEndTime
                                                     ? editSettings.donationEndTime.substring(0, 16)
@@ -1756,6 +3712,7 @@ tr:nth-child(even){background:#f8fffe;}
                                             </label>
                                             <input
                                                 type="datetime-local"
+                                                step="60"
                                                 className="settings-input schedule-input"
                                                 value={editSettings.bookingStartTime
                                                     ? editSettings.bookingStartTime.substring(0, 16)
@@ -1805,10 +3762,90 @@ tr:nth-child(even){background:#f8fffe;}
                                         </div>
                                         <div className="card-save-row">
                                             <button className="card-save-btn"
-                                                onClick={() => handleSaveSectionSettings('passwords', ['secretGatewayCode','adminPassword','ahmadPassword','saraPassword'])}
+                                                onClick={() => handleSaveSectionSettings('passwords', ['secretGatewayCode', 'adminPassword', 'ahmadPassword', 'saraPassword'])}
                                                 disabled={sectionSaving === 'passwords'}
                                             >
                                                 {sectionSaving === 'passwords' ? '⏳' : '💾'} {isAr ? 'حفظ كلمات المرور' : 'Save Passwords'}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="settings-card">
+                                        <div className="settings-card-header">
+                                            <h4>🛡️ {isAr ? 'صلاحيات المنسقين' : 'Coordinator Permissions'}</h4>
+                                            <span className="settings-card-hint">{isAr ? 'حدد صلاحيات التعديل، الحذف، التسليم والإلغاء لكل منسق' : 'Set edit, delete, delivery and cancel permissions for each coordinator'}</span>
+                                        </div>
+
+                                        <div className="settings-field">
+                                            <label>{isAr ? 'اختر المنسق' : 'Select Coordinator'}</label>
+                                            <select
+                                                className="settings-input"
+                                                value={permissionsSelection}
+                                                onChange={e => setPermissionsSelection(e.target.value)}
+                                            >
+                                                <option value="ahmad">{isAr ? `${systemSettings.ahmadNameAr || 'أحمد'} (ذكر)` : `${systemSettings.ahmadNameEn || 'Ahmad'} (Male)`}</option>
+                                                <option value="sara">{isAr ? `${systemSettings.saraNameAr || 'سارة'} (أنثى)` : `${systemSettings.saraNameEn || 'Sara'} (Female)`}</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="settings-field coordinator-permission-field">
+                                            <label className="permission-toggle-label">
+                                                <span className="permission-icon">🔓</span>
+                                                <div className="permission-text-block">
+                                                    <strong>{isAr ? 'السماح للمنسقين بالتعديل والحذف' : 'Allow Coordinators to Edit & Delete'}</strong>
+                                                    <small>{isAr ? 'عند التفعيل، يسمح للمنسقين بالتحكم في التعديلات والحذف دون موافقة إضافية.' : 'When enabled, coordinators can edit and delete without extra admin approval.'}</small>
+                                                </div>
+                                                <div className="toggle-switch-wrapper">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="allowCoordEditDelete"
+                                                        className="toggle-checkbox"
+                                                        checked={editSettings.allowCoordinatorEditDelete || false}
+                                                        onChange={e => setEditSettings(p => ({ ...p, allowCoordinatorEditDelete: e.target.checked }))}
+                                                    />
+                                                    <label htmlFor="allowCoordEditDelete" className="toggle-label-switch"></label>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div className="settings-field permission-checkboxes-grid">
+                                            {['editDonation', 'deleteDonation', 'completeBooking', 'cancelBooking'].map(permissionKey => {
+                                                const labels = {
+                                                    editDonation: { ar: 'تعديل التبرعات', en: 'Edit Donations' },
+                                                    deleteDonation: { ar: 'حذف التبرعات', en: 'Delete Donations' },
+                                                    completeBooking: { ar: 'تأكيد التسليم', en: 'Confirm Delivery' },
+                                                    cancelBooking: { ar: 'إلغاء الحجز', en: 'Cancel Booking' }
+                                                };
+                                                const currentPermissions = editSettings.coordinatorPermissions || systemSettings.coordinatorPermissions || {};
+                                                const checked = currentPermissions[permissionsSelection]?.[permissionKey] || false;
+                                                return (
+                                                    <label key={permissionKey} className="permission-checkbox-label">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={checked}
+                                                            onChange={e => setEditSettings(prev => ({
+                                                                ...prev,
+                                                                coordinatorPermissions: {
+                                                                    ...prev.coordinatorPermissions,
+                                                                    [permissionsSelection]: {
+                                                                        ...((prev.coordinatorPermissions || systemSettings.coordinatorPermissions || {})[permissionsSelection] || {}),
+                                                                        [permissionKey]: e.target.checked
+                                                                    }
+                                                                }
+                                                            }))}
+                                                        />
+                                                        <span>{isAr ? labels[permissionKey].ar : labels[permissionKey].en}</span>
+                                                    </label>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <div className="card-save-row">
+                                            <button className="card-save-btn"
+                                                onClick={() => handleSaveSectionSettings('coordPermissions', ['coordinatorPermissions'])}
+                                                disabled={sectionSaving === 'coordPermissions'}
+                                            >
+                                                {sectionSaving === 'coordPermissions' ? '⏳' : '💾'} {isAr ? 'حفظ صلاحيات المنسقين' : 'Save Coordinator Permissions'}
                                             </button>
                                         </div>
                                     </div>
@@ -1835,12 +3872,20 @@ tr:nth-child(even){background:#f8fffe;}
                                             <label>♀️ {isAr ? 'اسم المنسقة بالإنجليزية' : 'Female Coord. English Name'}</label>
                                             <input type="text" className="settings-input" value={editSettings.saraNameEn || ''} onChange={e => setEditSettings(p => ({ ...p, saraNameEn: e.target.value }))} />
                                         </div>
+                                        <div className="settings-field">
+                                            <label>📧 {isAr ? `بريد المنسق (${systemSettings.ahmadNameAr || 'أحمد'}) — لتلقي الإشعارات` : `Coordinator (${systemSettings.ahmadNameEn || 'Ahmad'}) Email — For Notifications`}</label>
+                                            <input type="email" className="settings-input" dir="ltr" placeholder="coordinator@example.com" value={editSettings.ahmadEmail || ''} onChange={e => setEditSettings(p => ({ ...p, ahmadEmail: e.target.value }))} />
+                                        </div>
+                                        <div className="settings-field">
+                                            <label>📧 {isAr ? `بريد المنسقة (${systemSettings.saraNameAr || 'سارة'}) — لتلقي الإشعارات` : `Coordinator (${systemSettings.saraNameEn || 'Sara'}) Email — For Notifications`}</label>
+                                            <input type="email" className="settings-input" dir="ltr" placeholder="coordinator@example.com" value={editSettings.saraEmail || ''} onChange={e => setEditSettings(p => ({ ...p, saraEmail: e.target.value }))} />
+                                        </div>
                                         <div className="card-save-row">
                                             <button className="card-save-btn"
-                                                onClick={() => handleSaveSectionSettings('names', ['ahmadNameAr','ahmadNameEn','saraNameAr','saraNameEn'])}
+                                                onClick={() => handleSaveSectionSettings('names', ['ahmadNameAr', 'ahmadNameEn', 'saraNameAr', 'saraNameEn', 'ahmadEmail', 'saraEmail'])}
                                                 disabled={sectionSaving === 'names'}
                                             >
-                                                {sectionSaving === 'names' ? '⏳' : '💾'} {isAr ? 'حفظ الأسماء' : 'Save Names'}
+                                                {sectionSaving === 'names' ? '⏳' : '💾'} {isAr ? 'حفظ الأسماء والبريد الإلكتروني' : 'Save Names & Emails'}
                                             </button>
                                         </div>
                                     </div>
@@ -1869,7 +3914,7 @@ tr:nth-child(even){background:#f8fffe;}
                                         </div>
                                         <div className="card-save-row">
                                             <button className="card-save-btn"
-                                                onClick={() => handleSaveSectionSettings('maleTasks', ['sharedCoordinatorTasks','coordinatorMaleTasks'])}
+                                                onClick={() => handleSaveSectionSettings('maleTasks', ['sharedCoordinatorTasks', 'coordinatorMaleTasks'])}
                                                 disabled={sectionSaving === 'maleTasks'}
                                             >
                                                 {sectionSaving === 'maleTasks' ? '⏳' : '💾'} {isAr ? 'حفظ مهام الذكور' : 'Save Male Tasks'}
@@ -1899,22 +3944,109 @@ tr:nth-child(even){background:#f8fffe;}
                                                 {sectionSaving === 'femaleTasks' ? '⏳' : '💾'} {isAr ? 'حفظ مهام الإناث' : 'Save Female Tasks'}
                                             </button>
                                         </div>
+                                     </div>
+
+                                    {/* Auto-Delete Timer Card */}
+                                    <div className="settings-card">
+                                        <div className="settings-card-header">
+                                            <h4>⏱️ {isAr ? 'مدة الحذف التلقائي للإنجازات' : 'Task Completion Auto-Delete Timer'}</h4>
+                                            <span className="settings-card-hint">{isAr ? 'بعد انقضاء المدة تُحذف الإنجازات تلقائياً' : 'Completions auto-clear after this duration'}</span>
+                                        </div>
+                                        <div className="settings-field">
+                                            <label>⏰ {isAr ? 'المدة بالساعات' : 'Duration (hours)'}</label>
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                max="8760"
+                                                className="settings-input"
+                                                dir="ltr"
+                                                placeholder="24"
+                                                value={editSettings.taskAutoDeleteHours ?? 24}
+                                                onChange={e => setEditSettings(p => ({ ...p, taskAutoDeleteHours: Number(e.target.value) || 24 }))}
+                                            />
+                                            <small style={{ color: 'var(--text-muted)', marginTop: '4px', display: 'block' }}>
+                                                {isAr
+                                                    ? `الإعداد الحالي: ${systemSettings.taskAutoDeleteHours || 24} ساعة — يعني كل ${systemSettings.taskAutoDeleteHours || 24} ساعة تُمسح إنجازات المنسقين تلقائياً`
+                                                    : `Current: ${systemSettings.taskAutoDeleteHours || 24}h — coordinator completions auto-clear every ${systemSettings.taskAutoDeleteHours || 24} hours`}
+                                            </small>
+                                        </div>
+                                        <div className="card-save-row">
+                                            <button className="card-save-btn"
+                                                onClick={() => handleSaveSectionSettings('taskAutoDelete', ['taskAutoDeleteHours'])}
+                                                disabled={sectionSaving === 'taskAutoDelete'}
+                                            >
+                                                {sectionSaving === 'taskAutoDelete' ? '⏳' : '💾'} {isAr ? 'حفظ المدة' : 'Save Timer'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         )}
 
-                        {/* ARCHIVE TAB (Admin only) */}
-                        {activeTab === 'archive' && isAdminUser && (
+                        {activeTab === 'approvalRequests' && isAdminUser && (
+                            <div className="approval-requests-panel">
+                                <div className="approval-requests-header">
+                                    <div>
+                                        <h3>🔔 {isAr ? 'الطلبات المنتظرة' : 'Pending Requests'}</h3>
+                                        <p>{isAr ? 'راجع إجراءات المنسقين ووافق أو ارفض قبل تنفيذ أي تغيير.' : 'Review coordinator requests and approve or reject before applying changes.'}</p>
+                                    </div>
+                                    <div className="approval-requests-summary">
+                                        <span>{isAr ? 'إجمالي الطلبات المعلقة' : 'Pending requests'}: <strong>{pendingApprovalRequestCount}</strong></span>
+                                    </div>
+                                </div>
+
+                                {pendingApprovalRequestCount === 0 ? (
+                                    <div className="empty-state">
+                                        ✅ {isAr ? 'لا توجد طلبات منتظرة الآن.' : 'No pending approval requests at the moment.'}
+                                    </div>
+                                ) : (
+                                    <div className="approval-requests-grid">
+                                        {pendingApprovalRequests.map((item, idx) => {
+                                            const requestDate = item.requestedAt?.seconds ? new Date(item.requestedAt.seconds * 1000) : new Date(item.requestedAt);
+                                            const materialName = item.donation?.materials?.[item.materialIndex]?.name || '';
+                                            return (
+                                                <div key={`${item.donationId}-${item.requestId}-${idx}`} className="approval-request-card">
+                                                    <div className="approval-request-top">
+                                                        <span className="request-type-label">{getApprovalRequestTypeLabel(item.type)}</span>
+                                                        <span className="request-status pending">{isAr ? 'معلق' : 'Pending'}</span>
+                                                    </div>
+                                                    <div className="approval-request-content">
+                                                        <p><strong>{isAr ? 'منسق الطلب' : 'Requester'}:</strong> {item.requestedByName}</p>
+                                                        <p><strong>{isAr ? 'معرّف التبرع' : 'Donation ID'}:</strong> {item.donationId}</p>
+                                                        <p><strong>{isAr ? 'اسم المتبرع' : 'Donor'}:</strong> {item.donation?.studentName || '—'}</p>
+                                                        {item.materialIndex !== null && item.materialIndex !== undefined && (
+                                                            <p><strong>{isAr ? 'رقم المادة' : 'Material #'}:</strong> {item.materialIndex + 1} {materialName ? `- ${materialName}` : ''}</p>
+                                                        )}
+                                                        <p><strong>{isAr ? 'الحالة الحالية' : 'Current Status'}:</strong> {item.donation?.status || '—'}</p>
+                                                        <p><strong>{isAr ? 'تاريخ الطلب' : 'Requested at'}:</strong> {requestDate.toLocaleString(isAr ? 'ar-JO' : 'en-US')}</p>
+                                                    </div>
+                                                    <div className="approval-request-actions">
+                                                        <button className="action-btn approve-btn" onClick={() => openAdminResponseModal(item.donationId, item)}>
+                                                            ✅ {isAr ? 'الموافقة/الرفض' : 'Decide'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {activeTab === 'archive' && canViewArchive && (
                             <div className="archive-panel">
                                 <div className="archive-panel-header">
                                     <div>
                                         <h3>🗄️ {isAr ? 'أرشيف حملات تبادل المواد' : 'Material Exchange Campaign Archive'}</h3>
-                                        <p>{isAr ? 'احفظ بيانات الفصل الحالي وابدأ حملة جديدة بدون فقدان البيانات القديمة' : 'Save the current semester data and start fresh without losing old data'}</p>
+                                        <p>{isAr ? 'اعرض الأرشيف السابق وحمّل التفاصيل للتصدير' : 'View the previous archive and export details as needed'}</p>
+                                        {!isAdminUser && (
+                                            <p className="archive-view-note">{isAr ? 'عرض فقط؛ لا يمكنك أرشفة أو تعديل الحملة.' : 'View only; you cannot archive or modify campaigns.'}</p>
+                                        )}
                                     </div>
-                                    <button className="archive-new-btn" onClick={() => setShowArchiveModal(true)}>
-                                        📦 {isAr ? 'أرشفة الحملة الحالية' : 'Archive Current Campaign'}
-                                    </button>
+                                    {isAdminUser && (
+                                        <button className="archive-new-btn" onClick={() => setShowArchiveModal(true)}>
+                                            📦 {isAr ? 'أرشفة الحملة الحالية' : 'Archive Current Campaign'}
+                                        </button>
+                                    )}
                                 </div>
 
                                 {/* Current campaign summary */}
@@ -2013,9 +4145,56 @@ tr:nth-child(even){background:#f8fffe;}
                                 )}
                             </div>
                         )}
+                        {activeTab === 'analytics' && isAdminUser && (
+                            <AdminDashboard isEmbedded={true} />
+                        )}
                     </div>
                 </div>
 
+                {/* ─── Approval Requests Modal ─── */}
+                {showApprovalRequestsModal && selectedDonationForRequests && (
+                    <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) closeApprovalRequestsModal(); }}>
+                        <div className="booking-modal glass-card approval-requests-modal" onClick={e => e.stopPropagation()}>
+                            <button className="close-modal" onClick={closeApprovalRequestsModal}>×</button>
+                            <div className="modal-header">
+                                <h2>🔔 {isAr ? 'الطلبات المنتظرة' : 'Pending Requests'}</h2>
+                                <p>{isAr ? 'راجع ووافق أو ارفض طلبات المنسقين قبل تنفيذ الإجراءات.' : 'Review and approve or reject coordinator requests before applying actions.'}</p>
+                            </div>
+                            <div className="approval-requests-list">
+                                {selectedDonationForRequests.adminApprovalRequests?.filter(req => req.status === 'pending').length === 0 ? (
+                                    <div className="empty-state">✅ {isAr ? 'لا توجد طلبات معلقة لهذا التبرع.' : 'No pending requests for this donation.'}</div>
+                                ) : (
+                                    <ul className="requests-list">
+                                        {selectedDonationForRequests.adminApprovalRequests?.filter(req => req.status === 'pending').map((req, idx) => (
+                                            <li key={idx} className="request-item">
+                                                <div className="request-header">
+                                                    <strong>{getApprovalRequestTypeLabel(req.type)}</strong>
+                                                    <span>{req.requestedByName}</span>
+                                                </div>
+                                                <div className="request-body">
+                                                    <p>{isAr ? `المنسق: ${req.requestedByName}` : `Coordinator: ${req.requestedByName}`}</p>
+                                                    <p>{isAr ? `الحدث: ${getApprovalRequestTypeLabel(req.type)}` : `Action: ${getApprovalRequestTypeLabel(req.type)}`}</p>
+                                                    {req.materialIndex !== null && req.materialIndex !== undefined && (
+                                                        <p>{isAr ? `رقم المادة: ${req.materialIndex + 1}` : `Material #${req.materialIndex + 1}`}</p>
+                                                    )}
+                                                    <p>{isAr ? `تاريخ الطلب: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('ar-JO')}` : `Requested at: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('en-US')}`}</p>
+                                                </div>
+                                                <div className="request-actions">
+                                                    <button className="action-btn approve-btn" onClick={() => handleApproveApprovalRequest(selectedDonationForRequests.id, req)}>
+                                                        ✅ {isAr ? 'موافقة' : 'Approve'}
+                                                    </button>
+                                                    <button className="action-btn delete-btn" onClick={() => handleRejectApprovalRequest(selectedDonationForRequests.id, req)}>
+                                                        ❌ {isAr ? 'رفض' : 'Reject'}
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {/* ─── Archive Campaign Modal ─── */}
                 {showArchiveModal && (
                     <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowArchiveModal(false); }}>
@@ -2109,8 +4288,21 @@ tr:nth-child(even){background:#f8fffe;}
                         <div className="booking-modal glass-card edit-donation-modal" onClick={e => e.stopPropagation()}>
                             <button className="close-modal" onClick={() => { setShowEditModal(false); setSelectedDonationForEdit(null); }}>×</button>
                             <div className="modal-header">
-                                <h2>✏️ {isAr ? 'تعديل بيانات طلب التبرع' : 'Edit Donation Record'}</h2>
-                                <p>{isAr ? 'تحديث معلومات المتبرع والمواد وحالة الحجز بالكامل' : 'Update donor info, materials, and reservation status'}</p>
+                                <h2>
+                                    {isAdminUser
+                                        ? (isAr ? '✏️ تعديل بيانات طلب التبرع' : '✏️ Edit Donation Record')
+                                        : (isAr ? '📝 طلب تعديل بيانات التبرع' : '📝 Request Donation Edit')}
+                                </h2>
+                                <p>
+                                    {isAdminUser
+                                        ? (isAr ? 'تحديث معلومات المتبرع والمواد وحالة الحجز بالكامل' : 'Update donor info, materials, and reservation status')
+                                        : (isAr ? 'سيتم إرسال التعديلات للإدارة للمراجعة والموافقة قبل تطبيقها' : 'Changes will be sent to admin for review before being applied')}
+                                </p>
+                                {!isAdminUser && (
+                                    <div style={{ background: 'rgba(255,180,0,0.15)', border: '1px solid rgba(255,180,0,0.4)', borderRadius: '8px', padding: '10px 14px', marginTop: '10px', fontSize: '0.9em', color: '#ffdd88', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        🔔 {isAr ? 'ملاحظة: التعديلات لن تُطبق فوراً — ستصل للإدارة كطلب معلق حتى الموافقة عليها' : 'Note: Changes will not apply immediately — they will be sent as a pending request for admin approval'}
+                                    </div>
+                                )}
                             </div>
                             <form className="booking-form" onSubmit={handleSaveEditDonation}>
                                 <div className="form-group">
@@ -2213,6 +4405,20 @@ tr:nth-child(even){background:#f8fffe;}
                                                         <option value="reserved">{isAr ? '🔒 محجوزة' : 'Reserved'}</option>
                                                         <option value="completed">{isAr ? '📦 تم تسليمها' : 'Completed'}</option>
                                                     </select>
+                                                    {selectedDonationForEdit.materials.length > 1 && (
+                                                        <button
+                                                            type="button"
+                                                            className="action-btn delete-btn"
+                                                            onClick={() => {
+                                                                const updatedMats = selectedDonationForEdit.materials.filter((_, idx) => idx !== index);
+                                                                setSelectedDonationForEdit({ ...selectedDonationForEdit, materials: updatedMats });
+                                                            }}
+                                                            style={{ padding: '0 12px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px' }}
+                                                            title={isAr ? 'حذف هذه المادة' : 'Delete this material'}
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    )}
                                                 </div>
                                                 <input
                                                     type="text"
@@ -2252,8 +4458,32 @@ tr:nth-child(even){background:#f8fffe;}
                                     })}
                                 </div>
 
+                                {!isAdminUser && (
+                                    <div className="form-group" style={{ marginTop: '20px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                            <span>📝 {isAr ? 'ملاحظات المنسق (مطلوبة لتوضيح الإجراء المطلوب):' : 'Coordinator Notes (Required to explain changes):'}</span>
+                                        </label>
+                                        <textarea
+                                            className="form-input"
+                                            value={editCoordinatorNotes}
+                                            onChange={e => setEditCoordinatorNotes(e.target.value)}
+                                            placeholder={isAr ? 'مثال: حذف كتاب اللغة العربية بسبب تسليمه، أو تصحيح اسم الطالب...' : 'Example: Deleted Arabic Book because it was delivered, or corrected student name...'}
+                                            style={{
+                                                minHeight: '80px',
+                                                fontFamily: 'inherit',
+                                                resize: 'vertical'
+                                            }}
+                                            maxLength="500"
+                                            required
+                                        />
+                                        <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px', display: 'block', textAlign: 'left' }}>
+                                            {editCoordinatorNotes.length}/500
+                                        </small>
+                                    </div>
+                                )}
+
                                 <button type="submit" className="submit-btn full-width" disabled={loading} style={{ marginTop: '20px' }}>
-                                    {loading ? (isAr ? '⏳ جاري الحفظ...' : 'Saving...') : (isAr ? '💾 حفظ التعديلات' : 'Save Changes')}
+                                    {loading ? (isAr ? '⏳ جاري الإرسال...' : 'Submitting...') : (!isAdminUser ? (isAr ? '📨 إرسال طلب' : 'Submit Request') : (isAr ? '💾 حفظ التعديلات' : 'Save Changes'))}
                                 </button>
                             </form>
                         </div>
@@ -2275,9 +4505,16 @@ tr:nth-child(even){background:#f8fffe;}
                         setLoginStep(1);
                         setSecretCodeInput('');
                         setSecretCodeError(false);
+                        setLoginForm({ username: '', password: '' });
                         setLoginError('');
                         setCaptchaInput('');
                         setCaptchaError(false);
+                        setVerificationCode('');
+                        setVerificationCodeInput('');
+                        setVerificationCodeError(false);
+                        setPendingStaffKey('');
+                        setPendingStaffEmail('');
+                        setPendingStaffName('');
                     }
                 }}>
                     <div className="login-modal glass-card">
@@ -2289,6 +4526,12 @@ tr:nth-child(even){background:#f8fffe;}
                             setLoginError('');
                             setCaptchaInput('');
                             setCaptchaError(false);
+                            setVerificationCode('');
+                            setVerificationCodeInput('');
+                            setVerificationCodeError(false);
+                            setPendingStaffKey('');
+                            setPendingStaffEmail('');
+                            setPendingStaffName('');
                         }}>×</button>
 
                         {/* ── Step 1: Secret Code ── */}
@@ -2311,7 +4554,7 @@ tr:nth-child(even){background:#f8fffe;}
                                 }}>
                                     <div className="form-group">
                                         <input
-                                            type="password"
+                                            type="text"
                                             className={`form-input ${secretCodeError ? 'input-error-shake' : ''}`}
                                             value={secretCodeInput}
                                             onChange={e => { setSecretCodeInput(e.target.value); setSecretCodeError(false); }}
@@ -2349,31 +4592,41 @@ tr:nth-child(even){background:#f8fffe;}
                                             autoFocus
                                         />
                                     </div>
-                                    <div className="form-group">
+                                    <div className="form-group form-group-with-toggle">
                                         <label>{isAr ? 'كلمة المرور' : 'Password'}</label>
-                                        <input
-                                            type="password"
-                                            name="staff_password_unique_makanak"
-                                            className="form-input"
-                                            value={loginForm.password}
-                                            onChange={e => setLoginForm(p => ({ ...p, password: e.target.value }))}
-                                            autoComplete="new-password"
-                                        />
+                                        <div className="input-toggle-wrapper">
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="staff_password_unique_makanak"
+                                                className="form-input"
+                                                value={loginForm.password}
+                                                onChange={e => setLoginForm(p => ({ ...p, password: e.target.value }))}
+                                                autoComplete="new-password"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="toggle-visibility-btn"
+                                                onClick={() => setShowPassword(prev => !prev)}
+                                                aria-label={showPassword ? (isAr ? 'إخفاء المحتوى' : 'Hide text') : (isAr ? 'عرض المحتوى' : 'Show text')}
+                                            >
+                                                {showPassword ? '🙈' : '👁️'}
+                                            </button>
+                                        </div>
                                     </div>
 
                                     {/* Text-based Canvas CAPTCHA */}
                                     <div className="form-group">
-                                        <label>{isAr ? 'التحقق البشري' : 'Human Verification'}</label>
+                                        <label>{isAr ? 'رمز التحقق' : 'Verification Code'}</label>
                                         <div className="captcha-wrapper">
                                             <div className="captcha-canvas-container">
-                                                <canvas 
-                                                    ref={canvasRef} 
-                                                    width="160" 
-                                                    height="50" 
+                                                <canvas
+                                                    ref={canvasRef}
+                                                    width="240"
+                                                    height="70"
                                                     className="captcha-canvas"
                                                 />
-                                                <button 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
                                                     className="captcha-refresh-btn"
                                                     onClick={generateCaptcha}
                                                     title={isAr ? 'تحديث الرمز' : 'Refresh code'}
@@ -2397,12 +4650,58 @@ tr:nth-child(even){background:#f8fffe;}
                                     </div>
 
                                     {loginError && <div className="login-error">⚠️ {loginError}</div>}
-                                    <button 
-                                        type="submit" 
+                                    <button
+                                        type="submit"
                                         className="submit-btn"
                                     >
                                         {isAr ? 'تسجيل الدخول' : 'Login'}
                                     </button>
+                                </form>
+                            </>
+                        )}
+
+                        {loginStep === 3 && (
+                            <>
+                                <div className="modal-header">
+                                    <h2>✉️ {isAr ? 'التحقق عبر البريد الإلكتروني' : 'Email Verification'}</h2>
+                                    <p>{isAr ? 'تم إرسال رمز تحقق إلى البريد الإلكتروني التالي. أدخله لإكمال تسجيل الدخول.' : 'A verification code has been sent to the coordinator email below. Enter it to complete login.'}</p>
+                                </div>
+                                <form className="login-form" onSubmit={handleVerificationSubmit}>
+                                    <div className="form-group">
+                                        <label>{isAr ? 'البريد الإلكتروني للمنسق' : 'Coordinator email'}</label>
+                                        <input
+                                            type="text"
+                                            className="form-input"
+                                            value={maskEmail(pendingStaffEmail)}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>{isAr ? 'رمز التحقق' : 'Verification code'}</label>
+                                        <input
+                                            type="text"
+                                            className={`form-input ${verificationCodeError ? 'input-error-shake' : ''}`}
+                                            value={verificationCodeInput}
+                                            onChange={e => {
+                                                setVerificationCodeInput(e.target.value);
+                                                setVerificationCodeError(false);
+                                            }}
+                                            autoComplete="off"
+                                            autoFocus
+                                            maxLength="6"
+                                        />
+                                        {verificationCodeError && (
+                                            <div className="login-error">⚠️ {isAr ? 'رمز التحقق غير صحيح' : 'Incorrect verification code'}</div>
+                                        )}
+                                    </div>
+                                    <div className="login-action-row" style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <button type="submit" className="submit-btn">
+                                            {isAr ? 'تأكيد الرمز' : 'Confirm Code'}
+                                        </button>
+                                        <button type="button" className="secondary-btn" onClick={handleResendVerificationCode}>
+                                            {isAr ? 'إعادة الإرسال' : 'Resend'}
+                                        </button>
+                                    </div>
                                 </form>
                             </>
                         )}
@@ -2422,12 +4721,15 @@ tr:nth-child(even){background:#f8fffe;}
             </section>
 
             <div className="exchange-main-container">
-
                 {/* Donation Form */}
                 <div className="add-material-section glass-card">
                     <div className="section-header">
-                        <h2>{isAr ? 'تبرع الآن بالمواد' : 'Donate Materials Now'}</h2>
-                        <p>{isAr ? 'شارك كتبك ودوسياتك مع زملائك' : 'Share your books and notes with peers'}</p>
+                        <div className="section-header-top">
+                            <div>
+                                <h2>{isAr ? 'تبرع الآن بالمواد' : 'Donate Materials Now'}</h2>
+                                <p>{isAr ? 'شارك كتبك ودوسياتك مع زملائك' : 'Share your books and notes with peers'}</p>
+                            </div>
+                        </div>
                     </div>
 
                     {!settingsLoaded ? (
@@ -2472,7 +4774,7 @@ tr:nth-child(even){background:#f8fffe;}
                                             ? 'اختيار الجنس يُمكّن المنسق المختص بقسمك (ذكور/إناث) من التواصل معك وتسليم المواد بشكل منظم وسريع'
                                             : 'Selecting gender allows the right coordinator (male/female section) to contact you and deliver materials efficiently'}
                                     >
-                                        ℹ️
+                                        i
                                     </span>
                                 </label>
                                 <div className="gender-select-row">
@@ -2492,7 +4794,7 @@ tr:nth-child(even){background:#f8fffe;}
                                     </button>
                                 </div>
                                 <small className="gender-field-hint">
-                                    💡 {isAr
+                                    {isAr
                                         ? 'يُستخدم الجنس لتصنيف موادك وإيصالها للمنسق المختص بقسمك لتسهيل عملية التسليم والتواصل'
                                         : 'Gender is used to route your materials to the right coordinator for organized delivery and communication'}
                                 </small>
@@ -2504,12 +4806,12 @@ tr:nth-child(even){background:#f8fffe;}
                                     <textarea value={currentMaterial.description} onChange={e => setCurrentMaterial(prev => ({ ...prev, description: e.target.value }))} placeholder={isAr ? 'وصف المادة (اختياري): مثال: سلايدات كاملة، سلايدات الميد فقط، كتاب + شرح، إلخ...' : 'Material description (optional): e.g. Complete slides, Midterm only, Book + notes, etc.'} className="form-input material-description" rows="2" />
                                     <button type="button" onClick={handleAddMaterial} className="add-btn">{isAr ? 'إضافة' : 'Add'}</button>
                                 </div>
-                                <small className="form-hint">💡 {isAr ? 'يمكنك إضافة أكثر من مادة بالنقر على "إضافة" عدة مرات' : 'You can add multiple materials by clicking "Add" multiple times'}</small>
+                                <small className="form-hint">{isAr ? 'يمكنك إضافة أكثر من مادة بالنقر على "إضافة" عدة مرات' : 'You can add multiple materials by clicking "Add" multiple times'}</small>
                                 {formData.materials.length > 0 && (
                                     <div className="added-materials-list">
                                         {formData.materials.map((material, index) => (
                                             <div key={index} className="added-material-item">
-                                                <div className="material-item-icon">📚</div>
+                                                <div className="material-item-icon">&#128218;</div>
                                                 <div className="material-item-details">
                                                     <strong>{typeof material === 'string' ? material : material.name}</strong>
                                                     {material.description && <p>{material.description}</p>}
@@ -2527,9 +4829,46 @@ tr:nth-child(even){background:#f8fffe;}
                                 </h4>
                                 <p className="disclaimer-content">
                                     {isAr
-                                        ? 'المواد التي يتم التبرع بها تصبح من ضمن المواد المحجوزة لدى الموقع، وتبقى تحت تصرف مسؤول الموقع إلى حين انتهاء الحملة. يتم التواصل مع المتبرعين أو الحاجزين من قبل مسؤول الموقع فقط. الموقع يخلي مسؤوليته عن أي تواصل يتم من قبل أي شخص آخر باسم الموقع.'
-                                        : 'Donated materials become part of the reserved materials of the website and remain under the disposal of the website administrator until the end of the campaign. Communication with donors or reservers is done only by the website administrator. We disclaim responsibility for any communication by any person in the name of the website.'}
+                                        ? 'المواد التي يتم التبرع بها تصبح من ضمن المواد المحجوزة لدى الموقع، وتبقى تحت تصرف مسؤول الموقع أو المنسقين المعتمدين إلى حين انتهاء الحملة. يتم التواصل مع المتبرعين أو الحاجزين من قبل مسؤول الموقع أو المنسقين المعتمدين فقط. الموقع يخلي مسؤوليته عن أي تواصل يتم من قبل أي شخص آخر باسم الموقع.'
+                                        : 'Donated materials become part of the reserved materials of the website and remain under the control of the site administrator or approved coordinators until the end of the campaign. Communication with donors or reservers is carried out only by the site administrator or approved coordinators. We disclaim responsibility for any communication by anyone else in the name of the website.'}
                                 </p>
+                            </div>
+                            {/* ── CAPTCHA — Verification Code ── */}
+                            <div className="form-group captcha-form-group">
+                                <label>{isAr ? 'رمز التحقق' : 'Verification Code'}</label>
+                                <div className="captcha-wrapper">
+                                    <div className="captcha-canvas-container">
+                                        <canvas
+                                            ref={donationCanvasRef}
+                                            width="240"
+                                            height="70"
+                                            className="captcha-canvas"
+                                        />
+                                        <button
+                                            type="button"
+                                            className="captcha-refresh-btn"
+                                            onClick={generateDonationCaptcha}
+                                            title={isAr ? 'تحديث الرمز' : 'Refresh code'}
+                                        >
+                                            🔄
+                                        </button>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        className={`form-input captcha-input-field ${donationCaptchaError ? 'input-error-shake' : ''}`}
+                                        value={donationCaptchaInput}
+                                        onChange={e => {
+                                            setDonationCaptchaInput(e.target.value);
+                                            setDonationCaptchaError(false);
+                                        }}
+                                        placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
+                                        autoComplete="off"
+                                        maxLength="6"
+                                    />
+                                </div>
+                                {donationCaptchaError && (
+                                    <div className="captcha-error-msg">⚠️ {isAr ? 'رمز التحقق غير صحيح — حاول مرة أخرى' : 'Incorrect code — please try again'}</div>
+                                )}
                             </div>
                             <div className="terms-checkbox-container">
                                 <input type="checkbox" id="termsCheckbox" className="terms-checkbox" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} />
@@ -2598,13 +4937,13 @@ tr:nth-child(even){background:#f8fffe;}
                                         <div className="material-icon">📚</div>
                                         <div className="donation-details"><h3>{item.materialItem.name}</h3></div>
                                     </div>
-                                    <button 
-                                        className={`btn-book ${!bookingOpen ? 'locked' : ''}`} 
-                                        onClick={() => { if (bookingOpen) openBookingModal(item); }} 
-                                        disabled={!bookingOpen} 
-                                        title={!bookingOpen ? (isAr ? 'حملة الحجز مغلقة حالياً' : 'Booking campaign is currently closed') : ''} 
-                                    > 
-                                        {isAr ? 'حجز المادة' : 'Book Material'} 
+                                    <button
+                                        className={`btn-book ${!bookingOpen ? 'locked' : ''}`}
+                                        onClick={() => { if (bookingOpen) openBookingModal(item); }}
+                                        disabled={!bookingOpen}
+                                        title={!bookingOpen ? (isAr ? 'حملة الحجز مغلقة حالياً' : 'Booking campaign is currently closed') : ''}
+                                    >
+                                        {isAr ? 'حجز المادة' : 'Book Material'}
                                     </button>
                                 </div>
                             ))}
@@ -2645,7 +4984,7 @@ tr:nth-child(even){background:#f8fffe;}
                     <div className="coordination-content">
                         <h3>{isAr ? 'آلية الإشراف والتوزيع' : 'Supervision & Distribution Mechanism'}</h3>
                         <p className="coordination-description">
-                            {isAr 
+                            {isAr
                                 ? 'هناك فريق تنسيق معتمد يقوم بالإشراف وتنسيق عملية التبرع والحجز، حيث يتم التواصل مع الطلاب الذكور من قبل المنسق المعني، والطالبات الإناث من قبل المنسقة المعنية، وذلك لضمان الخصوصية والتنظيم والسرعة في تسليم المواد.'
                                 : 'There is a certified coordination team supervising and coordinating the donation and booking process: male students are contacted by the male coordinator, and female students by the female coordinator, ensuring privacy, organization, and speed in material delivery.'}
                         </p>
@@ -2667,6 +5006,149 @@ tr:nth-child(even){background:#f8fffe;}
                         </div>
                     </div>
                 </section>
+            </div>
+
+            {/* Track Material Status Section */}
+            <div id="track-status" className="material-tracker-section glass-card">
+                <div className="section-header">
+                    <h2>{isAr ? 'تتبع حالة المواد' : 'Track Material Status'}</h2>
+                    <p>
+                        {isAr
+                            ? 'أدخل رقم الهاتف المسجل سابقاً لمعرفة المواد التي تم حجزها، المتاحة، والمسلّمة.'
+                            : 'Enter the previously registered phone number to see reserved, available, and delivered materials.'}
+                    </p>
+                </div>
+                <div className="tracker-form">
+                    <input
+                        type="tel"
+                        className="form-input"
+                        placeholder={isAr ? 'رقم الهاتف المسجل سابقاً' : 'Previously registered phone number'}
+                        value={trackerSearchQuery}
+                        onChange={(e) => setTrackerSearchQuery(toEnglishNumerals(e.target.value))}
+                        dir="ltr"
+                    />
+                    <button
+                        type="button"
+                        className="tracker-search-btn"
+                        disabled={!systemSettings.materialTrackerEnabled}
+                        onClick={handleTrackRequest}
+                        title={systemSettings.materialTrackerEnabled
+                            ? isAr ? 'اضغط للبحث' : 'Click to search'
+                            : isAr ? 'خدمة التتبع غير متاحة حالياً' : 'Tracking service is currently unavailable'}
+                    >
+                        {systemSettings.materialTrackerEnabled
+                            ? (isAr ? 'بحث' : 'Search')
+                            : (isAr ? 'غير متاح' : 'Unavailable')}
+                    </button>
+                </div>
+                <div className="tracker-note">
+                    {systemSettings.materialTrackerEnabled
+                        ? (isAr ? 'تم تفعيل خدمة تتبع حالة المواد رسميًا، والنتائج المعروضة أدناه تمثل الحالة الحالية للمواد.' : 'The material tracking service is active. The results shown below reflect the current material status.')
+                        : (isAr ? 'خدمة تتبع حالة المواد غير متاحة حالياً وفقاً لإعدادات النظام.' : 'Material tracking service is currently unavailable according to system settings.')}
+                </div>
+                {trackerSummary && (
+                    <div className="tracker-summary-panel">
+                        <div className="summary-header">
+                            <h3>{isAr ? 'تقرير حالة المواد' : 'Material Status Report'}</h3>
+                            <p>{isAr ? 'عرض ملخّص وواضح لحالة المواد المرتبطة برقم الهاتف المدخل.' : 'A clear summary of material status linked to the entered phone number.'}</p>
+                        </div>
+                        <div className="summary-row">
+                            <div className="summary-item">
+                                <span>{isAr ? 'إجمالي المواد' : 'Total materials'}</span>
+                                <strong>{trackerSummary.total}</strong>
+                            </div>
+                            <div className="summary-item">
+                                <span>{isAr ? 'المحجوزة' : 'Reserved'}</span>
+                                <strong>{trackerSummary.reserved}</strong>
+                            </div>
+                            <div className="summary-item">
+                                <span>{isAr ? 'المسلَّمة' : 'Delivered'}</span>
+                                <strong>{trackerSummary.delivered}</strong>
+                            </div>
+                            <div className="summary-item">
+                                <span>{isAr ? 'المتاحة/قيد الانتظار' : 'Available / Pending'}</span>
+                                <strong>{trackerSummary.available}</strong>
+                            </div>
+                        </div>
+                        <div className="summary-detail">
+                            <p>{isAr ? 'استناداً إلى البيانات الحالية، يوضّح هذا التقرير حالة المادة سواء كانت محجوزة، متاحة، أو مُسلَّمة.' : 'Based on current data, this report shows whether materials are reserved, available, or delivered.'}</p>
+                            {trackerSummary.booked > 0 && (
+                                <p>{isAr ? `عدد المواد المحجوزة من قبل الطلاب: ${trackerSummary.booked}` : `Number of materials reserved by students: ${trackerSummary.booked}`}</p>
+                            )}
+                        </div>
+                    </div>
+                )}
+                {trackerResults && (
+                    <div className="tracker-results">
+                        {trackerResults.length === 0 ? (
+                            <div className="empty-state">
+                                {isAr ? 'لم يتم العثور على مواد لهذا الرقم' : 'No materials found for this number'}
+                            </div>
+                        ) : (
+                            <div className="tracker-cards-grid">
+                                {trackerResults.map((item, idx) => (
+                                    <div key={`${item.materialName}-${idx}`} className={`tracker-card tracker-card-${item.userRole}`}>
+                                        {/* Role ribbon */}
+                                        <div className={`tracker-role-ribbon ribbon-${item.userRole}`}>
+                                            <span>{item.userRole === 'donor' ? '🎁' : '📦'}</span>
+                                            <span>
+                                                {item.userRole === 'donor'
+                                                    ? (isAr ? 'تبرعتَ بهذه المادة' : 'You donated this')
+                                                    : (isAr ? 'حجزتَ هذه المادة' : 'You booked this')}
+                                            </span>
+                                        </div>
+
+                                        <div className="tracker-card-header">
+                                            <div>
+                                                <h3>{item.materialName}</h3>
+                                                {item.materialDescription && (
+                                                    <p className="tracker-description">{item.materialDescription}</p>
+                                                )}
+                                            </div>
+                                            <span className={`tracker-status-badge status-${item.itemStatus}`}>
+                                                {getFriendlyStatusName(item.itemStatus, item.userRole)}
+                                            </span>
+                                        </div>
+
+                                        {/* Donor-specific journey panel */}
+                                        {item.userRole === 'donor' && (
+                                            <div className="tracker-donor-journey">
+                                                <div className={`journey-step ${['pending'].includes(item.donationStatus || item.itemStatus) ? 'step-active' : 'step-done'}`}>
+                                                    <span className="step-dot"></span>
+                                                    <span>{isAr ? 'استلمنا تبرعك' : 'Donation received'}</span>
+                                                </div>
+                                                <div className={`journey-step ${
+                                                    item.itemStatus === 'approved' || item.itemStatus === 'reserved' || item.itemStatus === 'completed'
+                                                        ? 'step-done' : 'step-pending'
+                                                }`}>
+                                                    <span className="step-dot"></span>
+                                                    <span>{isAr ? 'تمت الموافقة' : 'Approved'}</span>
+                                                </div>
+                                                <div className={`journey-step ${item.itemStatus === 'reserved' || item.itemStatus === 'completed' ? 'step-done' : 'step-pending'}`}>
+                                                    <span className="step-dot"></span>
+                                                    <span>
+                                                        {item.itemStatus === 'reserved' || item.itemStatus === 'completed'
+                                                            ? (isAr ? `محجوز ${item.bookedAt ? `— ${new Date(item.bookedAt).toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}` : ''}` : `Reserved ${item.bookedAt ? `— ${new Date(item.bookedAt).toLocaleDateString('en-US')}` : ''}`)
+                                                            : (isAr ? 'في انتظار الحجز...' : 'Waiting for a student...')}
+                                                    </span>
+                                                </div>
+                                                <div className={`journey-step ${item.itemStatus === 'completed' ? 'step-done' : 'step-pending'}`}>
+                                                    <span className="step-dot"></span>
+                                                    <span>{item.itemStatus === 'completed' ? (isAr ? '✅ تم التسليم للطالب' : '✅ Delivered') : (isAr ? 'تسليم للطالب' : 'Delivery to student')}</span>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <div className="tracker-meta">
+                                            <span>📋 {isAr ? 'المنسق:' : 'Coordinator:'} {item.coordinatorName}</span>
+                                            <span>📅 {isAr ? 'تاريخ التبرع:' : 'Donated:'} {new Date(item.createdAt).toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Booking Modal */}
@@ -2699,7 +5181,7 @@ tr:nth-child(even){background:#f8fffe;}
                                             ? 'اختيار الجنس يساعد المنسق المختص بقسمك على التواصل معك وإتمام عملية الاستلام بشكل منظم'
                                             : 'Selecting gender helps the right coordinator contact you to arrange material pickup'}
                                     >
-                                        ℹ️
+                                        i
                                     </span>
                                 </label>
                                 <div className="gender-select-row">
@@ -2719,10 +5201,47 @@ tr:nth-child(even){background:#f8fffe;}
                                     </button>
                                 </div>
                                 <small className="gender-field-hint">
-                                    💡 {isAr
+                                    {isAr
                                         ? 'يُستخدم لتحديد المنسق المختص الذي سيتواصل معك لتسليمك المادة'
                                         : 'Used to identify the right coordinator who will contact you for material pickup'}
                                 </small>
+                            </div>
+                            {/* ── CAPTCHA — Verification Code ── */}
+                            <div className="form-group captcha-form-group">
+                                <label>{isAr ? 'رمز التحقق' : 'Verification Code'}</label>
+                                <div className="captcha-wrapper">
+                                    <div className="captcha-canvas-container">
+                                        <canvas
+                                            ref={bookingCanvasRef}
+                                            width="240"
+                                            height="70"
+                                            className="captcha-canvas"
+                                        />
+                                        <button
+                                            type="button"
+                                            className="captcha-refresh-btn"
+                                            onClick={generateBookingCaptcha}
+                                            title={isAr ? 'تحديث الرمز' : 'Refresh code'}
+                                        >
+                                            🔄
+                                        </button>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        className={`form-input captcha-input-field ${bookingCaptchaError ? 'input-error-shake' : ''}`}
+                                        value={bookingCaptchaInput}
+                                        onChange={e => {
+                                            setBookingCaptchaInput(e.target.value);
+                                            setBookingCaptchaError(false);
+                                        }}
+                                        placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
+                                        autoComplete="off"
+                                        maxLength="6"
+                                    />
+                                </div>
+                                {bookingCaptchaError && (
+                                    <div className="captcha-error-msg">⚠️ {isAr ? 'رمز التحقق غير صحيح — حاول مرة أخرى' : 'Incorrect code — please try again'}</div>
+                                )}
                             </div>
                             <button type="submit" className="submit-btn full-width" disabled={loading}>
                                 {loading ? (isAr ? 'جاري الحجز...' : 'Booking...') : (isAr ? 'تأكيد الحجز' : 'Confirm Booking')}
@@ -2744,29 +5263,29 @@ tr:nth-child(even){background:#f8fffe;}
                         <form className="booking-form" onSubmit={handleSaveEditDonation}>
                             <div className="form-group">
                                 <label>{isAr ? 'اسم المتبرع' : 'Donor Name'}</label>
-                                <input 
-                                    type="text" 
-                                    required 
-                                    value={selectedDonationForEdit.studentName} 
-                                    onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentName: e.target.value })} 
-                                    className="form-input" 
+                                <input
+                                    type="text"
+                                    required
+                                    value={selectedDonationForEdit.studentName}
+                                    onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentName: e.target.value })}
+                                    className="form-input"
                                 />
                             </div>
                             <div className="form-group">
                                 <label>{isAr ? 'رقم هاتف المتبرع' : 'Donor Phone'}</label>
-                                <input 
-                                    type="text" 
-                                    required 
-                                    value={selectedDonationForEdit.phoneNumber} 
-                                    onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, phoneNumber: toEnglishNumerals(e.target.value) })} 
-                                    className="form-input" 
+                                <input
+                                    type="text"
+                                    required
+                                    value={selectedDonationForEdit.phoneNumber}
+                                    onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, phoneNumber: toEnglishNumerals(e.target.value) })}
+                                    className="form-input"
                                     maxLength="10"
                                 />
                             </div>
                             <div className="form-group">
                                 <label>{isAr ? 'جنس المتبرع' : 'Donor Gender'}</label>
-                                <select 
-                                    value={selectedDonationForEdit.studentGender} 
+                                <select
+                                    value={selectedDonationForEdit.studentGender}
                                     onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentGender: e.target.value })}
                                     className="form-input"
                                 >
@@ -2777,11 +5296,11 @@ tr:nth-child(even){background:#f8fffe;}
 
                             {loggedInUser.role === 'admin' && (
                                 <div className="form-group terms-checkbox-container" style={{ margin: '15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <input 
-                                        type="checkbox" 
-                                        id="publishedCheckbox" 
-                                        checked={selectedDonationForEdit.publishedToCoordinators || false} 
-                                        onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, publishedToCoordinators: e.target.checked })} 
+                                    <input
+                                        type="checkbox"
+                                        id="publishedCheckbox"
+                                        checked={selectedDonationForEdit.publishedToCoordinators || false}
+                                        onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, publishedToCoordinators: e.target.checked })}
                                     />
                                     <label htmlFor="publishedCheckbox" style={{ margin: 0, cursor: 'pointer' }}>
                                         📢 {isAr ? 'نشر وتفويض للمنسقين' : 'Publish/Delegate to Coordinators'}
@@ -2822,17 +5341,17 @@ tr:nth-child(even){background:#f8fffe;}
                                     return (
                                         <div key={index} className="edit-material-block" style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '12px' }}>
                                             <div className="material-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                                                <input 
-                                                    type="text" 
-                                                    value={name} 
-                                                    onChange={e => updateMaterialField('name', e.target.value)} 
+                                                <input
+                                                    type="text"
+                                                    value={name}
+                                                    onChange={e => updateMaterialField('name', e.target.value)}
                                                     className="form-input material-name-input"
                                                     placeholder={isAr ? 'اسم المادة' : 'Material name'}
                                                     style={{ flex: 1 }}
                                                     required
                                                 />
-                                                <select 
-                                                    value={status} 
+                                                <select
+                                                    value={status}
                                                     onChange={e => updateMaterialField('status', e.target.value)}
                                                     className="form-input material-status-select"
                                                     style={{ width: '150px' }}
@@ -2843,10 +5362,10 @@ tr:nth-child(even){background:#f8fffe;}
                                                     <option value="completed">{isAr ? '📦 تم تسليمها' : 'Completed'}</option>
                                                 </select>
                                             </div>
-                                            <input 
-                                                type="text" 
-                                                value={description} 
-                                                onChange={e => updateMaterialField('description', e.target.value)} 
+                                            <input
+                                                type="text"
+                                                value={description}
+                                                onChange={e => updateMaterialField('description', e.target.value)}
                                                 className="form-input material-desc-input"
                                                 placeholder={isAr ? 'وصف المادة (اختياري)' : 'Description (optional)'}
                                             />
@@ -2855,21 +5374,21 @@ tr:nth-child(even){background:#f8fffe;}
                                                 <div className="taker-info-fields" style={{ marginTop: '10px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>
                                                     <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>👤 {isAr ? 'معلومات المستلم (الحاجز)' : 'Taker/Booker Info'}</h4>
                                                     <div className="taker-fields-row" style={{ display: 'flex', gap: '8px' }}>
-                                                        <input 
-                                                            type="text" 
-                                                            value={taker.name || ''} 
-                                                            onChange={e => updateTakerField('name', e.target.value)} 
-                                                            className="form-input" 
-                                                            placeholder={isAr ? 'اسم المستلم' : 'Taker Name'} 
+                                                        <input
+                                                            type="text"
+                                                            value={taker.name || ''}
+                                                            onChange={e => updateTakerField('name', e.target.value)}
+                                                            className="form-input"
+                                                            placeholder={isAr ? 'اسم المستلم' : 'Taker Name'}
                                                             style={{ flex: 1 }}
                                                             required
                                                         />
-                                                        <input 
-                                                            type="tel" 
-                                                            value={taker.phone || ''} 
-                                                            onChange={e => updateTakerField('phone', toEnglishNumerals(e.target.value))} 
-                                                            className="form-input" 
-                                                            placeholder={isAr ? 'رقم هاتف المستلم' : 'Taker Phone'} 
+                                                        <input
+                                                            type="tel"
+                                                            value={taker.phone || ''}
+                                                            onChange={e => updateTakerField('phone', toEnglishNumerals(e.target.value))}
+                                                            className="form-input"
+                                                            placeholder={isAr ? 'رقم هاتف المستلم' : 'Taker Phone'}
                                                             style={{ flex: 1 }}
                                                             required
                                                             maxLength="10"
@@ -2883,12 +5402,451 @@ tr:nth-child(even){background:#f8fffe;}
                             </div>
 
                             <button type="submit" className="submit-btn full-width" disabled={loading} style={{ marginTop: '20px' }}>
-                                {loading ? (isAr ? '⏳ جاري الحفظ...' : 'Saving...') : (isAr ? '💾 حفظ التعديلات' : 'Save Changes')}
+                                {loading ? (isAr ? '⏳ جاري الإرسال...' : 'Submitting...') : (!isAdminUser ? (isAr ? '📤 إرسال الطلب' : 'Submit Request') : (isAr ? '💾 حفظ التعديلات' : 'Save Changes'))}
                             </button>
+                            {!isAdminUser && (
+                                <p className="modal-note" style={{ marginTop: '12px', color: 'var(--muted-color)', fontSize: '0.95em' }}>
+                                    {isAr ? 'ملاحظة: سيتم إرسال هذا الطلب إلى الإدارة للمراجعة. سيُتّخذ قرار بالموافقة أو الرفض وسيصلك إشعار بالنتيجة.' : 'Note: This request will be sent to administration for review. A decision (approve or reject) will be made and you will be notified.'}
+                                </p>
+                            )}
                         </form>
                     </div>
                 </div>
             )}
+
+            {/* ──────────────────────────────────────────────────────────────────────────
+                ADMIN DECISION MODAL
+                ──────────────────────────────────────────────────────────────────────────
+                Opens when admin clicks on approval request in the pending list.
+                Allows admin to approve/reject/suspend with optional admin notes.
+            ────────────────────────────────────────────────────────────────────────────── */}
+            {showAdminResponseModal && isAdminUser && adminResponseData.request && (
+                <div className="modal-overlay" onClick={e => {
+                    if (e.target === e.currentTarget) closeAdminResponseModal();
+                }}>
+                    <div className="booking-modal glass-card" onClick={e => e.stopPropagation()}>
+                        <button className="close-modal" onClick={closeAdminResponseModal}>×</button>
+                        <h2 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            🔍 {isAr ? 'قرار المشرف على الطلب' : 'Admin Decision on Request'}
+                        </h2>
+
+                        {/* Coordinator Request Details */}
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
+                            <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: 'rgba(255,255,255,0.7)', fontWeight: 'bold' }}>
+                                {isAr ? '📋 تفاصيل طلب المنسق:' : '📋 Coordinator Request Details:'}
+                            </p>
+                            <table style={{ width: '100%', fontSize: '0.9em' }}>
+                                <tbody>
+                                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                        <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                            {isAr ? 'نوع الطلب:' : 'Request Type:'}
+                                        </td>
+                                        <td style={{ padding: '8px' }}>
+                                            {getApprovalRequestTypeLabel(adminResponseData.request.type)}
+                                        </td>
+                                    </tr>
+                                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                        <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                            {isAr ? 'طالب الموافقة:' : 'Requester:'}
+                                        </td>
+                                        <td style={{ padding: '8px' }}>
+                                            {adminResponseData.request.requestedByName}
+                                        </td>
+                                    </tr>
+                                    {adminResponseData.request.coordinatorNotes && (
+                                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                            <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                                {isAr ? 'ملاحظات المنسق:' : 'Notes:'}
+                                            </td>
+                                            <td style={{ padding: '8px', fontStyle: 'italic', color: 'rgba(255,255,255,0.9)' }}>
+                                                "{adminResponseData.request.coordinatorNotes}"
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Admin Decision Radio Buttons */}
+                        <div style={{ marginBottom: '20px', padding: '15px', background: 'rgba(0,100,200,0.1)', borderRadius: '8px', border: '1px solid rgba(0,150,255,0.2)' }}>
+                            <p style={{ margin: '0 0 12px 0', fontSize: '0.95em', fontWeight: 'bold' }}>
+                                {isAr ? '⚙️ اختر قرارك:' : '⚙️ Choose your decision:'}
+                            </p>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'approve' ? 'rgba(0,255,100,0.15)' : 'transparent' }}>
+                                    <input
+                                        type="radio"
+                                        value="approve"
+                                        checked={adminResponseData.adminAction === 'approve'}
+                                        onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                    <span style={{ flex: 1 }}>✅ {isAr ? 'الموافقة على الطلب' : 'Approve the request'}</span>
+                                </label>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'reject' ? 'rgba(255,0,0,0.15)' : 'transparent' }}>
+                                    <input
+                                        type="radio"
+                                        value="reject"
+                                        checked={adminResponseData.adminAction === 'reject'}
+                                        onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                    <span style={{ flex: 1 }}>❌ {isAr ? 'رفض الطلب' : 'Reject the request'}</span>
+                                </label>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'suspend' ? 'rgba(255,200,0,0.15)' : 'transparent' }}>
+                                    <input
+                                        type="radio"
+                                        value="suspend"
+                                        checked={adminResponseData.adminAction === 'suspend'}
+                                        onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                    <span style={{ flex: 1 }}>⏸️ {isAr ? 'إيقاف الطلب للمراجعة' : 'Suspend for further review'}</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* Admin Notes */}
+                        <div className="form-group" style={{ marginBottom: '20px' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                <span>📝 {isAr ? 'ملاحظات المشرف (اختيارية)' : 'Admin Notes (Optional)'}</span>
+                                <span style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.5)' }}>
+                                    ({isAr ? 'اشرح السبب خلف قرارك' : 'explain your decision'})
+                                </span>
+                            </label>
+                            <textarea
+                                className="form-input"
+                                value={adminResponseData.adminNotes}
+                                onChange={e => setAdminResponseData({ ...adminResponseData, adminNotes: e.target.value })}
+                                placeholder={isAr ? 'مثال: الطلب نظيف وآمن، المادة صحيحة...' : 'Example: Request is clean, material is valid...'}
+                                style={{
+                                    minHeight: '100px',
+                                    fontFamily: 'inherit',
+                                    resize: 'vertical'
+                                }}
+                                maxLength="500"
+                            />
+                            <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
+                                {isAr ? `${adminResponseData.adminNotes.length}/500` : `${adminResponseData.adminNotes.length}/500`}
+                            </small>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                            <button
+                                onClick={closeAdminResponseModal}
+                                className="cancel-btn"
+                                style={{
+                                    padding: '10px 20px',
+                                    background: 'rgba(255,255,255,0.1)',
+                                    border: '1px solid rgba(255,255,255,0.2)',
+                                    borderRadius: '6px',
+                                    color: 'rgba(255,255,255,0.8)',
+                                    cursor: 'pointer',
+                                    fontSize: '0.95em'
+                                }}
+                            >
+                                {isAr ? '❌ إلغاء' : '❌ Cancel'}
+                            </button>
+                            {adminResponseData.adminAction === 'approve' && (
+                                <button
+                                    onClick={() => handleApproveApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
+                                    style={{
+                                        padding: '10px 20px',
+                                        background: 'linear-gradient(135deg, #00d400, #009900)',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.95em'
+                                    }}
+                                >
+                                    ✅ {isAr ? 'الموافقة' : 'Approve'}
+                                </button>
+                            )}
+                            {adminResponseData.adminAction === 'reject' && (
+                                <button
+                                    onClick={() => handleRejectApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
+                                    style={{
+                                        padding: '10px 20px',
+                                        background: 'linear-gradient(135deg, #ff0000, #cc0000)',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.95em'
+                                    }}
+                                >
+                                    ❌ {isAr ? 'رفض' : 'Reject'}
+                                </button>
+                            )}
+                            {adminResponseData.adminAction === 'suspend' && (
+                                <button
+                                    onClick={() => handleSuspendApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
+                                    style={{
+                                        padding: '10px 20px',
+                                        background: 'linear-gradient(135deg, #ffc800, #ff9800)',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.95em'
+                                    }}
+                                >
+                                    ⏸️ {isAr ? 'إيقاف' : 'Suspend'}
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showActionRequestModal && !isAdminUser && (
+                <div className="modal-overlay" onClick={e => {
+                    if (e.target === e.currentTarget) closeActionRequestModal();
+                }} style={{ zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div className="booking-modal glass-card" onClick={e => e.stopPropagation()} style={{ zIndex: 10001, maxHeight: '90vh', overflowY: 'auto' }}>
+                        <button className="close-modal" onClick={closeActionRequestModal}>×</button>
+                        <h2 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            ⚠️ {isAr ? 'طلب إجراء للموافقة' : 'Action Request for Approval'}
+                        </h2>
+
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
+                            <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: 'rgba(255,255,255,0.7)' }}>
+                                {isAr ? '📋 تفاصيل الإجراء المطلوب:' : '📋 Action Details:'}
+                            </p>
+                            <table style={{ width: '100%', fontSize: '0.9em' }}>
+                                <tbody>
+                                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                        <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                            {isAr ? 'نوع الإجراء:' : 'Action Type:'}
+                                        </td>
+                                        <td style={{ padding: '8px' }}>
+                                            {actionRequestData.actionType === 'editDonation' && (isAr ? '✏️ تعديل التبرع' : '✏️ Edit Donation')}
+                                            {actionRequestData.actionType === 'deleteDonation' && (isAr ? '🗑️ حذف التبرع' : '🗑️ Delete Donation')}
+                                            {actionRequestData.actionType === 'completeBooking' && (isAr ? '✅ إتمام تسليم المادة' : '✅ Complete Material Delivery')}
+                                            {actionRequestData.actionType === 'cancelBooking' && (isAr ? '❌ إلغاء حجز المادة' : '❌ Cancel Material Booking')}
+                                        </td>
+                                    </tr>
+                                    {actionRequestData.donationDetails && (
+                                        <>
+                                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                                <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                                    {isAr ? 'المادة المتأثرة:' : 'Affected Material:'}
+                                                </td>
+                                                <td style={{ padding: '8px' }}>
+                                                    {actionRequestData.donationDetails.materials && actionRequestData.donationDetails.materials[actionRequestData.materialIndex || 0]?.name}
+                                                </td>
+                                            </tr>
+                                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                                <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                                    {isAr ? 'المتبرع:' : 'Donor:'}
+                                                </td>
+                                                <td style={{ padding: '8px' }}>
+                                                    {actionRequestData.donationDetails.donorNameAr || actionRequestData.donationDetails.donorNameEn}
+                                                </td>
+                                            </tr>
+                                        </>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Coordinator Notes */}
+                        <div className="form-group" style={{ marginBottom: '20px' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                <span>📝 {isAr ? 'ملاحظات المنسق (اختيارية)' : 'Coordinator Notes (Optional)'}</span>
+                                <span style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.5)' }}>
+                                    ({isAr ? 'اشرح السبب أو التفاصيل' : 'explain reason or details'})
+                                </span>
+                            </label>
+                            <textarea
+                                className="form-input"
+                                value={actionRequestData.coordinatorNotes}
+                                onChange={e => setActionRequestData({ ...actionRequestData, coordinatorNotes: e.target.value })}
+                                placeholder={isAr ? 'مثال: المادة تالفة، تحتاج تحديث معلومات...' : 'Example: Material damaged, needs info update...'}
+                                style={{
+                                    minHeight: '100px',
+                                    fontFamily: 'inherit',
+                                    resize: 'vertical'
+                                }}
+                                maxLength="500"
+                            />
+                            <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
+                                {isAr ? `${actionRequestData.coordinatorNotes.length}/500` : `${actionRequestData.coordinatorNotes.length}/500`}
+                            </small>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                            <button
+                                onClick={closeActionRequestModal}
+                                className="cancel-btn"
+                                style={{
+                                    padding: '10px 20px',
+                                    background: 'rgba(255,255,255,0.1)',
+                                    border: '1px solid rgba(255,255,255,0.2)',
+                                    borderRadius: '6px',
+                                    color: 'rgba(255,255,255,0.8)',
+                                    cursor: 'pointer',
+                                    fontSize: '0.95em'
+                                }}
+                            >
+                                {isAr ? '❌ إلغاء' : '❌ Cancel'}
+                            </button>
+                            <button
+                                onClick={handleSubmitActionRequest}
+                                className="submit-btn"
+                                style={{
+                                    padding: '10px 20px',
+                                    background: 'linear-gradient(135deg, #00d4ff, #0099cc)',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    fontWeight: 'bold',
+                                    fontSize: '0.95em'
+                                }}
+                            >
+                                📤 {isAr ? 'إرسال الطلب' : 'Submit Request'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ─── WhatsApp direct links replace the old modal ─── */}
+            {false && (() => {
+                let finalPhone = String(messageRecipient.phone || '').replace(/\D/g, '');
+                if (finalPhone.length === 10 && finalPhone.startsWith('0')) {
+                    finalPhone = '962' + finalPhone.substring(1);
+                }
+                const whatsappLink = `https://wa.me/${finalPhone}?text=${encodeURIComponent(messageText)}`;
+
+                return (
+                    <div className="modal-overlay" onClick={() => setShowMessageComposer(false)}>
+                        <div className="booking-modal glass-card" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+                            <div className="modal-header">
+                                <h2>💬 {isAr ? 'إرسال رسالة عبر الواتس' : 'Send WhatsApp Message'}</h2>
+                                <button
+                                    className="close-btn"
+                                    onClick={() => setShowMessageComposer(false)}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        fontSize: '1.5em',
+                                        cursor: 'pointer',
+                                        color: 'rgba(255,255,255,0.7)'
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label>{isAr ? 'المتلقي' : 'Recipient'}</label>
+                                    <div style={{
+                                        background: 'rgba(255,255,255,0.05)',
+                                        padding: '12px 15px',
+                                        borderRadius: '6px',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        marginBottom: '15px'
+                                    }}>
+                                        <p style={{ margin: '0 0 5px 0', color: 'rgba(255,255,255,0.7)', fontSize: '0.9em' }}>
+                                            {messageRecipient.type === 'donor' ? (isAr ? 'المتبرع' : 'Donor') : (isAr ? 'الحاجز' : 'Booker')}
+                                        </p>
+                                        <p style={{ margin: '0 0 3px 0', fontWeight: 'bold', color: 'white' }}>
+                                            {messageRecipient.name || '—'}
+                                        </p>
+                                        <p style={{ margin: '0', color: 'rgba(255,255,255,0.6)', fontSize: '0.9em', direction: 'ltr', textAlign: isAr ? 'right' : 'left' }}>
+                                            📱 {messageRecipient.phone || '—'}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>{isAr ? 'الرسالة' : 'Message'}</label>
+                                    <textarea
+                                        className="form-input"
+                                        value={messageText}
+                                        onChange={e => setMessageText(e.target.value)}
+                                        style={{
+                                            minHeight: '250px',
+                                            fontFamily: 'inherit',
+                                            resize: 'vertical',
+                                            fontSize: '0.95em',
+                                            lineHeight: '1.6'
+                                        }}
+                                        maxLength="2000"
+                                    />
+                                    <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px', display: 'block' }}>
+                                        {messageText.length}/2000
+                                    </small>
+                                </div>
+
+                                <div style={{
+                                    background: 'rgba(25, 135, 84, 0.1)',
+                                    border: '1px solid rgba(25, 135, 84, 0.3)',
+                                    borderRadius: '6px',
+                                    padding: '12px 15px',
+                                    marginBottom: '20px',
+                                    direction: isAr ? 'rtl' : 'ltr'
+                                }}>
+                                    <p style={{ margin: '0', color: 'rgba(25, 135, 84, 1)', fontSize: '0.9em' }}>
+                                        ✓ {isAr ? 'سيتم فتح تطبيق الواتس أب مع الرسالة جاهزة للإرسال' : 'WhatsApp will open with the message ready to send'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', padding: '0 20px 20px' }}>
+                                <button
+                                    onClick={() => setShowMessageComposer(false)}
+                                    className="cancel-btn"
+                                    style={{
+                                        padding: '10px 20px',
+                                        background: 'rgba(255,255,255,0.1)',
+                                        border: '1px solid rgba(255,255,255,0.2)',
+                                        borderRadius: '6px',
+                                        color: 'rgba(255,255,255,0.8)',
+                                        cursor: 'pointer',
+                                        fontSize: '0.95em'
+                                    }}
+                                >
+                                    {isAr ? 'إلغاء' : 'Cancel'}
+                                </button>
+                                <a
+                                    href={whatsappLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() => {
+                                        toast.success(isAr ? 'تم فتح تطبيق الواتس أب' : 'WhatsApp opened');
+                                        setShowMessageComposer(false);
+                                    }}
+                                    className="submit-btn"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: '10px 20px',
+                                        background: '#25D366',
+                                        border: 'none',
+                                        borderRadius: '6px',
+                                        color: 'white',
+                                        cursor: 'pointer',
+                                        fontWeight: 'bold',
+                                        fontSize: '0.95em',
+                                        textDecoration: 'none'
+                                    }}
+                                >
+                                    💬 {isAr ? 'إرسال عبر الواتس' : 'Send WhatsApp'}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })()}
         </div>
     );
 };

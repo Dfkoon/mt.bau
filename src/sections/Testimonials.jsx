@@ -86,7 +86,7 @@ function SplitText({ text }) {
 }
 
 const Testimonials = () => {
-    const { t, language } = useLanguage();
+    const { language } = useLanguage();
     const [activeIndex, setActiveIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
     const [firebaseTestimonials, setFirebaseTestimonials] = useState([]);
@@ -95,7 +95,7 @@ const Testimonials = () => {
 
     // Subscribe to Firebase testimonials
     useEffect(() => {
-        setLoading(true);
+        // setLoading(true);
         const unsubscribe = subscribeToApprovedTestimonials((approved) => {
             const languageFiltered = approved.filter(t => t.language === language);
             setFirebaseTestimonials(languageFiltered);

@@ -7,7 +7,8 @@ import './Navbar.css';
 
 const Navbar = ({ toggleSidebar }) => {
   const [scrolled, setScrolled] = useState(false);
-  const { t } = useLanguage();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { t, language } = useLanguage();
   const location = useLocation();
 
   useEffect(() => {
@@ -17,6 +18,14 @@ const Navbar = ({ toggleSidebar }) => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Detect admin session for dashboard link
+  useEffect(() => {
+    try {
+      const s = sessionStorage.getItem('exchange_staff');
+      if (s) { const u = JSON.parse(s); setIsAdmin(u?.role === 'admin'); }
+    } catch { /* ignore */ }
+  }, [location]);
 
   const isActive = (path) => {
     // For hash router, we check the actual path within the hash
@@ -66,7 +75,6 @@ const Navbar = ({ toggleSidebar }) => {
             <ul className="dropdown-menu">
               <li><Link to="/faq">{t('nav.faq')}</Link></li>
               <li><Link to="/about">{t('nav.about')}</Link></li>
-
             </ul>
           </li>
         </ul>

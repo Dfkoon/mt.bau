@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { coursesData, categories, faculties } from '../data/coursesData';
 import { Link, useNavigate } from 'react-router-dom';
 import FileUploader from '../components/FileUploader';
+import MaterialStatusChecker from '../components/MaterialStatusChecker';
 import { getQuizForCourse } from '../data/quizMapping';
+import { logMaterialDownload } from '../services/analyticsService';
 import './StudyMaterials.css';
 import '../pages/AcademicPlans.css'; // Importing for CTA styles if needed, though they should be in index.css
 
@@ -16,7 +18,6 @@ const StudyMaterials = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchScope, setSearchScope] = useState('category'); // 'category', 'faculty', 'all'
-    const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [expandedCourse, setExpandedCourse] = useState(null);
     const [showUploader, setShowUploader] = useState(false);
@@ -58,7 +59,7 @@ const StudyMaterials = () => {
 
     const getCoursesForSearch = (forceGlobal = false) => {
         const isSearching = searchQuery.trim().length > 0;
-        
+
         if ((isSearching && searchScope === 'all') || forceGlobal === 'all') {
             return categories.flatMap(cat =>
                 (coursesData[cat.id] || [])
@@ -119,7 +120,7 @@ const StudyMaterials = () => {
     const handleSuggestionClick = (course) => {
         setSearchQuery(language === 'ar' ? course.name : (course.nameEn || course.name));
         setShowSuggestions(false);
-        
+
         const category = categories.find(c => c.id === course.categoryId);
         if (!category) return;
 
@@ -133,7 +134,7 @@ const StudyMaterials = () => {
         }
 
         setSelectedCategory(course.categoryId);
-        
+
         setTimeout(() => {
             const courseId = `course-${course.categoryId}-${course.id}`;
             const element = document.getElementById(courseId);
@@ -189,6 +190,18 @@ const StudyMaterials = () => {
                 </div>
             )}
 
+            <div className="material-status-section">
+                <div className="section-header">
+                    <h2>{language === 'ar' ? 'تابع حالة المواد الخاصة بك' : 'Quickly Track Your Material Status'}</h2>
+                    <p>
+                        {language === 'ar'
+                            ? 'استخدم رقم الهاتف المسجل لديك لتعرف بسرعة حالة المواد التي تبرعت بها أو حجزتها.'
+                            : 'Use your registered phone number to quickly see the status of materials you donated or booked.'}
+                    </p>
+                </div>
+                <MaterialStatusChecker isAr={language === 'ar'} />
+            </div>
+
             <div className="search-container">
                 <div className="search-wrapper">
                     <input
@@ -217,19 +230,19 @@ const StudyMaterials = () => {
                 )}
 
                 <div className="search-scope-selector">
-                    <button 
+                    <button
                         className={`scope-btn ${searchScope === 'category' ? 'active' : ''}`}
                         onClick={() => setSearchScope('category')}
                     >
                         {t('materials.search_scope.category')}
                     </button>
-                    <button 
+                    <button
                         className={`scope-btn ${searchScope === 'faculty' ? 'active' : ''}`}
                         onClick={() => setSearchScope('faculty')}
                     >
                         {t('materials.search_scope.faculty')}
                     </button>
-                    <button 
+                    <button
                         className={`scope-btn ${searchScope === 'all' ? 'active' : ''}`}
                         onClick={() => setSearchScope('all')}
                     >
@@ -298,7 +311,13 @@ const StudyMaterials = () => {
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className={`resource-link ${type}`}
-                                                    onClick={(e) => e.stopPropagation()}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        logMaterialDownload(
+                                                            language === 'ar' ? (course.nameAr || course.name) : course.name,
+                                                            getResourceLabel(type)
+                                                        );
+                                                    }}
                                                 >
                                                     <span className="link-icon">{getResourceIcon(type)}</span>
                                                     <span>{getResourceLabel(type)}</span>
@@ -333,64 +352,63 @@ const StudyMaterials = () => {
                         })}
                     </div>
                 )}
-            </div>
-
-            {/* Unified CTA Section */}
-            <div className="plans-cta-section fade-in" style={{ marginTop: '4rem' }}>
-                <div className="quiz-contribution-container">
-                    <div className="quiz-contribution-cta unified-cta glass-card">
-                        <div className="cta-content">
-                            <div className="cta-icon-wrapper">
-                                <div className="cta-icon-bg"></div>
-                                <span className="cta-icon">✨</span>
+                {/* Unified CTA Section */}
+                <div className="plans-cta-section fade-in" style={{ marginTop: '4rem' }}>
+                    <div className="quiz-contribution-container">
+                        <div className="quiz-contribution-cta unified-cta glass-card">
+                            <div className="cta-content">
+                                <div className="cta-icon-wrapper">
+                                    <div className="cta-icon-bg"></div>
+                                    <span className="cta-icon">✨</span>
+                                </div>
+                                <div className="cta-text">
+                                    <h3>{language === 'ar' ? 'ساهم في إثراء محتوى مكانك ✨' : 'Share & Enrich Makanak Content ✨'}</h3>
+                                    <p>
+                                        {language === 'ar'
+                                            ? 'نرحب بمساهماتكم سواء كانت أسئلة سنوات، كويزات، ملخصات، أو روابط مفيدة. ساعد زملائك وكن جزءاً من مسيرة الخير.'
+                                            : 'We welcome your contributions! Share past papers, quizzes, summaries, or helpful links to benefit all students.'}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="cta-text">
-                                <h3>{language === 'ar' ? 'ساهم في إثراء محتوى مكانك ✨' : 'Share & Enrich Makanak Content ✨'}</h3>
-                                <p>
-                                    {language === 'ar'
-                                        ? 'نرحب بمساهماتكم سواء كانت أسئلة سنوات، كويزات، ملخصات، أو روابط مفيدة. ساعد زملائك وكن جزءاً من مسيرة الخير.'
-                                        : 'We welcome your contributions! Share past papers, quizzes, summaries, or helpful links to benefit all students.'}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="cta-actions">
-                            <button
-                                onClick={() => setShowUploader(true)}
-                                className="cta-pill primary-action"
-                            >
-                                <span className="pill-icon">📤</span>
-                                <span className="pill-text">{language === 'ar' ? 'أرفق ملفات أو روابط' : 'Attach Files or Links'}</span>
-                            </button>
-                            <div className="secondary-actions">
-                                <a href="https://wa.me/962782934685" target="_blank" rel="noopener noreferrer" className="cta-pill whatsapp-lite">
-                                    <span className="pill-icon">📱</span>
-                                    <span className="pill-text">WhatsApp</span>
-                                </a>
-                                <Link to="/#suggestions" className="cta-pill suggestions-lite">
-                                    <span className="pill-icon">📩</span>
-                                    <span className="pill-text">{language === 'ar' ? 'الاقتراحات' : 'Suggestions'}</span>
-                                </Link>
+                            <div className="cta-actions">
+                                <button
+                                    onClick={() => setShowUploader(true)}
+                                    className="cta-pill primary-action"
+                                >
+                                    <span className="pill-icon">📤</span>
+                                    <span className="pill-text">{language === 'ar' ? 'أرفق ملفات أو روابط' : 'Attach Files or Links'}</span>
+                                </button>
+                                <div className="secondary-actions">
+                                    <a href="https://wa.me/962782934685" target="_blank" rel="noopener noreferrer" className="cta-pill whatsapp-lite">
+                                        <span className="pill-icon">📱</span>
+                                        <span className="pill-text">WhatsApp</span>
+                                    </a>
+                                    <Link to="/#suggestions" className="cta-pill suggestions-lite">
+                                        <span className="pill-icon">📩</span>
+                                        <span className="pill-text">{language === 'ar' ? 'الاقتراحات' : 'Suggestions'}</span>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Link to Academic Plans */}
-            <div className="info-banner glass-card" style={{ marginTop: '2rem' }}>
-                <h3>{language === 'ar' ? 'ملاحظة هامة' : 'Important Note'}</h3>
-                <p>
-                    {language === 'ar'
-                        ? 'إذا كنت تبحث عن الخطط الدراسية الشجرية المعتمدة (2025)، يمكنك العثور عليها في صفحة الخطط الدراسية.'
-                        : 'If you are looking for the approved academic tree plans (2025), you can find them in the Academic Plans page.'}
-                </p>
-                <Link to="/plans" className="btn-primary" style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none' }}>
-                    {language === 'ar' ? 'انتقل إلى الخطط الدراسية' : 'Go to Academic Plans'}
-                </Link>
-            </div>
+                {/* Link to Academic Plans */}
+                <div className="info-banner glass-card" style={{ marginTop: '2rem' }}>
+                    <h3>{language === 'ar' ? 'ملاحظة هامة' : 'Important Note'}</h3>
+                    <p>
+                        {language === 'ar'
+                            ? 'إذا كنت تبحث عن الخطط الدراسية الشجرية المعتمدة (2025)، يمكنك العثور عليها في صفحة الخطط الدراسية.'
+                            : 'If you are looking for the approved academic tree plans (2025), you can find them in the Academic Plans page.'}
+                    </p>
+                    <Link to="/plans" className="btn-primary" style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none' }}>
+                        {language === 'ar' ? 'انتقل إلى الخطط الدراسية' : 'Go to Academic Plans'}
+                    </Link>
+                </div>
 
-            {/* File Uploader */}
-            {showUploader && <FileUploader onClose={() => setShowUploader(false)} />}
+                {/* File Uploader */}
+                {showUploader && <FileUploader onClose={() => setShowUploader(false)} />}
+            </div>
         </div>
     );
 };

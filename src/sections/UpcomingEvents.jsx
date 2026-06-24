@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { academicCalendarData } from '../data/calendarData';
 import './UpcomingEvents.css';
@@ -77,27 +76,18 @@ const UpcomingEvents = () => {
                         const rotateY = offset * -45;
 
                         return (
-                            <motion.div
+                            <div
                                 key={index}
                                 className={`carousel-card glass-card ${isCenter ? 'active' : ''}`}
-                                initial={false}
-                                animate={{
-                                    x,
-                                    z,
-                                    scale,
+                                style={{
+                                    position: 'absolute',
+                                    transform: `translateX(${x}px) translateZ(${z}px) scale(${scale}) rotateY(${rotateY}deg)`,
                                     opacity,
                                     zIndex,
-                                    rotateY,
                                     filter: isCenter ? 'blur(0px)' : 'blur(4px)',
-                                    visibility: absOffset > 2 ? 'hidden' : 'visible'
+                                    visibility: absOffset > 2 ? 'hidden' : 'visible',
+                                    transition: 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease, filter 0.4s ease'
                                 }}
-                                transition={{
-                                    type: "spring",
-                                    stiffness: 150,
-                                    damping: 25,
-                                    mass: 1.2
-                                }}
-                                style={{ position: 'absolute' }}
                                 onClick={() => setCurrentIndex(index)}
                             >
                                 <div className="holographic-overlay"></div>
@@ -116,13 +106,7 @@ const UpcomingEvents = () => {
                                         {language === 'ar' ? event.day : event.dayEn}
                                     </p>
                                 </div>
-                                {isCenter && (
-                                    <motion.div
-                                        className="active-indicator"
-                                        layoutId="active-indicator"
-                                    />
-                                )}
-                            </motion.div>
+                            </div>
                         );
                     })}
                 </div>

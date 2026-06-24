@@ -30,7 +30,7 @@ export const submitContribution = async (file, subjectName = 'General', contribu
         console.log(`Saving metadata to Firestore for ${file.name}...`);
         const docRef = await addDoc(collection(db, CONTRIBUTIONS_COLLECTION), {
             subjectName: subjectName,
-            studentName: studentName || 'مساهمة مجهولة',
+            studentName: 'مساهمة مجهولة',
             fileName: file.name,
             fileUrl: result.url,
             publicId: result.publicId,

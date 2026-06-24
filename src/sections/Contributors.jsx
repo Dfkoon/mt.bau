@@ -3,7 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import './Contributors.css';
 
 const Contributors = () => {
-    const { t, language } = useLanguage();
+    const { t } = useLanguage();
 
     return (
         <section id="contributors" className="contributors-section">

@@ -2,6 +2,9 @@
  * Nashmi AI Service - Enhanced for Makanak Platform
  */
 import Groq from "groq-sdk";
+import { collection, addDoc } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 const apiKey = (import.meta.env.VITE_GROQ_API_KEY || "").trim();
 

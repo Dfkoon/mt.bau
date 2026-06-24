@@ -68,8 +68,8 @@ const Footer = () => {
                                         <span className="coordinator-label">
                                             {isAr ? 'دخول المنسقين' : 'Coordinator Login'}
                                         </span>
-                                        <span 
-                                            className="coordinator-mark" 
+                                        <span
+                                            className="coordinator-mark"
                                             onDoubleClick={handleMarkDoubleClick}
                                             title={isAr ? 'انقر مرتين للوصول' : 'Double click to access'}
                                         >
@@ -79,12 +79,12 @@ const Footer = () => {
                                     {showGatewayInput && (
                                         <form onSubmit={handleGatewaySubmit} className="coordinator-gateway-form">
                                             <input
-                                                type="password"
+                                                type="text"
                                                 className={`coordinator-gateway-input ${gatewayError ? 'shake-err' : ''}`}
                                                 value={gatewayCode}
                                                 onChange={e => setGatewayCode(e.target.value)}
                                                 placeholder={isAr ? 'كود الدخول' : 'Access code'}
-                                                autoComplete="new-password"
+                                                autoComplete="off"
                                                 autoFocus
                                                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleGatewaySubmit(e); } }}
                                             />

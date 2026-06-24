@@ -3,7 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import './ProjectsSection.css';
 
 const ProjectsSection = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const projects = [
         {
             id: 1,
@@ -71,7 +71,7 @@ const ProjectsSection = () => {
                                 </div>
                                 <a href={project.link} target="_blank" rel="noopener noreferrer" className="bento-link">
                                     <span className="link-text">{t('projects.visit')}</span>
-                                    <span className="link-arrow">{useLanguage().language === 'ar' ? '←' : '→'}</span>
+                                    <span className="link-arrow">{language === 'ar' ? '←' : '→'}</span>
                                 </a>
                             </div>
                             <div className="card-decoration"></div>

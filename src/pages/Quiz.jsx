@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { quizData, quizCategories } from '../data/quizData';
 import FileUploader from '../components/FileUploader';
 import { submitQuestionReport } from '../services/quizReportService';
+import { logQuizCompletion } from '../services/analyticsService';
+import { db } from '../config/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import watermarkLogo from '../assets/logo-watermark.png';
 import quizHero from '../assets/heros/quiz_hero.png';
@@ -236,8 +239,40 @@ const Quiz = () => {
     const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
     const [printMode, setPrintMode] = useState(null);
 
-    // Get current quiz data
-    const currentQuiz = quizId ? quizData[quizId] : null;
+    // ── Admin-edits from Firestore (question_edits collection) ──
+    const [questionEdits, setQuestionEdits] = useState({});
+
+    useEffect(() => {
+        if (!quizId) { setQuestionEdits({}); return; }
+        getDocs(query(collection(db, 'question_edits'), where('quizId', '==', quizId)))
+            .then(snap => {
+                const map = {};
+                snap.forEach(d => { map[d.data().questionId] = d.data(); });
+                setQuestionEdits(map);
+            })
+            .catch(() => {}); // silently fail — local data is fallback
+    }, [quizId]);
+
+    // Get current quiz data (merged with admin edits)
+    const rawQuiz = quizId ? quizData[quizId] : null;
+    const currentQuiz = useMemo(() => {
+        if (!rawQuiz) return null;
+        if (Object.keys(questionEdits).length === 0) return rawQuiz;
+        return {
+            ...rawQuiz,
+            questions: rawQuiz.questions.map(q => {
+                const edit = questionEdits[q.id];
+                if (!edit) return q;
+                return {
+                    ...q,
+                    questionAr:    edit.questionAr    || q.questionAr,
+                    questionEn:    edit.questionEn    || q.questionEn,
+                    options:       edit.options?.length > 0 ? edit.options : q.options,
+                    correctAnswer: edit.correctAnswer  || q.correctAnswer,
+                };
+            }),
+        };
+    }, [rawQuiz, questionEdits]);
 
     // Find the parent subject/category for the current quiz (used in breadcrumbs)
     const currentSubject = quizId ? quizCategories.find(cat => {
@@ -307,6 +342,46 @@ const Quiz = () => {
     }, [quizId, location.state]);
 
     // Timer countdown effect
+    // Calculate Score — defined BEFORE the timer effect that calls it
+    const finishQuiz = React.useCallback(() => {
+        let calculatedScore = 0;
+        let totalMarks = 0;
+
+        currentQuiz.questions.forEach(q => {
+            totalMarks += q.marks || 1;
+            if (q.type === 'matching') {
+                const subQuestions = q.subQuestions || [];
+                const subMarks = (q.marks || 1) / subQuestions.length;
+                subQuestions.forEach(sub => {
+                    const userSubAns = userAnswers[q.id]?.[sub.id];
+                    if (userSubAns === sub.correctAnswer) {
+                        calculatedScore += subMarks;
+                    }
+                });
+            } else {
+                if (userAnswers[q.id] === q.correctAnswer) {
+                    calculatedScore += q.marks || 1;
+                }
+            }
+        });
+
+        setScore(calculatedScore);
+        setShowResults(true);
+        setTimerActive(false);
+        window.scrollTo(0, 0);
+
+        // Log quiz completion to analytics
+        logQuizCompletion(
+            quizId,
+            currentQuiz.titleAr || currentQuiz.title || quizId,
+            `${calculatedScore.toFixed(2)}/${totalMarks.toFixed(2)}`
+        );
+
+        if (calculatedScore / totalMarks >= 0.5) {
+            playSuccessSound();
+        }
+    }, [currentQuiz, userAnswers]);
+
     useEffect(() => {
         let interval = null;
         if (timerActive && timeLeft > 0 && !showResults) {
@@ -323,7 +398,7 @@ const Quiz = () => {
             finishQuiz();
         }
         return () => clearInterval(interval);
-    }, [timerActive, timeLeft, showResults]);
+    }, [timerActive, timeLeft, showResults, finishQuiz, language]);
 
     // Ensure page starts from top when changing categories internally
     useEffect(() => {
@@ -386,39 +461,7 @@ const Quiz = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [timerActive, showResults, currentQuiz, currentQuestionIndex, handleAnswerSelect]);
 
-    // Calculate Score
-    const finishQuiz = () => {
-        let calculatedScore = 0;
-        let totalMarks = 0;
-
-        currentQuiz.questions.forEach(q => {
-            totalMarks += q.marks || 1;
-            if (q.type === 'matching') {
-                // For matching questions, each correct sub-answer gives a portion of marks
-                const subQuestions = q.subQuestions || [];
-                const subMarks = (q.marks || 1) / subQuestions.length;
-                subQuestions.forEach(sub => {
-                    const userSubAns = userAnswers[q.id]?.[sub.id];
-                    if (userSubAns === sub.correctAnswer) {
-                        calculatedScore += subMarks;
-                    }
-                });
-            } else {
-                if (userAnswers[q.id] === q.correctAnswer) {
-                    calculatedScore += q.marks || 1;
-                }
-            }
-        });
-
-        setScore(calculatedScore);
-        setShowResults(true);
-        setTimerActive(false);
-        window.scrollTo(0, 0);
-
-        if (calculatedScore / totalMarks >= 0.5) {
-            playSuccessSound();
-        }
-    };
+    // finishQuiz is now defined above the timer useEffect that calls it
 
     // Restart Quiz
     const restartQuiz = () => {
@@ -459,11 +502,13 @@ const Quiz = () => {
                 quizId: quizId,
                 quizTitle: currentQuiz.titleAr || currentQuiz.title,
                 subjectName: subName,
-                reportType: 'incorrect_answer', // Default case for flagging
+                reportType: 'incorrect_answer',
                 questionId: qId,
                 questionAr: q.questionAr || '',
                 questionEn: q.questionEn || '',
-                type: q.type
+                type: q.type,
+                options: q.options || [],
+                correctAnswer: q.correctAnswer || '',
             };
 
             submitQuestionReport(reportData).then(res => {

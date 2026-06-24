@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { ThemeProvider } from './contexts/ThemeContext';
-import { LanguageProvider } from './contexts/LanguageContext';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import ScrollToTop from './components/ScrollToTop';
@@ -31,6 +29,8 @@ import MaterialExchange from './pages/MaterialExchange';
 
 import FAQ from './pages/FAQ';
 import AboutUs from './pages/AboutUs';
+import AdminCourseStatusManager from './components/AdminCourseStatusManager';
+import AdminDashboard from './pages/AdminDashboard';
 
 import Legal from './pages/Legal';
 import './index.css';
@@ -116,56 +116,53 @@ function App() {
   };
 
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <Router>
-          <ScrollToTop />
-          <PageTitleUpdater />
-          <Toaster
-            position="top-center"
-            reverseOrder={false}
-            containerStyle={{
-              zIndex: 99999, // Ensure it's above everything including navbar
-            }}
-            toastOptions={{
-              style: {
-                zIndex: 99999,
-              },
-            }}
-          />
-          <div className="app-container">
-            <Navbar toggleSidebar={toggleSidebar} />
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+    <Router>
+      <ScrollToTop />
+      <PageTitleUpdater />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        containerStyle={{
+          zIndex: 99999, // Ensure it's above everything including navbar
+        }}
+        toastOptions={{
+          style: {
+            zIndex: 99999,
+          },
+        }}
+      />
+      <div className="app-container">
+        <Navbar toggleSidebar={toggleSidebar} />
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-            <FeedbackPopup
-              isOpen={showFeedbackPopup}
-              onClose={handleClosePopup}
-            />
+        <FeedbackPopup
+          isOpen={showFeedbackPopup}
+          onClose={handleClosePopup}
+        />
 
-            <main>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/materials" element={<StudyMaterials />} />
-                <Route path="/plans" element={<AcademicPlans />} />
-                <Route path="/quiz" element={<Quiz />} />
-                <Route path="/quiz/:quizId" element={<Quiz />} />
-                <Route path="/calendar" element={<AcademicCalendar />} />
-                <Route path="/grading" element={<GradingSystem />} />
-                <Route path="/exchange" element={<MaterialExchange />} />
+        <main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/materials" element={<StudyMaterials />} />
+            <Route path="/plans" element={<AcademicPlans />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/quiz/:quizId" element={<Quiz />} />
+            <Route path="/calendar" element={<AcademicCalendar />} />
+            <Route path="/grading" element={<GradingSystem />} />
+            <Route path="/exchange" element={<MaterialExchange />} />
+            <Route path="/exchange-admin" element={<AdminCourseStatusManager />} />
 
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/about" element={<AboutUs />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/about" element={<AboutUs />} />
 
-                <Route path="/legal" element={<Legal />} />
-              </Routes>
-            </main>
+            <Route path="/legal" element={<Legal />} />
+          </Routes>
+        </main>
 
-            <NashmiGuide />
-            <Footer />
-          </div>
-        </Router>
-      </LanguageProvider>
-    </ThemeProvider>
+        <NashmiGuide />
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

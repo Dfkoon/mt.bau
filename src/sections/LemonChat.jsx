@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { academicCalendarData } from '../data/calendarData';
-import { faqData } from '../data/faqData';
 import { nashmiData } from '../data/nashmiData';
 import { coursesData } from '../data/coursesData';
 import { chatWithNashmi } from '../services/aiService';
