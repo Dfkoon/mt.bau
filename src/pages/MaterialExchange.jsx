@@ -4898,7 +4898,7 @@ td{color:#2f3d4f;}
                         <div className="booking-notice-banner glass-card animate-pulse">
                             <span className="notice-icon">⏳</span>
                             <div className="notice-text">
-                                <h3>{isAr ? 'فترة جمع المواد والتبرع 📚' : 'Material Collection & Donation Period 📚'}</h3>
+                                <h3>{isAr ? 'فترة حجز المواد تبدأ 📚' : 'Material Booking Period Starts 📚'}</h3>
                                 <div className="countdown-timer">
                                     <div className="countdown-item"><span className="time-val">{timeLeft.days}</span><span className="time-label">{isAr ? 'يوم' : 'Days'}</span></div>
                                     <div className="countdown-item"><span className="time-val">{timeLeft.hours}</span><span className="time-label">{isAr ? 'ساعة' : 'Hrs'}</span></div>
