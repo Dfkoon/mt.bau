@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { coursesData, categories, faculties } from '../data/coursesData';
 import { Link, useNavigate } from 'react-router-dom';
 import FileUploader from '../components/FileUploader';
-import MaterialStatusChecker from '../components/MaterialStatusChecker';
+
 import { getQuizForCourse } from '../data/quizMapping';
 import { logMaterialDownload } from '../services/analyticsService';
 import './StudyMaterials.css';
@@ -190,17 +190,6 @@ const StudyMaterials = () => {
                 </div>
             )}
 
-            <div className="material-status-section">
-                <div className="section-header">
-                    <h2>{language === 'ar' ? 'تابع حالة المواد الخاصة بك' : 'Quickly Track Your Material Status'}</h2>
-                    <p>
-                        {language === 'ar'
-                            ? 'استخدم رقم الهاتف المسجل لديك لتعرف بسرعة حالة المواد التي تبرعت بها أو حجزتها.'
-                            : 'Use your registered phone number to quickly see the status of materials you donated or booked.'}
-                    </p>
-                </div>
-                <MaterialStatusChecker isAr={language === 'ar'} />
-            </div>
 
             <div className="search-container">
                 <div className="search-wrapper">
