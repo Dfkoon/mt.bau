@@ -5,6 +5,9 @@ import { nashmiData } from '../data/nashmiData';
 import { chatWithNashmi } from '../services/aiService';
 import './NashmiGuide.css';
 
+const SITE_URL = 'https://mtbau.web.app';
+const SITE_NAME = 'مكانك الجامعي | MT.BAU';
+
 const NashmiGuide = () => {
     const { language, t } = useLanguage();
     const location = useLocation();
@@ -17,6 +20,26 @@ const NashmiGuide = () => {
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [hasUnread, setHasUnread] = useState(false);
+    const [shareCopied, setShareCopied] = useState(false);
+
+    const handleShare = async () => {
+        const shareData = {
+            title: SITE_NAME,
+            text: isAr
+                ? 'اكتشف مكانك الجامعي — منصة طلاب جامعة البلقاء التطبيقية 🎓'
+                : 'Discover MT.BAU — The student platform for BAU students 🎓',
+            url: SITE_URL
+        };
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(SITE_URL);
+                setShareCopied(true);
+                setTimeout(() => setShareCopied(false), 2200);
+            }
+        } catch { /* user cancelled */ }
+    };
 
     // Detailed page context for AI and preview bubbles
     const pageGuides = {
@@ -312,14 +335,40 @@ const NashmiGuide = () => {
             )}
 
             {!isOpen && (
-                <button
-                    className={`nashmi-robot-btn ${hasUnread ? 'pulse' : ''}`}
-                    onClick={() => { setIsOpen(!isOpen); setHasUnread(false); }}
-                    title={t('nav.nashmi')}
-                >
-                    <span className="robot-icon">🤖</span>
-                    {hasUnread && <span className="notification-dot"></span>}
-                </button>
+                <>
+                    {/* Share button — appears above nashmi */}
+                    <button
+                        className="share-fab-btn"
+                        onClick={handleShare}
+                        title={isAr ? 'شارك الموقع' : 'Share website'}
+                        aria-label={isAr ? 'مشاركة الموقع' : 'Share website'}
+                    >
+                        {shareCopied
+                            ? <span className="share-fab-icon">✅</span>
+                            : <svg className="share-fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="18" cy="5" r="3" />
+                                <circle cx="6" cy="12" r="3" />
+                                <circle cx="18" cy="19" r="3" />
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                              </svg>
+                        }
+                        {shareCopied && (
+                            <span className="share-toast">
+                                {isAr ? 'تم نسخ الرابط!' : 'Link copied!'}
+                            </span>
+                        )}
+                    </button>
+
+                    <button
+                        className={`nashmi-robot-btn ${hasUnread ? 'pulse' : ''}`}
+                        onClick={() => { setIsOpen(!isOpen); setHasUnread(false); }}
+                        title={t('nav.nashmi')}
+                    >
+                        <span className="robot-icon">🤖</span>
+                        {hasUnread && <span className="notification-dot"></span>}
+                    </button>
+                </>
             )}
         </div>
     );
