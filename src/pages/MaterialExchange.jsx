@@ -132,6 +132,9 @@ const MaterialExchange = () => {
         ahmadQrConfirmed: false,
         saraQrConfirmed: false,
         adminQrConfirmed: false,
+        ahmadResetRequest: false,
+        saraResetRequest: false,
+        adminResetRequest: false,
         allowCoordinatorEditDelete: false,
         coordinatorPermissions: {
             ahmad: {
@@ -461,7 +464,10 @@ const MaterialExchange = () => {
                         admin2faEnabled: data.admin2faEnabled || false,
                         ahmadQrConfirmed: data.ahmadQrConfirmed || false,
                         saraQrConfirmed: data.saraQrConfirmed || false,
-                        adminQrConfirmed: data.adminQrConfirmed || false
+                        adminQrConfirmed: data.adminQrConfirmed || false,
+                        ahmadResetRequest: data.ahmadResetRequest || false,
+                        saraResetRequest: data.saraResetRequest || false,
+                        adminResetRequest: data.adminResetRequest || false
                     }));
                     // Load task completions (with auto-delete of old entries)
                     const rawCompletions = data.taskCompletions || { ahmad: {}, sara: {} };
@@ -497,6 +503,9 @@ const MaterialExchange = () => {
                         ahmadQrConfirmed: data.ahmadQrConfirmed || false,
                         saraQrConfirmed: data.saraQrConfirmed || false,
                         adminQrConfirmed: data.adminQrConfirmed || false,
+                        ahmadResetRequest: data.ahmadResetRequest || false,
+                        saraResetRequest: data.saraResetRequest || false,
+                        adminResetRequest: data.adminResetRequest || false,
                         allowCoordinatorEditDelete: data.allowCoordinatorEditDelete !== undefined ? data.allowCoordinatorEditDelete : false,
                         coordinatorPermissions: data.coordinatorPermissions || {
                             ahmad: {
@@ -1297,6 +1306,20 @@ const MaterialExchange = () => {
         } else {
             setTotpError(true);
             toast.error(isAr ? 'رمز التحقق الثنائي غير صحيح' : 'Incorrect 2FA code');
+        }
+    };
+
+    // Send a reset request to the admin — stored in Firestore, shown in admin settings
+    const handleRequestReset2fa = async (username) => {
+        try {
+            const requestField = username === 'admin' ? 'adminResetRequest'
+                : username === 'ahmad' ? 'ahmadResetRequest' : 'saraResetRequest';
+            await updateDoc(doc(db, 'system_configs', 'global_settings'), { [requestField]: true });
+            setSystemSettings(prev => ({ ...prev, [requestField]: true }));
+            toast.success(isAr ? 'تم إرسال طلب إعادة التعيين للأدمن ✅' : 'Reset request sent to admin ✅');
+        } catch (err) {
+            console.error('Request reset error:', err);
+            toast.error(isAr ? 'فشل إرسال الطلب' : 'Failed to send request');
         }
     };
 
@@ -4091,64 +4114,152 @@ td{color:#2f3d4f;}
                                         </div>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '10px' }}>
 
-                                            {/* Admin 2FA status */}
+                                            {/* Admin 2FA */}
                                             <div className="settings-field" style={{ borderBottom: '1px dashed var(--glass-border)', paddingBottom: '12px' }}>
                                                 <label style={{ fontWeight: 'bold' }}>👑 {isAr ? 'الأدمن' : 'Admin'}</label>
+                                                {systemSettings.adminResetRequest && (
+                                                    <div style={{ margin: '8px 0', padding: '10px 14px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+                                                        <span style={{ fontSize: '0.85rem', color: '#d97706', fontWeight: '600' }}>
+                                                            📨 {isAr ? 'طلب إعادة تعيين رمز التحقق معلق' : 'Reset request pending'}
+                                                        </span>
+                                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                                            <button
+                                                                className="submit-btn"
+                                                                onClick={async () => {
+                                                                    await handleReset2fa('admin');
+                                                                    await updateDoc(doc(db, 'system_configs', 'global_settings'), { adminResetRequest: false });
+                                                                    setSystemSettings(p => ({ ...p, adminResetRequest: false }));
+                                                                }}
+                                                                style={{ padding: '5px 12px', fontSize: '0.8rem', background: '#22c55e' }}
+                                                            >
+                                                                ✅ {isAr ? 'موافقة' : 'Approve'}
+                                                            </button>
+                                                            <button
+                                                                className="secondary-btn"
+                                                                onClick={async () => {
+                                                                    await updateDoc(doc(db, 'system_configs', 'global_settings'), { adminResetRequest: false });
+                                                                    setSystemSettings(p => ({ ...p, adminResetRequest: false }));
+                                                                    toast(isAr ? 'تم رفض الطلب' : 'Request rejected');
+                                                                }}
+                                                                style={{ padding: '5px 12px', fontSize: '0.8rem', borderColor: '#ef4444', color: '#ef4444' }}
+                                                            >
+                                                                ❌ {isAr ? 'رفض' : 'Reject'}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
                                                     <span style={{ fontSize: '0.9rem', color: '#22c55e', fontWeight: '500' }}>
                                                         {isAr ? '🛡️ مفعّل دائماً (إجباري)' : '🛡️ Enforced (Mandatory)'}
                                                     </span>
-                                                    <div>
-                                                        <button
-                                                            className="secondary-btn"
-                                                            onClick={() => handleReset2fa('admin')}
-                                                            style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239, 68, 68, 0.05)' }}
-                                                        >
-                                                            🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
-                                                        </button>
-                                                    </div>
+                                                    <button
+                                                        className="secondary-btn"
+                                                        onClick={() => handleReset2fa('admin')}
+                                                        style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239,68,68,0.05)' }}
+                                                    >
+                                                        🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
+                                                    </button>
                                                 </div>
                                             </div>
 
-                                            {/* Ahmad 2FA status */}
+                                            {/* Ahmad 2FA */}
                                             <div className="settings-field" style={{ borderBottom: '1px dashed var(--glass-border)', paddingBottom: '12px' }}>
                                                 <label style={{ fontWeight: 'bold' }}>♂️ {systemSettings.ahmadNameAr || 'أحمد'}</label>
+                                                {systemSettings.ahmadResetRequest && (
+                                                    <div style={{ margin: '8px 0', padding: '10px 14px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+                                                        <span style={{ fontSize: '0.85rem', color: '#d97706', fontWeight: '600' }}>
+                                                            📨 {isAr ? 'طلب إعادة تعيين رمز التحقق معلق' : 'Reset request pending'}
+                                                        </span>
+                                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                                            <button
+                                                                className="submit-btn"
+                                                                onClick={async () => {
+                                                                    await handleReset2fa('ahmad');
+                                                                    await updateDoc(doc(db, 'system_configs', 'global_settings'), { ahmadResetRequest: false });
+                                                                    setSystemSettings(p => ({ ...p, ahmadResetRequest: false }));
+                                                                }}
+                                                                style={{ padding: '5px 12px', fontSize: '0.8rem', background: '#22c55e' }}
+                                                            >
+                                                                ✅ {isAr ? 'موافقة' : 'Approve'}
+                                                            </button>
+                                                            <button
+                                                                className="secondary-btn"
+                                                                onClick={async () => {
+                                                                    await updateDoc(doc(db, 'system_configs', 'global_settings'), { ahmadResetRequest: false });
+                                                                    setSystemSettings(p => ({ ...p, ahmadResetRequest: false }));
+                                                                    toast(isAr ? 'تم رفض الطلب' : 'Request rejected');
+                                                                }}
+                                                                style={{ padding: '5px 12px', fontSize: '0.8rem', borderColor: '#ef4444', color: '#ef4444' }}
+                                                            >
+                                                                ❌ {isAr ? 'رفض' : 'Reject'}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
                                                     <span style={{ fontSize: '0.9rem', color: '#22c55e', fontWeight: '500' }}>
                                                         {isAr ? '🛡️ مفعّل دائماً (إجباري)' : '🛡️ Enforced (Mandatory)'}
                                                     </span>
-                                                    <div>
-                                                        <button
-                                                            className="secondary-btn"
-                                                            onClick={() => handleReset2fa('ahmad')}
-                                                            style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239, 68, 68, 0.05)' }}
-                                                        >
-                                                            🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
-                                                        </button>
-                                                    </div>
+                                                    <button
+                                                        className="secondary-btn"
+                                                        onClick={() => handleReset2fa('ahmad')}
+                                                        style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239,68,68,0.05)' }}
+                                                    >
+                                                        🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
+                                                    </button>
                                                 </div>
                                             </div>
 
-                                            {/* Sara 2FA status */}
+                                            {/* Sara 2FA */}
                                             <div className="settings-field">
                                                 <label style={{ fontWeight: 'bold' }}>♀️ {systemSettings.saraNameAr || 'سارة'}</label>
+                                                {systemSettings.saraResetRequest && (
+                                                    <div style={{ margin: '8px 0', padding: '10px 14px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.35)', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+                                                        <span style={{ fontSize: '0.85rem', color: '#d97706', fontWeight: '600' }}>
+                                                            📨 {isAr ? 'طلب إعادة تعيين رمز التحقق معلق' : 'Reset request pending'}
+                                                        </span>
+                                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                                            <button
+                                                                className="submit-btn"
+                                                                onClick={async () => {
+                                                                    await handleReset2fa('sara');
+                                                                    await updateDoc(doc(db, 'system_configs', 'global_settings'), { saraResetRequest: false });
+                                                                    setSystemSettings(p => ({ ...p, saraResetRequest: false }));
+                                                                }}
+                                                                style={{ padding: '5px 12px', fontSize: '0.8rem', background: '#22c55e' }}
+                                                            >
+                                                                ✅ {isAr ? 'موافقة' : 'Approve'}
+                                                            </button>
+                                                            <button
+                                                                className="secondary-btn"
+                                                                onClick={async () => {
+                                                                    await updateDoc(doc(db, 'system_configs', 'global_settings'), { saraResetRequest: false });
+                                                                    setSystemSettings(p => ({ ...p, saraResetRequest: false }));
+                                                                    toast(isAr ? 'تم رفض الطلب' : 'Request rejected');
+                                                                }}
+                                                                style={{ padding: '5px 12px', fontSize: '0.8rem', borderColor: '#ef4444', color: '#ef4444' }}
+                                                            >
+                                                                ❌ {isAr ? 'رفض' : 'Reject'}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
                                                     <span style={{ fontSize: '0.9rem', color: '#22c55e', fontWeight: '500' }}>
                                                         {isAr ? '🛡️ مفعّل دائماً (إجباري)' : '🛡️ Enforced (Mandatory)'}
                                                     </span>
-                                                    <div>
-                                                        <button
-                                                            className="secondary-btn"
-                                                            onClick={() => handleReset2fa('sara')}
-                                                            style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239, 68, 68, 0.05)' }}
-                                                        >
-                                                            🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
-                                                        </button>
-                                                    </div>
+                                                    <button
+                                                        className="secondary-btn"
+                                                        onClick={() => handleReset2fa('sara')}
+                                                        style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239,68,68,0.05)' }}
+                                                    >
+                                                        🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <div className="settings-card">
                                         <div className="settings-card-header">
@@ -5093,7 +5204,12 @@ td{color:#2f3d4f;}
                                 : pendingStaffKey === 'ahmad'
                                     ? systemSettings.ahmadQrConfirmed
                                     : systemSettings.saraQrConfirmed;
-                            const loginQrUrl = loginQrSecret
+                            const resetRequested = pendingStaffKey === 'admin'
+                                ? systemSettings.adminResetRequest
+                                : pendingStaffKey === 'ahmad'
+                                    ? systemSettings.ahmadResetRequest
+                                    : systemSettings.saraResetRequest;
+                            const loginQrUrl = (!qrConfirmed && loginQrSecret)
                                 ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`otpauth://totp/Makanak%20Al-Jamii:${pendingStaffKey}?secret=${loginQrSecret}&issuer=Makanak%20Al-Jamii`)}&color=0f172a&bgcolor=ffffff`
                                 : null;
                             return (
@@ -5102,66 +5218,40 @@ td{color:#2f3d4f;}
                                         <h2>🛡️ {isAr ? 'التحقق بخطوتين (2FA)' : 'Two-Factor Authentication'}</h2>
                                         <p>{isAr ? 'أدخل الرمز المكون من 6 أرقام من تطبيق Authenticator الخاص بك.' : 'Enter the 6-digit code from your authenticator app.'}</p>
 
-                                        {/* ⋮ Three-dot button */}
-                                        {loginQrUrl && (
-                                            <button
-                                                type="button"
-                                                title={isAr ? 'خيارات التحقق' : '2FA Options'}
-                                                onClick={() => {
-                                                    setShowQrInLogin(v => !v);
-                                                    setShowResetInLogin(false);
-                                                }}
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: '-5px',
-                                                    [isAr ? 'left' : 'right']: '5px',
-                                                    background: 'var(--card-bg, #ffffff)',
-                                                    border: '1px solid var(--glass-border, rgba(0,0,0,0.15))',
-                                                    cursor: 'pointer',
-                                                    fontSize: '1.4rem',
-                                                    color: 'var(--text-primary, #0f172a)',
-                                                    padding: '2px 8px',
-                                                    borderRadius: '50%',
-                                                    lineHeight: '1.2',
-                                                    zIndex: 10,
-                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                                                }}
-                                            >
-                                                ⋮
-                                            </button>
-                                        )}
+                                        {/* ⋮ Three-dot button — always visible */}
+                                        <button
+                                            type="button"
+                                            title={isAr ? 'خيارات' : 'Options'}
+                                            onClick={() => setShowQrInLogin(v => !v)}
+                                            style={{
+                                                position: 'absolute',
+                                                top: '-5px',
+                                                [isAr ? 'left' : 'right']: '5px',
+                                                background: 'var(--card-bg, #ffffff)',
+                                                border: '1px solid var(--glass-border, rgba(0,0,0,0.15))',
+                                                cursor: 'pointer',
+                                                fontSize: '1.4rem',
+                                                color: 'var(--text-primary, #0f172a)',
+                                                padding: '2px 8px',
+                                                borderRadius: '50%',
+                                                lineHeight: '1.2',
+                                                zIndex: 10,
+                                                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                            }}
+                                        >
+                                            ⋮
+                                        </button>
                                     </div>
 
-                                    {/* 2FA Dropdown Menu Options */}
+                                    {/* Dropdown panel */}
                                     {showQrInLogin && (
-                                        <div style={{ margin: '0 0 15px', padding: '12px', background: 'rgba(99,102,241,0.06)', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '8px', border: '1px solid rgba(99,102,241,0.15)' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-                                                {/* Show QR button is ONLY visible if NOT confirmed */}
-                                                {!qrConfirmed && (
-                                                    <button
-                                                        type="button"
-                                                        className="submit-btn"
-                                                        onClick={() => setShowResetInLogin(false)}
-                                                        style={{ padding: '6px 12px', fontSize: '0.8rem', flex: 1 }}
-                                                    >
-                                                        📷 {isAr ? 'عرض الباركود' : 'Show QR'}
-                                                    </button>
-                                                )}
-                                                <button
-                                                    type="button"
-                                                    className="secondary-btn"
-                                                    onClick={() => setShowResetInLogin(true)}
-                                                    style={{ padding: '6px 12px', fontSize: '0.8rem', flex: 1, borderColor: '#ef4444', color: '#ef4444' }}
-                                                >
-                                                    🔄 {isAr ? 'إعادة تعيين الرمز' : 'Reset Secret'}
-                                                </button>
-                                            </div>
+                                        <div style={{ margin: '0 0 15px', padding: '12px', background: 'rgba(99,102,241,0.06)', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '10px', border: '1px solid rgba(99,102,241,0.15)' }}>
 
-                                            {/* Action 1: Show QR — ONLY allowed if NOT confirmed */}
-                                            {!showResetInLogin && !qrConfirmed && loginQrUrl && (
-                                                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                                            {/* QR — only if NOT yet confirmed */}
+                                            {!qrConfirmed && loginQrUrl && (
+                                                <div style={{ textAlign: 'center' }}>
                                                     <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
-                                                        {isAr ? '📱 امسح هذا الرمز بتطبيق Authenticator' : '📱 Scan this QR with Authenticator app'}
+                                                        {isAr ? '📱 امسح هذا الرمز بتطبيق Authenticator (مرة واحدة فقط)' : '📱 Scan once with Authenticator app'}
                                                     </p>
                                                     <div style={{ display: 'inline-block', background: '#fff', padding: '8px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                                                         <img src={loginQrUrl} alt="QR" style={{ width: '150px', height: '150px', display: 'block' }} />
@@ -5169,26 +5259,32 @@ td{color:#2f3d4f;}
                                                 </div>
                                             )}
 
-                                            {/* Action 2: Reset Form */}
-                                            {showResetInLogin && (
-                                                <form onSubmit={handleReset2faFromLogin} style={{ marginTop: '10px', textAlign: 'right' }}>
-                                                    <label style={{ fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
-                                                        🔑 {isAr ? 'أدخل كلمة مرور الأدمن للتأكيد:' : 'Enter Admin password to confirm:'}
-                                                    </label>
-                                                    <input
-                                                        type="password"
-                                                        className="form-input"
-                                                        placeholder={isAr ? 'كلمة مرور الأدمن' : 'Admin password'}
-                                                        value={resetAdminPasswordInput}
-                                                        onChange={e => setResetAdminPasswordInput(e.target.value)}
-                                                        style={{ marginBottom: '8px', fontSize: '0.9rem', padding: '6px 10px' }}
-                                                        required
-                                                    />
-                                                    <button type="submit" className="submit-btn" style={{ width: '100%', background: '#ef4444', padding: '6px' }}>
-                                                        {isAr ? 'تأكيد وإعادة التعيين' : 'Confirm & Reset'}
+                                            {/* Request reset button — always shown in dropdown */}
+                                            <div style={{ textAlign: 'center' }}>
+                                                {resetRequested ? (
+                                                    <div style={{ fontSize: '0.82rem', color: '#f59e0b', fontWeight: '600', padding: '8px', background: 'rgba(245,158,11,0.08)', borderRadius: '8px', border: '1px solid rgba(245,158,11,0.2)' }}>
+                                                        ⏳ {isAr ? 'تم إرسال طلب إعادة التعيين — بانتظار موافقة الأدمن' : 'Reset request sent — awaiting admin approval'}
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRequestReset2fa(pendingStaffKey)}
+                                                        style={{
+                                                            width: '100%',
+                                                            padding: '8px 14px',
+                                                            fontSize: '0.85rem',
+                                                            background: 'rgba(239,68,68,0.06)',
+                                                            border: '1px solid rgba(239,68,68,0.35)',
+                                                            color: '#ef4444',
+                                                            borderRadius: '8px',
+                                                            cursor: 'pointer',
+                                                            fontWeight: '600'
+                                                        }}
+                                                    >
+                                                        📨 {isAr ? 'طلب إعادة تعيين رمز التحقق' : 'Request Verification Code Reset'}
                                                     </button>
-                                                </form>
-                                            )}
+                                                )}
+                                            </div>
                                         </div>
                                     )}
 
