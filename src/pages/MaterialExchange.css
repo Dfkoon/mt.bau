@@ -181,8 +181,8 @@
     position: relative;
     padding: 2.8rem 2.6rem;
     border-radius: 24px;
-    background: #ffffff;
-    border: 1px solid rgba(211, 47, 47, 0.12);
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--glass-border, rgba(211, 47, 47, 0.12));
     box-shadow:
         0 4px 6px rgba(0, 0, 0, 0.04),
         0 20px 60px rgba(211, 47, 47, 0.07),
@@ -228,7 +228,7 @@
 .material-tracker-section .section-header h2 {
     font-size: 1.65rem;
     font-weight: 800;
-    color: #1a1a2e;
+    color: var(--text-primary, #1a1a2e);
     margin-bottom: 0.5rem;
     letter-spacing: -0.3px;
 }
@@ -240,7 +240,7 @@
 }
 
 .material-tracker-section .section-header p {
-    color: #64748b;
+    color: var(--text-secondary, #64748b);
     font-size: 0.96rem;
     max-width: 500px;
     margin: 0 auto;
@@ -260,21 +260,21 @@
     width: 100%;
     padding: 0.95rem 1.2rem;
     border-radius: 14px;
-    border: 1.5px solid #e2e8f0;
-    background: #f8fafc;
-    color: #1e293b;
+    border: 1.5px solid var(--glass-border, #e2e8f0);
+    background: var(--input-bg, var(--secondary-bg, #f8fafc));
+    color: var(--text-primary, #1e293b);
     font-size: 1rem;
     transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
 }
 
 .tracker-form .form-input::placeholder {
-    color: #94a3b8;
+    color: var(--text-muted, #94a3b8);
 }
 
 .tracker-form .form-input:focus {
     outline: none;
     border-color: #d32f2f;
-    background: #fff;
+    background: var(--card-bg, #fff);
     box-shadow:
         0 0 0 3px rgba(211, 47, 47, 0.10),
         0 2px 10px rgba(211, 47, 47, 0.06);
