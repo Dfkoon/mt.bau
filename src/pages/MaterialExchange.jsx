@@ -266,6 +266,10 @@ const MaterialExchange = () => {
     // ── AUDIT LOG STATE ───────────────────────────────────────────
     const [auditLogs, setAuditLogs] = useState([]);
     const [logsLoading, setLogsLoading] = useState(false);
+    const [staffStatuses, setStaffStatuses] = useState({});
+    const [statusesLoading, setStatusesLoading] = useState(false);
+    const [logFilterOperator, setLogFilterOperator] = useState('all');
+    const [logSearchQuery, setLogSearchQuery] = useState('');
 
     // ── ARCHIVE STATE ─────────────────────────────────────────────
     const [archives, setArchives] = useState([]);
@@ -652,6 +656,67 @@ const MaterialExchange = () => {
             drawBookingCaptcha();
         }
     }, [bookingCaptchaText, showBookingModal]);
+
+    // Update staff status (online & lastSeen) periodically while logged in
+    useEffect(() => {
+        if (!loggedInUser) return;
+
+        const updateStatus = async (isOnline = true) => {
+            try {
+                const statusRef = doc(db, 'staff_status', loggedInUser.username);
+                await setDoc(statusRef, {
+                    online: isOnline,
+                    lastSeen: serverTimestamp(),
+                    ...(isOnline ? { lastLogin: serverTimestamp() } : { lastLogout: serverTimestamp() }),
+                    username: loggedInUser.username,
+                    nameAr: loggedInUser.nameAr || loggedInUser.username,
+                    nameEn: loggedInUser.nameEn || loggedInUser.username,
+                    role: loggedInUser.role || 'coordinator'
+                }, { merge: true });
+            } catch (e) {
+                console.error("Error updating staff status:", e);
+            }
+        };
+
+        // Update immediately on login/mount
+        updateStatus(true);
+
+        // Ping every 1 minute to keep lastSeen active
+        const interval = setInterval(() => {
+            updateStatus(true);
+        }, 60000);
+
+        // Set offline when user closes the tab / window
+        const handleUnload = () => {
+            const statusRef = doc(db, 'staff_status', loggedInUser.username);
+            updateDoc(statusRef, {
+                online: false,
+                lastSeen: serverTimestamp()
+            }).catch(console.error);
+        };
+
+        window.addEventListener('beforeunload', handleUnload);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('beforeunload', handleUnload);
+        };
+    }, [loggedInUser]);
+
+    // Periodically refresh coordinators status and audit logs when tab is active
+    useEffect(() => {
+        if (activeTab !== 'coordinators' || !isAdminUser) return;
+
+        fetchStaffStatuses();
+        fetchAuditLogs();
+
+        const interval = setInterval(() => {
+            fetchStaffStatuses();
+            fetchAuditLogs();
+        }, 20000); // refresh every 20 seconds
+
+        return () => clearInterval(interval);
+    }, [activeTab, isAdminUser]);
 
     // ── EMAILJS NOTIFICATION FUNCTION ────────────────────────────
     const sendCoordinatorEmailNotification = async (type, data) => {
@@ -1290,6 +1355,29 @@ const MaterialExchange = () => {
             setSystemSettings(prev => ({ ...prev, [qrField]: true }));
             setShowQrInLogin(false);
 
+            // ── Update staff_status in Firestore ──
+            const statusRef = doc(db, 'staff_status', pendingStaffKey);
+            setDoc(statusRef, {
+                online: true,
+                lastSeen: serverTimestamp(),
+                lastLogin: serverTimestamp(),
+                username: pendingStaffKey,
+                nameAr: user.nameAr,
+                nameEn: user.nameEn,
+                role: user.role
+            }, { merge: true }).catch(console.error);
+
+            // ── Add Audit Log for Login ──
+            addDoc(collection(db, 'materialExchangeLogs'), {
+                operatorId: pendingStaffKey,
+                operatorNameAr: user.nameAr,
+                operatorNameEn: user.nameEn,
+                actionAr: 'سجّل دخوله إلى النظام',
+                actionEn: 'Logged in to the system',
+                details: { type: 'login' },
+                timestamp: serverTimestamp()
+            }).catch(console.error);
+
             setLoggedInUser({ ...user, username: pendingStaffKey });
             sessionStorage.setItem('exchange_staff', JSON.stringify({ ...user, username: pendingStaffKey }));
             setShowLoginModal(false);
@@ -1430,6 +1518,21 @@ const MaterialExchange = () => {
     };
 
     const handleLogout = () => {
+        if (loggedInUser) {
+            const username = loggedInUser.username;
+            const statusRef = doc(db, 'staff_status', username);
+            updateDoc(statusRef, {
+                online: false,
+                lastLogout: serverTimestamp(),
+                lastSeen: serverTimestamp()
+            }).catch(console.error);
+
+            addAuditLog(
+                'سجّل خروجه من النظام',
+                'Logged out of the system',
+                { type: 'logout' }
+            );
+        }
         setLoggedInUser(null);
         sessionStorage.removeItem('exchange_staff');
         setActiveTab('donations');
@@ -2339,7 +2442,7 @@ Please contact us to coordinate the pickup. Thank you.`;
             const q = query(
                 collection(db, 'materialExchangeLogs'),
                 orderBy('timestamp', 'desc'),
-                limit(50)
+                limit(150)
             );
             const snapshot = await getDocs(q);
             setAuditLogs(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
@@ -2347,6 +2450,22 @@ Please contact us to coordinate the pickup. Thank you.`;
             console.error('Error fetching audit logs:', error);
         } finally {
             setLogsLoading(false);
+        }
+    };
+
+    const fetchStaffStatuses = async () => {
+        setStatusesLoading(true);
+        try {
+            const snapshot = await getDocs(collection(db, 'staff_status'));
+            const statuses = {};
+            snapshot.docs.forEach(doc => {
+                statuses[doc.id] = doc.data();
+            });
+            setStaffStatuses(statuses);
+        } catch (error) {
+            console.error('Error fetching staff statuses:', error);
+        } finally {
+            setStatusesLoading(false);
         }
     };
 
@@ -2954,6 +3073,14 @@ td{color:#2f3d4f;}
                                 onClick={() => setActiveTab('settings')}
                             >
                                 ⚙️ {isAr ? 'الإعدادات' : 'Settings'}
+                            </button>
+                        )}
+                        {isAdminUser && (
+                            <button
+                                className={`tab-btn ${activeTab === 'coordinators' ? 'active' : ''}`}
+                                onClick={() => { setActiveTab('coordinators'); fetchStaffStatuses(); fetchAuditLogs(); }}
+                            >
+                                👥 {isAr ? 'نشاط المنسقين' : 'Coordinator Activity'}
                             </button>
                         )}
                         {canViewArchive && (
@@ -4639,6 +4766,207 @@ td{color:#2f3d4f;}
                         {activeTab === 'analytics' && isAdminUser && (
                             <AdminDashboard isEmbedded={true} />
                         )}
+                        {activeTab === 'coordinators' && isAdminUser && (() => {
+                            const isUserOnline = (userKey) => {
+                                const status = staffStatuses[userKey];
+                                if (!status) return false;
+                                if (!status.online) return false;
+                                const lastSeen = status.lastSeen?.seconds ? status.lastSeen.seconds * 1000 : status.lastSeen;
+                                if (!lastSeen) return false;
+                                return (Date.now() - lastSeen) < 120000;
+                            };
+
+                            const formatStatusTime = (timestamp) => {
+                                if (!timestamp) return isAr ? 'غير متوفر' : 'N/A';
+                                const date = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp);
+                                return date.toLocaleString(isAr ? 'ar-JO' : 'en-JO', {
+                                    month: 'numeric',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                });
+                            };
+
+                            const formatLastSeenRelative = (userKey) => {
+                                const status = staffStatuses[userKey];
+                                if (!status) return isAr ? 'غير متصل' : 'Offline';
+                                if (isUserOnline(userKey)) return isAr ? 'نشط الآن' : 'Active now';
+                                const lastSeen = status.lastSeen?.seconds ? status.lastSeen.seconds * 1000 : status.lastSeen;
+                                if (!lastSeen) return isAr ? 'غير متصل' : 'Offline';
+                                const diffMs = Date.now() - lastSeen;
+                                const diffMins = Math.floor(diffMs / 60000);
+
+                                if (diffMins < 2) return isAr ? 'نشط الآن' : 'Active now';
+                                if (diffMins < 60) return isAr ? `منذ ${diffMins} دقيقة` : `${diffMins} mins ago`;
+                                const diffHours = Math.floor(diffMins / 60);
+                                if (diffHours < 24) return isAr ? `منذ ${diffHours} ساعة` : `${diffHours} hours ago`;
+                                const diffDays = Math.floor(diffHours / 24);
+                                return isAr ? `منذ ${diffDays} يوم` : `${diffDays} days ago`;
+                            };
+
+                            const getActionCount = (userKey) => {
+                                return auditLogs.filter(l => l.operatorId === userKey).length;
+                            };
+
+                            const filteredLogs = auditLogs.filter(log => {
+                                if (logFilterOperator !== 'all' && log.operatorId !== logFilterOperator) return false;
+                                if (logSearchQuery.trim()) {
+                                    const q = logSearchQuery.toLowerCase();
+                                    const ar = (log.actionAr || '').toLowerCase();
+                                    const en = (log.actionEn || '').toLowerCase();
+                                    const op = (log.operatorId || '').toLowerCase();
+                                    return ar.includes(q) || en.includes(q) || op.includes(q);
+                                }
+                                return true;
+                            });
+
+                            const staffList = [
+                                { key: 'admin', name: 'الأدمن', roleName: 'مدير النظام / Admin', icon: '👑', avatarClass: 'admin-avatar' },
+                                { key: 'ahmad', name: systemSettings.ahmadNameAr || 'أحمد', roleName: 'منسق قسم الذكور / Coordinator', icon: '♂️', avatarClass: '' },
+                                { key: 'sara', name: systemSettings.saraNameAr || 'سارة', roleName: 'منسقة قسم الإناث / Coordinator', icon: '♀️', avatarClass: '' }
+                            ];
+
+                            return (
+                                <div className="coordinators-activity-container">
+                                    {/* Top Status Cards */}
+                                    <div className="staff-status-grid">
+                                        {staffList.map(staff => {
+                                            const status = staffStatuses[staff.key] || {};
+                                            const online = isUserOnline(staff.key);
+                                            const actionCount = getActionCount(staff.key);
+                                            return (
+                                                <div key={staff.key} className="staff-card glass-card">
+                                                    <div className="staff-card-header">
+                                                        <div className="staff-avatar-wrapper">
+                                                            <div className={`staff-avatar-icon ${staff.avatarClass}`}>
+                                                                {staff.icon}
+                                                            </div>
+                                                            <div className="staff-card-title">
+                                                                <h3>{staff.name}</h3>
+                                                                <span>{staff.roleName}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className={`staff-status-dot-wrapper ${online ? 'is-online' : ''}`}>
+                                                            <span className="status-dot-pulse" />
+                                                            <span>{online ? (isAr ? 'متصل' : 'Online') : (isAr ? 'غير متصل' : 'Offline')}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="staff-details-rows">
+                                                        <div className="staff-detail-row">
+                                                            <label>{isAr ? 'حالة النشاط' : 'Activity Status'}</label>
+                                                            <span style={{ color: online ? '#22c55e' : 'inherit' }}>
+                                                                {formatLastSeenRelative(staff.key)}
+                                                            </span>
+                                                        </div>
+                                                        <div className="staff-detail-row">
+                                                            <label>{isAr ? 'آخر تسجيل دخول' : 'Last Login'}</label>
+                                                            <span>{formatStatusTime(status.lastLogin)}</span>
+                                                        </div>
+                                                        <div className="staff-detail-row">
+                                                            <label>{isAr ? 'آخر تسجيل خروج' : 'Last Logout'}</label>
+                                                            <span>{formatStatusTime(status.lastLogout)}</span>
+                                                        </div>
+                                                        <div className="staff-detail-row">
+                                                            <label>{isAr ? 'إجمالي العمليات المنفذة' : 'Total Actions'}</label>
+                                                            <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>
+                                                                {actionCount} {isAr ? 'عملية' : 'actions'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {/* Timeline Filter Toolbar */}
+                                    <div className="activity-filter-toolbar glass-card">
+                                        <div className="filter-operators-group">
+                                            {[
+                                                { key: 'all', label: isAr ? 'الكل' : 'All' },
+                                                { key: 'admin', label: isAr ? 'الأدمن' : 'Admin' },
+                                                { key: 'ahmad', label: systemSettings.ahmadNameAr || 'أحمد' },
+                                                { key: 'sara', label: systemSettings.saraNameAr || 'سارة' }
+                                            ].map(op => (
+                                                <button
+                                                    key={op.key}
+                                                    className={`filter-op-btn ${logFilterOperator === op.key ? 'active' : ''}`}
+                                                    onClick={() => setLogFilterOperator(op.key)}
+                                                >
+                                                    {op.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div className="activity-search-box">
+                                            <input
+                                                type="text"
+                                                placeholder={isAr ? '🔍 ابحث في سجل العمليات...' : '🔍 Search action logs...'}
+                                                value={logSearchQuery}
+                                                onChange={e => setLogSearchQuery(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Timeline Card */}
+                                    <div className="activity-timeline-card glass-card">
+                                        <div className="timeline-header-row">
+                                            <h3>📋 {isAr ? 'سجل العمليات والنشاط التفصيلي' : 'Detailed Activity Log & Audit'}</h3>
+                                            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                                                {isAr ? `يعرض آخر ${filteredLogs.length} عملية منفذة` : `Showing last ${filteredLogs.length} operations`}
+                                            </span>
+                                        </div>
+
+                                        {statusesLoading && filteredLogs.length === 0 ? (
+                                            <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                                                ⏳ {isAr ? 'جاري تحميل سجل النشاط...' : 'Loading activity logs...'}
+                                            </div>
+                                        ) : filteredLogs.length === 0 ? (
+                                            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
+                                                🔍 {isAr ? 'لا توجد عمليات مطابقة للمرشحات المحددة.' : 'No matching activities found.'}
+                                            </div>
+                                        ) : (
+                                            <ul className="timeline-list">
+                                                {filteredLogs.map(log => {
+                                                    const logTime = log.timestamp?.seconds ? new Date(log.timestamp.seconds * 1000) : new Date(log.timestamp);
+                                                    const operatorName = isAr ? log.operatorNameAr : log.operatorNameEn;
+                                                    const operatorIcon = log.operatorId === 'admin' ? '👑' : log.operatorId === 'ahmad' ? '♂️' : '♀️';
+                                                    return (
+                                                        <li key={log.id} className="timeline-item">
+                                                            <div className="timeline-item-dot" />
+                                                            <div className="timeline-item-meta">
+                                                                <span className="timeline-item-operator">
+                                                                    <span>{operatorIcon}</span>
+                                                                    <strong>{operatorName}</strong>
+                                                                </span>
+                                                                <span>
+                                                                    {logTime.toLocaleString(isAr ? 'ar-JO' : 'en-JO', {
+                                                                        dateStyle: 'medium',
+                                                                        timeStyle: 'short'
+                                                                    })}
+                                                                </span>
+                                                            </div>
+                                                            <div className="timeline-item-content">
+                                                                {isAr ? log.actionAr : log.actionEn}
+                                                            </div>
+                                                            {log.details && Object.keys(log.details).length > 0 && log.details.type !== 'login' && log.details.type !== 'logout' && (
+                                                                <div className="timeline-item-details">
+                                                                    {isAr ? 'تفاصيل العملية:' : 'Details:'} {
+                                                                        Object.entries(log.details)
+                                                                            .filter(([k]) => k !== 'type')
+                                                                            .map(([k, v]) => `${k}: ${v}`).join(' | ')
+                                                                    }
+                                                                </div>
+                                                            )}
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })()}
                     </div>
                 </div>
 
