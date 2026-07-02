@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { db } from '../config/firebase';
 import {
     collection, query, orderBy, limit, getDocs,
@@ -10,6 +10,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import toast from 'react-hot-toast';
 import FileUploader from '../components/FileUploader';
 import { subscribeToContributions, approveContribution, deleteContribution } from '../services/contributionsService';
+import { quizCategories, quizData as staticBaseQuizData } from '../data/quizData';
+import { extraQuizData as staticExtraQuizData } from '../data/quizDataExtra';
 import './AdminDashboard.css';
 
 // ── CAPTCHA helpers ──────────────────────────────────────────────────
@@ -194,6 +196,29 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     const [isAuthed, setIsAuthed] = useState(false);
 
+    // ── Quiz Management States ──
+    const [qManageSubjects, setQManageSubjects] = useState([]);
+    const [qManageParts, setQManageParts] = useState([]);
+    const [qManageQuestions, setQManageQuestions] = useState([]);
+
+    const [selectedSubjectId, setSelectedSubjectId] = useState('');
+    const [selectedPartId, setSelectedPartId] = useState('');
+
+    const [showAddSubjectModal, setShowAddSubjectModal] = useState(false);
+    const [subjectForm, setSubjectForm] = useState({ id: '', name: '', nameAr: '', icon: '📚', color: '#6366F1', forceEnglish: false });
+
+    const [showAddPartModal, setShowAddPartModal] = useState(false);
+    const [partForm, setPartForm] = useState({ id: '', title: '', titleAr: '', isGroup: false });
+
+    const [editingQuestion, setEditingQuestion] = useState(null);
+    const [showQuestionModal, setShowQuestionModal] = useState(false);
+    const [questionForm, setQuestionForm] = useState({ id: '', type: 'mcq', questionAr: '', questionEn: '', options: [], correctAnswer: '', marks: 1.0, image: '' });
+    
+    // Hidden file input for question image upload from device inside quizzes tab
+    const quizImageInputRef = useRef(null);
+    const [quizImageUploading, setQuizImageUploading] = useState(false);
+    const [quizImageProgress, setQuizImageProgress] = useState(0);
+
     // ── Listen to Firebase Auth state changes ──
     useEffect(() => {
         const auth = getAuth();
@@ -264,6 +289,44 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
         return () => unsubRep();
     }, [loggedIn]);
+
+    // ── Load quiz subjects and parts for management ──
+    useEffect(() => {
+        if (!loggedIn) return;
+
+        const unsubSubjects = onSnapshot(collection(db, 'quiz_subjects'), (snap) => {
+            const list = [];
+            snap.forEach(d => list.push(d.data()));
+            setQManageSubjects(list);
+        }, err => console.error('Subjects read error:', err));
+
+        const unsubParts = onSnapshot(collection(db, 'quiz_parts'), (snap) => {
+            const list = [];
+            snap.forEach(d => list.push(d.data()));
+            setQManageParts(list);
+        }, err => console.error('Parts read error:', err));
+
+        return () => {
+            unsubSubjects();
+            unsubParts();
+        };
+    }, [loggedIn]);
+
+    // ── Load questions for selected part ──
+    useEffect(() => {
+        if (!selectedPartId || !loggedIn) {
+            setQManageQuestions([]);
+            return;
+        }
+        const q = query(collection(db, 'quiz_questions'), where('partId', '==', selectedPartId));
+        const unsubQuestions = onSnapshot(q, (snap) => {
+            const list = [];
+            snap.forEach(d => list.push(d.data()));
+            setQManageQuestions(list);
+        }, err => console.error('Questions read error:', err));
+
+        return () => unsubQuestions();
+    }, [selectedPartId, loggedIn]);
 
     useEffect(() => {
         if (!loggedIn) return;
@@ -403,6 +466,247 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }
     };
 
+    // ── Quiz Management Helpers & Memos ──
+    const allSubjects = useMemo(() => {
+        const list = [...quizCategories];
+        qManageSubjects.forEach(sub => {
+            if (!list.some(c => c.id === sub.id)) {
+                list.push({ ...sub, isDynamic: true });
+            }
+        });
+        return list;
+    }, [qManageSubjects]);
+
+    const activeSubject = allSubjects.find(s => s.id === selectedSubjectId);
+    
+    const allParts = useMemo(() => {
+        if (!selectedSubjectId) return [];
+        const staticParts = activeSubject?.parts || [];
+        const list = [...staticParts];
+        
+        const dynamicParts = qManageParts.filter(p => p.subjectId === selectedSubjectId);
+        dynamicParts.forEach(dp => {
+            if (!list.some(p => p.id === dp.id)) {
+                list.push({ ...dp, isDynamic: true });
+            }
+        });
+        return list;
+    }, [selectedSubjectId, activeSubject, qManageParts]);
+
+    const allQuestions = useMemo(() => {
+        if (!selectedPartId) return [];
+        const staticQuizObj = staticBaseQuizData[selectedPartId] || staticExtraQuizData[selectedPartId] || {};
+        const staticQs = staticQuizObj.questions || [];
+        const list = [...staticQs];
+
+        qManageQuestions.forEach(dbQ => {
+            const idx = list.findIndex(q => q.id === dbQ.id);
+            if (idx >= 0) {
+                list[idx] = { ...list[idx], ...dbQ, isDynamic: true };
+            } else {
+                list.push({ ...dbQ, isDynamic: true });
+            }
+        });
+        return list;
+    }, [selectedPartId, qManageQuestions]);
+
+    const saveSubject = async () => {
+        if (!subjectForm.id || !subjectForm.name || !subjectForm.nameAr) {
+            toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامية' : 'Please fill all required fields');
+            return;
+        }
+        try {
+            const subId = subjectForm.id.toLowerCase().trim();
+            await setDoc(doc(db, 'quiz_subjects', subId), {
+                id: subId,
+                name: subjectForm.name.trim(),
+                nameAr: subjectForm.nameAr.trim(),
+                icon: subjectForm.icon,
+                color: subjectForm.color,
+                forceEnglish: subjectForm.forceEnglish,
+                isNew: true,
+                createdAt: serverTimestamp()
+            });
+            toast.success(isAr ? '✅ تم حفظ المادة بنجاح' : '✅ Subject saved successfully');
+            setShowAddSubjectModal(false);
+            setSubjectForm({ id: '', name: '', nameAr: '', icon: '📚', color: '#6366F1', forceEnglish: false });
+        } catch (e) {
+            console.error(e);
+            toast.error(isAr ? 'فشل حفظ المادة' : 'Failed to save subject');
+        }
+    };
+
+    const deleteSubject = async (subId) => {
+        if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه المادة؟ سيتم حذف كافة الأجزاء والأسئلة التابعة لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
+        try {
+            await deleteDoc(doc(db, 'quiz_subjects', subId));
+            const partsSnap = await getDocs(query(collection(db, 'quiz_parts'), where('subjectId', '==', subId)));
+            const promises = [];
+            partsSnap.forEach(d => promises.push(deleteDoc(d.ref)));
+            const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('subjectId', '==', subId)));
+            qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
+            await Promise.all(promises);
+            setSelectedSubjectId('');
+            setSelectedPartId('');
+            toast.success(isAr ? '🗑️ تم حذف المادة وكافة بياناتها' : '🗑️ Subject and all related data deleted');
+        } catch (e) {
+            console.error(e);
+            toast.error(isAr ? 'فشل حذف المادة' : 'Failed to delete subject');
+        }
+    };
+
+    const savePart = async () => {
+        if (!selectedSubjectId) return;
+        if (!partForm.id || !partForm.title || !partForm.titleAr) {
+            toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامية' : 'Please fill all required fields');
+            return;
+        }
+        try {
+            const partId = partForm.id.toLowerCase().trim();
+            await setDoc(doc(db, 'quiz_parts', partId), {
+                id: partId,
+                subjectId: selectedSubjectId,
+                title: partForm.title.trim(),
+                titleAr: partForm.titleAr.trim(),
+                isGroup: partForm.isGroup,
+                subParts: partForm.isGroup ? [] : null,
+                createdAt: serverTimestamp()
+            });
+            toast.success(isAr ? '✅ تم حفظ الجزء بنجاح' : '✅ Quiz part saved successfully');
+            setShowAddPartModal(false);
+            setPartForm({ id: '', title: '', titleAr: '', isGroup: false });
+        } catch (e) {
+            console.error(e);
+            toast.error(isAr ? 'فشل حفظ الجزء' : 'Failed to save quiz part');
+        }
+    };
+
+    const deletePart = async (partId) => {
+        if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئلة التابعة له!' : 'Are you sure? This will delete all questions in this part!')) return;
+        try {
+            await deleteDoc(doc(db, 'quiz_parts', partId));
+            const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', partId)));
+            const promises = [];
+            qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
+            await Promise.all(promises);
+            setSelectedPartId('');
+            toast.success(isAr ? '🗑️ تم حذف الجزء وكافة أسئلته' : '🗑️ Part and questions deleted');
+        } catch (e) {
+            console.error(e);
+            toast.error(isAr ? 'فشل حذف الجزء' : 'Failed to delete part');
+        }
+    };
+
+    const openQuestionModal = (q = null) => {
+        if (q) {
+            setEditingQuestion(q);
+            setQuestionForm({
+                id: q.id || '',
+                type: q.type || 'mcq',
+                questionAr: q.questionAr || '',
+                questionEn: q.questionEn || '',
+                options: q.options ? q.options.map(o => ({ ...o })) : [],
+                correctAnswer: q.correctAnswer || '',
+                marks: q.marks || 1.0,
+                image: q.image || '',
+            });
+        } else {
+            setEditingQuestion(null);
+            setQuestionForm({
+                id: '',
+                type: 'mcq',
+                questionAr: '',
+                questionEn: '',
+                options: [
+                    { id: 'a', textAr: '', textEn: '' },
+                    { id: 'b', textAr: '', textEn: '' },
+                    { id: 'c', textAr: '', textEn: '' },
+                    { id: 'd', textAr: '', textEn: '' }
+                ],
+                correctAnswer: 'a',
+                marks: 1.0,
+                image: '',
+            });
+        }
+        setShowQuestionModal(true);
+    };
+
+    const updateQuestionOption = (idx, field, val) => {
+        setQuestionForm(prev => ({
+            ...prev,
+            options: prev.options.map((o, i) => i === idx ? { ...o, [field]: val } : o)
+        }));
+    };
+
+    const deleteQuestionOption = (idx) => {
+        setQuestionForm(prev => {
+            const options = prev.options.filter((_, i) => i !== idx);
+            const deletedOptId = prev.options[idx]?.id;
+            const correctAnswer = prev.correctAnswer === deletedOptId ? '' : prev.correctAnswer;
+            return { ...prev, options, correctAnswer };
+        });
+    };
+
+    const addQuestionOption = () => {
+        const nextLetter = String.fromCharCode(97 + questionForm.options.length);
+        const newId = questionForm.options.some(o => o.id === nextLetter) ? `opt_${Date.now()}` : nextLetter;
+        setQuestionForm(prev => ({
+            ...prev,
+            options: [...prev.options, { id: newId, textAr: '', textEn: '' }]
+        }));
+    };
+
+    const saveQuestion = async () => {
+        if (!selectedPartId) return;
+        if (!questionForm.questionAr && !questionForm.questionEn) {
+            toast.error(isAr ? 'يرجى إدخال نص السؤال (عربي أو إنجليزي)' : 'Please enter question text');
+            return;
+        }
+        if (questionForm.options.length < 2) {
+            toast.error(isAr ? 'يجب إدخال خيارين على الأقل' : 'Please add at least 2 options');
+            return;
+        }
+        if (!questionForm.correctAnswer) {
+            toast.error(isAr ? 'يرجى اختيار الإجابة الصحيحة' : 'Please select the correct answer');
+            return;
+        }
+
+        try {
+            const qId = questionForm.id || `q_${Date.now()}`;
+            const docRef = doc(db, 'quiz_questions', `${selectedPartId}_${qId}`);
+            await setDoc(docRef, {
+                id: qId,
+                partId: selectedPartId,
+                subjectId: selectedSubjectId,
+                type: questionForm.type,
+                questionAr: questionForm.questionAr.trim(),
+                questionEn: questionForm.questionEn.trim(),
+                options: questionForm.options,
+                correctAnswer: questionForm.correctAnswer,
+                marks: Number(questionForm.marks) || 1,
+                image: questionForm.image || null,
+                createdAt: serverTimestamp()
+            });
+            toast.success(isAr ? '✅ تم حفظ السؤال بنجاح' : '✅ Question saved successfully');
+            setShowQuestionModal(false);
+            setEditingQuestion(null);
+        } catch (e) {
+            console.error(e);
+            toast.error(isAr ? 'فشل حفظ السؤال' : 'Failed to save question');
+        }
+    };
+
+    const deleteQuestion = async (qId) => {
+        if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا السؤال؟' : 'Are you sure you want to delete this question?')) return;
+        try {
+            await deleteDoc(doc(db, 'quiz_questions', `${selectedPartId}_${qId}`));
+            toast.success(isAr ? '🗑️ تم حذف السؤال' : '🗑️ Question deleted');
+        } catch (e) {
+            console.error(e);
+            toast.error(isAr ? 'فشل حذف السؤال' : 'Failed to delete question');
+        }
+    };
+
     // ── Filtered suggestions ──
     const filteredSuggestions = suggestions.filter(s => {
         if (filterType !== 'all' && s.type !== filterType) return false;
@@ -512,6 +816,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const tabs = [
         { id: 'analytics', label: isAr ? '📊 إحصائيات الزيارات' : '📊 Analytics' },
         { id: 'general', label: isAr ? '🛠️ الإدارة العامة' : '🛠️ General Admin' },
+        { id: 'quizzes', label: isAr ? '🎯 إدارة الاختبارات' : '🎯 Quizzes' },
         { id: 'feedback', label: isAr ? '💬 الآراء والشكاوى' : '💬 Feedback' },
         { id: 'testimonials', label: isAr ? '⭐ التقييمات' : '⭐ Testimonials' },
         { id: 'reports', label: isAr ? '🚩 بلاغات الأسئلة' : '🚩 Reports' },
@@ -1024,6 +1329,160 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         </div>
                     )}
 
+                    {/* ══════════════════════════════════════════════════════ */}
+                    {/* TAB: Quizzes Management                                */}
+                    {/* ══════════════════════════════════════════════════════ */}
+                    {activeTab === 'quizzes' && (
+                        <div className="admin-panel-section quizzes-management-section">
+                            <div className="qmanage-layout">
+                                
+                                {/* Column 1: Subjects List */}
+                                <div className="qmanage-column subjects-col">
+                                    <div className="qmanage-col-header">
+                                        <h4>📚 {isAr ? 'المواد الدراسية' : 'Subjects'}</h4>
+                                        <button className="qmanage-add-btn" onClick={() => setShowAddSubjectModal(true)}>
+                                            ➕ {isAr ? 'مادة جديدة' : 'New Subject'}
+                                        </button>
+                                    </div>
+                                    <div className="qmanage-list">
+                                        {allSubjects.map(sub => (
+                                            <div 
+                                                key={sub.id} 
+                                                className={`qmanage-item-card ${selectedSubjectId === sub.id ? 'active' : ''}`}
+                                                onClick={() => {
+                                                    setSelectedSubjectId(sub.id);
+                                                    setSelectedPartId('');
+                                                }}
+                                            >
+                                                <span className="qmanage-item-icon">{sub.icon || '📚'}</span>
+                                                <div className="qmanage-item-info">
+                                                    <span className="qmanage-item-name">{isAr ? sub.nameAr : sub.name}</span>
+                                                    <span className="qmanage-item-id">ID: {sub.id}</span>
+                                                </div>
+                                                {sub.isDynamic && (
+                                                    <button 
+                                                        className="qmanage-item-delete-btn" 
+                                                        onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
+                                                        title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
+                                                    >
+                                                        🗑️
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Column 2: Quiz Parts */}
+                                <div className="qmanage-column parts-col">
+                                    <div className="qmanage-col-header">
+                                        <h4>🎯 {isAr ? 'الأجزاء / الاختبارات' : 'Quizzes / Parts'}</h4>
+                                        {selectedSubjectId ? (
+                                            <button className="qmanage-add-btn" onClick={() => setShowAddPartModal(true)}>
+                                                ➕ {isAr ? 'اختبار جديد' : 'New Quiz'}
+                                            </button>
+                                        ) : (
+                                            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                                                {isAr ? 'اختر مادة أولاً' : 'Select a subject first'}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="qmanage-list">
+                                        {selectedSubjectId ? (
+                                            allParts.length === 0 ? (
+                                                <div className="qmanage-empty">{isAr ? 'لا توجد اختبارات مضافة بعد' : 'No quiz parts yet'}</div>
+                                            ) : (
+                                                allParts.map(part => (
+                                                    <div 
+                                                        key={part.id} 
+                                                        className={`qmanage-item-card ${selectedPartId === part.id ? 'active' : ''}`}
+                                                        onClick={() => setSelectedPartId(part.id)}
+                                                    >
+                                                        <div className="qmanage-item-info">
+                                                            <span className="qmanage-item-name">{isAr ? part.titleAr : part.title}</span>
+                                                            <span className="qmanage-item-id">ID: {part.id}</span>
+                                                        </div>
+                                                        {part.isDynamic && (
+                                                            <button 
+                                                                className="qmanage-item-delete-btn" 
+                                                                onClick={(e) => { e.stopPropagation(); deletePart(part.id); }}
+                                                                title={isAr ? 'حذف الجزء بالكامل' : 'Delete entire part'}
+                                                            >
+                                                                🗑️
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                ))
+                                            )
+                                        ) : (
+                                            <div className="qmanage-empty">{isAr ? 'يرجى اختيار مادة من اليمين' : 'Please select a subject from left'}</div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Column 3: Questions List */}
+                                <div className="qmanage-column questions-col">
+                                    <div className="qmanage-col-header">
+                                        <h4>📋 {isAr ? 'أسئلة الاختبار' : 'Questions List'}</h4>
+                                        {selectedPartId ? (
+                                            <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
+                                                ➕ {isAr ? 'إضافة سؤال' : 'New Question'}
+                                            </button>
+                                        ) : (
+                                            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                                                {isAr ? 'اختر اختباراً أولاً' : 'Select a quiz first'}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="qmanage-list">
+                                        {selectedPartId ? (
+                                            allQuestions.length === 0 ? (
+                                                <div className="qmanage-empty">{isAr ? 'لا توجد أسئلة في هذا الجزء بعد' : 'No questions in this part yet'}</div>
+                                            ) : (
+                                                allQuestions.map((q, idx) => (
+                                                    <div key={q.id || idx} className="qmanage-question-card">
+                                                        <div className="qmanage-question-card-header">
+                                                            <span className="qmanage-q-badge">Q{idx + 1}</span>
+                                                            <span className="qmanage-q-badge badge-points">{q.marks || 1} pt</span>
+                                                            {q.isDynamic && <span className="qmanage-q-badge badge-db">Db</span>}
+                                                            
+                                                            <div style={{ marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto', display: 'flex', gap: '0.4rem' }}>
+                                                                <button className="qmanage-q-action-btn" onClick={() => openQuestionModal(q)}>✏️</button>
+                                                                {q.isDynamic && (
+                                                                    <button className="qmanage-q-action-btn delete" onClick={() => deleteQuestion(q.id)}>🗑️</button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="qmanage-question-card-body">
+                                                            <p className="qmanage-q-text text-ar">{q.questionAr || '—'}</p>
+                                                            <p className="qmanage-q-text text-en">{q.questionEn || '—'}</p>
+                                                            {q.image && (
+                                                                <div className="qmanage-q-img-preview">
+                                                                    <img src={q.image} alt="Question visual" />
+                                                                </div>
+                                                            )}
+                                                            <div className="qmanage-q-options">
+                                                                {q.options?.map(opt => (
+                                                                    <div key={opt.id} className={`qmanage-q-option ${q.correctAnswer === opt.id ? 'correct' : ''}`}>
+                                                                        <span className="opt-marker">{opt.id.toUpperCase()}</span>
+                                                                        <span className="opt-text">{isAr ? (opt.textAr || opt.textEn) : opt.textEn}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )
+                                        ) : (
+                                            <div className="qmanage-empty">{isAr ? 'يرجى اختيار جزء/اختبار لعرض أسئلته' : 'Please select a quiz to see questions'}</div>
+                                        )}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    )}
+
                 </div>
             </div>
 
@@ -1251,6 +1710,302 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 {editSaving ? <span className="qedit-spinner" /> : '💾'}
                                 {isAr ? 'حفظ التعديل' : 'Save Changes'}
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ══ Add Subject Modal ══ */}
+            {showAddSubjectModal && (
+                <div className="qedit-overlay" onClick={() => setShowAddSubjectModal(false)}>
+                    <div className="qedit-modal" onClick={e => e.stopPropagation()}>
+                        <div className="qedit-header">
+                            <span className="qedit-badge-quiz">{isAr ? 'إضافة مادة جديدة' : 'Add New Subject'}</span>
+                            <button className="qedit-close" onClick={() => setShowAddSubjectModal(false)}>✕</button>
+                        </div>
+                        <div className="qedit-body">
+                            <div className="qedit-field">
+                                <label className="qedit-label">{isAr ? 'رمز المادة (ID فريد بالإنجليزية)' : 'Subject ID (unique, e.g. networks_2)'}</label>
+                                <input
+                                    className="qedit-opt-input"
+                                    value={subjectForm.id}
+                                    onChange={e => setSubjectForm(prev => ({ ...prev, id: e.target.value }))}
+                                    placeholder="e.g. data_science"
+                                />
+                            </div>
+                            <div className="qedit-field">
+                                <label className="qedit-label">{isAr ? 'اسم المادة باللغة العربية' : 'Subject Name (Arabic)'}</label>
+                                <input
+                                    className="qedit-opt-input"
+                                    value={subjectForm.nameAr}
+                                    onChange={e => setSubjectForm(prev => ({ ...prev, nameAr: e.target.value }))}
+                                    placeholder="مثال: علم البيانات"
+                                    dir="rtl"
+                                />
+                            </div>
+                            <div className="qedit-field">
+                                <label className="qedit-label">{isAr ? 'اسم المادة باللغة الإنجليزية' : 'Subject Name (English)'}</label>
+                                <input
+                                    className="qedit-opt-input"
+                                    value={subjectForm.name}
+                                    onChange={e => setSubjectForm(prev => ({ ...prev, name: e.target.value }))}
+                                    placeholder="e.g. Data Science"
+                                />
+                            </div>
+                            <div className="qedit-field" style={{ display: 'flex', gap: '1rem' }}>
+                                <div style={{ flex: 1 }}>
+                                    <label className="qedit-label">{isAr ? 'أيقونة (Emoji)' : 'Icon (Emoji)'}</label>
+                                    <input
+                                        className="qedit-opt-input"
+                                        value={subjectForm.icon}
+                                        onChange={e => setSubjectForm(prev => ({ ...prev, icon: e.target.value }))}
+                                        placeholder="e.g. 📊"
+                                    />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <label className="qedit-label">{isAr ? 'اللون (Hex)' : 'Color (Hex)'}</label>
+                                    <input
+                                        className="qedit-opt-input"
+                                        type="color"
+                                        value={subjectForm.color}
+                                        onChange={e => setSubjectForm(prev => ({ ...prev, color: e.target.value }))}
+                                        style={{ height: '42px', padding: '2px' }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="qedit-field">
+                                <label className="qedit-correct-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={subjectForm.forceEnglish}
+                                        onChange={e => setSubjectForm(prev => ({ ...prev, forceEnglish: e.target.checked }))}
+                                    />
+                                    {isAr ? 'إجبار استخدام الإنجليزية فقط في هذا المساق' : 'Force English language only for this subject'}
+                                </label>
+                            </div>
+                        </div>
+                        <div className="qedit-footer">
+                            <button className="qedit-btn-cancel" onClick={() => setShowAddSubjectModal(false)}>{isAr ? 'إلغاء' : 'Cancel'}</button>
+                            <button className="qedit-btn-save" onClick={saveSubject}>💾 {isAr ? 'حفظ المادة' : 'Save Subject'}</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ══ Add Quiz/Part Modal ══ */}
+            {showAddPartModal && (
+                <div className="qedit-overlay" onClick={() => setShowAddPartModal(false)}>
+                    <div className="qedit-modal" onClick={e => e.stopPropagation()}>
+                        <div className="qedit-header">
+                            <span className="qedit-badge-quiz">{isAr ? 'إضافة اختبار/جزء جديد' : 'Add New Quiz / Part'}</span>
+                            <button className="qedit-close" onClick={() => setShowAddPartModal(false)}>✕</button>
+                        </div>
+                        <div className="qedit-body">
+                            <div className="qedit-field">
+                                <label className="qedit-label">{isAr ? 'رمز الجزء (ID فريد بالإنجليزية)' : 'Quiz ID (unique, e.g. networks_2_quiz1)'}</label>
+                                <input
+                                    className="qedit-opt-input"
+                                    value={partForm.id}
+                                    onChange={e => setPartForm(prev => ({ ...prev, id: e.target.value }))}
+                                    placeholder="e.g. data_science_mid"
+                                />
+                            </div>
+                            <div className="qedit-field">
+                                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغة العربية' : 'Quiz Title (Arabic)'}</label>
+                                <input
+                                    className="qedit-opt-input"
+                                    value={partForm.titleAr}
+                                    onChange={e => setPartForm(prev => ({ ...prev, titleAr: e.target.value }))}
+                                    placeholder="مثال: أسئلة سنوات ميد"
+                                    dir="rtl"
+                                />
+                            </div>
+                            <div className="qedit-field">
+                                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغة الإنجليزية' : 'Quiz Title (English)'}</label>
+                                <input
+                                    className="qedit-opt-input"
+                                    value={partForm.title}
+                                    onChange={e => setPartForm(prev => ({ ...prev, title: e.target.value }))}
+                                    placeholder="e.g. Midterm Exams"
+                                />
+                            </div>
+                        </div>
+                        <div className="qedit-footer">
+                            <button className="qedit-btn-cancel" onClick={() => setShowAddPartModal(false)}>{isAr ? 'إلغاء' : 'Cancel'}</button>
+                            <button className="qedit-btn-save" onClick={savePart}>💾 {isAr ? 'حفظ الاختبار' : 'Save Quiz'}</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ══ Add/Edit Question Modal ══ */}
+            {showQuestionModal && (
+                <div className="qedit-overlay" onClick={() => setShowQuestionModal(false)}>
+                    <div className="qedit-modal" onClick={e => e.stopPropagation()}>
+                        <div className="qedit-header">
+                            <span className="qedit-badge-quiz">{editingQuestion ? (isAr ? 'تعديل سؤال' : 'Edit Question') : (isAr ? 'إضافة سؤال جديد' : 'Add New Question')}</span>
+                            <button className="qedit-close" onClick={() => setShowQuestionModal(false)}>✕</button>
+                        </div>
+                        <div className="qedit-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                            <div className="qedit-field" style={{ display: 'flex', gap: '1rem' }}>
+                                <div style={{ flex: 1 }}>
+                                    <label className="qedit-label">{isAr ? 'الدرجات/العلامات' : 'Marks/Points'}</label>
+                                    <input
+                                        className="qedit-opt-input"
+                                        type="number"
+                                        step="0.5"
+                                        value={questionForm.marks}
+                                        onChange={e => setQuestionForm(prev => ({ ...prev, marks: e.target.value }))}
+                                    />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <label className="qedit-label">{isAr ? 'نوع السؤال' : 'Question Type'}</label>
+                                    <select
+                                        className="qedit-opt-input"
+                                        value={questionForm.type}
+                                        onChange={e => setQuestionForm(prev => ({ ...prev, type: e.target.value }))}
+                                    >
+                                        <option value="mcq">MCQ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="qedit-field">
+                                <label className="qedit-label">🇸🇦 {isAr ? 'نص السؤال — عربي' : 'Question Text — Arabic'}</label>
+                                <textarea
+                                    className="qedit-textarea"
+                                    value={questionForm.questionAr}
+                                    onChange={e => setQuestionForm(prev => ({ ...prev, questionAr: e.target.value }))}
+                                    dir="rtl"
+                                    rows={3}
+                                    placeholder="اكتب السؤال هنا..."
+                                />
+                            </div>
+                            <div className="qedit-field">
+                                <label className="qedit-label">🇬🇧 {isAr ? 'نص السؤال — إنجليزي' : 'Question Text — English'}</label>
+                                <textarea
+                                    className="qedit-textarea"
+                                    value={questionForm.questionEn}
+                                    onChange={e => setQuestionForm(prev => ({ ...prev, questionEn: e.target.value }))}
+                                    dir="ltr"
+                                    rows={3}
+                                    placeholder="Type question here..."
+                                />
+                            </div>
+
+                            {/* Options list */}
+                            <div className="qedit-field">
+                                <label className="qedit-label">📋 {isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}</label>
+                                <div className="qedit-options-list">
+                                    {questionForm.options.map((opt, idx) => (
+                                        <div key={opt.id || idx} className={`qedit-option ${questionForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}>
+                                            <div className="qedit-option-top">
+                                                <span className="qedit-opt-id">{(opt.id || String.fromCharCode(65 + idx)).toUpperCase()}</span>
+                                                <label className="qedit-correct-label">
+                                                    <input
+                                                        type="radio"
+                                                        name="quizCorrectAnswer"
+                                                        checked={questionForm.correctAnswer === opt.id}
+                                                        onChange={() => setQuestionForm(prev => ({ ...prev, correctAnswer: opt.id }))}
+                                                    />
+                                                    {isAr ? 'صحيحة ✅' : 'Correct ✅'}
+                                                </label>
+                                                <button className="qedit-opt-delete" onClick={() => deleteQuestionOption(idx)}>🗑️</button>
+                                            </div>
+                                            <input
+                                                className="qedit-opt-input"
+                                                value={opt.textAr || ''}
+                                                onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
+                                                placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
+                                                dir="rtl"
+                                            />
+                                            <input
+                                                className="qedit-opt-input"
+                                                value={opt.textEn || ''}
+                                                onChange={e => updateQuestionOption(idx, 'textEn', e.target.value)}
+                                                placeholder="English option text"
+                                                dir="ltr"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                <button className="qedit-add-option" onClick={addQuestionOption}>+ {isAr ? 'إضافة خيار' : 'Add Option'}</button>
+                            </div>
+
+                            {/* Image device upload zone */}
+                            <div className="qedit-field">
+                                <label className="qedit-label">🖼️ {isAr ? 'صورة السؤال (اختياري)' : 'Question Image (optional)'}</label>
+                                <input
+                                    ref={quizImageInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        if (file.size > 10 * 1024 * 1024) {
+                                            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                                            return;
+                                        }
+                                        setQuizImageUploading(true);
+                                        setQuizImageProgress(20);
+                                        try {
+                                            const compressed = await new Promise((resolve, reject) => {
+                                                const img = new Image();
+                                                const url = URL.createObjectURL(file);
+                                                img.onload = () => {
+                                                    URL.revokeObjectURL(url);
+                                                    const MAX = 800;
+                                                    let w = img.width, h = img.height;
+                                                    if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+                                                    const canvas = document.createElement('canvas');
+                                                    canvas.width = w; canvas.height = h;
+                                                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                                                    resolve(canvas.toDataURL('image/jpeg', 0.78));
+                                                };
+                                                img.onerror = reject;
+                                                img.src = url;
+                                            });
+                                            setQuizImageProgress(100);
+                                            setQuestionForm(prev => ({ ...prev, image: compressed }));
+                                            toast.success(isAr ? '✅ تم تحميل الصورة بنجاح' : '✅ Image loaded successfully');
+                                        } catch (err) {
+                                            console.error(err);
+                                            toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                                        } finally {
+                                            setQuizImageUploading(false);
+                                            setQuizImageProgress(0);
+                                        }
+                                        e.target.value = '';
+                                    }}
+                                />
+                                {!questionForm.image && !quizImageUploading && (
+                                    <div className="qedit-image-dropzone" onClick={() => quizImageInputRef.current?.click()}>
+                                        <span style={{ fontSize: '2rem' }}>🖼️</span>
+                                        <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>{isAr ? 'اضغط لاختيار صورة من جهازك' : 'Click to choose an image from your device'}</p>
+                                    </div>
+                                )}
+                                {quizImageUploading && (
+                                    <div className="qedit-image-uploading">
+                                        <div className="qedit-upload-bar">
+                                            <div className="qedit-upload-bar-fill" style={{ width: `${quizImageProgress}%` }} />
+                                        </div>
+                                        <span>{isAr ? `جاري الرفع... ${quizImageProgress}%` : `Uploading... ${quizImageProgress}%`}</span>
+                                    </div>
+                                )}
+                                {questionForm.image && !quizImageUploading && (
+                                    <div style={{ marginTop: '0.6rem', textAlign: 'center' }}>
+                                        <img src={questionForm.image} alt="preview" style={{ maxHeight: '180px', maxWidth: '100%', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)' }} />
+                                        <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                            <button className="qedit-add-option" style={{ width: 'auto', padding: '0.3rem 0.8rem' }} onClick={() => quizImageInputRef.current?.click()}>🔄 {isAr ? 'تغيير الصورة' : 'Change Image'}</button>
+                                            <button className="qedit-opt-delete" onClick={() => setQuestionForm(prev => ({ ...prev, image: '' }))}>{isAr ? 'حذف 🗑' : 'Remove 🗑'}</button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="qedit-footer">
+                            <button className="qedit-btn-cancel" onClick={() => setShowQuestionModal(false)}>{isAr ? 'إلغاء' : 'Cancel'}</button>
+                            <button className="qedit-btn-save" onClick={saveQuestion}>💾 {isAr ? 'حفظ السؤال' : 'Save Question'}</button>
                         </div>
                     </div>
                 </div>

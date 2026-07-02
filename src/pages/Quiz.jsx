@@ -242,7 +242,30 @@ const Quiz = () => {
 
     // ── Admin-edits from Firestore (question_edits collection) ──
     const [questionEdits, setQuestionEdits] = useState({});
+    const [dbSubjects, setDbSubjects] = useState([]);
+    const [dbParts, setDbParts] = useState([]);
+    const [dbCurrentQuestions, setDbCurrentQuestions] = useState([]);
 
+    // Load custom subjects and parts from Firestore
+    useEffect(() => {
+        getDocs(collection(db, 'quiz_subjects'))
+            .then(snap => {
+                const list = [];
+                snap.forEach(d => list.push({ ...d.data(), fromDb: true }));
+                setDbSubjects(list);
+            })
+            .catch(console.error);
+
+        getDocs(collection(db, 'quiz_parts'))
+            .then(snap => {
+                const list = [];
+                snap.forEach(d => list.push({ ...d.data(), fromDb: true }));
+                setDbParts(list);
+            })
+            .catch(console.error);
+    }, []);
+
+    // Load edits for the current quizId
     useEffect(() => {
         if (!quizId) { setQuestionEdits({}); return; }
         getDocs(query(collection(db, 'question_edits'), where('quizId', '==', quizId)))
@@ -254,17 +277,105 @@ const Quiz = () => {
             .catch(() => { }); // silently fail — local data is fallback
     }, [quizId]);
 
-    // Merge base quiz data with any extra quizzes (e.g., past-year DB questions)
+    // Load dynamic questions for the current quizId
+    useEffect(() => {
+        if (!quizId) {
+            setDbCurrentQuestions([]);
+            return;
+        }
+        getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', quizId)))
+            .then(snap => {
+                const list = [];
+                snap.forEach(d => list.push(d.data()));
+                setDbCurrentQuestions(list);
+            })
+            .catch(console.error);
+    }, [quizId]);
+
+    // Merge base quiz categories (static) with custom subjects & parts from DB
+    const mergedCategories = useMemo(() => {
+        let cats = quizCategories.map(cat => {
+            const matchingDbParts = dbParts.filter(p => p.subjectId === cat.id);
+            if (matchingDbParts.length > 0) {
+                const existingParts = cat.parts || [];
+                const filteredDbParts = matchingDbParts.filter(dp => !existingParts.some(ep => ep.id === dp.id));
+                return {
+                    ...cat,
+                    parts: [...existingParts, ...filteredDbParts]
+                };
+            }
+            return cat;
+        });
+
+        // Add completely new subjects
+        dbSubjects.forEach(sub => {
+            const exists = cats.some(c => c.id === sub.id);
+            if (!exists) {
+                const subParts = dbParts.filter(p => p.subjectId === sub.id);
+                cats.push({
+                    ...sub,
+                    parts: subParts
+                });
+            }
+        });
+
+        return cats;
+    }, [dbSubjects, dbParts]);
+
+    // Merge base quiz data with extra quizzes
     const quizData = useMemo(() => ({ ...baseQuizData, ...extraQuizData }), [baseQuizData]);
 
-    // Get current quiz data (merged with admin edits)
-    const rawQuiz = quizId ? quizData[quizId] : null;
+    // Get current quiz data (merged with dynamic questions & edits)
     const currentQuiz = useMemo(() => {
-        if (!rawQuiz) return null;
-        if (Object.keys(questionEdits).length === 0) return rawQuiz;
-        return {
-            ...rawQuiz,
-            questions: rawQuiz.questions.map(q => {
+        let baseQuiz = quizId ? quizData[quizId] : null;
+
+        // If it's a completely dynamic/new quiz, construct its base metadata
+        if (!baseQuiz && quizId) {
+            const partInfo = dbParts.find(p => p.id === quizId);
+            if (partInfo) {
+                baseQuiz = {
+                    id: quizId,
+                    title: partInfo.title,
+                    titleAr: partInfo.titleAr,
+                    questions: []
+                };
+            } else {
+                // Check in subParts of grouped parts
+                for (const p of dbParts) {
+                    if (p.isGroup && p.subParts) {
+                        const subPart = p.subParts.find(sp => sp.id === quizId);
+                        if (subPart) {
+                            baseQuiz = {
+                                id: quizId,
+                                title: subPart.title,
+                                titleAr: subPart.titleAr,
+                                questions: []
+                            };
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!baseQuiz) return null;
+
+        // Start with base questions (if any)
+        let mergedQuestions = [...(baseQuiz.questions || [])];
+
+        // Append custom dynamic questions from DB
+        dbCurrentQuestions.forEach(dbQ => {
+            const idx = mergedQuestions.findIndex(q => q.id === dbQ.id);
+            if (idx >= 0) {
+                mergedQuestions[idx] = { ...mergedQuestions[idx], ...dbQ };
+            } else {
+                mergedQuestions.push(dbQ);
+            }
+        });
+
+        // Apply admin edits / corrections
+        if (Object.keys(questionEdits).length > 0) {
+            mergedQuestions = mergedQuestions.map(q => {
                 const edit = questionEdits[q.id];
                 if (!edit) return q;
                 return {
@@ -273,15 +384,19 @@ const Quiz = () => {
                     questionEn: edit.questionEn || q.questionEn,
                     options: edit.options?.length > 0 ? edit.options : q.options,
                     correctAnswer: edit.correctAnswer || q.correctAnswer,
-                    // Apply admin-added/updated image (null means explicitly removed)
                     image: edit.hasOwnProperty('image') ? edit.image : q.image,
                 };
-            }),
+            });
+        }
+
+        return {
+            ...baseQuiz,
+            questions: mergedQuestions
         };
-    }, [rawQuiz, questionEdits]);
+    }, [quizId, quizData, dbParts, dbCurrentQuestions, questionEdits]);
 
     // Find the parent subject/category for the current quiz (used in breadcrumbs)
-    const currentSubject = quizId ? quizCategories.find(cat => {
+    const currentSubject = quizId ? mergedCategories.find(cat => {
         // Level 1: Direct match
         if (cat.id === quizId) return true;
 
@@ -291,6 +406,10 @@ const Quiz = () => {
         // Level 3: Match in sub-parts of parts
         if (cat.parts) {
             return cat.parts.some(p => {
+                // Static subParts or DB subParts
+                if (p.isGroup && p.subParts) {
+                    return p.subParts.some(subPart => subPart.id === quizId);
+                }
                 const partObj = quizData[p.id];
                 return partObj && partObj.parts && partObj.parts.some(subPart => subPart.id === quizId);
             });
@@ -298,12 +417,13 @@ const Quiz = () => {
 
         return false;
     }) : null;
+
     const currentSubjectName = currentSubject
         ? (language === 'ar' ? (currentSubject.nameAr || currentSubject.name) : currentSubject.name)
         : '';
 
     // Filter categories based on search
-    const filteredCategories = quizCategories.filter(category => {
+    const filteredCategories = mergedCategories.filter(category => {
         if (!searchTerm) return true;
         const search = searchTerm.toLowerCase();
         return (
@@ -337,7 +457,7 @@ const Quiz = () => {
     useEffect(() => {
         if (!quizId) {
             if (location.state?.selectedCategoryId) {
-                const cat = quizCategories.find(c => c.id === location.state.selectedCategoryId);
+                const cat = mergedCategories.find(c => c.id === location.state.selectedCategoryId);
                 if (cat) {
                     setSelectedCategory(cat);
                 }
@@ -501,7 +621,7 @@ const Quiz = () => {
         // If newly flagged, send report to admin
         if (willBeFlagged) {
             // Find subject name for context
-            const subject = quizCategories.find(cat =>
+            const subject = mergedCategories.find(cat =>
                 cat.id === quizId || (cat.parts && cat.parts.some(p => p.id === quizId))
             );
             const subName = subject ? (language === 'ar' ? (subject.nameAr || subject.name) : subject.name) : '';
@@ -1674,7 +1794,7 @@ const Quiz = () => {
                                     <h3 className="index-title">{language === 'ar' ? 'فهرس المواد المتاحة' : 'Available Subjects Index'}</h3>
                                 </div>
                                 <div className="subjects-chips-grid">
-                                    {[...quizCategories].reverse().map((category, index) => (
+                                    {[...mergedCategories].reverse().map((category, index) => (
                                         <button
                                             key={category.id}
                                             className="subject-chip-premium"

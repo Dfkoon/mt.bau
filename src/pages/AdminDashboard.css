@@ -1139,6 +1139,371 @@
 }
 @keyframes qedit-spin { to { transform: rotate(360deg); } }
 
+/* ── Quizzes Management Section ── */
+.quizzes-management-section {
+    padding: 0;
+    background: transparent;
+    border: none;
+}
+.qmanage-layout {
+    display: grid;
+    grid-template-columns: 290px 290px 1fr;
+    gap: 1.25rem;
+    align-items: stretch;
+    width: 100%;
+}
+.qmanage-column {
+    display: flex;
+    flex-direction: column;
+    background: rgba(30, 41, 59, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    height: 720px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+.qmanage-col-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(30, 41, 59, 0.25);
+    flex-shrink: 0;
+}
+.qmanage-col-header h4 {
+    margin: 0;
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+.qmanage-add-btn {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.78rem;
+    border-radius: 7px;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    background: rgba(99, 102, 241, 0.08);
+    color: #818cf8;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 600;
+}
+.qmanage-add-btn:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.6);
+    color: #a5b4fc;
+}
+.qmanage-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* Scrollbar styling for qmanage lists */
+.qmanage-list::-webkit-scrollbar {
+    width: 6px;
+}
+.qmanage-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.qmanage-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+}
+.qmanage-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.qmanage-item-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    position: relative;
+    user-select: none;
+}
+.qmanage-item-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+.qmanage-item-card.active {
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.qmanage-item-icon {
+    font-size: 1.25rem;
+}
+.qmanage-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+    overflow: hidden;
+}
+.qmanage-item-name {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.qmanage-item-card.active .qmanage-item-name {
+    color: #fff;
+}
+.qmanage-item-id {
+    font-size: 0.74rem;
+    color: #64748b;
+    font-family: monospace;
+}
+.qmanage-item-delete-btn {
+    opacity: 0;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    border-radius: 6px;
+    padding: 0.2rem 0.4rem;
+    cursor: pointer;
+    font-size: 0.74rem;
+    transition: all 0.15s;
+}
+.qmanage-item-card:hover .qmanage-item-delete-btn {
+    opacity: 1;
+}
+.qmanage-item-delete-btn:hover {
+    background: rgba(239, 68, 68, 0.3);
+    color: #ff8787;
+}
+
+.qmanage-empty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #64748b;
+    font-size: 0.86rem;
+}
+
+/* Question card in column 3 */
+.qmanage-question-card {
+    background: rgba(30, 41, 59, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.15s;
+}
+.qmanage-question-card:hover {
+    border-color: rgba(255, 255, 255, 0.09);
+}
+.qmanage-question-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding-bottom: 0.6rem;
+}
+.qmanage-q-badge {
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.18rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+}
+.qmanage-q-badge.badge-points {
+    background: rgba(16, 185, 129, 0.08);
+    color: #34d399;
+}
+.qmanage-q-badge.badge-db {
+    background: rgba(245, 158, 11, 0.08);
+    color: #fbbf24;
+}
+.qmanage-q-action-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.82rem;
+}
+.qmanage-q-action-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+.qmanage-q-action-btn.delete {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+}
+.qmanage-q-action-btn.delete:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ff8787;
+}
+.qmanage-question-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.qmanage-q-text {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+.qmanage-q-text.text-ar {
+    color: #e2e8f0;
+    direction: rtl;
+    text-align: right;
+}
+.qmanage-q-text.text-en {
+    color: #cbd5e1;
+    direction: ltr;
+    text-align: left;
+}
+.qmanage-q-img-preview {
+    margin: 0.4rem 0;
+    text-align: center;
+}
+.qmanage-q-img-preview img {
+    max-height: 120px;
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.qmanage-q-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+}
+@media (max-width: 1200px) {
+    .qmanage-q-options {
+        grid-template-columns: 1fr;
+    }
+}
+.qmanage-q-option {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    font-size: 0.8rem;
+}
+.qmanage-q-option.correct {
+    background: rgba(16, 185, 129, 0.06);
+    border-color: rgba(16, 185, 129, 0.35);
+    color: #34d399;
+}
+.qmanage-q-option .opt-marker {
+    font-weight: 700;
+    opacity: 0.6;
+}
+
+/* Light Theme Overrides */
+[data-theme='light'] .qmanage-column {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+[data-theme='light'] .qmanage-col-header {
+    border-bottom-color: #f1f5f9;
+    background: #f8fafc;
+}
+[data-theme='light'] .qmanage-col-header h4 {
+    color: #1e293b;
+}
+[data-theme='light'] .qmanage-item-card {
+    background: #f8fafc;
+    border-color: #f1f5f9;
+}
+[data-theme='light'] .qmanage-item-card:hover {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+[data-theme='light'] .qmanage-item-card.active {
+    background: rgba(99, 102, 241, 0.08);
+    border-color: #6366f1;
+}
+[data-theme='light'] .qmanage-item-name {
+    color: #334155;
+}
+[data-theme='light'] .qmanage-item-card.active .qmanage-item-name {
+    color: #6366f1;
+}
+[data-theme='light'] .qmanage-item-id {
+    color: #94a3b8;
+}
+[data-theme='light'] .qmanage-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.08);
+}
+[data-theme='light'] .qmanage-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.16);
+}
+[data-theme='light'] .qmanage-question-card {
+    background: #f8fafc;
+    border-color: #f1f5f9;
+}
+[data-theme='light'] .qmanage-question-card:hover {
+    border-color: #e2e8f0;
+}
+[data-theme='light'] .qmanage-question-card-header {
+    border-bottom-color: #f1f5f9;
+}
+[data-theme='light'] .qmanage-q-badge {
+    background: rgba(0, 0, 0, 0.04);
+    color: #64748b;
+}
+[data-theme='light'] .qmanage-q-text.text-ar {
+    color: #1e293b;
+}
+[data-theme='light'] .qmanage-q-text.text-en {
+    color: #334155;
+}
+[data-theme='light'] .qmanage-q-option {
+    background: #ffffff;
+    border-color: #f1f5f9;
+}
+[data-theme='light'] .qmanage-q-option.correct {
+    background: rgba(16, 185, 129, 0.06);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #059669;
+}
+[data-theme='light'] .qmanage-q-img-preview img {
+    border-color: #e2e8f0;
+}
+[data-theme='light'] .qmanage-q-action-btn {
+    background: #ffffff;
+    border-color: #e2e8f0;
+}
+[data-theme='light'] .qmanage-q-action-btn:hover {
+    background: #f1f5f9;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+    .qmanage-layout {
+        grid-template-columns: 1fr;
+    }
+    .qmanage-column {
+        height: 480px;
+    }
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
     .admin-kpi-row { grid-template-columns: repeat(2, 1fr); }

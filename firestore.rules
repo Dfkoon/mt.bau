@@ -105,6 +105,17 @@ service cloud.firestore {
     match /staff_status/{doc} {
       allow read, write: if true;
     }
+
+    // Dynamic Quiz Management
+    match /quiz_subjects/{doc} {
+      allow read, write: if true;
+    }
+    match /quiz_parts/{doc} {
+      allow read, write: if true;
+    }
+    match /quiz_questions/{doc} {
+      allow read, write: if true;
+    }
     
     // Default Deny
     match /{document=**} {
