@@ -994,6 +994,39 @@
 .qedit-opt-input:focus { outline: none; border-color: #6366f1; }
 [data-theme='light'] .qedit-opt-input { background: #fff; border-color: #e2e8f0; color: #1e293b; }
 
+/* Delete option button */
+.qedit-opt-delete {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #f87171;
+    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-right: auto;
+    transition: background 0.15s;
+}
+.qedit-opt-delete:hover { background: rgba(239, 68, 68, 0.25); }
+
+/* Add option button */
+.qedit-add-option {
+    margin-top: 0.6rem;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px dashed rgba(99, 102, 241, 0.4);
+    border-radius: 8px;
+    background: rgba(99, 102, 241, 0.06);
+    color: #818cf8;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+.qedit-add-option:hover {
+    background: rgba(99, 102, 241, 0.14);
+    border-color: rgba(99, 102, 241, 0.6);
+    color: #a5b4fc;
+}
+
 .qedit-no-options {
     text-align: center;
     padding: 1.2rem;

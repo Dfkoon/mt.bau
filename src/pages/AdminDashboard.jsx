@@ -334,6 +334,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             questionEn: r.questionEn || '',
             options: r.options ? r.options.map(o => ({ ...o })) : [],
             correctAnswer: r.correctAnswer || '',
+            image: r.image || '',
         });
     };
     const closeEditModal = () => setEditingReport(null);
@@ -344,12 +345,31 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             options: prev.options.map((o, i) => i === idx ? { ...o, [field]: val } : o),
         }));
 
+    const deleteOption = (idx) =>
+        setEditForm(prev => ({
+            ...prev,
+            options: prev.options.filter((_, i) => i !== idx),
+            // If deleted option was correct answer, clear correctAnswer
+            correctAnswer: prev.correctAnswer === (prev.options[idx]?.id) ? '' : prev.correctAnswer,
+        }));
+
+    const addOption = () => {
+        const newId = `opt_${Date.now()}`;
+        setEditForm(prev => ({
+            ...prev,
+            options: [
+                ...prev.options,
+                { id: newId, textAr: '', textEn: '' }
+            ],
+        }));
+    };
+
     const saveQuestionEdit = async () => {
         if (!editingReport) return;
         setEditSaving(true);
         try {
             const editKey = `${editingReport.quizId}_${editingReport.questionId}`;
-            await setDoc(doc(db, 'question_edits', editKey), {
+            const payload = {
                 quizId: editingReport.quizId,
                 questionId: editingReport.questionId,
                 questionAr: editForm.questionAr,
@@ -357,13 +377,18 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 options: editForm.options,
                 correctAnswer: editForm.correctAnswer,
                 updatedAt: serverTimestamp(),
-            });
+            };
+            if (editForm.image) payload.image = editForm.image;
+            else payload.image = null;
+
+            await setDoc(doc(db, 'question_edits', editKey), payload);
             await updateDoc(doc(db, 'question_reports', editingReport.id), {
                 status: 'resolved',
                 questionAr: editForm.questionAr,
                 questionEn: editForm.questionEn,
                 options: editForm.options,
                 correctAnswer: editForm.correctAnswer,
+                ...(editForm.image ? { image: editForm.image } : { image: null }),
             });
             toast.success(isAr ? '✅ تم حفظ تعديل السؤال' : '✅ Question edit saved');
             closeEditModal();
@@ -1050,61 +1075,92 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 />
                             </div>
 
-                            {/* Options */}
-                            {editForm.options.length > 0 ? (
-                                <div className="qedit-field">
-                                    <label className="qedit-label">
-                                        📋 {isAr ? 'الخيارات — اختر الإجابة الصحيحة' : 'Options — select the correct answer'}
-                                    </label>
-                                    <div className="qedit-options-list">
-                                        {editForm.options.map((opt, idx) => (
-                                            <div
-                                                key={opt.id || idx}
-                                                className={`qedit-option ${editForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}
-                                            >
-                                                {/* Option label + correct radio */}
-                                                <div className="qedit-option-top">
-                                                    <span className="qedit-opt-id">{(opt.id || String.fromCharCode(65 + idx)).toUpperCase()}</span>
-                                                    <label className="qedit-correct-label">
-                                                        <input
-                                                            type="radio"
-                                                            name="correctAnswer"
-                                                            checked={editForm.correctAnswer === opt.id}
-                                                            onChange={() => setEditForm(prev => ({ ...prev, correctAnswer: opt.id }))}
-                                                        />
-                                                        {isAr ? 'الإجابة الصحيحة ✅' : 'Correct Answer ✅'}
-                                                    </label>
-                                                </div>
-                                                {/* Arabic option text */}
-                                                {(opt.textAr !== undefined || editForm.questionAr) && (
+                            {/* Options — with add/delete */}
+                            <div className="qedit-field">
+                                <label className="qedit-label">
+                                    📋 {isAr ? 'الخيارات — اختر الإجابة الصحيحة' : 'Options — select the correct answer'}
+                                </label>
+                                <div className="qedit-options-list">
+                                    {editForm.options.map((opt, idx) => (
+                                        <div
+                                            key={opt.id || idx}
+                                            className={`qedit-option ${editForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}
+                                        >
+                                            {/* Option label + correct radio + delete */}
+                                            <div className="qedit-option-top">
+                                                <span className="qedit-opt-id">{(opt.id || String.fromCharCode(65 + idx)).toUpperCase()}</span>
+                                                <label className="qedit-correct-label">
                                                     <input
-                                                        className="qedit-opt-input"
-                                                        value={opt.textAr || ''}
-                                                        onChange={e => updateOption(idx, 'textAr', e.target.value)}
-                                                        placeholder={isAr ? 'نص الخيار (عربي)' : 'Option text (AR)'}
-                                                        dir="rtl"
+                                                        type="radio"
+                                                        name="correctAnswer"
+                                                        checked={editForm.correctAnswer === opt.id}
+                                                        onChange={() => setEditForm(prev => ({ ...prev, correctAnswer: opt.id }))}
                                                     />
-                                                )}
-                                                {/* English option text */}
+                                                    {isAr ? 'الإجابة الصحيحة ✅' : 'Correct Answer ✅'}
+                                                </label>
+                                                <button
+                                                    className="qedit-opt-delete"
+                                                    onClick={() => deleteOption(idx)}
+                                                    title={isAr ? 'حذف الخيار' : 'Delete option'}
+                                                >🗑️</button>
+                                            </div>
+                                            {/* Arabic option text */}
+                                            {(opt.textAr !== undefined || editForm.questionAr) && (
                                                 <input
                                                     className="qedit-opt-input"
-                                                    value={opt.textEn || ''}
-                                                    onChange={e => updateOption(idx, 'textEn', e.target.value)}
-                                                    placeholder="Option text (EN)"
-                                                    dir="ltr"
+                                                    value={opt.textAr || ''}
+                                                    onChange={e => updateOption(idx, 'textAr', e.target.value)}
+                                                    placeholder={isAr ? 'نص الخيار (عربي)' : 'Option text (AR)'}
+                                                    dir="rtl"
                                                 />
-                                            </div>
-                                        ))}
+                                            )}
+                                            {/* English option text */}
+                                            <input
+                                                className="qedit-opt-input"
+                                                value={opt.textEn || ''}
+                                                onChange={e => updateOption(idx, 'textEn', e.target.value)}
+                                                placeholder="Option text (EN)"
+                                                dir="ltr"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* Add Option Button */}
+                                <button className="qedit-add-option" onClick={addOption}>
+                                    + {isAr ? 'إضافة خيار جديد' : 'Add New Option'}
+                                </button>
+                            </div>
+
+                            {/* Question Image */}
+                            <div className="qedit-field">
+                                <label className="qedit-label">🖼️ {isAr ? 'صورة السؤال (رابط URL اختياري)' : 'Question Image (optional URL)'}</label>
+                                <input
+                                    className="qedit-opt-input"
+                                    style={{ width: '100%', direction: 'ltr' }}
+                                    value={editForm.image || ''}
+                                    onChange={e => setEditForm(prev => ({ ...prev, image: e.target.value }))}
+                                    placeholder="https://example.com/image.png"
+                                    dir="ltr"
+                                />
+                                {editForm.image && (
+                                    <div style={{ marginTop: '0.6rem', textAlign: 'center' }}>
+                                        <img
+                                            src={editForm.image}
+                                            alt="preview"
+                                            style={{ maxHeight: '160px', maxWidth: '100%', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                                            onError={e => { e.target.style.display = 'none'; }}
+                                        />
+                                        <div style={{ marginTop: '0.4rem' }}>
+                                            <button
+                                                className="qedit-opt-delete"
+                                                onClick={() => setEditForm(prev => ({ ...prev, image: '' }))}
+                                            >
+                                                {isAr ? 'حذف الصورة 🗑️' : 'Remove Image 🗑️'}
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ) : (
-                                <div className="qedit-no-options">
-                                    ⚠️ {isAr
-                                        ? 'هذا السؤال لا يحتوي على خيارات مُخزَّنة. يمكنك تعديل نص السؤال فقط.'
-                                        : 'No options stored for this question (question text editable only).'
-                                    }
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
 
                         {/* Footer */}
