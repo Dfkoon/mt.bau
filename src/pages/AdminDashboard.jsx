@@ -241,7 +241,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     // ── Load question reports on auth ──
     useEffect(() => {
-        if (!loggedIn || !isAuthed) return;
+        if (!loggedIn) return;
 
         setLoading(true);
 
@@ -260,7 +260,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         );
 
         return () => unsubRep();
-    }, [loggedIn, isAuthed]);
+    }, [loggedIn]);
 
     useEffect(() => {
         if (!loggedIn) return;
