@@ -103,9 +103,12 @@ service cloud.firestore {
 
     // Material Exchange Audit Logs
     match /materialExchangeLogs/{doc} {
-      allow read: if isAdmin();
-      allow create: if request.auth != null;
-      allow update, delete: if false;
+      allow read, write: if true;
+    }
+
+    // Coordinator & Staff Activity Statuses
+    match /staff_status/{doc} {
+      allow read, write: if true;
     }
     
     // Default Deny
