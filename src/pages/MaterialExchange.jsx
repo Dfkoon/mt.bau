@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { db } from '../config/firebase';
-import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, setDoc, deleteDoc, limit, arrayUnion, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, setDoc, deleteDoc, limit, arrayUnion, onSnapshot, increment } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import exchangeHero from '../assets/heros/exchange_hero.png';
 import { sendDonationToSheets, sendBookingToSheets } from '../services/googleSheetsService';
@@ -756,12 +756,26 @@ const MaterialExchange = () => {
         return () => unsubscribe();
     }, [isAdminUser]);
 
-    // Periodically refresh audit logs when coordinators tab is active
+    // Real-time listener for audit logs (replaces getDocs polling)
     useEffect(() => {
         if (activeTab !== 'coordinators' || !isAdminUser) return;
-        fetchAuditLogs();
-        const interval = setInterval(() => fetchAuditLogs(), 15000);
-        return () => clearInterval(interval);
+        setLogsLoading(true);
+        const q = query(
+            collection(db, 'materialExchangeLogs'),
+            orderBy('timestamp', 'desc'),
+            limit(200)
+        );
+        const unsubscribe = onSnapshot(q,
+            (snapshot) => {
+                setAuditLogs(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+                setLogsLoading(false);
+            },
+            (err) => {
+                console.error('materialExchangeLogs listener error:', err);
+                setLogsLoading(false);
+            }
+        );
+        return () => unsubscribe();
     }, [activeTab, isAdminUser]);
 
     // ── EMAILJS NOTIFICATION FUNCTION ────────────────────────────
@@ -2477,6 +2491,11 @@ Please contact us to coordinate the pickup. Thank you.`;
                 details,
                 timestamp: serverTimestamp()
             });
+            // Increment persistent totalActions counter in staff_status for accurate all-time counts
+            const statusRef = doc(db, 'staff_status', loggedInUser.username);
+            updateDoc(statusRef, { totalActions: increment(1) }).catch(() =>
+                setDoc(statusRef, { totalActions: 1 }, { merge: true })
+            );
         } catch (error) {
             console.error('Error adding audit log:', error);
         }
@@ -4860,7 +4879,8 @@ td{color:#2f3d4f;}
                             };
 
                             const getActionCount = (userKey) => {
-                                return auditLogs.filter(l => l.operatorId === userKey).length;
+                                // Persistent all-time counter stored in staff_status — always accurate
+                                return staffStatuses[userKey]?.totalActions ?? 0;
                             };
 
                             const filteredLogs = auditLogs.filter(log => {
