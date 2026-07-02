@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { db, storage } from '../config/firebase';
-import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { db } from '../config/firebase';
 import {
     collection, query, orderBy, limit, getDocs,
     doc, updateDoc, deleteDoc, where, onSnapshot,
@@ -1141,7 +1140,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     🖼️ {isAr ? 'صورة السؤال (اختياري)' : 'Question Image (optional)'}
                                 </label>
 
-                                {/* Hidden file input */}
+                                {/* Hidden file input — compresses and stores as base64 */}
                                 <input
                                     ref={imageInputRef}
                                     type="file"
@@ -1150,36 +1149,39 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     onChange={async (e) => {
                                         const file = e.target.files?.[0];
                                         if (!file) return;
-                                        if (file.size > 5 * 1024 * 1024) {
-                                            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+                                        if (file.size > 10 * 1024 * 1024) {
+                                            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                                             return;
                                         }
                                         setImageUploading(true);
-                                        setImageUploadProgress(0);
+                                        setImageUploadProgress(20);
                                         try {
-                                            const fileRef = storageRef(storage, `question_images/${editingReport.quizId}_${editingReport.questionId}_${Date.now()}_${file.name}`);
-                                            const uploadTask = uploadBytesResumable(fileRef, file);
-                                            uploadTask.on('state_changed',
-                                                (snap) => {
-                                                    const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-                                                    setImageUploadProgress(pct);
-                                                },
-                                                (err) => {
-                                                    console.error(err);
-                                                    toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
-                                                    setImageUploading(false);
-                                                },
-                                                async () => {
-                                                    const url = await getDownloadURL(uploadTask.snapshot.ref);
-                                                    setEditForm(prev => ({ ...prev, image: url }));
-                                                    setImageUploading(false);
-                                                    toast.success(isAr ? '✅ تم رفع الصورة بنجاح' : '✅ Image uploaded successfully');
-                                                }
-                                            );
+                                            // Compress image client-side using Canvas
+                                            const compressed = await new Promise((resolve, reject) => {
+                                                const img = new Image();
+                                                const url = URL.createObjectURL(file);
+                                                img.onload = () => {
+                                                    URL.revokeObjectURL(url);
+                                                    const MAX = 800;
+                                                    let w = img.width, h = img.height;
+                                                    if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+                                                    const canvas = document.createElement('canvas');
+                                                    canvas.width = w; canvas.height = h;
+                                                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                                                    resolve(canvas.toDataURL('image/jpeg', 0.78));
+                                                };
+                                                img.onerror = reject;
+                                                img.src = url;
+                                            });
+                                            setImageUploadProgress(100);
+                                            setEditForm(prev => ({ ...prev, image: compressed }));
+                                            toast.success(isAr ? '✅ تم تحميل الصورة بنجاح' : '✅ Image loaded successfully');
                                         } catch (err) {
                                             console.error(err);
-                                            toast.error(isAr ? 'خطأ في رفع الصورة' : 'Upload error');
+                                            toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                                        } finally {
                                             setImageUploading(false);
+                                            setImageUploadProgress(0);
                                         }
                                         e.target.value = '';
                                     }}
