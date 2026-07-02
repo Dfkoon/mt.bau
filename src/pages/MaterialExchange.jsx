@@ -672,8 +672,8 @@ const MaterialExchange = () => {
                     online: isOnline,
                     statusState: isOnline ? statusStateVal : 'offline',
                     currentTab: activeTab || 'donations',
-                    lastSeen: serverTimestamp(),
-                    ...(isOnline && statusStateVal === 'active' ? { lastLogin: serverTimestamp() } : {}),
+                    lastSeen: Date.now(),
+                    ...(isOnline && statusStateVal === 'active' ? { lastLogin: Date.now() } : {}),
                     username: loggedInUser.username,
                     nameAr: loggedInUser.nameAr || loggedInUser.username,
                     nameEn: loggedInUser.nameEn || loggedInUser.username,
@@ -1397,8 +1397,8 @@ const MaterialExchange = () => {
             const statusRef = doc(db, 'staff_status', pendingStaffKey);
             setDoc(statusRef, {
                 online: true,
-                lastSeen: serverTimestamp(),
-                lastLogin: serverTimestamp(),
+                lastSeen: Date.now(),
+                lastLogin: Date.now(),
                 username: pendingStaffKey,
                 nameAr: user.nameAr,
                 nameEn: user.nameEn,
@@ -1561,8 +1561,8 @@ const MaterialExchange = () => {
             const statusRef = doc(db, 'staff_status', username);
             updateDoc(statusRef, {
                 online: false,
-                lastLogout: serverTimestamp(),
-                lastSeen: serverTimestamp()
+                lastLogout: Date.now(),
+                lastSeen: Date.now()
             }).catch(console.error);
 
             addAuditLog(
@@ -4811,7 +4811,7 @@ td{color:#2f3d4f;}
                                 if (status.online === false || status.statusState === 'offline') return false;
                                 const lastSeen = status.lastSeen?.seconds ? status.lastSeen.seconds * 1000 : status.lastSeen;
                                 if (!lastSeen) return false;
-                                return (Date.now() - lastSeen) < 45000; // 45 seconds threshold
+                                return (Date.now() - lastSeen) < 180000; // 3 minutes threshold
                             };
 
                             const formatStatusTime = (timestamp) => {
