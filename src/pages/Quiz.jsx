@@ -273,6 +273,8 @@ const Quiz = () => {
                     questionEn: edit.questionEn || q.questionEn,
                     options: edit.options?.length > 0 ? edit.options : q.options,
                     correctAnswer: edit.correctAnswer || q.correctAnswer,
+                    // Apply admin-added/updated image (null means explicitly removed)
+                    image: edit.hasOwnProperty('image') ? edit.image : q.image,
                 };
             }),
         };
