@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { db } from '../config/firebase';
-import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, setDoc, deleteDoc, limit, arrayUnion } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, setDoc, deleteDoc, limit, arrayUnion, onSnapshot } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import exchangeHero from '../assets/heros/exchange_hero.png';
 import { sendDonationToSheets, sendBookingToSheets } from '../services/googleSheetsService';
@@ -741,18 +741,26 @@ const MaterialExchange = () => {
         };
     }, [loggedInUser, activeTab]);
 
-    // Periodically refresh coordinators status and audit logs when tab is active
+    // Real-time listener for staff statuses (replaces getDocs polling)
+    useEffect(() => {
+        if (!isAdminUser) return;
+        const unsubscribe = onSnapshot(
+            collection(db, 'staff_status'),
+            (snapshot) => {
+                const statuses = {};
+                snapshot.docs.forEach(d => { statuses[d.id] = d.data(); });
+                setStaffStatuses(statuses);
+            },
+            (err) => console.error('staff_status listener error:', err)
+        );
+        return () => unsubscribe();
+    }, [isAdminUser]);
+
+    // Periodically refresh audit logs when coordinators tab is active
     useEffect(() => {
         if (activeTab !== 'coordinators' || !isAdminUser) return;
-
-        fetchStaffStatuses();
         fetchAuditLogs();
-
-        const interval = setInterval(() => {
-            fetchStaffStatuses();
-            fetchAuditLogs();
-        }, 10000); // refresh every 10 seconds
-
+        const interval = setInterval(() => fetchAuditLogs(), 15000);
         return () => clearInterval(interval);
     }, [activeTab, isAdminUser]);
 
@@ -2491,21 +2499,9 @@ Please contact us to coordinate the pickup. Thank you.`;
         }
     };
 
-    const fetchStaffStatuses = async () => {
-        setStatusesLoading(true);
-        try {
-            const snapshot = await getDocs(collection(db, 'staff_status'));
-            const statuses = {};
-            snapshot.docs.forEach(doc => {
-                statuses[doc.id] = doc.data();
-            });
-            setStaffStatuses(statuses);
-        } catch (error) {
-            console.error('Error fetching staff statuses:', error);
-        } finally {
-            setStatusesLoading(false);
-        }
-    };
+    // fetchStaffStatuses replaced by real-time onSnapshot listener (see useEffect above)
+    // Kept as no-op to avoid breaking any residual call-sites
+    const fetchStaffStatuses = () => {};
 
     const handleArchiveCampaign = async () => {
         if (!archiveName.trim()) {
