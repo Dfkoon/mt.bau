@@ -657,17 +657,23 @@ const MaterialExchange = () => {
         }
     }, [bookingCaptchaText, showBookingModal]);
 
-    // Update staff status (online & lastSeen) periodically while logged in
+    // Update staff status (online & lastSeen & active tab & idle state) with high precision
     useEffect(() => {
         if (!loggedInUser) return;
 
-        const updateStatus = async (isOnline = true) => {
+        let lastActivity = Date.now();
+        let currentStatusState = 'active'; // 'active' | 'idle'
+
+        const updateStatus = async (isOnline = true, overrideState = null) => {
             try {
+                const statusStateVal = overrideState || currentStatusState;
                 const statusRef = doc(db, 'staff_status', loggedInUser.username);
                 await setDoc(statusRef, {
                     online: isOnline,
+                    statusState: isOnline ? statusStateVal : 'offline',
+                    currentTab: activeTab || 'donations',
                     lastSeen: serverTimestamp(),
-                    ...(isOnline ? { lastLogin: serverTimestamp() } : { lastLogout: serverTimestamp() }),
+                    ...(isOnline && statusStateVal === 'active' ? { lastLogin: serverTimestamp() } : {}),
                     username: loggedInUser.username,
                     nameAr: loggedInUser.nameAr || loggedInUser.username,
                     nameEn: loggedInUser.nameEn || loggedInUser.username,
@@ -678,19 +684,46 @@ const MaterialExchange = () => {
             }
         };
 
-        // Update immediately on login/mount
+        // Update immediately on mount / tab change
         updateStatus(true);
 
-        // Ping every 1 minute to keep lastSeen active
-        const interval = setInterval(() => {
+        // Keep-alive ping every 30 seconds
+        const pingInterval = setInterval(() => {
             updateStatus(true);
-        }, 60000);
+        }, 30000);
 
-        // Set offline when user closes the tab / window
+        // User activity listeners
+        const recordActivity = () => {
+            lastActivity = Date.now();
+            if (currentStatusState === 'idle') {
+                currentStatusState = 'active';
+                // Update Firestore immediately to reflect active status
+                updateStatus(true, 'active');
+            }
+        };
+
+        window.addEventListener('mousemove', recordActivity);
+        window.addEventListener('keydown', recordActivity);
+        window.addEventListener('scroll', recordActivity);
+        window.addEventListener('click', recordActivity);
+
+        // Check for idleness every 10 seconds
+        const idleCheckInterval = setInterval(() => {
+            const idleTime = Date.now() - lastActivity;
+            if (idleTime > 90000) { // 1.5 minutes
+                if (currentStatusState === 'active') {
+                    currentStatusState = 'idle';
+                    updateStatus(true, 'idle');
+                }
+            }
+        }, 10000);
+
+        // Set offline when user closes the tab / window or logs out
         const handleUnload = () => {
             const statusRef = doc(db, 'staff_status', loggedInUser.username);
             updateDoc(statusRef, {
                 online: false,
+                statusState: 'offline',
                 lastSeen: serverTimestamp()
             }).catch(console.error);
         };
@@ -698,10 +731,15 @@ const MaterialExchange = () => {
         window.addEventListener('beforeunload', handleUnload);
 
         return () => {
-            clearInterval(interval);
+            clearInterval(pingInterval);
+            clearInterval(idleCheckInterval);
+            window.removeEventListener('mousemove', recordActivity);
+            window.removeEventListener('keydown', recordActivity);
+            window.removeEventListener('scroll', recordActivity);
+            window.removeEventListener('click', recordActivity);
             window.removeEventListener('beforeunload', handleUnload);
         };
-    }, [loggedInUser]);
+    }, [loggedInUser, activeTab]);
 
     // Periodically refresh coordinators status and audit logs when tab is active
     useEffect(() => {
@@ -713,7 +751,7 @@ const MaterialExchange = () => {
         const interval = setInterval(() => {
             fetchStaffStatuses();
             fetchAuditLogs();
-        }, 20000); // refresh every 20 seconds
+        }, 10000); // refresh every 10 seconds
 
         return () => clearInterval(interval);
     }, [activeTab, isAdminUser]);
@@ -4770,10 +4808,10 @@ td{color:#2f3d4f;}
                             const isUserOnline = (userKey) => {
                                 const status = staffStatuses[userKey];
                                 if (!status) return false;
-                                if (!status.online) return false;
+                                if (status.online === false || status.statusState === 'offline') return false;
                                 const lastSeen = status.lastSeen?.seconds ? status.lastSeen.seconds * 1000 : status.lastSeen;
                                 if (!lastSeen) return false;
-                                return (Date.now() - lastSeen) < 120000;
+                                return (Date.now() - lastSeen) < 45000; // 45 seconds threshold
                             };
 
                             const formatStatusTime = (timestamp) => {
@@ -4791,18 +4829,38 @@ td{color:#2f3d4f;}
                             const formatLastSeenRelative = (userKey) => {
                                 const status = staffStatuses[userKey];
                                 if (!status) return isAr ? 'غير متصل' : 'Offline';
-                                if (isUserOnline(userKey)) return isAr ? 'نشط الآن' : 'Active now';
+                                
+                                const online = isUserOnline(userKey);
+                                if (online) {
+                                    if (status.statusState === 'idle') {
+                                        return isAr ? 'خامل (بلا نشاط)' : 'Idle (Inactive)';
+                                    }
+                                    return isAr ? 'نشط الآن' : 'Active now';
+                                }
+
                                 const lastSeen = status.lastSeen?.seconds ? status.lastSeen.seconds * 1000 : status.lastSeen;
                                 if (!lastSeen) return isAr ? 'غير متصل' : 'Offline';
                                 const diffMs = Date.now() - lastSeen;
                                 const diffMins = Math.floor(diffMs / 60000);
 
-                                if (diffMins < 2) return isAr ? 'نشط الآن' : 'Active now';
-                                if (diffMins < 60) return isAr ? `منذ ${diffMins} دقيقة` : `${diffMins} mins ago`;
+                                if (diffMins < 2) return isAr ? 'نشط قبل قليل' : 'Active recently';
+                                if (diffMins < 60) return isAr ? `نشط منذ ${diffMins} دقيقة` : `Active ${diffMins} mins ago`;
                                 const diffHours = Math.floor(diffMins / 60);
-                                if (diffHours < 24) return isAr ? `منذ ${diffHours} ساعة` : `${diffHours} hours ago`;
+                                if (diffHours < 24) return isAr ? `نشط منذ ${diffHours} ساعة` : `Active ${diffHours} hours ago`;
                                 const diffDays = Math.floor(diffHours / 24);
-                                return isAr ? `منذ ${diffDays} يوم` : `${diffDays} days ago`;
+                                return isAr ? `نشط منذ ${diffDays} يوم` : `Active ${diffDays} days ago`;
+                            };
+
+                            const getTabLabel = (tabKey) => {
+                                switch (tabKey) {
+                                    case 'donations': return isAr ? '📦 إدارة التبرعات' : '📦 Manage Donations';
+                                    case 'approvalRequests': return isAr ? '🔔 الطلبات المنتظرة' : '🔔 Pending Requests';
+                                    case 'settings': return isAr ? '⚙️ إعدادات النظام' : '⚙️ System Settings';
+                                    case 'archive': return isAr ? '🗄️ أرشيف الحملات' : '🗄️ Campaign Archive';
+                                    case 'analytics': return isAr ? '📊 إحصائيات النظام' : '📊 System Analytics';
+                                    case 'coordinators': return isAr ? '👥 تتبع المنسقين' : '👥 Coordinators Tracker';
+                                    default: return tabKey || (isAr ? 'الرئيسية' : 'Dashboard');
+                                }
                             };
 
                             const getActionCount = (userKey) => {
@@ -4823,8 +4881,8 @@ td{color:#2f3d4f;}
 
                             const staffList = [
                                 { key: 'admin', name: 'الأدمن', roleName: 'مدير النظام / Admin', icon: '👑', avatarClass: 'admin-avatar' },
-                                { key: 'ahmad', name: systemSettings.ahmadNameAr || 'أحمد', roleName: 'منسق قسم الذكور / Coordinator', icon: '♂️', avatarClass: '' },
-                                { key: 'sara', name: systemSettings.saraNameAr || 'سارة', roleName: 'منسقة قسم الإناث / Coordinator', icon: '♀️', avatarClass: '' }
+                                { key: 'ahmad', name: systemSettings.ahmadNameAr || 'أحمد (علي)', roleName: 'منسق قسم الذكور / Coordinator', icon: '♂️', avatarClass: '' },
+                                { key: 'sara', name: systemSettings.saraNameAr || 'سارة (سندس)', roleName: 'منسقة قسم الإناث / Coordinator', icon: '♀️', avatarClass: '' }
                             ];
 
                             return (
@@ -4834,7 +4892,22 @@ td{color:#2f3d4f;}
                                         {staffList.map(staff => {
                                             const status = staffStatuses[staff.key] || {};
                                             const online = isUserOnline(staff.key);
+                                            const isIdle = online && status.statusState === 'idle';
                                             const actionCount = getActionCount(staff.key);
+                                            
+                                            // Status class for CSS styling
+                                            let statusClass = '';
+                                            let statusLabel = isAr ? 'غير متصل' : 'Offline';
+                                            if (online) {
+                                                if (isIdle) {
+                                                    statusClass = 'is-idle'; // We can add CSS for is-idle
+                                                    statusLabel = isAr ? 'خامل' : 'Idle';
+                                                } else {
+                                                    statusClass = 'is-online';
+                                                    statusLabel = isAr ? 'متصل' : 'Online';
+                                                }
+                                            }
+
                                             return (
                                                 <div key={staff.key} className="staff-card glass-card">
                                                     <div className="staff-card-header">
@@ -4847,19 +4920,27 @@ td{color:#2f3d4f;}
                                                                 <span>{staff.roleName}</span>
                                                             </div>
                                                         </div>
-                                                        <div className={`staff-status-dot-wrapper ${online ? 'is-online' : ''}`}>
+                                                        <div className={`staff-status-dot-wrapper ${statusClass}`}>
                                                             <span className="status-dot-pulse" />
-                                                            <span>{online ? (isAr ? 'متصل' : 'Online') : (isAr ? 'غير متصل' : 'Offline')}</span>
+                                                            <span>{statusLabel}</span>
                                                         </div>
                                                     </div>
 
                                                     <div className="staff-details-rows">
                                                         <div className="staff-detail-row">
                                                             <label>{isAr ? 'حالة النشاط' : 'Activity Status'}</label>
-                                                            <span style={{ color: online ? '#22c55e' : 'inherit' }}>
+                                                            <span style={{ color: online ? (isIdle ? '#f59e0b' : '#22c55e') : 'inherit', fontWeight: 'bold' }}>
                                                                 {formatLastSeenRelative(staff.key)}
                                                             </span>
                                                         </div>
+                                                        {online && status.currentTab && (
+                                                            <div className="staff-detail-row">
+                                                                <label>{isAr ? 'الصفحة المفتوحة حالياً' : 'Current Page'}</label>
+                                                                <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>
+                                                                    {getTabLabel(status.currentTab)}
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                         <div className="staff-detail-row">
                                                             <label>{isAr ? 'آخر تسجيل دخول' : 'Last Login'}</label>
                                                             <span>{formatStatusTime(status.lastLogin)}</span>
