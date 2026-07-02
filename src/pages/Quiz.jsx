@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { quizData, quizCategories } from '../data/quizData';
+import { quizData as baseQuizData, quizCategories } from '../data/quizData';
+import { extraQuizData } from '../data/quizDataExtra';
 import FileUploader from '../components/FileUploader';
 import { submitQuestionReport } from '../services/quizReportService';
 import { logQuizCompletion } from '../services/analyticsService';
@@ -22,19 +23,19 @@ const Confetti = () => {
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let animationId;
-        
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        
+
         const colors = [
-            '#4caf50', '#8bc34a', '#2196f3', '#00bcd4', 
-            '#ffeb3b', '#ffc107', '#ff9800', '#e91e63', 
+            '#4caf50', '#8bc34a', '#2196f3', '#00bcd4',
+            '#ffeb3b', '#ffc107', '#ff9800', '#e91e63',
             '#9c27b0', '#673ab7', '#00c853', '#00e5ff'
         ];
-        
+
         const particles = [];
         const particleCount = 150;
-        
+
         for (let i = 0; i < particleCount; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
@@ -47,7 +48,7 @@ const Confetti = () => {
                 tiltAngle: 0
             });
         }
-        
+
         const draw = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach((p, idx) => {
@@ -55,7 +56,7 @@ const Confetti = () => {
                 p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
                 p.x += Math.sin(p.tiltAngle);
                 p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
-                
+
                 ctx.beginPath();
                 ctx.lineWidth = p.r;
                 ctx.strokeStyle = p.color;
@@ -63,43 +64,43 @@ const Confetti = () => {
                 ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
                 ctx.stroke();
             });
-            
+
             let active = false;
             particles.forEach(p => {
                 if (p.y < canvas.height) active = true;
             });
-            
+
             if (active) {
                 animationId = requestAnimationFrame(draw);
             }
         };
-        
+
         draw();
-        
+
         const handleResize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         };
         window.addEventListener('resize', handleResize);
-        
+
         return () => {
             cancelAnimationFrame(animationId);
             window.removeEventListener('resize', handleResize);
         };
     }, []);
-    
+
     return (
-        <canvas 
-            ref={canvasRef} 
-            style={{ 
-                position: 'fixed', 
-                top: 0, 
-                left: 0, 
-                width: '100vw', 
-                height: '100vh', 
-                pointerEvents: 'none', 
-                zIndex: 99999 
-            }} 
+        <canvas
+            ref={canvasRef}
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                pointerEvents: 'none',
+                zIndex: 99999
+            }}
         />
     );
 };
@@ -209,7 +210,7 @@ const playSuccessSound = () => {
             osc.start(audioCtx.currentTime + (i * 0.1));
             osc.stop(audioCtx.currentTime + (i * 0.1) + 1);
         });
-    } catch (e) {}
+    } catch (e) { }
 };
 
 const triggerHaptic = () => {
@@ -250,8 +251,11 @@ const Quiz = () => {
                 snap.forEach(d => { map[d.data().questionId] = d.data(); });
                 setQuestionEdits(map);
             })
-            .catch(() => {}); // silently fail — local data is fallback
+            .catch(() => { }); // silently fail — local data is fallback
     }, [quizId]);
+
+    // Merge base quiz data with any extra quizzes (e.g., past-year DB questions)
+    const quizData = useMemo(() => ({ ...baseQuizData, ...extraQuizData }), [baseQuizData]);
 
     // Get current quiz data (merged with admin edits)
     const rawQuiz = quizId ? quizData[quizId] : null;
@@ -265,10 +269,10 @@ const Quiz = () => {
                 if (!edit) return q;
                 return {
                     ...q,
-                    questionAr:    edit.questionAr    || q.questionAr,
-                    questionEn:    edit.questionEn    || q.questionEn,
-                    options:       edit.options?.length > 0 ? edit.options : q.options,
-                    correctAnswer: edit.correctAnswer  || q.correctAnswer,
+                    questionAr: edit.questionAr || q.questionAr,
+                    questionEn: edit.questionEn || q.questionEn,
+                    options: edit.options?.length > 0 ? edit.options : q.options,
+                    correctAnswer: edit.correctAnswer || q.correctAnswer,
                 };
             }),
         };
@@ -278,10 +282,10 @@ const Quiz = () => {
     const currentSubject = quizId ? quizCategories.find(cat => {
         // Level 1: Direct match
         if (cat.id === quizId) return true;
-        
+
         // Level 2: Match in parts
         if (cat.parts && cat.parts.some(p => p.id === quizId)) return true;
-        
+
         // Level 3: Match in sub-parts of parts
         if (cat.parts) {
             return cat.parts.some(p => {
@@ -289,7 +293,7 @@ const Quiz = () => {
                 return partObj && partObj.parts && partObj.parts.some(subPart => subPart.id === quizId);
             });
         }
-        
+
         return false;
     }) : null;
     const currentSubjectName = currentSubject
@@ -390,8 +394,8 @@ const Quiz = () => {
             }, 1000);
         } else if (timeLeft === 0 && timerActive && !showResults) {
             toast.error(
-                language === 'ar' 
-                    ? 'انتهى الوقت! تم إنهاء الاختبار وتصحيح إجاباتك تلقائياً.' 
+                language === 'ar'
+                    ? 'انتهى الوقت! تم إنهاء الاختبار وتصحيح إجاباتك تلقائياً.'
                     : 'Time is up! Your quiz has been automatically submitted.',
                 { duration: 5000, icon: '⏰' }
             );
@@ -404,6 +408,8 @@ const Quiz = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [selectedCategory]);
+
+
 
     // Handle clearing print mode
     useEffect(() => {
@@ -431,16 +437,16 @@ const Quiz = () => {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (!timerActive || showResults || !currentQuiz) return;
-            
+
             const question = currentQuiz.questions[currentQuestionIndex];
-            
+
             // Navigate between questions
             if (e.key === 'ArrowRight' || e.key === 'Enter') {
                 setCurrentQuestionIndex(prev => Math.min(currentQuiz.questions.length - 1, prev + 1));
             } else if (e.key === 'ArrowLeft') {
                 setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
             }
-            
+
             // Select answers using numbers 1-4 for MCQ/TF
             if (question && (question.type === 'mcq' || question.type === 'true_false')) {
                 const num = parseInt(e.key);
@@ -542,8 +548,8 @@ const Quiz = () => {
 
                     <div className="quiz-selection-container">
                         <div className="parts-selection fade-in">
-                            <button 
-                                className="back-btn" 
+                            <button
+                                className="back-btn"
                                 onClick={() => {
                                     if (currentSubject) {
                                         navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } });
@@ -618,9 +624,9 @@ const Quiz = () => {
                             {currentSubjectName && currentSubject && currentSubject.id !== quizId && (
                                 <>
                                     <span className="moodle-breadcrumb-separator">/</span>
-                                    <span 
-                                        className="moodle-breadcrumb-item" 
-                                        style={{ color: '#0f6cbf', cursor: 'pointer' }} 
+                                    <span
+                                        className="moodle-breadcrumb-item"
+                                        style={{ color: '#0f6cbf', cursor: 'pointer' }}
                                         onClick={() => navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } })}
                                     >
                                         {currentSubjectName}
@@ -656,8 +662,8 @@ const Quiz = () => {
                             </div>
                             <hr className="moodle-meta-divider" />
                             <p className="moodle-meta-instruction">
-                                {language === 'ar' 
-                                    ? 'أجب على الأسئلة في دفتر ملاحظاتك وارفع صورة لإجاباتك.' 
+                                {language === 'ar'
+                                    ? 'أجب على الأسئلة في دفتر ملاحظاتك وارفع صورة لإجاباتك.'
                                     : 'Answer the short-answer questions in your notebook and upload a picture of your answers.'}
                             </p>
                         </div>
@@ -715,14 +721,14 @@ const Quiz = () => {
                             </table>
 
                             <div className="moodle-back-btn-container" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: language === 'ar' ? 'flex-end' : 'flex-start', marginTop: '1.5rem' }}>
-                                <button 
+                                <button
                                     onClick={() => {
                                         if (currentSubject) {
                                             navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } });
                                         } else {
                                             navigate('/quiz');
                                         }
-                                    }} 
+                                    }}
                                     className="moodle-back-btn"
                                 >
                                     {language === 'ar' ? 'العودة إلى المقرر الدراسي' : 'Back to the course'}
@@ -747,7 +753,7 @@ const Quiz = () => {
                                     {currentQuiz.questions.map((q, idx) => {
                                         const originalUserAnswer = userAnswers[q.id];
                                         let effectiveUserAnswer = originalUserAnswer;
-                                        
+
                                         if (printMode === 'model') {
                                             if (q.type === 'matching') {
                                                 const matchingCorrect = {};
@@ -759,9 +765,9 @@ const Quiz = () => {
                                                 effectiveUserAnswer = q.correctAnswer;
                                             }
                                         }
-                                        
+
                                         const userAnswer = effectiveUserAnswer;
-                                        
+
                                         let isCorrect = false;
                                         if (q.type === 'matching') {
                                             const subQuestions = q.subQuestions || [];
@@ -786,13 +792,13 @@ const Quiz = () => {
                                                         <span className="flag-icon">⚑</span> {language === 'ar' ? 'تعليم السؤال' : 'Flag question'}
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div className="moodle-q-content-box">
                                                     <div className={`moodle-q-text-area ${displayLang === 'en' ? 'force-ltr' : ''}`}>
                                                         <div className="moodle-q-text-main">
                                                             {renderTextWithCode(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn)}
                                                         </div>
-                                                        
+
                                                         {q.image && (
                                                             <div className="question-image-container" style={{ textAlign: 'center', margin: '1rem 0' }}>
                                                                 <img
@@ -964,14 +970,14 @@ const Quiz = () => {
                                                             })}
                                                         </div>
                                                     </div>
-                                                    
+
                                                     <div className="moodle-q-feedback-box">
                                                         <div className="feedback-answer-state">
                                                             {language === 'ar' ? 'إجابتك ' : 'Your answer is '}{isCorrect ? (language === 'ar' ? 'صحيحة.' : 'correct.') : (language === 'ar' ? 'غير صحيحة.' : 'incorrect.')}
                                                         </div>
                                                         <div className="feedback-correct-answer">
                                                             {language === 'ar' ? 'الإجابة الصحيحة هي: ' : 'The correct answer is: '}
-                                                            {q.type === 'mcq' 
+                                                            {q.type === 'mcq'
                                                                 ? renderTextWithCode(displayLang === 'ar' ? (q.options.find(o => o.id === q.correctAnswer)?.textAr || q.options.find(o => o.id === q.correctAnswer)?.textEn) : q.options.find(o => o.id === q.correctAnswer)?.textEn)
                                                                 : q.type === 'matching'
                                                                     ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
@@ -989,7 +995,7 @@ const Quiz = () => {
                                         );
                                     })}
                                 </div>
-                                
+
                                 {/* Right Content (Quiz Navigation Sidebar) */}
                                 <div className="moodle-nav-column">
                                     <div className="moodle-nav-block">
@@ -1002,7 +1008,7 @@ const Quiz = () => {
                                             {currentQuiz.questions.map((q, idx) => {
                                                 const originalUserAnswer = userAnswers[q.id];
                                                 let effectiveUserAnswer = originalUserAnswer;
-                                                
+
                                                 if (printMode === 'model') {
                                                     if (q.type === 'matching') {
                                                         const matchingCorrect = {};
@@ -1014,7 +1020,7 @@ const Quiz = () => {
                                                         effectiveUserAnswer = q.correctAnswer;
                                                     }
                                                 }
-                                                
+
                                                 const userAnswer = effectiveUserAnswer;
 
                                                 let isCorrect = false;
@@ -1031,9 +1037,9 @@ const Quiz = () => {
                                                 const isFlagged = flaggedQuestions.has(q.id);
 
                                                 return (
-                                                    <a 
-                                                        href={`#question-${idx + 1}`} 
-                                                        key={q.id} 
+                                                    <a
+                                                        href={`#question-${idx + 1}`}
+                                                        key={q.id}
                                                         className={`moodle-nav-item-review ${isCorrect ? 'correct' : 'wrong'}`}
                                                     >
                                                         <span className="nav-num">{idx + 1}</span>
@@ -1084,9 +1090,9 @@ const Quiz = () => {
                     {currentSubjectName && currentSubject && currentSubject.id !== quizId && (
                         <>
                             <span className="moodle-breadcrumb-separator">/</span>
-                            <span 
-                                className="moodle-breadcrumb-item" 
-                                style={{ color: '#0f6cbf', cursor: 'pointer' }} 
+                            <span
+                                className="moodle-breadcrumb-item"
+                                style={{ color: '#0f6cbf', cursor: 'pointer' }}
                                 onClick={() => navigate('/quiz', { state: { selectedCategoryId: currentSubject.id } })}
                             >
                                 {currentSubjectName}
@@ -1382,7 +1388,7 @@ const Quiz = () => {
                                             setCurrentQuestionIndex(0);
                                             setFlaggedQuestions(new Set());
                                             setSelectedCategory(null);
-                                            navigate('/quiz', { state: { selectedCategoryId: currentSubject?.id } }); 
+                                            navigate('/quiz', { state: { selectedCategoryId: currentSubject?.id } });
                                         }
                                     }}
                                 >
@@ -1463,8 +1469,8 @@ const Quiz = () => {
                 </div>
 
                 {/* Floating Navigation FAB button for mobile/tablet */}
-                <button 
-                    className="mobile-nav-toggle-fab no-print" 
+                <button
+                    className="mobile-nav-toggle-fab no-print"
                     onClick={() => setIsMobileDrawerOpen(true)}
                     style={{ backgroundColor: '#0f6cbf' }}
                 >
@@ -1476,14 +1482,14 @@ const Quiz = () => {
                 <AnimatePresence>
                     {isMobileDrawerOpen && (
                         <>
-                            <motion.div 
+                            <motion.div
                                 className="mobile-drawer-backdrop no-print"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onClick={() => setIsMobileDrawerOpen(false)}
                             />
-                            <motion.div 
+                            <motion.div
                                 className="mobile-drawer-sheet no-print"
                                 initial={{ y: '100%' }}
                                 animate={{ y: 0 }}
@@ -1496,7 +1502,7 @@ const Quiz = () => {
                                     <h3>{language === 'ar' ? 'خريطة الأسئلة والتنقل' : 'Question Map & Navigation'}</h3>
                                     <button className="close-drawer-btn" onClick={() => setIsMobileDrawerOpen(false)}>✕</button>
                                 </div>
-                                
+
                                 <div className="drawer-timer-section">
                                     <span className="timer-label">⏱️ {language === 'ar' ? 'الوقت المتبقي:' : 'Time Left:'}</span>
                                     <span className={`timer-value ${timeLeft <= 60 ? 'timer-danger' : ''}`}>{formatTime(timeLeft)}</span>
@@ -1566,6 +1572,31 @@ const Quiz = () => {
                         </h2>
                         <div className="quiz-categories-grid">
                             {[...selectedCategory.parts].reverse().map(part => {
+                                // Handle accordion/group structure
+                                if (part.isGroup && part.subParts) {
+                                    return part.subParts.map(subPart => {
+                                        const subPartData = quizData[subPart.id];
+                                        const hasQuestions = subPartData?.questions?.length > 0;
+                                        return (
+                                            <Link
+                                                key={subPart.id}
+                                                to={hasQuestions ? `/quiz/${subPart.id}` : '#'}
+                                                onClick={(e) => !hasQuestions && e.preventDefault()}
+                                                className={`quiz-category-card glass-card ${!hasQuestions ? 'disabled-quiz-card' : ''}`}
+                                                style={{ '--category-color': selectedCategory.color }}
+                                            >
+                                                <div className="category-icon">{selectedCategory.icon}</div>
+                                                <h3>{language === 'ar' ? subPart.titleAr : subPart.title}</h3>
+                                                <p>{subPartData?.questions?.length || 0} {language === 'ar' ? 'أسئلة' : 'Questions'}</p>
+                                                <span className="start-btn">
+                                                    {hasQuestions ? (language === 'ar' ? 'ابدأ الاختبار' : 'Start') : (language === 'ar' ? 'لم تتوفر بعد' : 'Not available')}
+                                                </span>
+                                            </Link>
+                                        );
+                                    });
+                                }
+
+                                // Handle regular parts
                                 const partData = quizData[part.id];
                                 const hasQuestions = partData?.questions?.length > 0;
                                 const hasSubParts = partData?.parts?.length > 0;

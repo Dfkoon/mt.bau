@@ -125,8 +125,13 @@ const MaterialExchange = () => {
         saraEmail: '',
         ahmad2faSecret: '',
         sara2faSecret: '',
+        admin2faSecret: '',
         ahmad2faEnabled: false,
         sara2faEnabled: false,
+        admin2faEnabled: false,
+        ahmadQrConfirmed: false,
+        saraQrConfirmed: false,
+        adminQrConfirmed: false,
         allowCoordinatorEditDelete: false,
         coordinatorPermissions: {
             ahmad: {
@@ -223,6 +228,9 @@ const MaterialExchange = () => {
     const [totpError, setTotpError] = useState(false);
     const [setup2faData, setSetup2faData] = useState(null);
     const [confirming2fa, setConfirming2fa] = useState(false);
+    const [showQrInLogin, setShowQrInLogin] = useState(false);
+    const [showResetInLogin, setShowResetInLogin] = useState(false);
+    const [resetAdminPasswordInput, setResetAdminPasswordInput] = useState('');
 
     // ── CAPTCHA STATE ──────────────────────────────────────────────
     const [captchaText, setCaptchaText] = useState('');
@@ -444,7 +452,16 @@ const MaterialExchange = () => {
                         taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
                         materialTrackerEnabled: data.materialTrackerEnabled !== undefined ? data.materialTrackerEnabled : false,
                         donationEndTime: data.donationEndTime || '',
-                        bookingStartTime: data.bookingStartTime || ''
+                        bookingStartTime: data.bookingStartTime || '',
+                        ahmad2faSecret: data.ahmad2faSecret || '',
+                        sara2faSecret: data.sara2faSecret || '',
+                        admin2faSecret: data.admin2faSecret || '',
+                        ahmad2faEnabled: data.ahmad2faEnabled || false,
+                        sara2faEnabled: data.sara2faEnabled || false,
+                        admin2faEnabled: data.admin2faEnabled || false,
+                        ahmadQrConfirmed: data.ahmadQrConfirmed || false,
+                        saraQrConfirmed: data.saraQrConfirmed || false,
+                        adminQrConfirmed: data.adminQrConfirmed || false
                     }));
                     // Load task completions (with auto-delete of old entries)
                     const rawCompletions = data.taskCompletions || { ahmad: {}, sara: {} };
@@ -473,8 +490,13 @@ const MaterialExchange = () => {
                         saraEmail: data.saraEmail || '',
                         ahmad2faSecret: data.ahmad2faSecret || '',
                         sara2faSecret: data.sara2faSecret || '',
+                        admin2faSecret: data.admin2faSecret || '',
                         ahmad2faEnabled: data.ahmad2faEnabled || false,
                         sara2faEnabled: data.sara2faEnabled || false,
+                        admin2faEnabled: data.admin2faEnabled || false,
+                        ahmadQrConfirmed: data.ahmadQrConfirmed || false,
+                        saraQrConfirmed: data.saraQrConfirmed || false,
+                        adminQrConfirmed: data.adminQrConfirmed || false,
                         allowCoordinatorEditDelete: data.allowCoordinatorEditDelete !== undefined ? data.allowCoordinatorEditDelete : false,
                         coordinatorPermissions: data.coordinatorPermissions || {
                             ahmad: {
@@ -1104,20 +1126,44 @@ const MaterialExchange = () => {
         if (matchedKey && passwords[matchedKey] === password) {
             const user = staffUsersDynamic[matchedKey];
             
-            // Check if 2FA is enabled for this coordinator
-            const is2faEnabled = matchedKey === 'ahmad'
-                ? systemSettings.ahmad2faEnabled
-                : matchedKey === 'sara'
-                    ? systemSettings.sara2faEnabled
-                    : false;
+            // ── Permanently Enforced 2FA — fetch and generate secret on the fly if missing ──
+            let totpSecret = '';
+            try {
+                const freshSnap = await getDoc(doc(db, 'system_configs', 'global_settings'));
+                if (freshSnap.exists()) {
+                    const fresh = freshSnap.data();
+                    if (matchedKey === 'admin') {
+                        totpSecret = fresh.admin2faSecret || '';
+                    } else if (matchedKey === 'ahmad') {
+                        totpSecret = fresh.ahmad2faSecret || '';
+                    } else if (matchedKey === 'sara') {
+                        totpSecret = fresh.sara2faSecret || '';
+                    }
+                }
 
-            const totpSecret = matchedKey === 'ahmad'
-                ? systemSettings.ahmad2faSecret
-                : matchedKey === 'sara'
-                    ? systemSettings.sara2faSecret
-                    : null;
+                // If no secret exists yet, generate one on the fly and save to Firestore
+                if (!totpSecret) {
+                    totpSecret = generateBase32Secret();
+                    const updateData = {};
+                    const qrField = matchedKey === 'admin' ? 'adminQrConfirmed'
+                        : matchedKey === 'ahmad' ? 'ahmadQrConfirmed' : 'saraQrConfirmed';
+                    const secretField = matchedKey === 'admin' ? 'admin2faSecret'
+                        : matchedKey === 'ahmad' ? 'ahmad2faSecret' : 'sara2faSecret';
+                    const enabledField = matchedKey === 'admin' ? 'admin2faEnabled'
+                        : matchedKey === 'ahmad' ? 'ahmad2faEnabled' : 'sara2faEnabled';
 
-            if (matchedKey !== 'admin' && is2faEnabled && totpSecret) {
+                    updateData[secretField] = totpSecret;
+                    updateData[enabledField] = true;
+                    updateData[qrField] = false;
+
+                    await updateDoc(doc(db, 'system_configs', 'global_settings'), updateData);
+                    setSystemSettings(prev => ({ ...prev, ...updateData }));
+                }
+            } catch (err) {
+                console.error('2FA Firestore fetch/generation error:', err);
+            }
+
+            if (totpSecret) {
                 setPendingStaffKey(matchedKey);
                 setPendingStaffName(user.nameAr || user.nameEn || matchedKey);
                 setPendingStaffTotpSecret(totpSecret);
@@ -1222,10 +1268,18 @@ const MaterialExchange = () => {
         const userVal = totpCodeInput.trim();
         if (userVal === codeCurrent || userVal === codePrev || userVal === codeNext) {
             const staffUsersDynamic = {
+                admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
                 ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
                 sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
             };
-            const user = staffUsersDynamic[pendingStaffKey];
+            const user = staffUsersDynamic[pendingStaffKey] || { role: 'coordinator', nameAr: pendingStaffKey, nameEn: pendingStaffKey, gender: null };
+
+            // ── Mark QR as confirmed (hide three-dot QR button on future logins) ──
+            const qrField = pendingStaffKey === 'admin' ? 'adminQrConfirmed'
+                : pendingStaffKey === 'ahmad' ? 'ahmadQrConfirmed' : 'saraQrConfirmed';
+            updateDoc(doc(db, 'system_configs', 'global_settings'), { [qrField]: true }).catch(console.error);
+            setSystemSettings(prev => ({ ...prev, [qrField]: true }));
+            setShowQrInLogin(false);
 
             setLoggedInUser({ ...user, username: pendingStaffKey });
             sessionStorage.setItem('exchange_staff', JSON.stringify({ ...user, username: pendingStaffKey }));
@@ -1246,81 +1300,110 @@ const MaterialExchange = () => {
         }
     };
 
-    const handleDisable2fa = async (username) => {
-        if (!window.confirm(isAr 
-            ? `هل أنت متأكد من رغبتك في تعطيل التحقق الثنائي (2FA) للمنسق ${username === 'ahmad' ? systemSettings.ahmadNameAr : systemSettings.saraNameAr}؟` 
-            : `Are you sure you want to disable 2FA for coordinator ${username === 'ahmad' ? systemSettings.ahmadNameEn : systemSettings.saraNameEn}?`
+    const handleReset2faFromLogin = async (e) => {
+        e.preventDefault();
+        const expectedAdminPass = systemSettings.adminPassword || 'admin2024';
+        if (resetAdminPasswordInput !== expectedAdminPass) {
+            toast.error(isAr ? 'كلمة مرور الأدمن غير صحيحة' : 'Incorrect Admin password');
+            return;
+        }
+
+        try {
+            const secret = generateBase32Secret();
+            const settingsRef = doc(db, 'system_configs', 'global_settings');
+            const updateData = {};
+            const secretField = pendingStaffKey === 'admin' ? 'admin2faSecret'
+                : pendingStaffKey === 'ahmad' ? 'ahmad2faSecret' : 'sara2faSecret';
+            const qrField = pendingStaffKey === 'admin' ? 'adminQrConfirmed'
+                : pendingStaffKey === 'ahmad' ? 'ahmadQrConfirmed' : 'saraQrConfirmed';
+
+            updateData[secretField] = secret;
+            updateData[qrField] = false;
+
+            await updateDoc(settingsRef, updateData);
+            setSystemSettings(prev => ({ ...prev, ...updateData }));
+            setPendingStaffTotpSecret(secret);
+            setShowResetInLogin(false);
+            setResetAdminPasswordInput('');
+            setShowQrInLogin(true); // Open/show the QR code immediately
+            toast.success(isAr ? 'تم إعادة تعيين الكود السري بنجاح! امسح الرمز الجديد.' : 'Two-factor secret reset successfully! Scan the new QR code.');
+        } catch (err) {
+            console.error('Reset 2FA from login error:', err);
+            toast.error(isAr ? 'فشل إعادة التعيين' : 'Failed to reset 2FA');
+        }
+    };
+
+    const handleReset2fa = async (username) => {
+        const displayName = username === 'admin'
+            ? (isAr ? 'الأدمن' : 'Admin')
+            : username === 'ahmad'
+                ? systemSettings.ahmadNameAr
+                : systemSettings.saraNameAr;
+        if (!window.confirm(isAr
+            ? `هل أنت متأكد من رغبتك في إعادة تعيين التحقق الثنائي (2FA) لـ ${displayName}؟ سيتم توليد رمز QR جديد بالكامل.`
+            : `Are you sure you want to reset 2FA for ${displayName}? A new QR code will be generated.`
         )) return;
 
         try {
             const settingsRef = doc(db, 'system_configs', 'global_settings');
+            const secret = generateBase32Secret();
             const updateData = {};
-            if (username === 'ahmad') {
-                updateData.ahmad2faEnabled = false;
-                updateData.ahmad2faSecret = '';
+            if (username === 'admin') {
+                updateData.admin2faEnabled = true;
+                updateData.admin2faSecret = secret;
+                updateData.adminQrConfirmed = false;
+            } else if (username === 'ahmad') {
+                updateData.ahmad2faEnabled = true;
+                updateData.ahmad2faSecret = secret;
+                updateData.ahmadQrConfirmed = false;
             } else {
-                updateData.sara2faEnabled = false;
-                updateData.sara2faSecret = '';
+                updateData.sara2faEnabled = true;
+                updateData.sara2faSecret = secret;
+                updateData.saraQrConfirmed = false;
             }
             await updateDoc(settingsRef, updateData);
             setSystemSettings(prev => ({ ...prev, ...updateData }));
-            toast.success(isAr ? 'تم تعطيل التحقق الثنائي بنجاح' : 'Two-factor authentication disabled successfully');
+            toast.success(isAr ? 'تم إعادة تعيين التحقق الثنائي بنجاح' : 'Two-factor authentication reset successfully');
         } catch (error) {
-            console.error("Error disabling 2FA:", error);
-            toast.error(isAr ? 'فشل تعطيل التحقق الثنائي' : 'Failed to disable 2FA');
+            console.error("Error resetting 2FA:", error);
+            toast.error(isAr ? 'فشل إعادة تعيين التحقق الثنائي' : 'Failed to reset 2FA');
         }
     };
 
-    const handleInit2faSetup = (username) => {
-        const secret = generateBase32Secret();
-        const qrData = `otpauth://totp/MakanakAlJamii:${username}?secret=${secret}&issuer=MakanakAlJamii`;
-        const formattedSecret = secret.match(/.{1,4}/g).join(' ');
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrData)}`;
+    // Re-show QR code — reads from state directly (synchronous, instant)
+    const handleShowQR = (username) => {
+        let secret = username === 'admin'
+            ? systemSettings.admin2faSecret
+            : username === 'ahmad'
+                ? systemSettings.ahmad2faSecret
+                : systemSettings.sara2faSecret;
 
-        setSetup2faData({
-            username,
-            secret,
-            formattedSecret,
-            qrUrl,
-            verificationCode: '',
-            error: false
-        });
-    };
-
-    const handleConfirm2faSetup = async (e) => {
-        e.preventDefault();
-        if (!setup2faData) return;
-
-        setConfirming2fa(true);
-        const codeCurrent = await getTOTPToken(setup2faData.secret, 0);
-        const codePrev = await getTOTPToken(setup2faData.secret, -30);
-        const codeNext = await getTOTPToken(setup2faData.secret, 30);
-
-        const userVal = setup2faData.verificationCode.trim();
-        if (userVal === codeCurrent || userVal === codePrev || userVal === codeNext) {
-            try {
-                const settingsRef = doc(db, 'system_configs', 'global_settings');
-                const updateData = {};
-                if (setup2faData.username === 'ahmad') {
-                    updateData.ahmad2faEnabled = true;
-                    updateData.ahmad2faSecret = setup2faData.secret;
-                } else {
-                    updateData.sara2faEnabled = true;
-                    updateData.sara2faSecret = setup2faData.secret;
-                }
-                await updateDoc(settingsRef, updateData);
-                setSystemSettings(prev => ({ ...prev, ...updateData }));
-                toast.success(isAr ? 'تم تفعيل التحقق الثنائي بنجاح! 🎉' : 'Two-factor authentication enabled successfully! 🎉');
-                setSetup2faData(null);
-            } catch (error) {
-                console.error("Error saving 2FA settings:", error);
-                toast.error(isAr ? 'فشل حفظ الإعدادات في قاعدة البيانات' : 'Failed to save settings to database');
+        // If no secret in state, generate a new one and persist it
+        if (!secret) {
+            secret = generateBase32Secret();
+            const updateData = {};
+            if (username === 'admin') {
+                updateData.admin2faSecret = secret;
+                updateData.admin2faEnabled = true;
+                updateData.adminQrConfirmed = false;
+            } else if (username === 'ahmad') {
+                updateData.ahmad2faSecret = secret;
+                updateData.ahmad2faEnabled = true;
+                updateData.ahmadQrConfirmed = false;
+            } else {
+                updateData.sara2faSecret = secret;
+                updateData.sara2faEnabled = true;
+                updateData.saraQrConfirmed = false;
             }
-        } else {
-            setSetup2faData(prev => ({ ...prev, error: true }));
-            toast.error(isAr ? 'رمز التحقق غير صحيح، يرجى المحاولة مجدداً' : 'Incorrect code, please try again');
+            updateDoc(doc(db, 'system_configs', 'global_settings'), updateData).catch(console.error);
+            setSystemSettings(prev => ({ ...prev, ...updateData }));
         }
-        setConfirming2fa(false);
+
+        const issuer = 'Makanak Al-Jamii';
+        const qrData = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(username)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}`;
+        const formattedSecret = secret.match(/.{1,4}/g).join(' ');
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrData)}&color=0f172a&bgcolor=ffffff`;
+        setSetup2faData({ username, secret, formattedSecret, qrUrl, verificationCode: '', error: false });
     };
 
     const handleLogout = () => {
@@ -4003,36 +4086,46 @@ td{color:#2f3d4f;}
                                     {/* 2FA Card */}
                                     <div className="settings-card">
                                         <div className="settings-card-header">
-                                            <h4>🛡️ {isAr ? 'التحقق بخطوتين للمنسقين (2FA)' : 'Coordinator 2FA Settings'}</h4>
-                                            <span className="settings-card-hint">{isAr ? 'تفعيل أو تعطيل رمز أمان تطبيق Authenticator' : 'Enable or disable Google Authenticator 2FA'}</span>
+                                            <h4>🛡️ {isAr ? 'التحقق بخطوتين (2FA) — الأدمن والمنسقين' : '2FA Settings — Admin & Coordinators'}</h4>
+                                            <span className="settings-card-hint">{isAr ? 'حماية الحسابات بشكل إجباري ومستمر' : 'Mandatory account protection is permanently enforced'}</span>
                                         </div>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '10px' }}>
+
+                                            {/* Admin 2FA status */}
+                                            <div className="settings-field" style={{ borderBottom: '1px dashed var(--glass-border)', paddingBottom: '12px' }}>
+                                                <label style={{ fontWeight: 'bold' }}>👑 {isAr ? 'الأدمن' : 'Admin'}</label>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
+                                                    <span style={{ fontSize: '0.9rem', color: '#22c55e', fontWeight: '500' }}>
+                                                        {isAr ? '🛡️ مفعّل دائماً (إجباري)' : '🛡️ Enforced (Mandatory)'}
+                                                    </span>
+                                                    <div>
+                                                        <button
+                                                            className="secondary-btn"
+                                                            onClick={() => handleReset2fa('admin')}
+                                                            style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239, 68, 68, 0.05)' }}
+                                                        >
+                                                            🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             {/* Ahmad 2FA status */}
                                             <div className="settings-field" style={{ borderBottom: '1px dashed var(--glass-border)', paddingBottom: '12px' }}>
                                                 <label style={{ fontWeight: 'bold' }}>♂️ {systemSettings.ahmadNameAr || 'أحمد'}</label>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-                                                    <span style={{ fontSize: '0.9rem', color: systemSettings.ahmad2faEnabled ? '#22c55e' : '#64748b', fontWeight: '500' }}>
-                                                        {systemSettings.ahmad2faEnabled 
-                                                            ? (isAr ? '🛡️ مفعّل (Google Authenticator)' : '🛡️ Enabled (Google Authenticator)') 
-                                                            : (isAr ? '❌ غير مفعّل' : '❌ Disabled')}
+                                                    <span style={{ fontSize: '0.9rem', color: '#22c55e', fontWeight: '500' }}>
+                                                        {isAr ? '🛡️ مفعّل دائماً (إجباري)' : '🛡️ Enforced (Mandatory)'}
                                                     </span>
-                                                    {systemSettings.ahmad2faEnabled ? (
-                                                        <button 
-                                                            className="secondary-btn" 
-                                                            onClick={() => handleDisable2fa('ahmad')}
-                                                            style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#ef4444', color: '#ef4444' }}
+                                                    <div>
+                                                        <button
+                                                            className="secondary-btn"
+                                                            onClick={() => handleReset2fa('ahmad')}
+                                                            style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239, 68, 68, 0.05)' }}
                                                         >
-                                                            {isAr ? 'تعطيل' : 'Disable'}
+                                                            🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
                                                         </button>
-                                                    ) : (
-                                                        <button 
-                                                            className="submit-btn" 
-                                                            onClick={() => handleInit2faSetup('ahmad')}
-                                                            style={{ padding: '6px 12px', fontSize: '0.8rem' }}
-                                                        >
-                                                            {isAr ? 'تفعيل 2FA' : 'Enable 2FA'}
-                                                        </button>
-                                                    )}
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -4040,28 +4133,18 @@ td{color:#2f3d4f;}
                                             <div className="settings-field">
                                                 <label style={{ fontWeight: 'bold' }}>♀️ {systemSettings.saraNameAr || 'سارة'}</label>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-                                                    <span style={{ fontSize: '0.9rem', color: systemSettings.sara2faEnabled ? '#22c55e' : '#64748b', fontWeight: '500' }}>
-                                                        {systemSettings.sara2faEnabled 
-                                                            ? (isAr ? '🛡️ مفعّل (Google Authenticator)' : '🛡️ Enabled (Google Authenticator)') 
-                                                            : (isAr ? '❌ غير مفعّل' : '❌ Disabled')}
+                                                    <span style={{ fontSize: '0.9rem', color: '#22c55e', fontWeight: '500' }}>
+                                                        {isAr ? '🛡️ مفعّل دائماً (إجباري)' : '🛡️ Enforced (Mandatory)'}
                                                     </span>
-                                                    {systemSettings.sara2faEnabled ? (
-                                                        <button 
-                                                            className="secondary-btn" 
-                                                            onClick={() => handleDisable2fa('sara')}
-                                                            style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: '#ef4444', color: '#ef4444' }}
+                                                    <div>
+                                                        <button
+                                                            className="secondary-btn"
+                                                            onClick={() => handleReset2fa('sara')}
+                                                            style={{ padding: '6px 14px', fontSize: '0.82rem', borderColor: '#ef4444', color: '#ef4444', background: 'rgba(239, 68, 68, 0.05)' }}
                                                         >
-                                                            {isAr ? 'تعطيل' : 'Disable'}
+                                                            🔄 {isAr ? 'تحديث رمز التحقق' : 'Update Verification Code'}
                                                         </button>
-                                                    ) : (
-                                                        <button 
-                                                            className="submit-btn" 
-                                                            onClick={() => handleInit2faSetup('sara')}
-                                                            style={{ padding: '6px 12px', fontSize: '0.8rem' }}
-                                                        >
-                                                            {isAr ? 'تفعيل 2FA' : 'Enable 2FA'}
-                                                        </button>
-                                                    )}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -5003,41 +5086,142 @@ td{color:#2f3d4f;}
                             </>
                         )}
 
-                        {loginStep === 4 && (
-                            <>
-                                <div className="modal-header">
-                                    <h2>🛡️ {isAr ? 'التحقق بخطوتين (2FA)' : 'Two-Factor Authentication'}</h2>
-                                    <p>{isAr ? 'أدخل الرمز المكون من 6 أرقام من تطبيق Authenticator الخاص بك.' : 'Enter the 6-digit code from your authenticator app.'}</p>
-                                </div>
-                                <form className="login-form" onSubmit={handleTotpSubmit}>
-                                    <div className="form-group" style={{ marginBottom: '20px' }}>
-                                        <label>{isAr ? 'رمز الأمان (2FA)' : 'Security Code (2FA)'}</label>
-                                        <input
-                                            type="text"
-                                            className={`form-input ${totpError ? 'input-error-shake' : ''}`}
-                                            placeholder="000 000"
-                                            value={totpCodeInput}
-                                            onChange={e => {
-                                                setTotpCodeInput(e.target.value.replace(/\D/g, ''));
-                                                setTotpError(false);
-                                            }}
-                                            autoComplete="one-time-code"
-                                            autoFocus
-                                            maxLength="6"
-                                            style={{ textAlign: 'center', letterSpacing: '8px', fontSize: '1.4rem', fontWeight: 'bold' }}
-                                        />
-                                        {totpError && (
-                                            <div className="login-error">⚠️ {isAr ? 'رمز التحقق غير صحيح، يرجى المحاولة مجدداً' : 'Incorrect 2FA code, please try again'}</div>
+                        {loginStep === 4 && (() => {
+                            const loginQrSecret = pendingStaffTotpSecret;
+                            const qrConfirmed = pendingStaffKey === 'admin'
+                                ? systemSettings.adminQrConfirmed
+                                : pendingStaffKey === 'ahmad'
+                                    ? systemSettings.ahmadQrConfirmed
+                                    : systemSettings.saraQrConfirmed;
+                            const loginQrUrl = loginQrSecret
+                                ? `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`otpauth://totp/Makanak%20Al-Jamii:${pendingStaffKey}?secret=${loginQrSecret}&issuer=Makanak%20Al-Jamii`)}&color=0f172a&bgcolor=ffffff`
+                                : null;
+                            return (
+                                <>
+                                    <div className="modal-header" style={{ position: 'relative' }}>
+                                        <h2>🛡️ {isAr ? 'التحقق بخطوتين (2FA)' : 'Two-Factor Authentication'}</h2>
+                                        <p>{isAr ? 'أدخل الرمز المكون من 6 أرقام من تطبيق Authenticator الخاص بك.' : 'Enter the 6-digit code from your authenticator app.'}</p>
+
+                                        {/* ⋮ Three-dot button */}
+                                        {loginQrUrl && (
+                                            <button
+                                                type="button"
+                                                title={isAr ? 'خيارات التحقق' : '2FA Options'}
+                                                onClick={() => {
+                                                    setShowQrInLogin(v => !v);
+                                                    setShowResetInLogin(false);
+                                                }}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '-5px',
+                                                    [isAr ? 'left' : 'right']: '5px',
+                                                    background: 'var(--card-bg, #ffffff)',
+                                                    border: '1px solid var(--glass-border, rgba(0,0,0,0.15))',
+                                                    cursor: 'pointer',
+                                                    fontSize: '1.4rem',
+                                                    color: 'var(--text-primary, #0f172a)',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '50%',
+                                                    lineHeight: '1.2',
+                                                    zIndex: 10,
+                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                                }}
+                                            >
+                                                ⋮
+                                            </button>
                                         )}
                                     </div>
-                                    <div className="login-action-row">
-                                        <button type="submit" className="submit-btn" style={{ width: '100%' }}>
-                                            {isAr ? 'تأكيد ودخول' : 'Verify & Enter'}
-                                        </button>
-                                    </div>
-                                </form>
-                            </>
-                        )}
+
+                                    {/* 2FA Dropdown Menu Options */}
+                                    {showQrInLogin && (
+                                        <div style={{ margin: '0 0 15px', padding: '12px', background: 'rgba(99,102,241,0.06)', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '8px', border: '1px solid rgba(99,102,241,0.15)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                                                {/* Show QR button is ONLY visible if NOT confirmed */}
+                                                {!qrConfirmed && (
+                                                    <button
+                                                        type="button"
+                                                        className="submit-btn"
+                                                        onClick={() => setShowResetInLogin(false)}
+                                                        style={{ padding: '6px 12px', fontSize: '0.8rem', flex: 1 }}
+                                                    >
+                                                        📷 {isAr ? 'عرض الباركود' : 'Show QR'}
+                                                    </button>
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    className="secondary-btn"
+                                                    onClick={() => setShowResetInLogin(true)}
+                                                    style={{ padding: '6px 12px', fontSize: '0.8rem', flex: 1, borderColor: '#ef4444', color: '#ef4444' }}
+                                                >
+                                                    🔄 {isAr ? 'إعادة تعيين الرمز' : 'Reset Secret'}
+                                                </button>
+                                            </div>
+
+                                            {/* Action 1: Show QR — ONLY allowed if NOT confirmed */}
+                                            {!showResetInLogin && !qrConfirmed && loginQrUrl && (
+                                                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                                                    <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
+                                                        {isAr ? '📱 امسح هذا الرمز بتطبيق Authenticator' : '📱 Scan this QR with Authenticator app'}
+                                                    </p>
+                                                    <div style={{ display: 'inline-block', background: '#fff', padding: '8px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                                                        <img src={loginQrUrl} alt="QR" style={{ width: '150px', height: '150px', display: 'block' }} />
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {/* Action 2: Reset Form */}
+                                            {showResetInLogin && (
+                                                <form onSubmit={handleReset2faFromLogin} style={{ marginTop: '10px', textAlign: 'right' }}>
+                                                    <label style={{ fontSize: '0.8rem', fontWeight: 'bold', display: 'block', marginBottom: '4px' }}>
+                                                        🔑 {isAr ? 'أدخل كلمة مرور الأدمن للتأكيد:' : 'Enter Admin password to confirm:'}
+                                                    </label>
+                                                    <input
+                                                        type="password"
+                                                        className="form-input"
+                                                        placeholder={isAr ? 'كلمة مرور الأدمن' : 'Admin password'}
+                                                        value={resetAdminPasswordInput}
+                                                        onChange={e => setResetAdminPasswordInput(e.target.value)}
+                                                        style={{ marginBottom: '8px', fontSize: '0.9rem', padding: '6px 10px' }}
+                                                        required
+                                                    />
+                                                    <button type="submit" className="submit-btn" style={{ width: '100%', background: '#ef4444', padding: '6px' }}>
+                                                        {isAr ? 'تأكيد وإعادة التعيين' : 'Confirm & Reset'}
+                                                    </button>
+                                                </form>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    <form className="login-form" onSubmit={handleTotpSubmit}>
+                                        <div className="form-group" style={{ marginBottom: '20px' }}>
+                                            <label>{isAr ? 'رمز الأمان (2FA)' : 'Security Code (2FA)'}</label>
+                                            <input
+                                                type="text"
+                                                className={`form-input ${totpError ? 'input-error-shake' : ''}`}
+                                                placeholder="000 000"
+                                                value={totpCodeInput}
+                                                onChange={e => {
+                                                    setTotpCodeInput(e.target.value.replace(/\D/g, ''));
+                                                    setTotpError(false);
+                                                }}
+                                                autoComplete="one-time-code"
+                                                autoFocus
+                                                maxLength="6"
+                                                style={{ textAlign: 'center', letterSpacing: '8px', fontSize: '1.4rem', fontWeight: 'bold' }}
+                                            />
+                                            {totpError && (
+                                                <div className="login-error">⚠️ {isAr ? 'رمز التحقق غير صحيح، يرجى المحاولة مجدداً' : 'Incorrect 2FA code, please try again'}</div>
+                                            )}
+                                        </div>
+                                        <div className="login-action-row">
+                                            <button type="submit" className="submit-btn" style={{ width: '100%' }}>
+                                                {isAr ? 'تأكيد ودخول' : 'Verify & Enter'}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </>
+                            );
+                        })()}
                     </div>
                 </div>
             )}
@@ -5050,8 +5234,8 @@ td{color:#2f3d4f;}
                             <h2>🛡️ {isAr ? 'تأمين الحساب بـ 2FA' : 'Secure Account with 2FA'}</h2>
                             <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '8px 0 16px', lineHeight: '1.5' }}>
                                 {isAr 
-                                    ? `امسح رمز الاستجابة السريعة (QR Code) باستخدام تطبيق Authenticator الخاص بك (مثل Google Authenticator أو Authy) أو أدخل المفتاح السري يدوياً لتفعيل 2FA للمنسق (${setup2faData.username === 'ahmad' ? systemSettings.ahmadNameAr : systemSettings.saraNameAr}).`
-                                    : `Scan the QR code with your authenticator app (Google Authenticator, Authy, etc.) or enter the secret manually to enable 2FA for coordinator (${setup2faData.username === 'ahmad' ? systemSettings.ahmadNameEn : systemSettings.saraNameEn}).`
+                                    ? `امسح رمز الاستجابة السريعة (QR Code) باستخدام تطبيق Authenticator الخاص بك (مثل Google Authenticator أو Authy) أو أدخل المفتاح السري يدوياً لتوليد الرموز.`
+                                    : `Scan the QR code with your authenticator app (Google Authenticator, Authy, etc.) or enter the secret manually to generate login codes.`
                                 }
                             </p>
                         </div>
@@ -5077,35 +5261,11 @@ td{color:#2f3d4f;}
                             />
                         </div>
 
-                        <form onSubmit={handleConfirm2faSetup}>
-                            <div className="form-group" style={{ marginBottom: '20px' }}>
-                                <label style={{ display: 'block', textAlign: isAr ? 'right' : 'left', marginBottom: '8px', fontSize: '0.85rem', fontWeight: '600' }}>
-                                    {isAr ? 'أدخل الرمز المكون من 6 أرقام للتأكيد:' : 'Enter the 6-digit code to confirm:'}
-                                </label>
-                                <input
-                                    type="text"
-                                    className={`form-input ${setup2faData.error ? 'input-error-shake' : ''}`}
-                                    placeholder="000 000"
-                                    value={setup2faData.verificationCode}
-                                    onChange={(e) => {
-                                        const val = e.target.value.replace(/\D/g, '');
-                                        setSetup2faData(prev => ({ ...prev, verificationCode: val, error: false }));
-                                    }}
-                                    maxLength="6"
-                                    required
-                                    style={{ textAlign: 'center', letterSpacing: '6px', fontSize: '1.25rem', fontWeight: 'bold' }}
-                                />
-                            </div>
-
-                            <div className="login-action-row" style={{ display: 'flex', gap: '10px' }}>
-                                <button type="submit" className="submit-btn" style={{ flex: 1 }} disabled={confirming2fa}>
-                                    {confirming2fa ? '...' : (isAr ? 'تأكيد وتفعيل' : 'Confirm & Enable')}
-                                </button>
-                                <button type="button" className="secondary-btn" style={{ flex: 1 }} onClick={() => setSetup2faData(null)}>
-                                    {isAr ? 'إلغاء' : 'Cancel'}
-                                </button>
-                            </div>
-                        </form>
+                        <div className="login-action-row" style={{ display: 'flex', justifyContent: 'center' }}>
+                            <button type="button" className="submit-btn" style={{ width: '100%' }} onClick={() => setSetup2faData(null)}>
+                                {isAr ? 'إغلاق' : 'Close'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

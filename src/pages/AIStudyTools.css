@@ -49,10 +49,7 @@
 .ast-hero-title {
   font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 800;
-  background: linear-gradient(135deg, var(--primary) 0%, #ff6659 50%, var(--secondary-light) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
   margin-bottom: 16px;
   line-height: 1.2;
   animation: ast-fadeDown 0.7s ease;
@@ -141,7 +138,7 @@
 .ast-step-header h2 {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: #ffffff;
 }
 
 /* ── Textarea ─────────────────────────────────── */
@@ -622,7 +619,7 @@
 [dir="ltr"] .ast-overview-box { border-right: none; border-left: 4px solid var(--primary); }
 
 .ast-section { display: flex; flex-direction: column; gap: 12px; }
-.ast-section h3 { font-size: 1rem; font-weight: 700; color: var(--text-main); }
+.ast-section h3 { font-size: 1rem; font-weight: 700; color: #ffffff; }
 
 .ast-key-points {
   list-style: none;
@@ -682,7 +679,7 @@
   flex-direction: column;
   gap: 8px;
 }
-.ast-conclusion h3 { font-size: 1rem; font-weight: 700; color: var(--secondary-light); }
+.ast-conclusion h3 { font-size: 1rem; font-weight: 700; color: #ffffff; }
 .ast-conclusion p  { font-size: 0.92rem; line-height: 1.7; color: var(--text-main); }
 
 /* ── Mind Map Result ──────────────────────────── */

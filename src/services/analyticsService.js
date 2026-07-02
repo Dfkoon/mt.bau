@@ -1,5 +1,5 @@
 import { db } from '../config/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getCountFromServer } from 'firebase/firestore';
 import { getUserProfile } from '../utils/exchangeLocalStorage';
 
 /**
@@ -45,6 +45,20 @@ export const logPageView = async (path, details = {}) => {
         await addDoc(collection(db, 'page_views'), viewData);
     } catch (error) {
         console.error('Error logging page view:', error);
+    }
+};
+
+export const getTotalStudentVisits = async () => {
+    try {
+        const visitsQuery = query(
+            collection(db, 'page_views'),
+            where('type', '==', 'visit')
+        );
+        const snapshot = await getCountFromServer(visitsQuery);
+        return Number(snapshot.data().count || 0);
+    } catch (error) {
+        console.error('Error fetching visitor count:', error);
+        return 0;
     }
 };
 

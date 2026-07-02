@@ -3,17 +3,29 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import Ballpit from '../components/Ballpit';
 import CountUp from '../components/CountUp';
+import { getTotalStudentVisits } from '../services/analyticsService';
 import './HeroSection.css';
 
 const HeroSection = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
     const [ballCount, setBallCount] = useState(75);
+    const [heroVisitorsCount, setHeroVisitorsCount] = useState(Number(import.meta.env.VITE_HERO_VISITORS_COUNT ?? 730));
+    const heroMaterialsCount = Number(import.meta.env.VITE_HERO_MATERIALS_COUNT ?? 100);
 
     useEffect(() => {
         const handleResize = () => {
             setBallCount(window.innerWidth < 768 ? 35 : 75);
         };
+
+        const loadVisitorCount = async () => {
+            const count = await getTotalStudentVisits();
+            if (count > 0) {
+                setHeroVisitorsCount(count);
+            }
+        };
+
+        loadVisitorCount();
 
         // Initial check
         handleResize();
@@ -81,13 +93,13 @@ const HeroSection = () => {
                 <div className="hero-stats">
                     <div className="stat-item">
                         <span className="stat-value">
-                            +<CountUp to={100} duration={2.5} className="count-up-text" />
+                            +<CountUp to={heroMaterialsCount} duration={2.5} className="count-up-text" />
                         </span>
                         <span className="stat-label">{t('hero.stat.materials')}</span>
                     </div>
                     <div className="stat-item">
                         <span className="stat-value">
-                            +<CountUp to={500} duration={2.5} className="count-up-text" />
+                            +<CountUp to={heroVisitorsCount} duration={2.5} className="count-up-text" />
                         </span>
                         <span className="stat-label">{t('hero.stat.students')}</span>
                     </div>

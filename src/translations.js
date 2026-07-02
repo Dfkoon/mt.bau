@@ -28,7 +28,7 @@ const translations = {
         'nav.login': 'دخول',
 
         // Academic Calendar Page
-        'calendar.hero.title': 'التقويم الأكاديمي 📅',
+        'calendar.hero.title': 'التقويم الأكاديمي',
         'calendar.hero.subtitle': 'التقويم الجامعي 2026/2025 - جامعة البلقاء التطبيقية',
         'calendar.hero.note': 'وحدة القبول والتسجيل',
         'calendar.stats.total': 'إجمالي الأحداث',
@@ -48,7 +48,7 @@ const translations = {
         'calendar.note.text': '* تحدد أيام السبت لمناقشة مشاريع التخرج.\nالتواريخ المذكورة قابلة للتعديل حسب الظروف الطارئة.',
 
         // Quiz Page
-        'quiz.hero.title': 'الاختبارات التفاعلية 📝',
+        'quiz.hero.title': 'الاختبارات التفاعلية',
         'quiz.hero.subtitle': 'اختبر معلوماتك في مختلف المواد المتاحة',
         'quiz.selection.title': 'اختر الاختبار',
         'quiz.selection.note': 'قم بتحديث الصفحة أو زيارة الموقع باستمرار، فنحن نقوم بإضافة المواد التي تصلنا تباعاً.',
@@ -71,7 +71,7 @@ const translations = {
         'quiz.finish': 'إنهاء المحاولة',
 
         // Study Materials Page
-        'materials.hero.title': 'المواد الدراسية 📚',
+        'materials.hero.title': 'المواد الدراسية',
         'materials.hero.subtitle': 'استكشف جميع المواد الدراسية ومصادرها المتنوعة',
         'materials.search.placeholder': 'ابحث عن مادة...',
         'materials.no_results.title': 'لم يتم العثور على نتائج',
@@ -110,15 +110,23 @@ const translations = {
         'hero.btn.calendar': 'التقويم الأكاديمي',
         'hero.btn.exchange': 'تبادل المواد',
         'hero.stat.materials': 'مادة دراسية',
-        'hero.stat.students': 'طالب نشط',
+        'hero.stat.students': 'زائر',
         'hero.stat.support': 'دعم أكاديمي',
 
         // Marquee
         'marquee.label': 'عاجل',
-        'marquee.text1': 'مبادرة مرافقة الطلبة ذوي الاحتياجات الخاصة - جامعة البلقاء التطبيقية',
-        'marquee.text2': 'لأن لحظة التخرج لا تتكرر... ذكرياتك تستحق الأفضل - الأفق للتصاميم',
-        'marquee.text4': 'بمناسبة عيد الاستقلال الأردني المجيد — كل عام ووطننا بخير، تحيا الأردن شامخةً بعزة وكرامة.',
-        'marquee.text5': 'يوم العلم الأردني 16 نيسان — رايتنا عالية ترفرف بحب وانتماء لوطن غالٍ على كل قلب أردني.',
+        'marquee.text1': 'لا توجد أحداث قادمة الآن. تابعنا لتحديثات الأحداث القادمة.',
+        'marquee.text2': 'سنعرض لك أول حدثين قادمين بمجرد توفرهما.',
+
+        // Campaign Popup
+        'campaign.title.open': 'حجز المواد متاح الآن',
+        'campaign.text.open': 'الآن الحجز مفتوح! احجز أو تبرع فوراً لتضمن حصولك على المواد قبل اكتمال الأماكن.',
+        'campaign.title.soon': 'غداً يبدأ حجز المواد',
+        'campaign.text.soon': 'استعد الآن! الحجز يبدأ غداً في الساعة 9 صباحاً، احجز أو تبرع لتكون ضمن الأوائل.',
+        'campaign.badge.open': 'متاح الآن',
+        'campaign.badge.soon': 'قريباً',
+        'campaign.button.open': 'احجز أو تبرع الآن',
+        'campaign.button.soon': 'استعد للحجز الآن',
 
         // Nashmi Bot
         'chat.title': 'بوت نشمي',
@@ -194,7 +202,7 @@ const translations = {
         'booking.success.msg': 'سوف يتم التواصل معك في أقرب وقت ممكن من فترة السحب والإضافة والاتفاق على آلية استلام المادة.',
 
         // Suggestions
-        'suggestions.title': 'اقتراحات وشكاوى 📬',
+        'suggestions.title': 'اقتراحات وشكاوى',
         'suggestions.subtitle': 'رأيك يهمنا! شاركنا مقترحاتك أو أي مشكلة تواجهها لنتمكن من تحسين تجربتك.',
         'suggestions.success.title': 'تم استلام رسالتك بنجاح!',
         'suggestions.success.desc': 'شكراً لتواصلك معنا، سنقوم بمراجعة طلبك في أقرب وقت.',
@@ -217,7 +225,7 @@ const translations = {
         'suggestions.btn.sending': 'جاري الإرسال...',
 
         // Academic Plans
-        'plans.hero.title': 'الخطط الإرشادية والشجرية 🎓',
+        'plans.hero.title': 'الخطط الإرشادية والشجرية',
         'plans.hero.subtitle': 'الخطط الشجرية لجميع تخصصات كلية الذكاء الاصطناعي',
         'plans.toggle.new': 'الخطط الجديدة',
         'plans.toggle.old': 'الخطط القديمة',
@@ -256,7 +264,7 @@ const translations = {
         'footer.charity': 'صدقة جارية عن أرواح شهداء العلم',
 
         // Student Projects
-        'student.projects.title': 'دعم المشاريع الطلابية 🚀',
+        'student.projects.title': 'دعم المشاريع الطلابية',
         'student.projects.subtitle': 'منصة لعرض إبداعات الطلاب ودعم مشاريعهم الريادية والتقنية',
         'student.projects.add': 'أضف مشروعك',
         'student.projects.name': 'اسم المشروع',
@@ -353,7 +361,7 @@ const translations = {
         'nav.login': 'Login',
 
         // Academic Calendar Page
-        'calendar.hero.title': 'Academic Calendar 📅',
+        'calendar.hero.title': 'Academic Calendar',
         'calendar.hero.subtitle': 'University Calendar 2025/2026 - Al-Balqa Applied University',
         'calendar.hero.note': 'Admissions and Registration Unit',
         'calendar.stats.total': 'Total Events',
@@ -373,7 +381,7 @@ const translations = {
         'calendar.note.text': '* Saturdays are designated for graduation project discussions.\nThe dates mentioned are subject to change according to emergency circumstances.',
 
         // Quiz Page
-        'quiz.hero.title': 'Interactive Quizzes 📝',
+        'quiz.hero.title': 'Interactive Quizzes',
         'quiz.hero.subtitle': 'Test your knowledge in various available subjects',
         'quiz.selection.title': 'Select Quiz',
         'quiz.selection.note': 'Please refresh or visit regularly, we are constantly adding materials as they arrive.',
@@ -396,7 +404,7 @@ const translations = {
         'quiz.finish': 'Finish Attempt',
 
         // Study Materials Page
-        'materials.hero.title': 'Study Materials 📚',
+        'materials.hero.title': 'Study Materials',
         'materials.hero.subtitle': 'Explore all study materials and resources',
         'materials.search.placeholder': 'Search for subjects...',
         'materials.no_results.title': 'No results found',
@@ -428,15 +436,23 @@ const translations = {
         'hero.btn.calendar': 'Academic Calendar',
         'hero.btn.exchange': 'Material Exchange',
         'hero.stat.materials': 'Study Materials',
-        'hero.stat.students': 'Active Students',
+        'hero.stat.students': 'Visitors',
         'hero.stat.support': 'Academic Support',
 
         // Marquee
         'marquee.label': 'Breaking',
-        'marquee.text1': 'Accompanying Students with Special Needs Initiative - Al-Balqa Applied University',
-        'marquee.text2': 'Because graduation moments never repeat... your memories deserve the best - Horizon Designs',
-        'marquee.text3': 'Happy Jordan Independence Day — May our beloved homeland stand tall forever, with pride and dignity.',
-        'marquee.text4': 'Jordan Flag Day — April 16 — Our flag flies high, carrying the love and belonging of every Jordanian heart.',
+        'marquee.text1': 'No upcoming events right now. Stay tuned for future event updates.',
+        'marquee.text2': 'We will show the first two upcoming events as soon as they become available.',
+
+        // Campaign Popup
+        'campaign.title.open': 'Reservations Available Now',
+        'campaign.text.open': 'Reservations are now open! Reserve or donate immediately to secure your materials before spots fill up.',
+        'campaign.title.soon': 'Reservations Start Tomorrow',
+        'campaign.text.soon': 'Get ready now! Reservations open tomorrow at 9 AM, reserve or donate to be among the first.',
+        'campaign.badge.open': 'Open Now',
+        'campaign.badge.soon': 'Coming Soon',
+        'campaign.button.open': 'Reserve or Donate Now',
+        'campaign.button.soon': 'Prepare to Reserve',
 
         // Nashmi Bot
         'chat.title': 'Nashmi Bot',
@@ -512,7 +528,7 @@ const translations = {
         'booking.success.msg': 'You will be contacted as soon as possible during the drop and add period to agree on the material delivery mechanism.',
 
         // Suggestions
-        'suggestions.title': 'Suggestions & Complaints 📬',
+        'suggestions.title': 'Suggestions & Complaints',
         'suggestions.subtitle': 'Your opinion matters! Share your suggestions or any issues to help us improve.',
         'suggestions.success.title': 'Message Received Successfully!',
         'suggestions.success.desc': 'Thanks for contacting us, we will review your request soon.',
@@ -535,7 +551,7 @@ const translations = {
         'suggestions.btn.sending': 'Sending...',
 
         // Academic Plans
-        'plans.hero.title': 'Advisory Plans 🎓',
+        'plans.hero.title': 'Advisory Plans',
         'plans.hero.subtitle': 'Tree plans for all IT Faculty majors',
         'plans.toggle.new': 'New Plans',
         'plans.toggle.old': 'Old Plans',
@@ -574,7 +590,7 @@ const translations = {
         'footer.charity': 'Perpetual Charity for the Souls of Martyrs of Knowledge',
 
         // Student Projects
-        'student.projects.title': 'Student Projects Support 🚀',
+        'student.projects.title': 'Student Projects Support',
         'student.projects.subtitle': 'A platform to showcase student creativity and support their entrepreneurial and technical projects',
         'student.projects.add': 'Add Your Project',
         'student.projects.name': 'Project Name',

@@ -15,7 +15,7 @@ const GradingSystem = () => {
             <section className="grading-hero" style={{ backgroundImage: `url(${gradingHero})` }}>
                 <div className="hero-overlay"></div>
                 <div className="hero-content">
-                    <h1>{isAr ? 'نظام العلامات' : 'Grading System'} 📊</h1>
+                    <h1>{isAr ? 'نظام العلامات' : 'Grading System'}</h1>
                     <p>{isAr ? 'استكشف أنظمة العلامات المختلفة والمعلومات المتعلقة بها' : 'Explore different grading systems and related information'}</p>
                 </div>
             </section>

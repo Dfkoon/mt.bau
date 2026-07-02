@@ -4,6 +4,8 @@
  */
 const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.trim();
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET?.trim();
+const PLACEHOLDER_CLOUD_NAME = 'your_cloudinary_cloud_name';
+const PLACEHOLDER_UPLOAD_PRESET = 'your_upload_preset';
 
 /**
  * Upload a file to Cloudinary
@@ -12,8 +14,12 @@ const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET?.trim();
  * @returns {Promise<Object>} Upload result with URL and public_id
  */
 export const uploadToCloudinary = async (file, options = {}) => {
-    if (!CLOUD_NAME) throw new Error('Cloudinary Cloud Name is missing in .env');
-    if (!UPLOAD_PRESET) throw new Error('Cloudinary Upload Preset is missing in .env');
+    if (!CLOUD_NAME || CLOUD_NAME === PLACEHOLDER_CLOUD_NAME) {
+        throw new Error('Cloudinary Cloud Name is missing or invalid in .env');
+    }
+    if (!UPLOAD_PRESET || UPLOAD_PRESET === PLACEHOLDER_UPLOAD_PRESET) {
+        throw new Error('Cloudinary Upload Preset is missing or invalid in .env');
+    }
 
     try {
         const formData = new FormData();

@@ -218,6 +218,8 @@
     margin-bottom: 1.5rem;
     text-align: center;
     color: var(--text-main);
+    text-shadow: none;
+    filter: none;
 }
 
 .title-frame {

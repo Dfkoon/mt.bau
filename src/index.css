@@ -49,6 +49,23 @@
   font-family: 'Tajawal', 'Outfit', sans-serif;
 }
 
+/* Global Title Styles - White, No Shadows */
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+  text-shadow: none;
+  filter: none;
+  letter-spacing: -0.5px;
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: #ffffff;
+}
+
 html {
   scroll-behavior: smooth;
 }

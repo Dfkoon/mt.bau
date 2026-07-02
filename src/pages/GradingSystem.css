@@ -40,7 +40,7 @@
     font-weight: 800;
     color: #ffffff;
     margin-bottom: 1rem;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-shadow: none;
 }
 
 .grading-hero p {
@@ -66,7 +66,7 @@
 }
 
 .section-title {
-    color: var(--primary-light);
+    color: #ffffff;
     font-size: 1.8rem;
     text-align: center;
     margin-bottom: 2rem;
@@ -122,7 +122,7 @@
 }
 
 .highlight-text {
-    color: var(--primary-light);
+    color: #ffffff;
 }
 
 .section-desc {
@@ -276,7 +276,7 @@
 }
 
 .comparison-table .diff-val {
-    color: var(--primary-light);
+    color: #ffffff;
     font-weight: 600;
 }
 

@@ -8,6 +8,7 @@ import './Navbar.css';
 const Navbar = ({ toggleSidebar }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isStaffLogged, setIsStaffLogged] = useState(false);
   const { t, language } = useLanguage();
   const location = useLocation();
 
@@ -19,11 +20,18 @@ const Navbar = ({ toggleSidebar }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Detect admin session for dashboard link
+  // Detect admin and staff session for dashboard link
   useEffect(() => {
     try {
       const s = sessionStorage.getItem('exchange_staff');
-      if (s) { const u = JSON.parse(s); setIsAdmin(u?.role === 'admin'); }
+      if (s) {
+        const u = JSON.parse(s);
+        setIsAdmin(u?.role === 'admin');
+        setIsStaffLogged(true);
+      } else {
+        setIsStaffLogged(false);
+        setIsAdmin(false);
+      }
     } catch { /* ignore */ }
   }, [location]);
 

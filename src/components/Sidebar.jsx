@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import './Sidebar.css';
@@ -6,7 +6,15 @@ import ThemeLanguageToggle from './ThemeLanguageToggle';
 import AnimatedLogo from './AnimatedLogo';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
+    const [isStaffLogged, setIsStaffLogged] = useState(false);
+
+    useEffect(() => {
+        try {
+            const s = sessionStorage.getItem('exchange_staff');
+            setIsStaffLogged(!!s);
+        } catch { /* ignore */ }
+    }, [isOpen]);
     return (
         <>
             <div className={`sidebar-overlay ${isOpen ? 'active' : ''}`} onClick={toggleSidebar}></div>
@@ -27,6 +35,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <li><Link to="/quiz" onClick={toggleSidebar}>{t('nav.quiz')}</Link></li>
                     <li><Link to="/calendar" onClick={toggleSidebar}>{t('nav.calendar')}</Link></li>
                     <li><Link to="/exchange" onClick={toggleSidebar}>{t('nav.exchange')}</Link></li>
+
                     <li><Link to="/faq" onClick={toggleSidebar}>{t('nav.faq')}</Link></li>
 
                     <div className="divider" style={{ borderTop: '1px solid var(--glass-border)', margin: '10px 0' }}></div>

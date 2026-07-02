@@ -57,7 +57,7 @@
     color: #ffffff;
     margin-bottom: 1.2rem;
     letter-spacing: -1.5px;
-    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-shadow: none;
     line-height: 1.1;
 }
 
@@ -499,7 +499,7 @@
 }
 
 [data-theme="light"] .semester-header h2 {
-    color: var(--text-main);
+    color: #ffffff;
 }
 
 .semester-year {

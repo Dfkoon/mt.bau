@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { nashmiData } from '../data/nashmiData';
 import { chatWithNashmi } from '../services/aiService';
-import toast from 'react-hot-toast';
+// toast removed (share UI removed)
 import './NashmiGuide.css';
 
 const SITE_URL = 'https://mtbau.web.app';
@@ -21,55 +21,10 @@ const NashmiGuide = () => {
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [hasUnread, setHasUnread] = useState(false);
-    const [shareCopied, setShareCopied] = useState(false);
-    const [showShareMenu, setShowShareMenu] = useState(false);
-    const shareMenuRef = useRef(null);
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (shareMenuRef.current && !shareMenuRef.current.contains(event.target)) {
-                setShowShareMenu(false);
-            }
-        };
-        if (showShareMenu) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [showShareMenu]);
+    // share menu removed — no outside-click handler needed
 
-    const handleOptionClick = (platform) => {
-        const url = encodeURIComponent(SITE_URL);
-        const text = encodeURIComponent(
-            isAr
-                ? 'اكتشف مكانك الجامعي — منصة طلاب جامعة البلقاء التطبيقية 🎓'
-                : 'Discover MT.BAU — The student platform for BAU students 🎓'
-        );
-
-        if (platform === 'copy') {
-            navigator.clipboard.writeText(SITE_URL);
-            toast.success(isAr ? 'تم نسخ الرابط بنجاح! 🔗' : 'Link copied successfully! 🔗');
-            setShareCopied(true);
-            setTimeout(() => setShareCopied(false), 2200);
-        } else if (platform === 'instagram') {
-            navigator.clipboard.writeText(SITE_URL);
-            toast.success(isAr 
-                ? 'تم نسخ الرابط! افتح انستغرام لمشاركته مع أصدقائك 📸' 
-                : 'Link copied! Open Instagram to share with friends 📸'
-            );
-            setTimeout(() => {
-                window.open('https://www.instagram.com', '_blank');
-            }, 1200);
-        } else if (platform === 'whatsapp') {
-            window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
-        } else if (platform === 'facebook') {
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-        } else if (platform === 'telegram') {
-            window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
-        }
-        setShowShareMenu(false);
-    };
+    // share menu removed
 
     // Detailed page context for AI and preview bubbles
     const pageGuides = {
@@ -366,75 +321,6 @@ const NashmiGuide = () => {
 
             {!isOpen && (
                 <>
-                    {/* Share Menu Card */}
-                    {showShareMenu && (
-                        <div className="share-menu-card glass-card" ref={shareMenuRef}>
-                            <div className="share-menu-header">
-                                <h4>{isAr ? 'مشاركة المنصة' : 'Share Platform'}</h4>
-                                <button className="share-menu-close" onClick={() => setShowShareMenu(false)}>×</button>
-                            </div>
-                            <div className="share-options-grid">
-                                <button className="share-opt-btn whatsapp" onClick={() => handleOptionClick('whatsapp')}>
-                                    <span className="share-opt-icon">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.717-1.458L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.966 14.12 .94 11.501.94 6.062.94 1.638 5.31 1.636 10.74c-.001 1.708.452 3.378 1.311 4.848l-.995 3.635 3.705-.969zm13.911-7.72c-.27-.136-1.602-.79-1.85-.882-.25-.093-.43-.138-.612.136-.182.274-.706.882-.865 1.066-.16.183-.318.206-.59.07-2.61-.13-3.625-1.123-4.394-2.45-.19-.327-.02-.504.143-.667.146-.14.318-.372.477-.558.16-.186.213-.318.319-.528.107-.21.053-.394-.027-.53-.08-.136-.612-1.477-.838-2.024-.22-.53-.443-.457-.612-.466-.16-.008-.342-.01-.525-.01-.182 0-.479.068-.729.34-.25.274-.956.934-.956 2.278 0 1.345.979 2.642 1.116 2.827.137.185 1.927 2.942 4.669 4.123 2.742 1.18 2.742.787 3.238.74.496-.048 1.602-.656 1.83-.1.229-.53.229-.988.16-1.116-.07-.127-.25-.203-.52-.34z"/>
-                                        </svg>
-                                    </span>
-                                    <span className="share-opt-label">{isAr ? 'واتساب' : 'WhatsApp'}</span>
-                                </button>
-                                <button className="share-opt-btn facebook" onClick={() => handleOptionClick('facebook')}>
-                                    <span className="share-opt-icon">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                        </svg>
-                                    </span>
-                                    <span className="share-opt-label">{isAr ? 'فيسبوك' : 'Facebook'}</span>
-                                </button>
-                                <button className="share-opt-btn instagram" onClick={() => handleOptionClick('instagram')}>
-                                    <span className="share-opt-icon">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
-                                        </svg>
-                                    </span>
-                                    <span className="share-opt-label">{isAr ? 'انستغرام' : 'Instagram'}</span>
-                                </button>
-                                <button className="share-opt-btn telegram" onClick={() => handleOptionClick('telegram')}>
-                                    <span className="share-opt-icon">
-                                        <svg viewBox="0 0 24 24" fill="currentColor">
-                                            <path d="M11.944 0C5.344 0 0 5.344 0 12s5.344 12 11.944 12c6.6 0 12-5.344 12-12s-5.4-12-12-12zm5.562 8.161l-1.875 8.828c-.14.629-.514.784-.967.528l-2.86-2.107-1.38 1.327c-.153.153-.282.282-.577.282l.206-2.921 5.316-4.798c.23-.206-.051-.318-.358-.116L8.7 13.064l-2.833-.884c-.615-.192-.628-.615.128-.91l11.083-4.275c.513-.186.96.12.728 1.166z"/>
-                                        </svg>
-                                    </span>
-                                    <span className="share-opt-label">{isAr ? 'تلغرام' : 'Telegram'}</span>
-                                </button>
-                                <button className="share-opt-btn copy-link" onClick={() => handleOptionClick('copy')}>
-                                    <span className="share-opt-icon">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                                        </svg>
-                                    </span>
-                                    <span className="share-opt-label">{isAr ? 'نسخ الرابط' : 'Copy Link'}</span>
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Share button — appears above nashmi */}
-                    <button
-                        className={`share-fab-btn ${showShareMenu ? 'active' : ''}`}
-                        onClick={() => setShowShareMenu(!showShareMenu)}
-                        title={isAr ? 'شارك الموقع' : 'Share website'}
-                        aria-label={isAr ? 'مشاركة الموقع' : 'Share website'}
-                    >
-                        <svg className="share-fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="18" cy="5" r="3" />
-                            <circle cx="6" cy="12" r="3" />
-                            <circle cx="18" cy="19" r="3" />
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                    </button>
-
                     <button
                         className={`nashmi-robot-btn ${hasUnread ? 'pulse' : ''}`}
                         onClick={() => { setIsOpen(!isOpen); setHasUnread(false); }}

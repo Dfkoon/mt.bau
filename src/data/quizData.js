@@ -1642,6 +1642,277 @@ export const quizData = {
             { id: 10, type: 'mcq', questionEn: 'How does a link-layer protocol encapsulate a network datagram?', options: [{ id: 'a', textEn: 'With a link-layer header' }, { id: 'b', textEn: 'With a network-layer header' }, { id: 'c', textEn: 'With a transport-layer header' }, { id: 'd', textEn: 'With an application-layer header' }], correctAnswer: 'a', marks: 1 }
         ]
     },
+    df_operating_systems: {
+        id: 'df_operating_systems',
+        title: 'Operating Systems for Digital Forensics - Midterm',
+        titleAr: 'نظم تشغيل للتحقيقات الجنائية - ميد',
+        icon: '🕵️‍♂️',
+        color: '#FF7043',
+        forceEnglish: true,
+        noteAr: 'أسئلة من المقرر الماده للدكتورة نسرين ثلجي لعام الدراسي 2026 الفصل الدراسي الاول',
+        questions: [
+            {
+                id: 1,
+                type: 'mcq',
+                questionEn: 'What are the four basic components of a computer system?',
+                options: [
+                    { id: 'a', textEn: 'Input, Output, Storage, Processing' },
+                    { id: 'b', textEn: 'CPU, RAM, Hard Disk, Network Card' },
+                    { id: 'c', textEn: 'Mouse, Keyboard, Monitor, Printer' },
+                    { id: 'd', textEn: 'OS, Hardware, Apps, Users' }
+                ],
+                correctAnswer: 'a',
+                marks: 2.0
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                questionEn: 'What is the main purpose of an Operating System for users?',
+                options: [
+                    { id: 'a', textEn: 'To run database queries' },
+                    { id: 'b', textEn: 'To maximize hardware' },
+                    { id: 'c', textEn: 'To manage storage' },
+                    { id: 'd', textEn: 'To make the system easy to use' }
+                ],
+                correctAnswer: 'd',
+                marks: 2.0
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                questionEn: 'Which program runs first when the computer starts?',
+                options: [
+                    { id: 'a', textEn: 'Kernel' },
+                    { id: 'b', textEn: 'Compiler' },
+                    { id: 'c', textEn: 'Bootstrap program' },
+                    { id: 'd', textEn: 'Loader' }
+                ],
+                correctAnswer: 'c',
+                marks: 2.0
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                questionEn: 'How do the CPU and devices communicate?',
+                options: [
+                    { id: 'a', textEn: 'Through the OS' },
+                    { id: 'b', textEn: 'Through a shared bus' },
+                    { id: 'c', textEn: 'Through applications' },
+                    { id: 'd', textEn: 'Through the network' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                questionEn: 'What mechanism notifies the CPU that I/O has finished?',
+                options: [
+                    { id: 'a', textEn: 'Interrupt' },
+                    { id: 'b', textEn: 'DMA' },
+                    { id: 'c', textEn: 'System call' },
+                    { id: 'd', textEn: 'Application' }
+                ],
+                correctAnswer: 'a',
+                marks: 2.0
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                questionEn: 'The smallest unit of memory is:',
+                options: [
+                    { id: 'a', textEn: 'Byte' },
+                    { id: 'b', textEn: 'Bit' },
+                    { id: 'c', textEn: 'Word' },
+                    { id: 'd', textEn: 'KB' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                questionEn: 'RAM is mainly:',
+                options: [
+                    { id: 'a', textEn: 'Permanent storage' },
+                    { id: 'b', textEn: 'Non-volatile' },
+                    { id: 'c', textEn: 'Volatile memory for CPU' },
+                    { id: 'd', textEn: 'I/O controller' }
+                ],
+                correctAnswer: 'c',
+                marks: 2.0
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                questionEn: 'The fastest memory type is:',
+                options: [
+                    { id: 'a', textEn: 'RAM' },
+                    { id: 'b', textEn: 'Disk' },
+                    { id: 'c', textEn: 'Registers' },
+                    { id: 'd', textEn: 'Cache' }
+                ],
+                correctAnswer: 'c',
+                marks: 2.0
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                questionEn: 'Which of the following is NOT a standard process state?',
+                options: [
+                    { id: 'a', textEn: 'Ready' },
+                    { id: 'b', textEn: 'Running' },
+                    { id: 'c', textEn: 'Deleted' },
+                    { id: 'd', textEn: 'Waiting' }
+                ],
+                correctAnswer: 'c',
+                marks: 2.0
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                questionEn: 'The process of switching the CPU from one process to another is called:',
+                options: [
+                    { id: 'a', textEn: 'Process Scheduling' },
+                    { id: 'b', textEn: 'Context Switching' },
+                    { id: 'c', textEn: 'Multitasking' },
+                    { id: 'd', textEn: 'Threading' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                questionEn: 'Which scheduling algorithm serves the process that arrives first?',
+                options: [
+                    { id: 'a', textEn: 'SJF' },
+                    { id: 'b', textEn: 'Round Robin' },
+                    { id: 'c', textEn: 'FCFS' },
+                    { id: 'd', textEn: 'Priority Scheduling' }
+                ],
+                correctAnswer: 'c',
+                marks: 2.0
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                questionEn: 'What is "Starvation" in process scheduling?',
+                options: [
+                    { id: 'a', textEn: 'Process stopping work' },
+                    { id: 'b', textEn: 'Low priority process never getting CPU' },
+                    { id: 'c', textEn: 'Lack of RAM' },
+                    { id: 'd', textEn: 'Slow CPU speed' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                questionEn: 'A small program that loads the OS during startup is called:',
+                options: [
+                    { id: 'a', textEn: 'BIOS' },
+                    { id: 'b', textEn: 'Bootstrap Loader' },
+                    { id: 'c', textEn: 'Safe Mode' },
+                    { id: 'd', textEn: 'Terminal' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                questionEn: 'Which of the following is an open-source operating system?',
+                options: [
+                    { id: 'a', textEn: 'Windows' },
+                    { id: 'b', textEn: 'Linux' },
+                    { id: 'c', textEn: 'macOS' },
+                    { id: 'd', textEn: 'iOS' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                questionEn: 'PCB stands for:',
+                options: [
+                    { id: 'a', textEn: 'Program Code Block' },
+                    { id: 'b', textEn: 'Process Control Block' },
+                    { id: 'c', textEn: 'Program Counter Buffer' },
+                    { id: 'd', textEn: 'Process Control Buffer' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                questionEn: 'What is the role of virtual memory in an operating system?',
+                options: [
+                    { id: 'a', textEn: 'Store programs permanently on disk' },
+                    { id: 'b', textEn: 'Allow the system to run larger processes than physical RAM can hold' },
+                    { id: 'c', textEn: 'Manage the user interface' },
+                    { id: 'd', textEn: 'Control network connections' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                questionEn: 'Which CPU scheduling algorithm assigns a fixed time slice to each process?',
+                options: [
+                    { id: 'a', textEn: 'First-Come, First-Served (FCFS)' },
+                    { id: 'b', textEn: 'Shortest Job First (SJF)' },
+                    { id: 'c', textEn: 'Round Robin' },
+                    { id: 'd', textEn: 'Priority Scheduling' }
+                ],
+                correctAnswer: 'c',
+                marks: 2.0
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                questionEn: 'What is a device driver in an operating system?',
+                options: [
+                    { id: 'a', textEn: 'A program that manages user files' },
+                    { id: 'b', textEn: 'Software that controls and communicates with a hardware device' },
+                    { id: 'c', textEn: 'A part of the boot process' },
+                    { id: 'd', textEn: 'The graphical interface used by users' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                questionEn: 'Which structure does the operating system use to store file metadata and disk locations on Unix-like systems?',
+                options: [
+                    { id: 'a', textEn: 'Directory Tree' },
+                    { id: 'b', textEn: 'File Allocation Table' },
+                    { id: 'c', textEn: 'Inode' },
+                    { id: 'd', textEn: 'Superblock' }
+                ],
+                correctAnswer: 'c',
+                marks: 2.0
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                questionEn: 'What is the main benefit of process isolation?',
+                options: [
+                    { id: 'a', textEn: 'Faster disk access' },
+                    { id: 'b', textEn: 'Preventing one process from corrupting another process’s memory' },
+                    { id: 'c', textEn: 'Reducing network traffic' },
+                    { id: 'd', textEn: 'Increasing file system speed' }
+                ],
+                correctAnswer: 'b',
+                marks: 2.0
+            }
+        ]
+    },
     os_mid: {
         id: 'os_mid',
         title: 'Operating Systems - Mid Exam',
@@ -7161,7 +7432,16 @@ export const quizData = {
             {
                 id: 1,
                 type: 'mcq',
-                questionEn: 'Consider the following processes with their arrival times and burst times using Shortest Remaining Time First (SRTF) scheduling: \n\nProcess | Arrival Time | Burst Time\n---|---|---\nP1 | 0 | 7\nP2 | 2 | 3\nP3 | 3 | 6\nP4 | 5 | 4\n\nCalculate the Average Waiting Time.',
+                questionEn: 'Consider the following processes with their arrival times and burst times using Shortest Remaining Time First (SRTF) scheduling:\n\nCalculate the Average Waiting Time.',
+                tableData: {
+                    headers: ['Process', 'Arrival Time', 'Burst Time'],
+                    rows: [
+                        ['P1', '0', '7'],
+                        ['P2', '2', '3'],
+                        ['P3', '3', '6'],
+                        ['P4', '5', '4']
+                    ]
+                },
                 options: [
                     { id: 'a', textEn: '3.0' },
                     { id: 'b', textEn: '4.5' },
@@ -8852,7 +9132,8 @@ export const quizCategories = [
         color: '#3F51B5',
         isNew: true,
         parts: [
-            { id: 'databases_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' }
+            { id: 'databases_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' },
+            { id: 'databases_past_years', title: 'Past Year Questions', titleAr: 'أسئلة سنوات' },
         ]
     },
     {
@@ -8909,10 +9190,20 @@ export const quizCategories = [
         color: '#3F51B5',
         isNew: true,
         parts: [
-            { id: 'df_os_quiz1', title: 'Quiz 1', titleAr: 'كويز 1' },
-            { id: 'df_os_quiz2', title: 'Quiz 2', titleAr: 'كويز 2' }
+            { 
+                id: 'df_os_quizzes',
+                title: 'Quizzes',
+                titleAr: 'الكويزات',
+                isGroup: true,
+                subParts: [
+                    { id: 'df_os_quiz1', title: 'Quiz 1', titleAr: 'كويز 1' },
+                    { id: 'df_os_quiz2', title: 'Quiz 2', titleAr: 'كويز 2' }
+                ]
+            },
+            { id: 'df_operating_systems', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' }
         ]
     },
+
     {
         id: 'principles_of_cybersecurity',
         name: 'Principles of Cybersecurity',

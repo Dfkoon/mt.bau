@@ -26,21 +26,19 @@ import Quiz from './pages/Quiz';
 import AcademicCalendar from './pages/AcademicCalendar';
 import GradingSystem from './pages/GradingSystem';
 import MaterialExchange from './pages/MaterialExchange';
-
+import AdminDashboard from './pages/AdminDashboard';
 import FAQ from './pages/FAQ';
 import AboutUs from './pages/AboutUs';
-import AdminCourseStatusManager from './components/AdminCourseStatusManager';
-import AdminDashboard from './pages/AdminDashboard';
 
 import Legal from './pages/Legal';
 import './index.css';
 
 import FeedbackPopup from './components/FeedbackPopup';
+
 import NashmiGuide from './components/NashmiGuide';
 
 const HomePage = () => {
   const location = useLocation();
-
   React.useEffect(() => {
     // Handle manual scroll state
     if (location.state?.scrollToReviews) {
@@ -68,6 +66,7 @@ const HomePage = () => {
     <>
       <HeroSection />
       <AnnouncementMarquee />
+
       <LemonChat />
       <UpcomingEvents />
       <GraduationPromo />
@@ -150,7 +149,7 @@ function App() {
             <Route path="/calendar" element={<AcademicCalendar />} />
             <Route path="/grading" element={<GradingSystem />} />
             <Route path="/exchange" element={<MaterialExchange />} />
-            <Route path="/exchange-admin" element={<AdminCourseStatusManager />} />
+            <Route path="/admin" element={<AdminDashboard />} />
 
             <Route path="/faq" element={<FAQ />} />
             <Route path="/about" element={<AboutUs />} />

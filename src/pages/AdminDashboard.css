@@ -408,6 +408,214 @@
     box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
+.admin-section-description {
+    color: var(--text-muted, #94a3b8);
+    line-height: 1.7;
+    margin-top: 0.6rem;
+    margin-bottom: 1.6rem;
+    max-width: 820px;
+}
+
+.admin-general-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-general-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 1.25rem 1.4rem;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 150px;
+}
+
+.admin-general-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(167,139,250,0.35);
+}
+
+.admin-general-card.active {
+    background: rgba(167,139,250,0.12);
+    border-color: rgba(167,139,250,0.45);
+}
+
+.admin-general-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: var(--text-main, #f1f5f9);
+}
+
+.admin-general-page-panel {
+    padding: 1.7rem;
+}
+
+.admin-general-page-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.45rem;
+}
+
+.admin-general-page-desc {
+    color: var(--text-muted, #94a3b8);
+    margin-bottom: 1.4rem;
+    line-height: 1.7;
+}
+
+.admin-general-page-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.admin-contributions-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contributions-filter-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.contribution-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    display: grid;
+    gap: 1rem;
+}
+
+.contribution-card.approved {
+    border-color: rgba(52,211,153,0.25);
+}
+
+.contribution-card.pending {
+    border-color: rgba(251,191,36,0.25);
+}
+
+.contribution-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.contribution-card-header strong {
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.contribution-meta {
+    display: inline-block;
+    color: var(--text-muted, #94a3b8);
+    font-size: 0.88rem;
+}
+
+.contribution-card-body p {
+    margin: 0;
+    line-height: 1.75;
+    word-break: break-word;
+}
+
+.contribution-card-body a {
+    color: var(--text-link, #7c3aed);
+    text-decoration: none;
+    word-break: break-word;
+}
+
+.contribution-date {
+    color: var(--text-muted, #94a3b8);
+    font-size: 0.84rem;
+    margin-top: 0.65rem;
+}
+
+.contribution-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.admin-action-btn {
+    padding: 0.35rem 0.8rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-inline-start: 4px;
+}
+
+.admin-action-btn.resolve {
+    background: rgba(52,211,153,0.15);
+    color: #34d399;
+    border: 1px solid rgba(52,211,153,0.25);
+}
+
+.admin-action-btn.resolve:hover { background: rgba(52,211,153,0.3); }
+.admin-action-btn.delete {
+    background: rgba(248,113,113,0.15);
+    color: #f87171;
+    border: 1px solid rgba(248,113,113,0.25);
+}
+
+.admin-action-btn.delete:hover { background: rgba(248,113,113,0.3); }
+.admin-action-btn.approve {
+    background: rgba(52,211,153,0.15);
+    color: #34d399;
+    border: 1px solid rgba(52,211,153,0.25);
+}
+
+.admin-action-btn.approve:hover { background: rgba(52,211,153,0.3); }
+.admin-action-btn.unapprove {
+    background: rgba(248,113,113,0.15);
+    color: #f87171;
+    border: 1px solid rgba(248,113,113,0.25);
+}
+
+.admin-action-btn.unapprove:hover { background: rgba(248,113,113,0.3); }
+
+.admin-general-block {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 1rem 1.1rem;
+}
+
+.admin-general-block h5 {
+    margin: 0 0 0.45rem;
+    font-size: 0.98rem;
+    font-weight: 700;
+}
+
+.admin-general-block p {
+    margin: 0;
+    color: var(--text-muted, #94a3b8);
+    line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+    .admin-general-page-body {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ── Question Report card ── */
 .report-card {
     background: rgba(255,255,255,0.03);

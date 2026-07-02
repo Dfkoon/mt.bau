@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { submitContribution, submitLinkContribution } from '../services/contributionsService';
 import toast from 'react-hot-toast';
@@ -12,6 +12,7 @@ const FileUploader = ({ onClose }) => {
     const { language } = useLanguage();
     const [files, setFiles] = useState([]); // [{file, preview, compressed, progress}]
     const [externalLink, setExternalLink] = useState('');
+    const [studentName, setStudentName] = useState('');
     const [subjectName, setSubjectName] = useState('');
     const [contributionType, setContributionType] = useState('');
     const [isDragging, setIsDragging] = useState(false);
@@ -20,7 +21,7 @@ const FileUploader = ({ onClose }) => {
     const [uploadProgress, setUploadProgress] = useState(0); // overall percentage
     const [status, setStatus] = useState('idle'); // idle, uploading, success, error
     const [errorDetails, setErrorDetails] = useState('');
-    const activeTasks = React.useRef([]);
+    const activeTasks = useRef([]);
 
     const formatFileSize = (size) => {
         if (!size) return '0 KB';
@@ -219,6 +220,7 @@ const FileUploader = ({ onClose }) => {
                     file,
                     subjectName || 'General',
                     contributionType,
+                    studentName,
                     (progress) => {
                         fileProgresses[idx] = progress;
                         const totalProgress = fileProgresses.reduce((sum, p) => sum + p, 0);
