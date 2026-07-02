@@ -2781,6 +2781,19 @@
     color: #9b59b6;
 }
 
+/* Shown when gender data is missing in a shared-table booking */
+.gender-badge.gender-unknown {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px dashed #f59e0b;
+}
+
+/* Row highlight for bookings with incomplete gender data */
+.gender-warning-row {
+    background: rgba(245, 158, 11, 0.06) !important;
+    border-right: 3px solid #f59e0b;
+}
+
 .view-only-actions-row {
     display: flex;
     flex-wrap: wrap;

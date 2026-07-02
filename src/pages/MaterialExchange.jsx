@@ -3855,7 +3855,7 @@ td{color:#2f3d4f;}
                                                         </span>
                                                     </div>
                                                     {(() => {
-                                                        // Filter bookings where donor gender ≠ taker gender
+                                                        // Filter bookings where donor gender ≠ taker gender OR gender data is incomplete
                                                         const sharedBookings = [];
                                                         allDonations.forEach(donation => {
                                                             if (donation.materials) {
@@ -3864,30 +3864,33 @@ td{color:#2f3d4f;}
                                                                         const takerGender = m.takerInfo?.gender;
                                                                         const donorGender = donation.studentGender;
 
-                                                                        // Only include if genders are different (cross-gender)
-                                                                        if (takerGender && donorGender && takerGender !== donorGender) {
-                                                                            const sharedBookingRecord = {
-                                                                                id: `${donation.id}_shared_${idx}`,
-                                                                                donationId: donation.id,
-                                                                                materialIndex: idx,
-                                                                                donation,
-                                                                                material: m,
-                                                                                donorName: donation.studentName,
-                                                                                donorGender: donation.studentGender,
-                                                                                donorPhone: donation.phoneNumber,
-                                                                                donorEmail: donation.email,
-                                                                                takerName: m.takerInfo?.name || '—',
-                                                                                takerGender: m.takerInfo?.gender,
-                                                                                takerPhone: m.takerInfo?.phone || '—',
-                                                                                takerEmail: m.takerInfo?.email || '—',
-                                                                                materialName: m.name,
-                                                                                materialDescription: m.description || '—',
-                                                                                materialStatus: m.status,
-                                                                                coordinatorAssigned: donation.delegatedTo || null
-                                                                            };
-                                                                            if (sharedBookingMatchesSearch(sharedBookingRecord)) {
-                                                                                sharedBookings.push(sharedBookingRecord);
-                                                                            }
+                                                                        // EXCLUDE only when both genders are known AND identical (confirmed same-gender, handled by own coordinator)
+                                                                        const confirmedSameGender = takerGender && donorGender && takerGender === donorGender;
+                                                                        if (confirmedSameGender) return;
+
+                                                                        const sharedBookingRecord = {
+                                                                            id: `${donation.id}_shared_${idx}`,
+                                                                            donationId: donation.id,
+                                                                            materialIndex: idx,
+                                                                            donation,
+                                                                            material: m,
+                                                                            donorName: donation.studentName,
+                                                                            donorGender: donation.studentGender,
+                                                                            donorPhone: donation.phoneNumber,
+                                                                            donorEmail: donation.email,
+                                                                            takerName: m.takerInfo?.name || '—',
+                                                                            takerGender: m.takerInfo?.gender,
+                                                                            takerPhone: m.takerInfo?.phone || '—',
+                                                                            takerEmail: m.takerInfo?.email || '—',
+                                                                            materialName: m.name,
+                                                                            materialDescription: m.description || '—',
+                                                                            materialStatus: m.status,
+                                                                            coordinatorAssigned: donation.delegatedTo || null,
+                                                                            // Flag rows with incomplete gender data so UI can warn coordinator
+                                                                            hasGenderWarning: !takerGender || !donorGender
+                                                                        };
+                                                                        if (sharedBookingMatchesSearch(sharedBookingRecord)) {
+                                                                            sharedBookings.push(sharedBookingRecord);
                                                                         }
                                                                     }
                                                                 });
@@ -3916,18 +3919,27 @@ td{color:#2f3d4f;}
                                                                     </thead>
                                                                     <tbody>
                                                                         {sharedBookings.map((booking, idx) => (
-                                                                            <tr key={booking.id} className={`formal-row status-row-${booking.materialStatus}`}>
+                                                                            <tr key={booking.id} className={`formal-row status-row-${booking.materialStatus}${booking.hasGenderWarning ? ' gender-warning-row' : ''}`}>
                                                                                 <td className="row-num">{idx + 1}</td>
                                                                                 <td className="donor-name-cell"><strong>{booking.donorName}</strong></td>
                                                                                 <td>
-                                                                                    <span className={`gender-badge gender-${booking.donorGender}`}>
-                                                                                        {booking.donorGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
-                                                                                    </span>
+                                                                                    {booking.donorGender ? (
+                                                                                        <span className={`gender-badge gender-${booking.donorGender}`}>
+                                                                                            {booking.donorGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
+                                                                                        </span>
+                                                                                    ) : (
+                                                                                        <span className="gender-badge gender-unknown" title={isAr ? 'جنس المتبرع غير مسجّل' : 'Donor gender not recorded'}>⚠️ ?</span>
+                                                                                    )}
                                                                                 </td>
                                                                                 <td dir="ltr" className="phone-cell">{booking.donorPhone}</td>
                                                                                 <td className="material-name-cell">
                                                                                     <strong>{booking.materialName}</strong>
                                                                                     {booking.materialDescription !== '—' && <small>{booking.materialDescription}</small>}
+                                                                                    {booking.hasGenderWarning && (
+                                                                                        <small style={{ display: 'block', color: '#f59e0b', marginTop: '2px' }}>
+                                                                                            {isAr ? '⚠️ جنس غير مكتمل — يرجى التحقق يدوياً' : '⚠️ Gender info incomplete — verify manually'}
+                                                                                        </small>
+                                                                                    )}
                                                                                 </td>
                                                                                 <td>
                                                                                     <span className={`status-badge status-${booking.materialStatus}`}>
@@ -3936,9 +3948,13 @@ td{color:#2f3d4f;}
                                                                                 </td>
                                                                                 <td className="taker-name-cell"><strong>{booking.takerName}</strong></td>
                                                                                 <td>
-                                                                                    <span className={`gender-badge gender-${booking.takerGender}`}>
-                                                                                        {booking.takerGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
-                                                                                    </span>
+                                                                                    {booking.takerGender ? (
+                                                                                        <span className={`gender-badge gender-${booking.takerGender}`}>
+                                                                                            {booking.takerGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
+                                                                                        </span>
+                                                                                    ) : (
+                                                                                        <span className="gender-badge gender-unknown" title={isAr ? 'جنس الحاجز غير مسجّل' : 'Taker gender not recorded'}>⚠️ ?</span>
+                                                                                    )}
                                                                                 </td>
                                                                                 <td dir="ltr" className="phone-cell">{booking.takerPhone}</td>
                                                                                 <td>
