@@ -724,7 +724,7 @@ const MaterialExchange = () => {
             updateDoc(statusRef, {
                 online: false,
                 statusState: 'offline',
-                lastSeen: serverTimestamp()
+                lastSeen: Date.now()
             }).catch(console.error);
         };
 
