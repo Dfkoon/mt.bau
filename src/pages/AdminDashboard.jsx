@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { db } from '../config/firebase';
+import { db, storage } from '../config/firebase';
+import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import {
     collection, query, orderBy, limit, getDocs,
     doc, updateDoc, deleteDoc, where, onSnapshot,
@@ -188,6 +189,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const [editingReport, setEditingReport] = useState(null);
     const [editForm, setEditForm] = useState({ questionAr: '', questionEn: '', options: [], correctAnswer: '' });
     const [editSaving, setEditSaving] = useState(false);
+    const [imageUploading, setImageUploading] = useState(false);
+    const [imageUploadProgress, setImageUploadProgress] = useState(0);
+    const imageInputRef = useRef(null);
 
     const [isAuthed, setIsAuthed] = useState(false);
 
@@ -1131,31 +1135,104 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 </button>
                             </div>
 
-                            {/* Question Image */}
+                            {/* Question Image — file upload from device */}
                             <div className="qedit-field">
-                                <label className="qedit-label">🖼️ {isAr ? 'صورة السؤال (رابط URL اختياري)' : 'Question Image (optional URL)'}</label>
+                                <label className="qedit-label">
+                                    🖼️ {isAr ? 'صورة السؤال (اختياري)' : 'Question Image (optional)'}
+                                </label>
+
+                                {/* Hidden file input */}
                                 <input
-                                    className="qedit-opt-input"
-                                    style={{ width: '100%', direction: 'ltr' }}
-                                    value={editForm.image || ''}
-                                    onChange={e => setEditForm(prev => ({ ...prev, image: e.target.value }))}
-                                    placeholder="https://example.com/image.png"
-                                    dir="ltr"
+                                    ref={imageInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ display: 'none' }}
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        if (file.size > 5 * 1024 * 1024) {
+                                            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+                                            return;
+                                        }
+                                        setImageUploading(true);
+                                        setImageUploadProgress(0);
+                                        try {
+                                            const fileRef = storageRef(storage, `question_images/${editingReport.quizId}_${editingReport.questionId}_${Date.now()}_${file.name}`);
+                                            const uploadTask = uploadBytesResumable(fileRef, file);
+                                            uploadTask.on('state_changed',
+                                                (snap) => {
+                                                    const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                                                    setImageUploadProgress(pct);
+                                                },
+                                                (err) => {
+                                                    console.error(err);
+                                                    toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
+                                                    setImageUploading(false);
+                                                },
+                                                async () => {
+                                                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                                                    setEditForm(prev => ({ ...prev, image: url }));
+                                                    setImageUploading(false);
+                                                    toast.success(isAr ? '✅ تم رفع الصورة بنجاح' : '✅ Image uploaded successfully');
+                                                }
+                                            );
+                                        } catch (err) {
+                                            console.error(err);
+                                            toast.error(isAr ? 'خطأ في رفع الصورة' : 'Upload error');
+                                            setImageUploading(false);
+                                        }
+                                        e.target.value = '';
+                                    }}
                                 />
-                                {editForm.image && (
+
+                                {/* Upload Zone */}
+                                {!editForm.image && !imageUploading && (
+                                    <div
+                                        className="qedit-image-dropzone"
+                                        onClick={() => imageInputRef.current?.click()}
+                                    >
+                                        <span style={{ fontSize: '2rem' }}>🖼️</span>
+                                        <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>
+                                            {isAr ? 'اضغط لاختيار صورة من جهازك' : 'Click to choose an image from your device'}
+                                        </p>
+                                        <p style={{ margin: '0.2rem 0 0', fontSize: '0.78rem', opacity: 0.5 }}>
+                                            {isAr ? 'حد أقصى 5 ميجابايت' : 'Max 5MB'}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Upload progress */}
+                                {imageUploading && (
+                                    <div className="qedit-image-uploading">
+                                        <div className="qedit-upload-bar">
+                                            <div className="qedit-upload-bar-fill" style={{ width: `${imageUploadProgress}%` }} />
+                                        </div>
+                                        <span>{isAr ? `جاري الرفع... ${imageUploadProgress}%` : `Uploading... ${imageUploadProgress}%`}</span>
+                                    </div>
+                                )}
+
+                                {/* Image preview */}
+                                {editForm.image && !imageUploading && (
                                     <div style={{ marginTop: '0.6rem', textAlign: 'center' }}>
                                         <img
                                             src={editForm.image}
                                             alt="preview"
-                                            style={{ maxHeight: '160px', maxWidth: '100%', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                                            style={{ maxHeight: '180px', maxWidth: '100%', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)' }}
                                             onError={e => { e.target.style.display = 'none'; }}
                                         />
-                                        <div style={{ marginTop: '0.4rem' }}>
+                                        <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                            <button
+                                                className="qedit-add-option"
+                                                style={{ width: 'auto', padding: '0.3rem 0.8rem' }}
+                                                onClick={() => imageInputRef.current?.click()}
+                                            >
+                                                🔄 {isAr ? 'تغيير الصورة' : 'Change Image'}
+                                            </button>
                                             <button
                                                 className="qedit-opt-delete"
                                                 onClick={() => setEditForm(prev => ({ ...prev, image: '' }))}
                                             >
-                                                {isAr ? 'حذف الصورة 🗑️' : 'Remove Image 🗑️'}
+                                                {isAr ? 'حذف 🗑️' : 'Remove 🗑️'}
                                             </button>
                                         </div>
                                     </div>
