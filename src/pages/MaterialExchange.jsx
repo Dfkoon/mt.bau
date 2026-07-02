@@ -668,12 +668,13 @@ const MaterialExchange = () => {
             try {
                 const statusStateVal = overrideState || currentStatusState;
                 const statusRef = doc(db, 'staff_status', loggedInUser.username);
+                // NOTE: lastLogin is NOT updated here — it is only written at the actual login event.
+                // This ping only keeps presence/activity data fresh.
                 await setDoc(statusRef, {
                     online: isOnline,
                     statusState: isOnline ? statusStateVal : 'offline',
                     currentTab: activeTab || 'donations',
                     lastSeen: Date.now(),
-                    ...(isOnline && statusStateVal === 'active' ? { lastLogin: Date.now() } : {}),
                     username: loggedInUser.username,
                     nameAr: loggedInUser.nameAr || loggedInUser.username,
                     nameEn: loggedInUser.nameEn || loggedInUser.username,
@@ -1333,6 +1334,27 @@ const MaterialExchange = () => {
                 return;
             }
 
+            // ── Write lastLogin to Firestore (admin direct login path) ──
+            const adminStatusRef = doc(db, 'staff_status', matchedKey);
+            setDoc(adminStatusRef, {
+                online: true,
+                lastSeen: Date.now(),
+                lastLogin: Date.now(),
+                username: matchedKey,
+                nameAr: user.nameAr,
+                nameEn: user.nameEn,
+                role: user.role
+            }, { merge: true }).catch(console.error);
+            // Audit log for login
+            addDoc(collection(db, 'materialExchangeLogs'), {
+                operatorId: matchedKey,
+                operatorNameAr: user.nameAr,
+                operatorNameEn: user.nameEn,
+                actionAr: 'سجّل دخوله إلى النظام',
+                actionEn: 'Logged in to the system',
+                details: { type: 'login' },
+                timestamp: serverTimestamp()
+            }).catch(console.error);
             setLoggedInUser({ ...user, username: matchedKey });
             sessionStorage.setItem('exchange_staff', JSON.stringify({ ...user, username: matchedKey }));
             setShowLoginModal(false);
@@ -1360,6 +1382,27 @@ const MaterialExchange = () => {
         };
         const user = staffUsersDynamic[pendingStaffKey] || { role: 'coordinator', nameAr: pendingStaffName, nameEn: pendingStaffName, gender: null };
 
+        // ── Write lastLogin to Firestore (email verification login path) ──
+        const coordStatusRef = doc(db, 'staff_status', pendingStaffKey);
+        setDoc(coordStatusRef, {
+            online: true,
+            lastSeen: Date.now(),
+            lastLogin: Date.now(),
+            username: pendingStaffKey,
+            nameAr: user.nameAr,
+            nameEn: user.nameEn,
+            role: user.role
+        }, { merge: true }).catch(console.error);
+        // Audit log for login
+        addDoc(collection(db, 'materialExchangeLogs'), {
+            operatorId: pendingStaffKey,
+            operatorNameAr: user.nameAr,
+            operatorNameEn: user.nameEn,
+            actionAr: 'سجّل دخوله إلى النظام',
+            actionEn: 'Logged in to the system',
+            details: { type: 'login' },
+            timestamp: serverTimestamp()
+        }).catch(console.error);
         setLoggedInUser({ ...user, username: pendingStaffKey });
         sessionStorage.setItem('exchange_staff', JSON.stringify({ ...user, username: pendingStaffKey }));
         setShowLoginModal(false);
@@ -1799,6 +1842,38 @@ Please contact us to coordinate the pickup. Thank you.`;
         } catch (error) {
             console.error('Error generating WhatsApp link:', error);
             return '#';
+        }
+    };
+
+    const handleUpdateTakerGender = async (donationId, materialIndex, newGender) => {
+        try {
+            const { doc: firestoreDoc, runTransaction } = await import('firebase/firestore');
+            const donationRef = firestoreDoc(db, 'materialDonations', donationId);
+            await runTransaction(db, async (transaction) => {
+                const donationDoc = await transaction.get(donationRef);
+                if (!donationDoc.exists()) throw new Error('Document does not exist!');
+                const currentData = donationDoc.data();
+                const materials = currentData.materials || [];
+                const updatedMaterials = [...materials];
+                if (updatedMaterials[materialIndex] && typeof updatedMaterials[materialIndex] === 'object') {
+                    updatedMaterials[materialIndex] = {
+                        ...updatedMaterials[materialIndex],
+                        takerInfo: {
+                            ...(updatedMaterials[materialIndex].takerInfo || {}),
+                            gender: newGender
+                        }
+                    };
+                }
+                transaction.update(donationRef, {
+                    materials: updatedMaterials,
+                    lastUpdated: new Date()
+                });
+            });
+            toast.success(isAr ? 'تم تحديث جنس الحاجز بنجاح! ✅' : 'Taker gender updated successfully! ✅');
+            fetchAllDonations();
+        } catch (err) {
+            console.error(err);
+            toast.error(isAr ? 'حدث خطأ أثناء تحديث جنس الحاجز' : 'Error updating taker gender');
         }
     };
 
@@ -3858,6 +3933,9 @@ td{color:#2f3d4f;}
                                                         // Filter bookings where donor gender ≠ taker gender OR gender data is incomplete
                                                         const sharedBookings = [];
                                                         allDonations.forEach(donation => {
+                                                            if (!isAdminUser && donation.delegatedTo !== loggedInUser.username) {
+                                                                return;
+                                                            }
                                                             if (donation.materials) {
                                                                 donation.materials.forEach((m, idx) => {
                                                                     if (typeof m === 'object' && (m.status === 'reserved' || m.status === 'completed')) {
@@ -3874,6 +3952,7 @@ td{color:#2f3d4f;}
                                                                             materialIndex: idx,
                                                                             donation,
                                                                             material: m,
+                                                                            takerInfo: m.takerInfo || {},
                                                                             donorName: donation.studentName,
                                                                             donorGender: donation.studentGender,
                                                                             donorPhone: donation.phoneNumber,
@@ -3948,12 +4027,36 @@ td{color:#2f3d4f;}
                                                                                 </td>
                                                                                 <td className="taker-name-cell"><strong>{booking.takerName}</strong></td>
                                                                                 <td>
-                                                                                    {booking.takerGender ? (
-                                                                                        <span className={`gender-badge gender-${booking.takerGender}`}>
-                                                                                            {booking.takerGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
-                                                                                        </span>
+                                                                                    {isAdminUser ? (
+                                                                                        <select
+                                                                                            value={booking.takerGender || ''}
+                                                                                            onChange={(e) => handleUpdateTakerGender(booking.donationId, booking.materialIndex, e.target.value)}
+                                                                                            className="admin-gender-select"
+                                                                                            style={{
+                                                                                                padding: '4px 8px',
+                                                                                                borderRadius: '6px',
+                                                                                                border: '1.5px dashed #f59e0b',
+                                                                                                fontSize: '0.85rem',
+                                                                                                background: booking.takerGender === 'male' ? '#e0f2fe' : (booking.takerGender === 'female' ? '#fce7f3' : '#fef3c7'),
+                                                                                                color: booking.takerGender === 'male' ? '#0369a1' : (booking.takerGender === 'female' ? '#be185d' : '#d97706'),
+                                                                                                fontWeight: 'bold',
+                                                                                                cursor: 'pointer',
+                                                                                                outline: 'none',
+                                                                                                boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                                                                                            }}
+                                                                                        >
+                                                                                            <option value="" style={{ background: '#fff', color: '#333' }}>⚠️ {isAr ? '؟' : '?'}</option>
+                                                                                            <option value="male" style={{ background: '#fff', color: '#333' }}>♂️ {isAr ? 'شب' : 'Male'}</option>
+                                                                                            <option value="female" style={{ background: '#fff', color: '#333' }}>♀️ {isAr ? 'بنت' : 'Female'}</option>
+                                                                                        </select>
                                                                                     ) : (
-                                                                                        <span className="gender-badge gender-unknown" title={isAr ? 'جنس الحاجز غير مسجّل' : 'Taker gender not recorded'}>⚠️ ?</span>
+                                                                                        booking.takerGender ? (
+                                                                                            <span className={`gender-badge gender-${booking.takerGender}`}>
+                                                                                                {booking.takerGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
+                                                                                            </span>
+                                                                                        ) : (
+                                                                                            <span className="gender-badge gender-unknown" title={isAr ? 'جنس الحاجز غير مسجّل' : 'Taker gender not recorded'}>⚠️ ?</span>
+                                                                                        )
                                                                                     )}
                                                                                 </td>
                                                                                 <td dir="ltr" className="phone-cell">{booking.takerPhone}</td>
@@ -4010,7 +4113,41 @@ td{color:#2f3d4f;}
                                                                                         </button>
                                                                                     )}
                                                                                     {!isAdminUser && (
-                                                                                        <span className="view-only-tag">👁️ {isAr ? 'للاطلاع' : 'View Only'}</span>
+                                                                                        booking.coordinatorAssigned === loggedInUser.username ? (
+                                                                                            <>
+                                                                                                {booking.materialStatus === 'reserved' && (
+                                                                                                    <button
+                                                                                                        type="button"
+                                                                                                        className="action-btn approve-btn"
+                                                                                                        onClick={() => handleCompleteBooking(booking.donationId, booking.materialIndex)}
+                                                                                                        style={{ marginRight: '4px' }}
+                                                                                                    >
+                                                                                                        ✅ {isAr ? 'تم التسليم' : 'Deliver'}
+                                                                                                    </button>
+                                                                                                )}
+                                                                                                <a
+                                                                                                    href={generateWhatsAppLink(booking.donation, 'donor')}
+                                                                                                    target="_blank"
+                                                                                                    rel="noopener noreferrer"
+                                                                                                    className="action-btn message-btn"
+                                                                                                    title={isAr ? 'مراسلة المتبرع' : 'Message Donor'}
+                                                                                                    style={{ marginRight: '4px' }}
+                                                                                                >
+                                                                                                    💬 {isAr ? 'المتبرع' : 'Donor'}
+                                                                                                </a>
+                                                                                                <a
+                                                                                                    href={generateWhatsAppLink(booking, 'booker')}
+                                                                                                    target="_blank"
+                                                                                                    rel="noopener noreferrer"
+                                                                                                    className="action-btn message-btn"
+                                                                                                    title={isAr ? 'مراسلة الحاجز' : 'Message Booker'}
+                                                                                                >
+                                                                                                    💬 {isAr ? 'الحاجز' : 'Booker'}
+                                                                                                </a>
+                                                                                            </>
+                                                                                        ) : (
+                                                                                            <span className="view-only-tag">👁️ {isAr ? 'للاطلاع' : 'View Only'}</span>
+                                                                                        )
                                                                                     )}
                                                                                 </td>
                                                                             </tr>

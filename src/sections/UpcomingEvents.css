@@ -138,6 +138,13 @@
         0 0 50px rgba(var(--primary-rgb), 0.2);
 }
 
+[data-theme="light"] .carousel-card.active {
+    background: #ffffff;
+    border-color: rgba(var(--primary-rgb), 0.4);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1),
+        0 0 30px rgba(var(--primary-rgb), 0.15);
+}
+
 [data-theme="dark"] .carousel-card.active {
     background: rgba(255, 255, 255, 0.05);
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8),
@@ -228,10 +235,19 @@
     opacity: 0.9;
 }
 
+[data-theme="light"] .event-month {
+    color: #1a1a2e;
+    opacity: 1;
+}
+
 .event-year {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-muted);
+}
+
+[data-theme="light"] .event-year {
+    color: #6c757d;
 }
 
 .event-title-text {
@@ -252,11 +268,20 @@
     text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
+[data-theme="light"] .event-title-text {
+    color: #1a1a2e;
+    text-shadow: none;
+}
+
 .event-day-text {
     color: var(--text-muted);
     font-size: 1.15rem;
     font-weight: 600;
     letter-spacing: 1px;
+}
+
+[data-theme="light"] .event-day-text {
+    color: #495057;
 }
 
 .active-indicator {

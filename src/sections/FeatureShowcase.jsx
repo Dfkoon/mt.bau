@@ -133,25 +133,8 @@ const FeatureShowcase = () => {
                         </Link>
                     </div>
 
-                    <div className="feature-visual">
-                        {feature.image ? (
-                            <div
-                                className={`feature-image-container glass-card feature-${feature.id}`}
-                                style={{ '--feature-color': feature.color }}
-                            >
-                                <img src={feature.image} alt={feature.title} className={`feature-image feature-${feature.id}`} />
-                            </div>
-                        ) : (
-                            <div
-                                className={`feature-placeholder glass-card ${feature.id}-bg`}
-                                style={{ '--feature-color': feature.color }}
-                            >
-                                <span className="placeholder-icon">{feature.icon}</span>
-                                <div className="placeholder-decor"></div>
-                                <div className="placeholder-decor-2"></div>
-                            </div>
-                        )}
-                    </div>
+                    {/* feature-visual مخفي مؤقتاً */}
+
                 </div>
             ))}
         </section>

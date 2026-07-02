@@ -205,7 +205,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const [selectedPartId, setSelectedPartId] = useState('');
 
     const [showAddSubjectModal, setShowAddSubjectModal] = useState(false);
-    const [subjectForm, setSubjectForm] = useState({ id: '', name: '', nameAr: '', icon: '📚', color: '#6366F1', forceEnglish: false });
+    const [subjectForm, setSubjectForm] = useState({ id: '', name: '', nameAr: '', icon: '📚', color: '#6366F1', languageMode: 'both' });
 
     const [showAddPartModal, setShowAddPartModal] = useState(false);
     const [partForm, setPartForm] = useState({ id: '', title: '', titleAr: '', isGroup: false });
@@ -523,16 +523,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 nameAr: subjectForm.nameAr.trim(),
                 icon: subjectForm.icon,
                 color: subjectForm.color,
-                forceEnglish: subjectForm.forceEnglish,
+                languageMode: subjectForm.languageMode, // 'both', 'en', 'ar'
                 isNew: true,
                 createdAt: serverTimestamp()
             });
             toast.success(isAr ? '✅ تم حفظ المادة بنجاح' : '✅ Subject saved successfully');
             setShowAddSubjectModal(false);
-            setSubjectForm({ id: '', name: '', nameAr: '', icon: '📚', color: '#6366F1', forceEnglish: false });
+            setSubjectForm({ id: '', name: '', nameAr: '', icon: '📚', color: '#6366F1', languageMode: 'both' });
         } catch (e) {
             console.error(e);
-            toast.error(isAr ? 'فشل حفظ المادة' : 'Failed to save subject');
+            toast.error(isAr ? `❌ فشل حفظ المادة: ${e.message || e}` : `❌ Failed to save subject: ${e.message || e}`);
         }
     };
 
@@ -556,19 +556,23 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     };
 
     const savePart = async () => {
-        if (!selectedSubjectId) return;
+        if (!selectedSubjectId) {
+            toast.error(isAr ? '⚠️ يرجى اختيار المادة أولاً' : '⚠️ Please select a subject first');
+            return;
+        }
         if (!partForm.id || !partForm.title || !partForm.titleAr) {
-            toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامية' : 'Please fill all required fields');
+            toast.error(isAr ? '⚠️ يرجى ملء جميع الحقول الإلزامية' : '⚠️ Please fill all required fields');
             return;
         }
         try {
-            const partId = partForm.id.toLowerCase().trim();
+            // Sanitize partId to be URL-safe (replace spaces with underscores)
+            const partId = partForm.id.toLowerCase().trim().replace(/\s+/g, '_');
             await setDoc(doc(db, 'quiz_parts', partId), {
                 id: partId,
                 subjectId: selectedSubjectId,
                 title: partForm.title.trim(),
                 titleAr: partForm.titleAr.trim(),
-                isGroup: partForm.isGroup,
+                isGroup: partForm.isGroup || false,
                 subParts: partForm.isGroup ? [] : null,
                 createdAt: serverTimestamp()
             });
@@ -577,7 +581,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             setPartForm({ id: '', title: '', titleAr: '', isGroup: false });
         } catch (e) {
             console.error(e);
-            toast.error(isAr ? 'فشل حفظ الجزء' : 'Failed to save quiz part');
+            toast.error(isAr ? `❌ فشل حفظ الجزء: ${e.message || e}` : `❌ Failed to save quiz part: ${e.message || e}`);
         }
     };
 
@@ -597,6 +601,70 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }
     };
 
+    // Helper to translate text using MyMemory Translation API
+    const translateText = async (text, direction) => {
+        if (!text || !text.trim()) return '';
+        const langpair = direction === 'ar2en' ? 'ar|en' : 'en|ar';
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langpair}`;
+        try {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data.responseData?.translatedText) {
+                // MyMemory can return HTML character references sometimes
+                const parser = new DOMParser();
+                const dom = parser.parseFromString(data.responseData.translatedText, 'text/html');
+                return dom.body.textContent;
+            }
+            return '';
+        } catch (err) {
+            console.error('Translation failed:', err);
+            return '';
+        }
+    };
+
+    const handleQuestionTypeChange = (newType) => {
+        setQuestionForm(prev => {
+            let options = [...prev.options];
+            let correctAnswer = prev.correctAnswer;
+            let subQuestions = prev.subQuestions || [];
+            if (newType === 'true_false') {
+                options = [
+                    { id: 'a', textAr: 'صح', textEn: 'True' },
+                    { id: 'b', textAr: 'خطأ', textEn: 'False' }
+                ];
+                if (correctAnswer !== 'a' && correctAnswer !== 'b') correctAnswer = 'a';
+                subQuestions = [];
+            } else if (newType === 'matching') {
+                // Keep existing options as the answer pool, add initial subQuestions if empty
+                if (!subQuestions.length) {
+                    subQuestions = [
+                        { id: 'sq1', textAr: '', textEn: '', correctAnswer: '' },
+                        { id: 'sq2', textAr: '', textEn: '', correctAnswer: '' },
+                    ];
+                }
+                if (!options.length || (prev.type === 'true_false')) {
+                    options = [
+                        { id: 'a', textAr: '', textEn: '' },
+                        { id: 'b', textAr: '', textEn: '' },
+                        { id: 'c', textAr: '', textEn: '' },
+                    ];
+                }
+                correctAnswer = '';
+            } else if (prev.type === 'true_false' || prev.type === 'matching') {
+                // Switching back to MCQ
+                options = [
+                    { id: 'a', textAr: '', textEn: '' },
+                    { id: 'b', textAr: '', textEn: '' },
+                    { id: 'c', textAr: '', textEn: '' },
+                    { id: 'd', textAr: '', textEn: '' }
+                ];
+                correctAnswer = 'a';
+                subQuestions = [];
+            }
+            return { ...prev, type: newType, options, correctAnswer, subQuestions };
+        });
+    };
+
     const openQuestionModal = (q = null) => {
         if (q) {
             setEditingQuestion(q);
@@ -606,6 +674,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 questionAr: q.questionAr || '',
                 questionEn: q.questionEn || '',
                 options: q.options ? q.options.map(o => ({ ...o })) : [],
+                subQuestions: q.subQuestions ? q.subQuestions.map(s => ({ ...s })) : [],
                 correctAnswer: q.correctAnswer || '',
                 marks: q.marks || 1.0,
                 image: q.image || '',
@@ -623,6 +692,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     { id: 'c', textAr: '', textEn: '' },
                     { id: 'd', textAr: '', textEn: '' }
                 ],
+                subQuestions: [],
                 correctAnswer: 'a',
                 marks: 1.0,
                 image: '',
@@ -662,11 +732,20 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             toast.error(isAr ? 'يرجى إدخال نص السؤال (عربي أو إنجليزي)' : 'Please enter question text');
             return;
         }
-        if (questionForm.options.length < 2) {
+        if (questionForm.type !== 'matching' && questionForm.options.length < 2) {
             toast.error(isAr ? 'يجب إدخال خيارين على الأقل' : 'Please add at least 2 options');
             return;
         }
-        if (!questionForm.correctAnswer) {
+        if (questionForm.type === 'matching') {
+            if (questionForm.options.length < 2) {
+                toast.error(isAr ? 'يجب إدخال خيارين على الأقل في قائمة الإجابات' : 'Please add at least 2 answer options');
+                return;
+            }
+            if (questionForm.subQuestions.length < 1) {
+                toast.error(isAr ? 'يجب إدخال جملة فرعية واحدة على الأقل' : 'Please add at least 1 sub-question');
+                return;
+            }
+        } else if (!questionForm.correctAnswer) {
             toast.error(isAr ? 'يرجى اختيار الإجابة الصحيحة' : 'Please select the correct answer');
             return;
         }
@@ -674,7 +753,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         try {
             const qId = questionForm.id || `q_${Date.now()}`;
             const docRef = doc(db, 'quiz_questions', `${selectedPartId}_${qId}`);
-            await setDoc(docRef, {
+            const docData = {
                 id: qId,
                 partId: selectedPartId,
                 subjectId: selectedSubjectId,
@@ -682,17 +761,23 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 questionAr: questionForm.questionAr.trim(),
                 questionEn: questionForm.questionEn.trim(),
                 options: questionForm.options,
-                correctAnswer: questionForm.correctAnswer,
                 marks: Number(questionForm.marks) || 1,
                 image: questionForm.image || null,
                 createdAt: serverTimestamp()
-            });
+            };
+            if (questionForm.type === 'matching') {
+                docData.subQuestions = questionForm.subQuestions;
+                docData.correctAnswer = null;
+            } else {
+                docData.correctAnswer = questionForm.correctAnswer;
+            }
+            await setDoc(docRef, docData);
             toast.success(isAr ? '✅ تم حفظ السؤال بنجاح' : '✅ Question saved successfully');
             setShowQuestionModal(false);
             setEditingQuestion(null);
         } catch (e) {
             console.error(e);
-            toast.error(isAr ? 'فشل حفظ السؤال' : 'Failed to save question');
+            toast.error(isAr ? `❌ فشل حفظ السؤال: ${e.message || e}` : `❌ Failed to save question: ${e.message || e}`);
         }
     };
 
@@ -1244,6 +1329,22 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             </div>
                                         )}
                                         {r.questionId && <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.6rem' }}>🆔 {r.questionId}</p>}
+                                        {r.studentNote && (
+                                            <div className="report-card-note" style={{
+                                                background: '#fff9db',
+                                                borderRight: isAr ? '4px solid #fab005' : 'none',
+                                                borderLeft: isAr ? 'none' : '4px solid #fab005',
+                                                padding: '8px 12px',
+                                                borderRadius: '4px',
+                                                margin: '0.75rem 0',
+                                                fontSize: '0.88rem',
+                                                color: '#2b2b2b',
+                                                textAlign: isAr ? 'right' : 'left'
+                                            }}>
+                                                <strong>{isAr ? 'ملاحظة الطالب: ' : 'Student Note: '}</strong>
+                                                <span>{r.studentNote}</span>
+                                            </div>
+                                        )}
                                         <div className="report-card-actions">
                                             <button className="admin-action-btn edit-q" onClick={() => openEditModal(r)}>
                                                 ✏️ {isAr ? 'تعديل السؤال' : 'Edit Question'}
@@ -1774,14 +1875,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 </div>
                             </div>
                             <div className="qedit-field">
-                                <label className="qedit-correct-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={subjectForm.forceEnglish}
-                                        onChange={e => setSubjectForm(prev => ({ ...prev, forceEnglish: e.target.checked }))}
-                                    />
-                                    {isAr ? 'إجبار استخدام الإنجليزية فقط في هذا المساق' : 'Force English language only for this subject'}
-                                </label>
+                                <label className="qedit-label">{isAr ? 'لغة الاختبار للمساق' : 'Quiz Language Mode'}</label>
+                                <select
+                                    className="qedit-opt-input"
+                                    value={subjectForm.languageMode || 'both'}
+                                    onChange={e => setSubjectForm(prev => ({ ...prev, languageMode: e.target.value }))}
+                                >
+                                    <option value="both">{isAr ? 'ثنائي اللغة (عربي + إنجليزي)' : 'Bilingual (Arabic + English)'}</option>
+                                    <option value="en">{isAr ? 'إنجليزي فقط' : 'English Only'}</option>
+                                    <option value="ar">{isAr ? 'عربي فقط' : 'Arabic Only'}</option>
+                                </select>
                             </div>
                         </div>
                         <div className="qedit-footer">
@@ -1863,14 +1966,36 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     <select
                                         className="qedit-opt-input"
                                         value={questionForm.type}
-                                        onChange={e => setQuestionForm(prev => ({ ...prev, type: e.target.value }))}
+                                        onChange={e => handleQuestionTypeChange(e.target.value)}
                                     >
                                         <option value="mcq">MCQ</option>
+                                        <option value="true_false">{isAr ? 'صح أم خطأ (True/False)' : 'True / False'}</option>
+                                        <option value="matching">{isAr ? 'تعبئة الفراغات بقائمة (Matching)' : 'Fill in the Blank (Matching)'}</option>
                                     </select>
                                 </div>
                             </div>
                             <div className="qedit-field">
-                                <label className="qedit-label">🇸🇦 {isAr ? 'نص السؤال — عربي' : 'Question Text — Arabic'}</label>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                    <label className="qedit-label" style={{ margin: 0 }}>🇸🇦 {isAr ? 'نص السؤال — عربي' : 'Question Text — Arabic'}</label>
+                                    <button 
+                                        type="button" 
+                                        className="qmanage-add-btn" 
+                                        style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem' }}
+                                        onClick={async () => {
+                                            if (!questionForm.questionAr) { toast.error(isAr ? 'يرجى كتابة النص بالعربي أولاً' : 'Please type Arabic text first'); return; }
+                                            toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                            const trans = await translateText(questionForm.questionAr, 'ar2en');
+                                            if (trans) {
+                                                setQuestionForm(prev => ({ ...prev, questionEn: trans }));
+                                                toast.success(isAr ? 'تمت الترجمة!' : 'Translated!');
+                                            } else {
+                                                toast.error(isAr ? 'فشلت الترجمة' : 'Translation failed');
+                                            }
+                                        }}
+                                    >
+                                        🤖 {isAr ? 'ترجم إلى الإنجليزية' : 'Translate to English'}
+                                    </button>
+                                </div>
                                 <textarea
                                     className="qedit-textarea"
                                     value={questionForm.questionAr}
@@ -1881,7 +2006,27 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 />
                             </div>
                             <div className="qedit-field">
-                                <label className="qedit-label">🇬🇧 {isAr ? 'نص السؤال — إنجليزي' : 'Question Text — English'}</label>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                    <label className="qedit-label" style={{ margin: 0 }}>🇬🇧 {isAr ? 'نص السؤال — إنجليزي' : 'Question Text — English'}</label>
+                                    <button 
+                                        type="button" 
+                                        className="qmanage-add-btn" 
+                                        style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem' }}
+                                        onClick={async () => {
+                                            if (!questionForm.questionEn) { toast.error(isAr ? 'يرجى كتابة النص بالإنجليزي أولاً' : 'Please type English text first'); return; }
+                                            toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                            const trans = await translateText(questionForm.questionEn, 'en2ar');
+                                            if (trans) {
+                                                setQuestionForm(prev => ({ ...prev, questionAr: trans }));
+                                                toast.success(isAr ? 'تمت الترجمة!' : 'Translated!');
+                                            } else {
+                                                toast.error(isAr ? 'فشلت الترجمة' : 'Translation failed');
+                                            }
+                                        }}
+                                    >
+                                        🤖 {isAr ? 'ترجم إلى العربية' : 'Translate to Arabic'}
+                                    </button>
+                                </div>
                                 <textarea
                                     className="qedit-textarea"
                                     value={questionForm.questionEn}
@@ -1892,24 +2037,141 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 />
                             </div>
 
+                            {/* ══ SubQuestions editor — shown only for matching type ══ */}
+                            {questionForm.type === 'matching' && (
+                                <div className="qedit-field" style={{ background: 'rgba(99,102,241,0.06)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(99,102,241,0.2)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                                        <label className="qedit-label" style={{ margin: 0 }}>
+                                            📝 {isAr ? 'الجمل الفرعية (كل جملة لها فراغ)' : 'Sub-sentences (each has a blank)'}
+                                        </label>
+                                        <button
+                                            type="button"
+                                            className="qmanage-add-btn"
+                                            style={{ padding: '0.2rem 0.6rem', fontSize: '0.75rem' }}
+                                            onClick={() => {
+                                                const newId = `sq${Date.now()}`;
+                                                setQuestionForm(prev => ({
+                                                    ...prev,
+                                                    subQuestions: [...(prev.subQuestions || []), { id: newId, textAr: '', textEn: '', correctAnswer: '' }]
+                                                }));
+                                            }}
+                                        >
+                                            + {isAr ? 'إضافة جملة' : 'Add Row'}
+                                        </button>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                                        {(questionForm.subQuestions || []).map((sub, sIdx) => (
+                                            <div key={sub.id} style={{ background: 'rgba(0,0,0,0.12)', borderRadius: '8px', padding: '0.6rem 0.8rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                                                    <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent-primary, #6366f1)' }}>
+                                                        {sIdx + 1}.
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        className="qedit-opt-delete"
+                                                        style={{ margin: 0 }}
+                                                        onClick={() => setQuestionForm(prev => ({
+                                                            ...prev,
+                                                            subQuestions: prev.subQuestions.filter((_, i) => i !== sIdx)
+                                                        }))}
+                                                    >🗑️</button>
+                                                </div>
+                                                <input
+                                                    className="qedit-opt-input"
+                                                    value={sub.textAr || ''}
+                                                    onChange={e => setQuestionForm(prev => ({
+                                                        ...prev,
+                                                        subQuestions: prev.subQuestions.map((s, i) => i === sIdx ? { ...s, textAr: e.target.value } : s)
+                                                    }))}
+                                                    placeholder={isAr ? 'نص الجملة بالعربي (اكتب ___ للفراغ)' : 'Arabic text (use ___ for blank)'}
+                                                    dir="rtl"
+                                                    style={{ marginBottom: '0.3rem' }}
+                                                />
+                                                <input
+                                                    className="qedit-opt-input"
+                                                    value={sub.textEn || ''}
+                                                    onChange={e => setQuestionForm(prev => ({
+                                                        ...prev,
+                                                        subQuestions: prev.subQuestions.map((s, i) => i === sIdx ? { ...s, textEn: e.target.value } : s)
+                                                    }))}
+                                                    placeholder="English text (use ___ for blank)"
+                                                    dir="ltr"
+                                                    style={{ marginBottom: '0.3rem' }}
+                                                />
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem' }}>
+                                                    <span style={{ color: 'var(--text-secondary, #888)' }}>{isAr ? 'الإجابة الصحيحة:' : 'Correct answer:'}</span>
+                                                    <select
+                                                        className="qedit-opt-input"
+                                                        style={{ flex: 1, padding: '0.2rem 0.4rem', fontSize: '0.78rem' }}
+                                                        value={sub.correctAnswer || ''}
+                                                        onChange={e => setQuestionForm(prev => ({
+                                                            ...prev,
+                                                            subQuestions: prev.subQuestions.map((s, i) => i === sIdx ? { ...s, correctAnswer: e.target.value } : s)
+                                                        }))}
+                                                    >
+                                                        <option value="">{isAr ? '— اختر —' : '— choose —'}</option>
+                                                        {(questionForm.options || []).map(opt => (
+                                                            <option key={opt.id} value={opt.id}>
+                                                                {opt.textEn || opt.textAr || opt.id}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Options list */}
                             <div className="qedit-field">
-                                <label className="qedit-label">📋 {isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}</label>
+                                <label className="qedit-label">
+                                    {questionForm.type === 'matching'
+                                        ? `🗂️ ${isAr ? 'قائمة الإجابات المشتركة (يختار الطالب منها لكل فراغ)' : 'Shared Answer Pool (student picks for each blank)'}`
+                                        : `📋 ${isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}`
+                                    }
+                                </label>
                                 <div className="qedit-options-list">
                                     {questionForm.options.map((opt, idx) => (
                                         <div key={opt.id || idx} className={`qedit-option ${questionForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}>
                                             <div className="qedit-option-top">
                                                 <span className="qedit-opt-id">{(opt.id || String.fromCharCode(65 + idx)).toUpperCase()}</span>
-                                                <label className="qedit-correct-label">
-                                                    <input
-                                                        type="radio"
-                                                        name="quizCorrectAnswer"
-                                                        checked={questionForm.correctAnswer === opt.id}
-                                                        onChange={() => setQuestionForm(prev => ({ ...prev, correctAnswer: opt.id }))}
-                                                    />
-                                                    {isAr ? 'صحيحة ✅' : 'Correct ✅'}
-                                                </label>
-                                                <button className="qedit-opt-delete" onClick={() => deleteQuestionOption(idx)}>🗑️</button>
+                                                {questionForm.type !== 'matching' && (
+                                                    <label className="qedit-correct-label">
+                                                        <input
+                                                            type="radio"
+                                                            name="quizCorrectAnswer"
+                                                            checked={questionForm.correctAnswer === opt.id}
+                                                            onChange={() => setQuestionForm(prev => ({ ...prev, correctAnswer: opt.id }))}
+                                                        />
+                                                        {isAr ? 'صحيحة ✅' : 'Correct ✅'}
+                                                    </label>
+                                                )}
+                                                <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto' }}>
+                                                    <button
+                                                        type="button"
+                                                        className="qmanage-add-btn"
+                                                        style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem' }}
+                                                        onClick={async () => {
+                                                            if (opt.textAr) {
+                                                                toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                                                const res = await translateText(opt.textAr, 'ar2en');
+                                                                if (res) { updateQuestionOption(idx, 'textEn', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
+                                                            } else if (opt.textEn) {
+                                                                toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                                                const res = await translateText(opt.textEn, 'en2ar');
+                                                                if (res) { updateQuestionOption(idx, 'textAr', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
+                                                            } else {
+                                                                toast.error(isAr ? 'اكتب نص الخيار أولاً' : 'Type option text first');
+                                                            }
+                                                        }}
+                                                    >
+                                                        🤖 {isAr ? 'ترجم' : 'Translate'}
+                                                    </button>
+                                                    {questionForm.type !== 'true_false' && questionForm.type !== 'matching' && (
+                                                        <button className="qedit-opt-delete" style={{ margin: 0 }} onClick={() => deleteQuestionOption(idx)}>🗑️</button>
+                                                    )}
+                                                </div>
                                             </div>
                                             <input
                                                 className="qedit-opt-input"
@@ -1917,6 +2179,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
                                                 placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
                                                 dir="rtl"
+                                                disabled={questionForm.type === 'true_false'}
                                             />
                                             <input
                                                 className="qedit-opt-input"
@@ -1924,11 +2187,30 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 onChange={e => updateQuestionOption(idx, 'textEn', e.target.value)}
                                                 placeholder="English option text"
                                                 dir="ltr"
+                                                disabled={questionForm.type === 'true_false'}
                                             />
+                                            {/* Delete button for matching pool items */}
+                                            {questionForm.type === 'matching' && (
+                                                <button
+                                                    type="button"
+                                                    className="qedit-opt-delete"
+                                                    style={{ margin: '0.2rem 0 0', alignSelf: 'flex-end' }}
+                                                    onClick={() => deleteQuestionOption(idx)}
+                                                >
+                                                    🗑️ {isAr ? 'حذف' : 'Remove'}
+                                                </button>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
-                                <button className="qedit-add-option" onClick={addQuestionOption}>+ {isAr ? 'إضافة خيار' : 'Add Option'}</button>
+                                {questionForm.type !== 'true_false' && (
+                                    <button className="qedit-add-option" onClick={addQuestionOption}>
+                                        + {isAr
+                                            ? (questionForm.type === 'matching' ? 'إضافة للقائمة' : 'إضافة خيار')
+                                            : (questionForm.type === 'matching' ? 'Add to Pool' : 'Add Option')
+                                        }
+                                    </button>
+                                )}
                             </div>
 
                             {/* Image device upload zone */}

@@ -499,7 +499,7 @@
 }
 
 [data-theme="light"] .semester-header h2 {
-    color: #ffffff;
+    color: #1a1a2e;
 }
 
 .semester-year {
@@ -620,19 +620,34 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
+[data-theme="light"] .calendar-event-card:hover {
+    border-color: var(--primary);
+    background: #ffffff;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+
 .calendar-event-date {
     font-size: 1.1rem;
     font-weight: 800;
     margin-bottom: 0.5rem;
     direction: ltr;
+    /* color is set inline via currentSemester.color */
+}
+
+[data-theme="light"] .calendar-event-date {
+    /* keep the inline color from JSX — no override needed */
 }
 
 .calendar-event-day {
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.5);
     margin-bottom: 1.5rem;
     font-weight: 700;
     text-transform: uppercase;
+}
+
+[data-theme="light"] .calendar-event-day {
+    color: #6c757d;
 }
 
 .calendar-event-text {
@@ -643,7 +658,7 @@
 }
 
 [data-theme="light"] .calendar-event-text {
-    color: var(--text-main);
+    color: #1a1a2e;
 }
 
 /* Info Banner Refined */

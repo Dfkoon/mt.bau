@@ -232,6 +232,7 @@ const Quiz = () => {
     const [showResults, setShowResults] = useState(false);
     const [score, setScore] = useState(0);
     const [flaggedQuestions, setFlaggedQuestions] = useState(new Set());
+    const [quizNotes, setQuizNotes] = useState({}); // optional student notes keyed by question ID
     const [searchTerm, setSearchTerm] = useState('');
 
     // Timer and mobile navigation states
@@ -245,6 +246,7 @@ const Quiz = () => {
     const [dbSubjects, setDbSubjects] = useState([]);
     const [dbParts, setDbParts] = useState([]);
     const [dbCurrentQuestions, setDbCurrentQuestions] = useState([]);
+    const [dbSubjectQuestions, setDbSubjectQuestions] = useState([]);
 
     // Load custom subjects and parts from Firestore
     useEffect(() => {
@@ -322,12 +324,29 @@ const Quiz = () => {
         return cats;
     }, [dbSubjects, dbParts]);
 
+    // Load all questions for the current subject (to count questions per part on subject landing page)
+    useEffect(() => {
+        const subjectId = quizId || selectedCategory?.id;
+        if (!subjectId) {
+            setDbSubjectQuestions([]);
+            return;
+        }
+        getDocs(query(collection(db, 'quiz_questions'), where('subjectId', '==', subjectId)))
+            .then(snap => {
+                const list = [];
+                snap.forEach(d => list.push(d.data()));
+                setDbSubjectQuestions(list);
+            })
+            .catch(console.error);
+    }, [quizId, selectedCategory]);
+
     // Merge base quiz data with extra quizzes
     const quizData = useMemo(() => ({ ...baseQuizData, ...extraQuizData }), [baseQuizData]);
 
     // Get current quiz data (merged with dynamic questions & edits)
     const currentQuiz = useMemo(() => {
-        let baseQuiz = quizId ? quizData[quizId] : null;
+        const matchedCat = quizId ? mergedCategories.find(c => c.id === quizId) : null;
+        let baseQuiz = matchedCat ? { ...matchedCat } : (quizId ? quizData[quizId] : null);
 
         // If it's a completely dynamic/new quiz, construct its base metadata
         if (!baseQuiz && quizId) {
@@ -393,7 +412,7 @@ const Quiz = () => {
             ...baseQuiz,
             questions: mergedQuestions
         };
-    }, [quizId, quizData, dbParts, dbCurrentQuestions, questionEdits]);
+    }, [quizId, quizData, mergedCategories, dbParts, dbCurrentQuestions, questionEdits]);
 
     // Find the parent subject/category for the current quiz (used in breadcrumbs)
     const currentSubject = quizId ? mergedCategories.find(cat => {
@@ -432,7 +451,7 @@ const Quiz = () => {
         );
     });
 
-    // Reset state and initialize timer when quiz changes
+    // Reset state when quiz ID changes (navigation)
     useEffect(() => {
         setCurrentQuestionIndex(0);
         setUserAnswers({});
@@ -440,18 +459,22 @@ const Quiz = () => {
         setScore(0);
         setFlaggedQuestions(new Set());
         setIsMobileDrawerOpen(false);
+        setQuizNotes({});
         if (quizId) setSelectedCategory(null);
         window.scrollTo(0, 0);
+        setTimerActive(false);
+        setTimeLeft(0);
+    }, [quizId]);
 
-        if (quizId && currentQuiz && !currentQuiz.parts && currentQuiz.questions?.length > 0) {
-            const timeLimit = currentQuiz.questions.length * 90; // 90 seconds per question
+    // Activate timer once questions are loaded (fires when dbCurrentQuestions arrives)
+    useEffect(() => {
+        if (quizId && currentQuiz && !currentQuiz.parts && currentQuiz.questions?.length > 0 && !showResults) {
+            const timeLimit = currentQuiz.questions.length * 90;
             setTimeLeft(timeLimit);
             setTimerActive(true);
-        } else {
-            setTimerActive(false);
-            setTimeLeft(0);
         }
-    }, [quizId, currentQuiz]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [quizId, currentQuiz?.questions?.length]);
 
     // Handle back navigation state to restore selected subject category
     useEffect(() => {
@@ -637,6 +660,7 @@ const Quiz = () => {
                 type: q.type,
                 options: q.options || [],
                 correctAnswer: q.correctAnswer || '',
+                studentNote: (quizNotes[qId] || '').trim(),  // ← ملاحظة الطالب الخاصة بهذا السؤال
             };
 
             submitQuestionReport(reportData).then(res => {
@@ -648,6 +672,12 @@ const Quiz = () => {
                             color: '#fff',
                         },
                         icon: '🚩'
+                    });
+                    // Clear note for this specific question after sending
+                    setQuizNotes(prev => {
+                        const next = { ...prev };
+                        delete next[qId];
+                        return next;
                     });
                 }
             });
@@ -690,7 +720,12 @@ const Quiz = () => {
                                     // Identify if the part refers to a valid quiz with questions
                                     const partId = part.id;
                                     const partData = quizData[partId];
-                                    const hasQuestions = partData?.questions?.length > 0;
+                                    
+                                    // Sum static questions + dynamic questions from DB
+                                    const dbQuestionsCount = dbSubjectQuestions.filter(q => q.partId === partId).length;
+                                    const staticQuestionsCount = partData?.questions?.length || 0;
+                                    const totalQuestionsCount = staticQuestionsCount + dbQuestionsCount;
+                                    const hasQuestions = totalQuestionsCount > 0;
 
                                     return (
                                         <Link
@@ -702,7 +737,7 @@ const Quiz = () => {
                                         >
                                             <div className="category-icon">{part.icon || currentQuiz.icon}</div>
                                             <h3>{language === 'ar' ? part.titleAr : part.title}</h3>
-                                            <p>{partData?.questions?.length || 0} {t('quiz.selection.questions')}</p>
+                                            <p>{totalQuestionsCount} {t('quiz.selection.questions')}</p>
                                             <span className="start-btn">
                                                 {hasQuestions
                                                     ? t('quiz.selection.start')
@@ -902,7 +937,8 @@ const Quiz = () => {
                                             isCorrect = userAnswer === q.correctAnswer;
                                         }
 
-                                        const displayLang = currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : language;
+                                        const subjectLangMode = currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both');
+                                        const displayLang = subjectLangMode === 'en' ? 'en' : subjectLangMode === 'ar' ? 'ar' : language;
 
                                         return (
                                             <div key={q.id} className="moodle-question-block" id={`question-${idx + 1}`}>
@@ -1053,14 +1089,14 @@ const Quiz = () => {
                                                             })}
 
                                                             {(q.type === 'tf' || q.type === 'true_false') && [
-                                                                { id: true, text: displayLang === 'ar' ? 'صح' : 'True' },
-                                                                { id: false, text: displayLang === 'ar' ? 'خطأ' : 'False' }
+                                                                { id: 'a', text: displayLang === 'ar' ? 'صح' : 'True' },
+                                                                { id: 'b', text: displayLang === 'ar' ? 'خطأ' : 'False' }
                                                             ].map((val, oIdx) => {
                                                                 const letter = String.fromCharCode(97 + oIdx); // a, b
                                                                 const isSelected = userAnswer === val.id;
                                                                 const isOptionCorrect = val.id === q.correctAnswer;
                                                                 return (
-                                                                    <div key={val.id.toString()} className="moodle-radio-display">
+                                                                    <div key={val.id} className="moodle-radio-display">
                                                                         <input type="radio" checked={isSelected} readOnly />
                                                                         <label className={isSelected && isOptionCorrect ? 'moodle-correct-text' : (isSelected ? 'moodle-wrong-text' : '')}>
                                                                             <span className="moodle-option-letter">{letter}.</span>{' '}
@@ -1103,7 +1139,7 @@ const Quiz = () => {
                                                                 ? renderTextWithCode(displayLang === 'ar' ? (q.options.find(o => o.id === q.correctAnswer)?.textAr || q.options.find(o => o.id === q.correctAnswer)?.textEn) : q.options.find(o => o.id === q.correctAnswer)?.textEn)
                                                                 : q.type === 'matching'
                                                                     ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
-                                                                    : (q.correctAnswer === true ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
+                                                                    : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
                                                         </div>
                                                         {(q.explanation || q.explanationAr) && (
                                                             <div className="explanation" style={{ marginTop: '1rem', borderLeft: language === 'en' ? '4px solid #FFC107' : 'none', borderRight: language === 'ar' ? '4px solid #FFC107' : 'none' }}>
@@ -1192,8 +1228,22 @@ const Quiz = () => {
         }
 
         const question = currentQuiz.questions[currentQuestionIndex];
-        const isEnglishContent = currentQuiz.forceEnglish || quizId === 'comp_skills';
-        const displayLang = isEnglishContent ? 'en' : language;
+        const subjectLangMode = currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both');
+        const isEnglishContent = subjectLangMode === 'en';
+        const isArabicContent = subjectLangMode === 'ar';
+        const displayLang = isEnglishContent ? 'en' : isArabicContent ? 'ar' : language;
+
+        // Guard: questions may not be loaded yet (Firebase async)
+        if (!question) {
+            return (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '1rem' }}>
+                    <div className="loading-spinner" style={{ width: 48, height: 48, border: '4px solid #e0e0e0', borderTop: '4px solid #9c27b0', borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
+                    <p style={{ color: '#9c27b0', fontWeight: 600, fontSize: '1.1rem' }}>
+                        {language === 'ar' ? 'جارٍ تحميل الأسئلة…' : 'Loading questions…'}
+                    </p>
+                </div>
+            );
+        }
 
         // Helper to format remaining time
         const formatTime = (seconds) => {
@@ -1266,6 +1316,7 @@ const Quiz = () => {
                             </div>
                         </div>
 
+
                         <div className="moodle-question-block" id={`question-${currentQuestionIndex + 1}`}>
                             {/* Left Info Box (Moodle Style) */}
                             <div className="moodle-q-info-box">
@@ -1296,6 +1347,52 @@ const Quiz = () => {
                                         ? (language === 'ar' ? 'إزالة العلامة' : 'Remove flag')
                                         : (language === 'ar' ? 'تعليم السؤال' : 'Flag question')}
                                 </button>
+
+                                {/* Notes textarea — below flag button */}
+                                <div className="no-print" style={{ marginTop: '10px' }}>
+                                    <label
+                                        htmlFor={`quiz-note-${question.id}`}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px',
+                                            fontSize: '0.78rem',
+                                            fontWeight: 600,
+                                            color: '#555',
+                                            marginBottom: '5px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        📝 {language === 'ar' ? 'كتابة ملاحظة عن السؤال' : 'Note about question'}
+                                    </label>
+                                    <textarea
+                                        id={`quiz-note-${question.id}`}
+                                        value={quizNotes[question.id] || ''}
+                                        onChange={e => {
+                                            const val = e.target.value;
+                                            setQuizNotes(prev => ({ ...prev, [question.id]: val }));
+                                        }}
+                                        placeholder={language === 'ar' ? 'اكتب ملاحظتك هنا...' : 'Write your note...'}
+                                        rows={3}
+                                        style={{
+                                            width: '100%',
+                                            resize: 'vertical',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '6px',
+                                            padding: '6px 8px',
+                                            fontSize: '0.82rem',
+                                            fontFamily: 'inherit',
+                                            color: 'var(--text-primary, #333)',
+                                            background: '#fff',
+                                            outline: 'none',
+                                            boxSizing: 'border-box',
+                                            direction: language === 'ar' ? 'rtl' : 'ltr',
+                                            transition: 'border-color 0.2s'
+                                        }}
+                                        onFocus={e => e.target.style.borderColor = '#9c27b0'}
+                                        onBlur={e => e.target.style.borderColor = '#ddd'}
+                                    />
+                                </div>
                             </div>
 
                             {/* Question Content Box */}
@@ -1474,14 +1571,14 @@ const Quiz = () => {
                                             </div>
                                         ) : (
                                             [
-                                                { id: true, text: displayLang === 'ar' ? 'صح' : 'True' },
-                                                { id: false, text: displayLang === 'ar' ? 'خطأ' : 'False' }
+                                                { id: 'a', text: displayLang === 'ar' ? 'صح' : 'True' },
+                                                { id: 'b', text: displayLang === 'ar' ? 'خطأ' : 'False' }
                                             ].map((val, oIdx) => {
                                                 const letter = String.fromCharCode(97 + oIdx); // a, b
                                                 const isSelected = userAnswers[question.id] === val.id;
                                                 return (
                                                     <div
-                                                        key={val.id.toString()}
+                                                        key={val.id}
                                                         className={`moodle-radio-display ${isSelected ? 'selected' : ''}`}
                                                         onClick={() => handleAnswerSelect(question.id, val.id)}
                                                     >
@@ -1698,7 +1795,10 @@ const Quiz = () => {
                                 if (part.isGroup && part.subParts) {
                                     return part.subParts.map(subPart => {
                                         const subPartData = quizData[subPart.id];
-                                        const hasQuestions = subPartData?.questions?.length > 0;
+                                        const staticCount = subPartData?.questions?.length || 0;
+                                        const dynamicCount = dbSubjectQuestions.filter(q => q.partId === subPart.id).length;
+                                        const totalCount = Math.max(staticCount, dynamicCount);
+                                        const hasQuestions = totalCount > 0;
                                         return (
                                             <Link
                                                 key={subPart.id}
@@ -1709,7 +1809,7 @@ const Quiz = () => {
                                             >
                                                 <div className="category-icon">{selectedCategory.icon}</div>
                                                 <h3>{language === 'ar' ? subPart.titleAr : subPart.title}</h3>
-                                                <p>{subPartData?.questions?.length || 0} {language === 'ar' ? 'أسئلة' : 'Questions'}</p>
+                                                <p>{totalCount} {language === 'ar' ? 'أسئلة' : 'Questions'}</p>
                                                 <span className="start-btn">
                                                     {hasQuestions ? (language === 'ar' ? 'ابدأ الاختبار' : 'Start') : (language === 'ar' ? 'لم تتوفر بعد' : 'Not available')}
                                                 </span>
@@ -1720,7 +1820,10 @@ const Quiz = () => {
 
                                 // Handle regular parts
                                 const partData = quizData[part.id];
-                                const hasQuestions = partData?.questions?.length > 0;
+                                const staticQCount = partData?.questions?.length || 0;
+                                const dynamicQCount = dbSubjectQuestions.filter(q => q.partId === part.id).length;
+                                const totalQCount = Math.max(staticQCount, dynamicQCount);
+                                const hasQuestions = totalQCount > 0;
                                 const hasSubParts = partData?.parts?.length > 0;
                                 const isAvailable = hasQuestions || hasSubParts;
 
@@ -1737,7 +1840,7 @@ const Quiz = () => {
                                         <p>
                                             {hasSubParts
                                                 ? `${partData.parts.length} ${language === 'ar' ? 'أجزاء' : 'Parts'}`
-                                                : `${partData?.questions?.length || 0} ${t('quiz.selection.questions')}`
+                                                : `${totalQCount} ${t('quiz.selection.questions')}`
                                             }
                                         </p>
                                         <span className="start-btn">

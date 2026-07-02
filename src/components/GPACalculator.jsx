@@ -21,6 +21,7 @@ const GPACalculator = () => {
 
     const [semesterGPA, setSemesterGPA] = useState(0);
     const [expectedCumulativeGPA, setExpectedCumulativeGPA] = useState(0);
+    const [expectedHours, setExpectedHours] = useState(0);
     const [rating, setRating] = useState('');
 
     // Grade Points Mapping
@@ -81,8 +82,10 @@ const GPACalculator = () => {
 
             const expGPA = totalHoursAccumulated > 0 ? (totalPointsAccumulated / totalHoursAccumulated) : 0;
             setExpectedCumulativeGPA(expGPA);
+            setExpectedHours(totalHoursAccumulated);
         } else {
             setExpectedCumulativeGPA(0);
+            setExpectedHours(0);
         }
     };
 
@@ -240,10 +243,16 @@ const GPACalculator = () => {
                             </div>
                         </div>
                         {expectedCumulativeGPA > 0 && (
-                            <div className="expected-gpa">
-                                <span>{t('gpa.expected_cumulative')}</span>
-                                <strong>{expectedCumulativeGPA.toFixed(2)}</strong>
-                            </div>
+                            <>
+                                <div className="expected-gpa">
+                                    <span>{t('gpa.expected_cumulative')}</span>
+                                    <strong>{expectedCumulativeGPA.toFixed(2)}</strong>
+                                </div>
+                                <div className="expected-gpa">
+                                    <span>{t('gpa.expected_hours')}</span>
+                                    <strong>{expectedHours}</strong>
+                                </div>
+                            </>
                         )}
                     </div>
 

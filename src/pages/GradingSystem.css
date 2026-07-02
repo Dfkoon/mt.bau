@@ -122,7 +122,7 @@
 }
 
 .highlight-text {
-    color: #ffffff;
+    color: var(--text-main);
 }
 
 .section-desc {
