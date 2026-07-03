@@ -212,7 +212,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     const [editingQuestion, setEditingQuestion] = useState(null);
     const [showQuestionModal, setShowQuestionModal] = useState(false);
-    const [questionForm, setQuestionForm] = useState({ id: '', type: 'mcq', questionAr: '', questionEn: '', options: [], correctAnswer: '', marks: 1.0, image: '', image2: '' });
+    const [questionForm, setQuestionForm] = useState({ id: '', type: 'mcq', questionAr: '', questionEn: '', options: [], correctAnswer: '', marks: 1.0, image: '', image2: '', codeBlock: '' });
     
     // Hidden file inputs for question image upload from device inside quizzes tab
     const quizImageInputRef = useRef(null);
@@ -704,6 +704,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 marks: q.marks || 1.0,
                 image: q.image || '',
                 image2: q.image2 || '',
+                codeBlock: q.codeBlock || '',
             });
         } else {
             setEditingQuestion(null);
@@ -723,6 +724,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 marks: 1.0,
                 image: '',
                 image2: '',
+                codeBlock: '',
             });
         }
         setShowQuestionModal(true);
@@ -841,6 +843,79 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }, 0);
     };
 
+    const renderCodeBlock = (code) => {
+        if (!code) return null;
+        const lines = code.trim().split('\n');
+        return (
+            <div className="code-ide-container" style={{
+                backgroundColor: '#18181c',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                fontFamily: '"Fira Code", Consolas, Monaco, "Courier New", Courier, monospace',
+                fontSize: '0.88rem',
+                lineHeight: '1.5',
+                color: '#e3e3e6',
+                overflow: 'hidden',
+                direction: 'ltr',
+                textAlign: 'left',
+                margin: '0.8rem 0',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+            }}>
+                {/* Header bar */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.5rem 0.8rem',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'rgba(255, 255, 255, 0.03)'
+                }}>
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ff5f56' }} />
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ffbd2e' }} />
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#27c93f' }} />
+                    </div>
+                    <span style={{ fontSize: '0.65rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>IDE View</span>
+                </div>
+                
+                {/* Body */}
+                <div style={{ display: 'flex', overflowX: 'auto' }}>
+                    <div style={{
+                        padding: '0.8rem 0.5rem 0.8rem 0.8rem',
+                        backgroundColor: '#111113',
+                        color: '#55555d',
+                        textAlign: 'right',
+                        userSelect: 'none',
+                        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
+                        minWidth: '2.2rem',
+                        flexShrink: 0
+                    }}>
+                        {lines.map((_, i) => (
+                            <div key={i} style={{ height: '1.4rem', fontSize: '0.8rem' }}>{i + 1}</div>
+                        ))}
+                    </div>
+                    <pre style={{
+                        margin: 0,
+                        padding: '0.8rem 0.8rem 0.8rem 0.6rem',
+                        flexGrow: 1,
+                        whiteSpace: 'pre',
+                        overflowX: 'visible',
+                        fontFamily: 'inherit',
+                        background: 'transparent',
+                        border: 'none',
+                        boxShadow: 'none'
+                    }}>
+                        {lines.map((line, i) => (
+                            <div key={i} style={{ height: '1.4rem', color: '#e3e3e6' }}>
+                                {line || ' '}
+                            </div>
+                        ))}
+                    </pre>
+                </div>
+            </div>
+        );
+    };
+
     // Colors available in the question text color picker
     const QUESTION_COLORS = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899'];
     const HIGHLIGHT_COLORS = ['#fde68a','#bbf7d0','#bfdbfe','#fca5a5','#e9d5ff','#fed7aa'];
@@ -916,6 +991,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 marks: Number(questionForm.marks) || 1,
                 image: questionForm.image || null,
                 image2: questionForm.image2 || null,
+                codeBlock: questionForm.codeBlock ? questionForm.codeBlock.trim() : null,
                 createdAt: serverTimestamp()
             };
             if (questionForm.type === 'matching') {
@@ -1708,6 +1784,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                             </div>
                                                         </div>
                                                         <div className="qmanage-question-card-body">
+                                                            {q.codeBlock && renderCodeBlock(q.codeBlock)}
                                                             <p className="qmanage-q-text text-ar">{q.questionAr || '—'}</p>
                                                             <p className="qmanage-q-text text-en">{q.questionEn || '—'}</p>
                                                             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem', marginBottom: '0.4rem' }}>
@@ -2438,6 +2515,29 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     dir="ltr"
                                     rows={3}
                                     placeholder="Type question here..."
+                                />
+                            </div>
+
+                            {/* Code Block (Optional) */}
+                            <div className="qedit-field">
+                                <label className="qedit-label">💻 {isAr ? 'كود برمجي مرافق للسؤال (اختياري)' : 'Associated Code Block (optional)'}</label>
+                                <textarea
+                                    className="qedit-textarea"
+                                    value={questionForm.codeBlock || ''}
+                                    onChange={e => setQuestionForm(prev => ({ ...prev, codeBlock: e.target.value }))}
+                                    dir="ltr"
+                                    rows={5}
+                                    style={{
+                                        fontFamily: '"Fira Code", Consolas, Monaco, "Courier New", Courier, monospace',
+                                        fontSize: '0.85rem',
+                                        backgroundColor: '#18181c',
+                                        color: '#e3e3e6',
+                                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                                        borderRadius: '6px',
+                                        padding: '0.5rem 0.8rem',
+                                        marginTop: '0.3rem'
+                                    }}
+                                    placeholder={isAr ? 'أدخل الكود البرمجي هنا...' : 'Enter the source code here...'}
                                 />
                                 {/* Live preview when HTML tags present */}
                                 {/[<]/.test(questionForm.questionEn) && (

@@ -113,29 +113,77 @@ const CodeBlock = ({ code, language = 'cpp' }) => (
         language={language}
     >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre style={{
-                ...style,
-                padding: '1.25rem',
-                borderRadius: '0.75rem',
-                overflow: 'auto',
+            <div className="code-ide-container" style={{
+                backgroundColor: '#18181c',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                fontFamily: '"Fira Code", Consolas, Monaco, "Courier New", Courier, monospace',
+                fontSize: '0.88rem',
+                lineHeight: '1.5',
+                color: '#e3e3e6',
+                overflow: 'hidden',
                 direction: 'ltr',
                 textAlign: 'left',
-                fontFamily: "'Fira Code', monospace",
-                fontSize: '0.95rem',
-                lineHeight: '1.6',
-                backgroundColor: '#1e1e1e',
-                border: '1px solid rgba(255,255,255,0.1)',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                margin: '1rem 0'
+                margin: '1rem 0',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
             }}>
-                {tokens.map((line, i) => (
-                    <div key={i} {...getLineProps({ line })}>
-                        {line.map((token, key) => (
-                            <span key={key} {...getTokenProps({ token })} />
+                {/* Header bar */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.5rem 0.8rem',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'rgba(255, 255, 255, 0.03)'
+                }}>
+                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ff5f56' }} />
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ffbd2e' }} />
+                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#27c93f' }} />
+                    </div>
+                    <span style={{ fontSize: '0.65rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>IDE View</span>
+                </div>
+                
+                {/* Body */}
+                <div style={{ display: 'flex', overflowX: 'auto' }}>
+                    {/* Line numbers */}
+                    <div style={{
+                        padding: '0.8rem 0.5rem 0.8rem 0.8rem',
+                        backgroundColor: '#111113',
+                        color: '#55555d',
+                        textAlign: 'right',
+                        userSelect: 'none',
+                        borderRight: '1px solid rgba(255, 255, 255, 0.06)',
+                        minWidth: '2.2rem',
+                        flexShrink: 0
+                    }}>
+                        {tokens.map((_, i) => (
+                            <div key={i} style={{ height: '1.4rem', fontSize: '0.8rem' }}>{i + 1}</div>
                         ))}
                     </div>
-                ))}
-            </pre>
+                    {/* Highlighted code */}
+                    <pre style={{
+                        ...style,
+                        margin: 0,
+                        padding: '0.8rem 0.8rem 0.8rem 0.6rem',
+                        flexGrow: 1,
+                        whiteSpace: 'pre',
+                        overflowX: 'visible',
+                        fontFamily: 'inherit',
+                        background: 'transparent',
+                        border: 'none',
+                        boxShadow: 'none'
+                    }}>
+                        {tokens.map((line, i) => (
+                            <div key={i} {...getLineProps({ line })} style={{ height: '1.4rem' }}>
+                                {line.map((token, key) => (
+                                    <span key={key} {...getTokenProps({ token })} />
+                                ))}
+                            </div>
+                        ))}
+                    </pre>
+                </div>
+            </div>
         )}
     </Highlight>
 );
@@ -953,6 +1001,7 @@ const Quiz = () => {
 
                                                 <div className="moodle-q-content-box">
                                                     <div className={`moodle-q-text-area ${displayLang === 'en' ? 'force-ltr' : ''}`}>
+                                                        {q.codeBlock && <CodeBlock code={q.codeBlock} />}
                                                         <div className="moodle-q-text-main">
                                                             {renderTextWithCode(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn)}
                                                         </div>
@@ -1429,6 +1478,7 @@ const Quiz = () => {
                             {/* Question Content Box */}
                             <div className="moodle-q-content-box">
                                 <div className={`moodle-q-text-area ${isEnglishContent ? 'force-ltr' : ''}`}>
+                                    {question.codeBlock && <CodeBlock code={question.codeBlock} />}
                                     <div className="moodle-q-text-main">
                                         {renderTextWithCode(displayLang === 'ar' ? (question.questionAr || question.questionEn) : question.questionEn)}
                                     </div>
