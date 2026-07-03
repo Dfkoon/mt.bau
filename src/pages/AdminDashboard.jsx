@@ -223,6 +223,27 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const [quizImage2Uploading, setQuizImage2Uploading] = useState(false);
     const [quizImage2Progress, setQuizImage2Progress] = useState(0);
 
+    // ── Per-option undo history (Ctrl+Z) ──
+    const optionHistories = useRef({}); // { idx: ['val0','val1',...] }
+    const pushOptionHistory = (idx, value) => {
+        if (!optionHistories.current[idx]) optionHistories.current[idx] = [];
+        const hist = optionHistories.current[idx];
+        if (hist[hist.length - 1] !== value) {
+            hist.push(value);
+            if (hist.length > 80) hist.shift();
+        }
+    };
+    const undoOptionChange = (idx, field) => {
+        const hist = optionHistories.current[idx] || [];
+        if (hist.length > 1) {
+            hist.pop();
+            updateQuestionOption(idx, field, hist[hist.length - 1]);
+        } else if (hist.length === 1) {
+            hist.pop();
+            updateQuestionOption(idx, field, '');
+        }
+    };
+
     // ── Listen to Firebase Auth state changes ──
     useEffect(() => {
         const auth = getAuth();
@@ -762,6 +783,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }
 
         const currentVal = questionForm.options[idx][field] || '';
+        pushOptionHistory(idx, currentVal);
         updateQuestionOption(idx, field, currentVal + textToInsert);
     };
 
@@ -2552,7 +2574,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             <input
                                                 className="qedit-opt-input"
                                                 value={opt.textEn || ''}
-                                                onChange={e => updateQuestionOption(idx, 'textEn', e.target.value)}
+                                                onChange={e => {
+                                                    pushOptionHistory(idx, opt.textEn || '');
+                                                    updateQuestionOption(idx, 'textEn', e.target.value);
+                                                }}
+                                                onKeyDown={e => {
+                                                    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                                                        e.preventDefault();
+                                                        undoOptionChange(idx, 'textEn');
+                                                    }
+                                                }}
                                                 placeholder="English option text"
                                                 dir="ltr"
                                                 disabled={questionForm.type === 'true_false'}
@@ -2576,6 +2607,14 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             {questionForm.type !== 'true_false' && (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
                                                     <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                                                        {/* Undo */}
+                                                        <button type="button"
+                                                            onMouseDown={e => { e.preventDefault(); undoOptionChange(idx, 'textEn'); }}
+                                                            title={isAr ? 'تراجع (Ctrl+Z)' : 'Undo (Ctrl+Z)'}
+                                                            style={{ fontSize: '0.8rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                                            ↩
+                                                        </button>
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
                                                         {/* Bold / Italic / Underline / Code */}
                                                         {[['B','bold'],['I','italic'],['U','underline'],['</>','code']].map(([lbl, tag]) => (
                                                             <button key={tag} type="button"
@@ -2591,6 +2630,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                         {/* Text colors */}
                                                         {QUESTION_COLORS.map(c => (
                                                             <button key={c} type="button"
+                                                                className="color-dot"
                                                                 onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'color', c); }}
                                                                 title={`Color ${c}`}
                                                                 style={{ width: '14px', height: '14px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
@@ -2599,6 +2639,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                         {/* Highlight colors */}
                                                         {HIGHLIGHT_COLORS.map(c => (
                                                             <button key={c} type="button"
+                                                                className="color-dot"
                                                                 onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'highlight', c); }}
                                                                 title={`Highlight ${c}`}
                                                                 style={{ width: '14px', height: '14px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.25)', cursor: 'pointer', padding: 0 }} />

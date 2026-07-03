@@ -1562,3 +1562,16 @@
     background-color: rgba(0, 0, 0, 0.08) !important;
     border-color: rgba(0, 0, 0, 0.18) !important;
 }
+
+/* Preserve real color for color/highlight dot buttons — must not be overridden */
+.qedit-opt-toolbar button.color-dot,
+[data-theme='light'] .qedit-opt-toolbar button.color-dot {
+    background-color: unset !important;
+    border-color: unset !important;
+}
+.qedit-opt-toolbar button.color-dot:hover,
+[data-theme='light'] .qedit-opt-toolbar button.color-dot:hover {
+    opacity: 0.8;
+    background-color: unset !important;
+    transform: scale(1.2);
+}
