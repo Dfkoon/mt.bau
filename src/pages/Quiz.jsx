@@ -293,6 +293,7 @@ const Quiz = () => {
     const [questionEdits, setQuestionEdits] = useState({});
     const [dbSubjects, setDbSubjects] = useState([]);
     const [dbParts, setDbParts] = useState([]);
+    const [dbPartsLoaded, setDbPartsLoaded] = useState(false);
     const [dbCurrentQuestions, setDbCurrentQuestions] = useState([]);
     const [dbSubjectQuestions, setDbSubjectQuestions] = useState([]);
 
@@ -312,7 +313,8 @@ const Quiz = () => {
                 snap.forEach(d => list.push({ ...d.data(), fromDb: true }));
                 setDbParts(list);
             })
-            .catch(console.error);
+            .catch(console.error)
+            .finally(() => setDbPartsLoaded(true));
     }, []);
 
     // Load edits for the current quizId
@@ -386,40 +388,53 @@ const Quiz = () => {
                 setDbSubjectQuestions(list);
             })
             .catch(console.error);
-    }, [quizId, selectedCategory]);
+    // Use selectedCategory?.id (string) not the object reference to avoid unnecessary re-runs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [quizId, selectedCategory?.id]);
 
     // Merge base quiz data with extra quizzes
     const quizData = useMemo(() => ({ ...baseQuizData, ...extraQuizData }), [baseQuizData]);
 
     // Get current quiz data (merged with dynamic questions & edits)
     const currentQuiz = useMemo(() => {
-        const matchedCat = quizId ? mergedCategories.find(c => c.id === quizId) : null;
-        let baseQuiz = matchedCat ? { ...matchedCat } : (quizId ? quizData[quizId] : null);
+        if (!quizId) return null;
 
-        // If it's a completely dynamic/new quiz, construct its base metadata
-        if (!baseQuiz && quizId) {
-            const partInfo = dbParts.find(p => p.id === quizId);
-            if (partInfo) {
-                baseQuiz = {
-                    id: quizId,
-                    title: partInfo.title,
-                    titleAr: partInfo.titleAr,
-                    questions: []
-                };
-            } else {
-                // Check in subParts of grouped parts
-                for (const p of dbParts) {
-                    if (p.isGroup && p.subParts) {
-                        const subPart = p.subParts.find(sp => sp.id === quizId);
-                        if (subPart) {
-                            baseQuiz = {
-                                id: quizId,
-                                title: subPart.title,
-                                titleAr: subPart.titleAr,
-                                questions: []
-                            };
-                            break;
-                        }
+        // Priority 1: Check if quizId matches a DB part (leaf quiz) — do this FIRST
+        // This prevents a part ID accidentally matching a subject in mergedCategories
+        const dbPartInfo = dbParts.find(p => p.id === quizId);
+
+        // Priority 2: Check static merged categories (subjects) — only if quizId is NOT a DB part
+        const matchedCat = !dbPartInfo ? mergedCategories.find(c => c.id === quizId) : null;
+
+        let baseQuiz = null;
+
+        if (matchedCat) {
+            // It's a subject/category (container with sub-parts)
+            baseQuiz = { ...matchedCat };
+        } else if (dbPartInfo) {
+            // It's a DB-created quiz part (leaf quiz with questions)
+            baseQuiz = {
+                id: quizId,
+                title: dbPartInfo.title,
+                titleAr: dbPartInfo.titleAr,
+                questions: []
+            };
+        } else if (quizData[quizId]) {
+            // It's a static quiz from quizData
+            baseQuiz = quizData[quizId];
+        } else {
+            // Last resort: check in subParts of grouped parts
+            for (const p of dbParts) {
+                if (p.isGroup && p.subParts) {
+                    const subPart = p.subParts.find(sp => sp.id === quizId);
+                    if (subPart) {
+                        baseQuiz = {
+                            id: quizId,
+                            title: subPart.title,
+                            titleAr: subPart.titleAr,
+                            questions: []
+                        };
+                        break;
                     }
                 }
             }
@@ -732,6 +747,18 @@ const Quiz = () => {
             });
         }
     };
+
+    // If quizId is set but quiz hasn't resolved yet (dbParts still loading) — show spinner
+    if (quizId && !currentQuiz && !dbPartsLoaded) {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '1rem' }}>
+                <div style={{ width: 52, height: 52, border: '5px solid #e0e0e0', borderTop: '5px solid #9c27b0', borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
+                <p style={{ color: '#9c27b0', fontWeight: 600, fontSize: '1.1rem' }}>
+                    {language === 'ar' ? 'جارٍ تحميل الاختبار…' : 'Loading quiz…'}
+                </p>
+            </div>
+        );
+    }
 
     // If viewing a specific quiz
     if (quizId && currentQuiz) {
@@ -1884,7 +1911,7 @@ const Quiz = () => {
                                         const subPartData = quizData[subPart.id];
                                         const staticCount = subPartData?.questions?.length || 0;
                                         const dynamicCount = dbSubjectQuestions.filter(q => q.partId === subPart.id).length;
-                                        const totalCount = Math.max(staticCount, dynamicCount);
+                                        const totalCount = staticCount + dynamicCount;
                                         const hasQuestions = totalCount > 0;
                                         return (
                                             <Link
@@ -1909,10 +1936,11 @@ const Quiz = () => {
                                 const partData = quizData[part.id];
                                 const staticQCount = partData?.questions?.length || 0;
                                 const dynamicQCount = dbSubjectQuestions.filter(q => q.partId === part.id).length;
-                                const totalQCount = Math.max(staticQCount, dynamicQCount);
+                                const totalQCount = staticQCount + dynamicQCount;
                                 const hasQuestions = totalQCount > 0;
                                 const hasSubParts = partData?.parts?.length > 0;
-                                const isAvailable = hasQuestions || hasSubParts;
+                                // Also allow navigation for DB-only parts (e.g. a newly created quiz part with questions but no static data)
+                                const isAvailable = hasQuestions || hasSubParts || part.fromDb;
 
                                 return (
                                     <Link
