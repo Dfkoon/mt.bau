@@ -751,6 +751,43 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         updateQuestionOption(idx, field, currentVal + textToInsert);
     };
 
+    // ── Format selected text in question textarea (bold, italic, color, etc.) ──
+    const questionArRef = React.useRef(null);
+    const questionEnRef = React.useRef(null);
+
+    const insertFormatIntoQuestion = (field, tagType, extra) => {
+        const ref = field === 'questionAr' ? questionArRef : questionEnRef;
+        const el = ref.current;
+        if (!el) return;
+
+        const start = el.selectionStart;
+        const end   = el.selectionEnd;
+        const currentVal = field === 'questionAr' ? questionForm.questionAr : questionForm.questionEn;
+        const selected = currentVal.substring(start, end);
+
+        let wrapped = '';
+        if (tagType === 'bold')      wrapped = `<strong>${selected || 'نص'}</strong>`;
+        else if (tagType === 'italic')    wrapped = `<em>${selected || 'نص'}</em>`;
+        else if (tagType === 'underline') wrapped = `<u>${selected || 'نص'}</u>`;
+        else if (tagType === 'color')     wrapped = `<span style="color:${extra};">${selected || 'نص'}</span>`;
+        else if (tagType === 'highlight') wrapped = `<mark style="background:${extra};color:#000;">${selected || 'نص'}</mark>`;
+        else if (tagType === 'code')      wrapped = `<code>${selected || 'code'}</code>`;
+
+        const newVal = currentVal.substring(0, start) + wrapped + currentVal.substring(end);
+        setQuestionForm(prev => ({ ...prev, [field]: newVal }));
+
+        // restore caret after React re-render
+        setTimeout(() => {
+            el.focus();
+            el.selectionStart = start + wrapped.length;
+            el.selectionEnd   = start + wrapped.length;
+        }, 0);
+    };
+
+    // Colors available in the question text color picker
+    const QUESTION_COLORS = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899'];
+    const HIGHLIGHT_COLORS = ['#fde68a','#bbf7d0','#bfdbfe','#fca5a5','#e9d5ff','#fed7aa'];
+
     const handleOptionImageChange = async (idx, e) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -2054,7 +2091,35 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                         🤖 {isAr ? 'ترجم إلى الإنجليزية' : 'Translate to English'}
                                     </button>
                                 </div>
+                                {/* ── Formatting toolbar for Arabic question ── */}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.35rem', alignItems: 'center' }}>
+                                    {[['B','bold','<strong>'],['I','italic','<em>'],['U','underline','<u>'],['</>','code','<code>']].map(([label, tag]) => (
+                                        <button key={tag} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionAr', tag); }}
+                                            style={{ fontWeight: tag==='bold'?'bold':'normal', fontStyle: tag==='italic'?'italic':'normal',
+                                                textDecoration: tag==='underline'?'underline':'none', fontFamily: tag==='code'?'monospace':'inherit',
+                                                fontSize: '0.75rem', padding: '0.15rem 0.4rem', border: '1px solid rgba(255,255,255,0.15)',
+                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                            {label}
+                                        </button>
+                                    ))}
+                                    <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                    {QUESTION_COLORS.map(c => (
+                                        <button key={c} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionAr', 'color', c); }}
+                                            title={`Color ${c}`}
+                                            style={{ width: '16px', height: '16px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
+                                    ))}
+                                    <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                    {HIGHLIGHT_COLORS.map(c => (
+                                        <button key={c} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionAr', 'highlight', c); }}
+                                            title={`Highlight ${c}`}
+                                            style={{ width: '16px', height: '16px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.2)', cursor: 'pointer', padding: 0 }} />
+                                    ))}
+                                </div>
                                 <textarea
+                                    ref={questionArRef}
                                     className="qedit-textarea"
                                     value={questionForm.questionAr}
                                     onChange={e => setQuestionForm(prev => ({ ...prev, questionAr: e.target.value }))}
@@ -2062,6 +2127,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     rows={3}
                                     placeholder="اكتب السؤال هنا..."
                                 />
+                                {/* Live preview when HTML tags present */}
+                                {/[<]/.test(questionForm.questionAr) && (
+                                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                                        <span style={{ opacity: 0.6 }}>👁️ معاينة: </span>
+                                        <span dangerouslySetInnerHTML={{ __html: questionForm.questionAr }} dir="rtl" />
+                                    </div>
+                                )}
                             </div>
                             <div className="qedit-field">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
@@ -2085,7 +2157,35 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                         🤖 {isAr ? 'ترجم إلى العربية' : 'Translate to Arabic'}
                                     </button>
                                 </div>
+                                {/* ── Formatting toolbar for English question ── */}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.35rem', alignItems: 'center' }}>
+                                    {[['B','bold'],['I','italic'],['U','underline'],['</>','code']].map(([label, tag]) => (
+                                        <button key={tag} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionEn', tag); }}
+                                            style={{ fontWeight: tag==='bold'?'bold':'normal', fontStyle: tag==='italic'?'italic':'normal',
+                                                textDecoration: tag==='underline'?'underline':'none', fontFamily: tag==='code'?'monospace':'inherit',
+                                                fontSize: '0.75rem', padding: '0.15rem 0.4rem', border: '1px solid rgba(255,255,255,0.15)',
+                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                            {label}
+                                        </button>
+                                    ))}
+                                    <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                    {QUESTION_COLORS.map(c => (
+                                        <button key={c} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionEn', 'color', c); }}
+                                            title={`Color ${c}`}
+                                            style={{ width: '16px', height: '16px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
+                                    ))}
+                                    <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                    {HIGHLIGHT_COLORS.map(c => (
+                                        <button key={c} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionEn', 'highlight', c); }}
+                                            title={`Highlight ${c}`}
+                                            style={{ width: '16px', height: '16px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.2)', cursor: 'pointer', padding: 0 }} />
+                                    ))}
+                                </div>
                                 <textarea
+                                    ref={questionEnRef}
                                     className="qedit-textarea"
                                     value={questionForm.questionEn}
                                     onChange={e => setQuestionForm(prev => ({ ...prev, questionEn: e.target.value }))}
@@ -2093,6 +2193,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     rows={3}
                                     placeholder="Type question here..."
                                 />
+                                {/* Live preview when HTML tags present */}
+                                {/[<]/.test(questionForm.questionEn) && (
+                                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                                        <span style={{ opacity: 0.6 }}>👁️ Preview: </span>
+                                        <span dangerouslySetInnerHTML={{ __html: questionForm.questionEn }} dir="ltr" />
+                                    </div>
+                                )}
                             </div>
 
                             {/* ══ SubQuestions editor — shown only for matching type ══ */}
