@@ -59,8 +59,14 @@
     text-align: center;
     font-size: 2.5rem;
     font-weight: 800;
-    color: var(--text-main);
+    color: var(--text-main) !important;
     margin-bottom: 3rem;
+}
+[data-theme='light'] .selection-title {
+    color: #0f172a !important;
+}
+[data-theme='dark'] .selection-title {
+    color: #ffffff !important;
 }
 
 .selection-note {
@@ -2910,7 +2916,9 @@ body:has(.moodle-theme-wrapper) {
     color: #212529;
     cursor: pointer;
     line-height: 1.4;
-    display: inline-block;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
     width: 100%;
 }
 

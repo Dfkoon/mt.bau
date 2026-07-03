@@ -7,7 +7,7 @@ import FileUploader from '../components/FileUploader';
 import { submitQuestionReport } from '../services/quizReportService';
 import { logQuizCompletion } from '../services/analyticsService';
 import { db } from '../config/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import watermarkLogo from '../assets/logo-watermark.png';
 import quizHero from '../assets/heros/quiz_hero.png';
@@ -299,34 +299,36 @@ const Quiz = () => {
 
     // Load custom subjects and parts from Firestore
     useEffect(() => {
-        getDocs(collection(db, 'quiz_subjects'))
-            .then(snap => {
-                const list = [];
-                snap.forEach(d => list.push({ ...d.data(), fromDb: true }));
-                setDbSubjects(list);
-            })
-            .catch(console.error);
+        const unsubSubjects = onSnapshot(collection(db, 'quiz_subjects'), (snap) => {
+            const list = [];
+            snap.forEach(d => list.push(d.data()));
+            setDbSubjects(list);
+        }, console.error);
 
-        getDocs(collection(db, 'quiz_parts'))
-            .then(snap => {
-                const list = [];
-                snap.forEach(d => list.push({ ...d.data(), fromDb: true }));
-                setDbParts(list);
-            })
-            .catch(console.error)
-            .finally(() => setDbPartsLoaded(true));
+        const unsubParts = onSnapshot(collection(db, 'quiz_parts'), (snap) => {
+            const list = [];
+            snap.forEach(d => list.push({ ...d.data(), fromDb: true }));
+            setDbParts(list);
+            setDbPartsLoaded(true);
+        }, console.error);
+
+        return () => {
+            unsubSubjects();
+            unsubParts();
+        };
     }, []);
 
     // Load edits for the current quizId
     useEffect(() => {
         if (!quizId) { setQuestionEdits({}); return; }
-        getDocs(query(collection(db, 'question_edits'), where('quizId', '==', quizId)))
-            .then(snap => {
-                const map = {};
-                snap.forEach(d => { map[d.data().questionId] = d.data(); });
-                setQuestionEdits(map);
-            })
-            .catch(() => { }); // silently fail — local data is fallback
+        const q = query(collection(db, 'question_edits'), where('quizId', '==', quizId));
+        const unsubEdits = onSnapshot(q, (snap) => {
+            const map = {};
+            snap.forEach(d => { map[d.data().questionId] = d.data(); });
+            setQuestionEdits(map);
+        }, () => {}); // silently fail — local data is fallback
+
+        return () => unsubEdits();
     }, [quizId]);
 
     // Load dynamic questions for the current quizId
@@ -335,13 +337,14 @@ const Quiz = () => {
             setDbCurrentQuestions([]);
             return;
         }
-        getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', quizId)))
-            .then(snap => {
-                const list = [];
-                snap.forEach(d => list.push(d.data()));
-                setDbCurrentQuestions(list);
-            })
-            .catch(console.error);
+        const q = query(collection(db, 'quiz_questions'), where('partId', '==', quizId));
+        const unsubCurrentQs = onSnapshot(q, (snap) => {
+            const list = [];
+            snap.forEach(d => list.push(d.data()));
+            setDbCurrentQuestions(list);
+        }, console.error);
+
+        return () => unsubCurrentQs();
     }, [quizId]);
 
     // Merge base quiz categories (static) with custom subjects & parts from DB
@@ -381,13 +384,14 @@ const Quiz = () => {
             setDbSubjectQuestions([]);
             return;
         }
-        getDocs(query(collection(db, 'quiz_questions'), where('subjectId', '==', subjectId)))
-            .then(snap => {
-                const list = [];
-                snap.forEach(d => list.push(d.data()));
-                setDbSubjectQuestions(list);
-            })
-            .catch(console.error);
+        const q = query(collection(db, 'quiz_questions'), where('subjectId', '==', subjectId));
+        const unsubSubjectQuestions = onSnapshot(q, (snap) => {
+            const list = [];
+            snap.forEach(d => list.push(d.data()));
+            setDbSubjectQuestions(list);
+        }, console.error);
+
+        return () => unsubSubjectQuestions();
     // Use selectedCategory?.id (string) not the object reference to avoid unnecessary re-runs
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quizId, selectedCategory?.id]);
@@ -423,18 +427,39 @@ const Quiz = () => {
             // It's a static quiz from quizData
             baseQuiz = quizData[quizId];
         } else {
-            // Last resort: check in subParts of grouped parts
-            for (const p of dbParts) {
-                if (p.isGroup && p.subParts) {
-                    const subPart = p.subParts.find(sp => sp.id === quizId);
-                    if (subPart) {
-                        baseQuiz = {
-                            id: quizId,
-                            title: subPart.title,
-                            titleAr: subPart.titleAr,
-                            questions: []
-                        };
+            // Check if it matches a part inside any category of mergedCategories (e.g. static part with no static questions but has dynamic questions)
+            let foundPart = null;
+            for (const cat of mergedCategories) {
+                if (cat.parts) {
+                    const p = cat.parts.find(part => part.id === quizId);
+                    if (p) {
+                        foundPart = p;
                         break;
+                    }
+                }
+            }
+
+            if (foundPart) {
+                baseQuiz = {
+                    id: quizId,
+                    title: foundPart.title,
+                    titleAr: foundPart.titleAr,
+                    questions: []
+                };
+            } else {
+                // Last resort: check in subParts of grouped parts
+                for (const p of dbParts) {
+                    if (p.isGroup && p.subParts) {
+                        const subPart = p.subParts.find(sp => sp.id === quizId);
+                        if (subPart) {
+                            baseQuiz = {
+                                id: quizId,
+                                title: subPart.title,
+                                titleAr: subPart.titleAr,
+                                questions: []
+                            };
+                            break;
+                        }
                     }
                 }
             }
@@ -1168,7 +1193,7 @@ const Quiz = () => {
                                                                                     </table>
                                                                                 </div>
                                                                             ) : (
-                                                                                <div className="moodle-option-content" style={{ display: 'inline-flex', flexDirection: 'column', gap: '0.4rem', verticalAlign: 'middle', width: '100%' }}>
+                                                                                <div className="moodle-option-content" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: 1 }}>
                                                                                     {o.image && (
                                                                                         <div className="moodle-option-image-wrapper" style={{ margin: '0.3rem 0' }}>
                                                                                             <img src={o.image} alt="Option Choice" className="moodle-option-image" style={{ maxHeight: '150px', maxWidth: '100%', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }} />
@@ -1239,7 +1264,7 @@ const Quiz = () => {
                                                                 const correctOpt = q.options.find(o => o.id === q.correctAnswer);
                                                                 if (!correctOpt) return null;
                                                                 return (
-                                                                    <div className="moodle-option-content" style={{ display: 'inline-flex', flexDirection: 'column', gap: '0.4rem', verticalAlign: 'middle' }}>
+                                                                    <div className="moodle-option-content" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', verticalAlign: 'middle' }}>
                                                                         {correctOpt.image && (
                                                                             <div className="moodle-option-image-wrapper" style={{ margin: '0.3rem 0' }}>
                                                                                 <img src={correctOpt.image} alt="Correct Choice" className="moodle-option-image" style={{ maxHeight: '100px', maxWidth: '100%', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }} />
@@ -1654,7 +1679,7 @@ const Quiz = () => {
                                                                     </table>
                                                                 </div>
                                                             ) : (
-                                                                <div className="moodle-option-content" style={{ display: 'inline-flex', flexDirection: 'column', gap: '0.4rem', verticalAlign: 'middle', width: '100%' }}>
+                                                                <div className="moodle-option-content" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: 1 }}>
                                                                     {opt.image && (
                                                                         <div className="moodle-option-image-wrapper" style={{ margin: '0.3rem 0' }}>
                                                                             <img src={opt.image} alt="Option Choice" className="moodle-option-image" style={{ maxHeight: '150px', maxWidth: '100%', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }} />
