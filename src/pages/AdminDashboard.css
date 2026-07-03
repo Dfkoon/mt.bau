@@ -1545,33 +1545,26 @@
     color: #0f172a;
 }
 
-/* Option uploader styling */
+/* Option toolbar styling — exclude color dot buttons from the background overrides */
 .qedit-opt-toolbar button {
-    transition: background-color 0.15s, border-color 0.15s;
+    transition: background-color 0.15s, border-color 0.15s, transform 0.1s, opacity 0.1s;
 }
-.qedit-opt-toolbar button:hover {
+.qedit-opt-toolbar button:not(.color-dot):hover {
     background-color: rgba(255, 255, 255, 0.12) !important;
     border-color: rgba(255, 255, 255, 0.25) !important;
 }
-[data-theme='light'] .qedit-opt-toolbar button {
+[data-theme='light'] .qedit-opt-toolbar button:not(.color-dot) {
     background-color: rgba(0, 0, 0, 0.04) !important;
     border-color: rgba(0, 0, 0, 0.1) !important;
     color: #1e293b !important;
 }
-[data-theme='light'] .qedit-opt-toolbar button:hover {
+[data-theme='light'] .qedit-opt-toolbar button:not(.color-dot):hover {
     background-color: rgba(0, 0, 0, 0.08) !important;
     border-color: rgba(0, 0, 0, 0.18) !important;
 }
 
-/* Preserve real color for color/highlight dot buttons — must not be overridden */
-.qedit-opt-toolbar button.color-dot,
-[data-theme='light'] .qedit-opt-toolbar button.color-dot {
-    background-color: unset !important;
-    border-color: unset !important;
-}
-.qedit-opt-toolbar button.color-dot:hover,
-[data-theme='light'] .qedit-opt-toolbar button.color-dot:hover {
-    opacity: 0.8;
-    background-color: unset !important;
-    transform: scale(1.2);
+/* Color dot buttons: preserve their inline background, add hover scale */
+.qedit-opt-toolbar button.color-dot:hover {
+    opacity: 0.85;
+    transform: scale(1.25);
 }
