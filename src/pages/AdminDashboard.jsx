@@ -212,12 +212,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     const [editingQuestion, setEditingQuestion] = useState(null);
     const [showQuestionModal, setShowQuestionModal] = useState(false);
-    const [questionForm, setQuestionForm] = useState({ id: '', type: 'mcq', questionAr: '', questionEn: '', options: [], correctAnswer: '', marks: 1.0, image: '' });
+    const [questionForm, setQuestionForm] = useState({ id: '', type: 'mcq', questionAr: '', questionEn: '', options: [], correctAnswer: '', marks: 1.0, image: '', image2: '' });
     
-    // Hidden file input for question image upload from device inside quizzes tab
+    // Hidden file inputs for question image upload from device inside quizzes tab
     const quizImageInputRef = useRef(null);
     const [quizImageUploading, setQuizImageUploading] = useState(false);
     const [quizImageProgress, setQuizImageProgress] = useState(0);
+
+    const quizImage2InputRef = useRef(null);
+    const [quizImage2Uploading, setQuizImage2Uploading] = useState(false);
+    const [quizImage2Progress, setQuizImage2Progress] = useState(0);
 
     // ── Listen to Firebase Auth state changes ──
     useEffect(() => {
@@ -678,6 +682,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 correctAnswer: q.correctAnswer || '',
                 marks: q.marks || 1.0,
                 image: q.image || '',
+                image2: q.image2 || '',
             });
         } else {
             setEditingQuestion(null);
@@ -696,6 +701,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 correctAnswer: 'a',
                 marks: 1.0,
                 image: '',
+                image2: '',
             });
         }
         setShowQuestionModal(true);
@@ -726,17 +732,25 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }));
     };
 
-    const insertFormatIntoOption = (idx, field, tagType) => {
+    const insertFormatIntoOption = (idx, field, tagType, extra) => {
         let textToInsert = '';
         if (tagType === 'underline') {
-            const selectedText = window.getSelection()?.toString() || '';
-            textToInsert = selectedText ? `<u>${selectedText}</u>` : '<u>s1</u>';
+            textToInsert = `<u>نص</u>`;
+        } else if (tagType === 'bold') {
+            textToInsert = `<strong>نص</strong>`;
+        } else if (tagType === 'italic') {
+            textToInsert = `<em>نص</em>`;
+        } else if (tagType === 'code') {
+            textToInsert = `<code>code</code>`;
+        } else if (tagType === 'color') {
+            textToInsert = `<span style="color:${extra};">نص</span>`;
+        } else if (tagType === 'highlight') {
+            textToInsert = `<mark style="background:${extra};color:#000;">نص</mark>`;
         } else if (tagType === 'table') {
             const relName = prompt(isAr ? 'أدخل اسم الجدول / العلاقة (مثال: B):' : 'Enter relation name (e.g. B):');
             if (relName === null) return;
             const attrsInput = prompt(isAr ? 'أدخل الحقول مفصولة بفاصلة. ضع نجمة (*) قبل الحقل لتسطيره كمفتاح أساسي (مثال: *s1, b1, x, y):' : 'Enter attributes separated by commas. Put an asterisk (*) before an attribute to underline it (e.g., *s1, b1, x, y):');
             if (attrsInput === null) return;
-
             const cells = attrsInput.split(',').map(attr => {
                 const trimmed = attr.trim();
                 if (trimmed.startsWith('*')) {
@@ -746,7 +760,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             });
             textToInsert = `<table class="relation-table"><tr><td>${relName || 'Relation'}</td>${cells.join('')}</tr></table>`;
         }
-        
+
         const currentVal = questionForm.options[idx][field] || '';
         updateQuestionOption(idx, field, currentVal + textToInsert);
     };
@@ -858,6 +872,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 options: questionForm.options,
                 marks: Number(questionForm.marks) || 1,
                 image: questionForm.image || null,
+                image2: questionForm.image2 || null,
                 createdAt: serverTimestamp()
             };
             if (questionForm.type === 'matching') {
@@ -1652,16 +1667,23 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                         <div className="qmanage-question-card-body">
                                                             <p className="qmanage-q-text text-ar">{q.questionAr || '—'}</p>
                                                             <p className="qmanage-q-text text-en">{q.questionEn || '—'}</p>
-                                                            {q.image && (
-                                                                <div className="qmanage-q-img-preview">
-                                                                    <img src={q.image} alt="Question visual" />
-                                                                </div>
-                                                            )}
+                                                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem', marginBottom: '0.4rem' }}>
+                                                                {q.image && (
+                                                                    <div className="qmanage-q-img-preview" style={{ flex: '1 1 auto', maxWidth: '200px', margin: 0 }}>
+                                                                        <img src={q.image} alt="Question visual 1" style={{ width: '100%', borderRadius: '6px' }} />
+                                                                    </div>
+                                                                )}
+                                                                {q.image2 && (
+                                                                    <div className="qmanage-q-img-preview" style={{ flex: '1 1 auto', maxWidth: '200px', margin: 0 }}>
+                                                                        <img src={q.image2} alt="Question visual 2" style={{ width: '100%', borderRadius: '6px' }} />
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                             <div className="qmanage-q-options">
                                                                 {q.options?.map(opt => (
                                                                     <div key={opt.id} className={`qmanage-q-option ${q.correctAnswer === opt.id ? 'correct' : ''}`}>
                                                                         <span className="opt-marker">{opt.id.toUpperCase()}</span>
-                                                                        <span className="opt-text">{isAr ? (opt.textAr || opt.textEn) : opt.textEn}</span>
+                                                                        <span className="opt-text" dangerouslySetInnerHTML={{ __html: isAr ? (opt.textAr || opt.textEn) : opt.textEn }} />
                                                                     </div>
                                                                 ))}
                                                             </div>
@@ -1731,6 +1753,153 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     rows={3}
                                     placeholder="English question text..."
                                 />
+                            </div>
+
+                            {/* Image device upload zone */}
+                            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+                                {/* Image 1 */}
+                                <div className="qedit-field" style={{ flex: '1 1 200px', margin: 0 }}>
+                                    <label className="qedit-label">🖼️ {isAr ? 'صورة السؤال الأولى (اختياري)' : 'Question Image 1 (optional)'}</label>
+                                    <input
+                                        ref={quizImageInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+                                            if (file.size > 10 * 1024 * 1024) {
+                                                toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                                                return;
+                                            }
+                                            setQuizImageUploading(true);
+                                            setQuizImageProgress(20);
+                                            try {
+                                                const compressed = await new Promise((resolve, reject) => {
+                                                    const img = new Image();
+                                                    const url = URL.createObjectURL(file);
+                                                    img.onload = () => {
+                                                        URL.revokeObjectURL(url);
+                                                        const MAX = 800;
+                                                        let w = img.width, h = img.height;
+                                                        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+                                                        const canvas = document.createElement('canvas');
+                                                        canvas.width = w; canvas.height = h;
+                                                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                                                        resolve(canvas.toDataURL('image/jpeg', 0.78));
+                                                    };
+                                                    img.onerror = reject;
+                                                    img.src = url;
+                                                });
+                                                setQuizImageProgress(100);
+                                                setQuestionForm(prev => ({ ...prev, image: compressed }));
+                                                toast.success(isAr ? '✅ تم تحميل الصورة الأولى بنجاح' : '✅ Image 1 loaded successfully');
+                                            } catch (err) {
+                                                console.error(err);
+                                                toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                                            } finally {
+                                                setQuizImageUploading(false);
+                                                setQuizImageProgress(0);
+                                            }
+                                            e.target.value = '';
+                                        }}
+                                    />
+                                    {!questionForm.image && !quizImageUploading && (
+                                        <div className="qedit-image-dropzone" onClick={() => quizImageInputRef.current?.click()}>
+                                            <span style={{ fontSize: '1.5rem' }}>🖼️</span>
+                                            <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاختيار صورة 1' : 'Click to choose image 1'}</p>
+                                        </div>
+                                    )}
+                                    {quizImageUploading && (
+                                        <div className="qedit-image-uploading">
+                                            <div className="qedit-upload-bar">
+                                                <div className="qedit-upload-bar-fill" style={{ width: `${quizImageProgress}%` }} />
+                                            </div>
+                                            <span>{isAr ? `جاري الرفع... ${quizImageProgress}%` : `Uploading... ${quizImageProgress}%`}</span>
+                                        </div>
+                                    )}
+                                    {questionForm.image && !quizImageUploading && (
+                                        <div style={{ marginTop: '0.6rem', textAlign: 'center' }}>
+                                            <img src={questionForm.image} alt="preview" style={{ maxHeight: '140px', maxWidth: '100%', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)' }} />
+                                            <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                                <button type="button" className="qedit-add-option" style={{ width: 'auto', padding: '0.2rem 0.6rem', fontSize: '0.75rem', margin: 0 }} onClick={() => quizImageInputRef.current?.click()}>🔄 {isAr ? 'تغيير' : 'Change'}</button>
+                                                <button type="button" className="qedit-opt-delete" style={{ padding: '0.2rem 0.6rem', fontSize: '0.75rem', margin: 0 }} onClick={() => setQuestionForm(prev => ({ ...prev, image: '' }))}>{isAr ? 'حذف 🗑' : 'Remove'}</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Image 2 */}
+                                <div className="qedit-field" style={{ flex: '1 1 200px', margin: 0 }}>
+                                    <label className="qedit-label">🖼️ {isAr ? 'صورة السؤال الثانية (اختياري)' : 'Question Image 2 (optional)'}</label>
+                                    <input
+                                        ref={quizImage2InputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (!file) return;
+                                            if (file.size > 10 * 1024 * 1024) {
+                                                toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                                                return;
+                                            }
+                                            setQuizImage2Uploading(true);
+                                            setQuizImage2Progress(20);
+                                            try {
+                                                const compressed = await new Promise((resolve, reject) => {
+                                                    const img = new Image();
+                                                    const url = URL.createObjectURL(file);
+                                                    img.onload = () => {
+                                                        URL.revokeObjectURL(url);
+                                                        const MAX = 800;
+                                                        let w = img.width, h = img.height;
+                                                        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+                                                        const canvas = document.createElement('canvas');
+                                                        canvas.width = w; canvas.height = h;
+                                                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                                                        resolve(canvas.toDataURL('image/jpeg', 0.78));
+                                                    };
+                                                    img.onerror = reject;
+                                                    img.src = url;
+                                                });
+                                                setQuizImage2Progress(100);
+                                                setQuestionForm(prev => ({ ...prev, image2: compressed }));
+                                                toast.success(isAr ? '✅ تم تحميل الصورة الثانية بنجاح' : '✅ Image 2 loaded successfully');
+                                            } catch (err) {
+                                                console.error(err);
+                                                toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                                            } finally {
+                                                setQuizImage2Uploading(false);
+                                                setQuizImage2Progress(0);
+                                            }
+                                            e.target.value = '';
+                                        }}
+                                    />
+                                    {!questionForm.image2 && !quizImage2Uploading && (
+                                        <div className="qedit-image-dropzone" onClick={() => quizImage2InputRef.current?.click()}>
+                                            <span style={{ fontSize: '1.5rem' }}>🖼️</span>
+                                            <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاختيار صورة 2' : 'Click to choose image 2'}</p>
+                                        </div>
+                                    )}
+                                    {quizImage2Uploading && (
+                                        <div className="qedit-image-uploading">
+                                            <div className="qedit-upload-bar">
+                                                <div className="qedit-upload-bar-fill" style={{ width: `${quizImage2Progress}%` }} />
+                                            </div>
+                                            <span>{isAr ? `جاري الرفع... ${quizImage2Progress}%` : `Uploading... ${quizImage2Progress}%`}</span>
+                                        </div>
+                                    )}
+                                    {questionForm.image2 && !quizImage2Uploading && (
+                                        <div style={{ marginTop: '0.6rem', textAlign: 'center' }}>
+                                            <img src={questionForm.image2} alt="preview 2" style={{ maxHeight: '140px', maxWidth: '100%', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)' }} />
+                                            <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+                                                <button type="button" className="qedit-add-option" style={{ width: 'auto', padding: '0.2rem 0.6rem', fontSize: '0.75rem', margin: 0 }} onClick={() => quizImage2InputRef.current?.click()}>🔄 {isAr ? 'تغيير' : 'Change'}</button>
+                                                <button type="button" className="qedit-opt-delete" style={{ padding: '0.2rem 0.6rem', fontSize: '0.75rem', margin: 0 }} onClick={() => setQuestionForm(prev => ({ ...prev, image2: '' }))}>{isAr ? 'حذف 🗑' : 'Remove'}</button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Options — with add/delete */}
@@ -2041,7 +2210,41 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 <div className="qedit-overlay" onClick={() => setShowQuestionModal(false)}>
                     <div className="qedit-modal" onClick={e => e.stopPropagation()}>
                         <div className="qedit-header">
-                            <span className="qedit-badge-quiz">{editingQuestion ? (isAr ? 'تعديل سؤال' : 'Edit Question') : (isAr ? 'إضافة سؤال جديد' : 'Add New Question')}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
+                                <span className="qedit-badge-quiz">
+                                    {editingQuestion ? (isAr ? 'تعديل سؤال' : 'Edit Question') : (isAr ? 'إضافة سؤال جديد' : 'Add New Question')}
+                                </span>
+                                {editingQuestion && (() => {
+                                    const qIdx = allQuestions.findIndex(q => q.id === editingQuestion.id);
+                                    return qIdx !== -1 ? (
+                                        <span style={{ fontSize: '0.75rem', background: 'rgba(99,102,241,0.25)', border: '1px solid rgba(99,102,241,0.4)', borderRadius: '6px', padding: '0.1rem 0.5rem', color: 'var(--primary-light, #a5b4fc)' }}>
+                                            Q{qIdx + 1} / {allQuestions.length}
+                                        </span>
+                                    ) : null;
+                                })()}
+                            </div>
+                            {/* Prev / Next navigation */}
+                            {editingQuestion && (() => {
+                                const qIdx = allQuestions.findIndex(q => q.id === editingQuestion.id);
+                                return (
+                                    <div style={{ display: 'flex', gap: '0.3rem' }}>
+                                        <button
+                                            type="button"
+                                            disabled={qIdx <= 0}
+                                            onClick={() => { if (qIdx > 0) openQuestionModal(allQuestions[qIdx - 1]); }}
+                                            style={{ padding: '0.2rem 0.55rem', fontSize: '0.8rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: qIdx <= 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.08)', cursor: qIdx <= 0 ? 'not-allowed' : 'pointer', opacity: qIdx <= 0 ? 0.4 : 1 }}
+                                            title={isAr ? 'السؤال السابق' : 'Previous question'}
+                                        >◀</button>
+                                        <button
+                                            type="button"
+                                            disabled={qIdx >= allQuestions.length - 1}
+                                            onClick={() => { if (qIdx < allQuestions.length - 1) openQuestionModal(allQuestions[qIdx + 1]); }}
+                                            style={{ padding: '0.2rem 0.55rem', fontSize: '0.8rem', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: qIdx >= allQuestions.length - 1 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.08)', cursor: qIdx >= allQuestions.length - 1 ? 'not-allowed' : 'pointer', opacity: qIdx >= allQuestions.length - 1 ? 0.4 : 1 }}
+                                            title={isAr ? 'السؤال التالي' : 'Next question'}
+                                        >▶</button>
+                                    </div>
+                                );
+                            })()}
                             <button className="qedit-close" onClick={() => setShowQuestionModal(false)}>✕</button>
                         </div>
                         <div className="qedit-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
@@ -2369,44 +2572,52 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                     </button>
                                                 </div>
                                             )}
-                                            {/* Option image upload and text formatting helpers */}
-                                            {questionForm.type === 'mcq' && (
+                                            {/* ── Option formatting toolbar — all question types ── */}
+                                            {questionForm.type !== 'true_false' && (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
-                                                    <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
-                                                        <button
-                                                            type="button"
-                                                            className="qmanage-add-btn compact-btn"
-                                                            title={isAr ? 'إضافة خط تحت النص (<u>)' : 'Add underline'}
-                                                            onClick={() => insertFormatIntoOption(idx, 'textEn', 'underline')}
-                                                            style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
-                                                        >
-                                                            <u>U</u> {isAr ? 'تسطير' : 'Underline'}
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className="qmanage-add-btn compact-btn"
-                                                            title={isAr ? 'إضافة جدول علاقة قاعدة بيانات' : 'Add relation table'}
+                                                    <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                                                        {/* Bold / Italic / Underline / Code */}
+                                                        {[['B','bold'],['I','italic'],['U','underline'],['</>','code']].map(([lbl, tag]) => (
+                                                            <button key={tag} type="button"
+                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', tag); }}
+                                                                style={{ fontWeight: tag==='bold'?'bold':'normal', fontStyle: tag==='italic'?'italic':'normal',
+                                                                    textDecoration: tag==='underline'?'underline':'none', fontFamily: tag==='code'?'monospace':'inherit',
+                                                                    fontSize: '0.72rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)',
+                                                                    background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                                                {lbl}
+                                                            </button>
+                                                        ))}
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                        {/* Text colors */}
+                                                        {QUESTION_COLORS.map(c => (
+                                                            <button key={c} type="button"
+                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'color', c); }}
+                                                                title={`Color ${c}`}
+                                                                style={{ width: '14px', height: '14px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
+                                                        ))}
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                        {/* Highlight colors */}
+                                                        {HIGHLIGHT_COLORS.map(c => (
+                                                            <button key={c} type="button"
+                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'highlight', c); }}
+                                                                title={`Highlight ${c}`}
+                                                                style={{ width: '14px', height: '14px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.25)', cursor: 'pointer', padding: 0 }} />
+                                                        ))}
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                        {/* Relation table */}
+                                                        <button type="button"
                                                             onClick={() => insertFormatIntoOption(idx, 'textEn', 'table')}
-                                                            style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
-                                                        >
-                                                            🗂️ {isAr ? 'جدول علاقة' : 'Relation Table'}
+                                                            style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
+                                                            🗂️
                                                         </button>
-                                                        <button
-                                                            type="button"
-                                                            className="qmanage-add-btn compact-btn"
-                                                            title={isAr ? 'تحميل صورة للخيار' : 'Upload option image'}
+                                                        {/* Image upload */}
+                                                        <button type="button"
                                                             onClick={() => document.getElementById(`opt-file-input-${idx}`).click()}
-                                                            style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
-                                                        >
-                                                            🖼️ {isAr ? 'صورة الخيار' : 'Option Image'}
+                                                            style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
+                                                            🖼️
                                                         </button>
-                                                        <input
-                                                            type="file"
-                                                            id={`opt-file-input-${idx}`}
-                                                            accept="image/*"
-                                                            style={{ display: 'none' }}
-                                                            onChange={(e) => handleOptionImageChange(idx, e)}
-                                                        />
+                                                        <input type="file" id={`opt-file-input-${idx}`} accept="image/*"
+                                                            style={{ display: 'none' }} onChange={(e) => handleOptionImageChange(idx, e)} />
                                                     </div>
                                                     {opt.image && (
                                                         <div className="qedit-opt-img-preview" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>

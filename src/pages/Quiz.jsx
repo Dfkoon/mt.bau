@@ -957,13 +957,26 @@ const Quiz = () => {
                                                             {renderTextWithCode(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn)}
                                                         </div>
 
-                                                        {q.image && (
-                                                            <div className="question-image-container" style={{ textAlign: 'center', margin: '1rem 0' }}>
-                                                                <img
-                                                                    src={q.image}
-                                                                    alt="Question Illustration"
-                                                                    style={{ maxWidth: '100%', maxHeight: '400px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)' }}
-                                                                />
+                                                        {(q.image || q.image2) && (
+                                                            <div className="question-images-grid" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', margin: '1rem 0' }}>
+                                                                {q.image && (
+                                                                    <div className="question-image-container" style={{ flex: '1 1 auto', maxWidth: '450px', textAlign: 'center', margin: 0 }}>
+                                                                        <img
+                                                                            src={q.image}
+                                                                            alt="Question Illustration 1"
+                                                                            style={{ maxWidth: '100%', maxHeight: '350px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                                {q.image2 && (
+                                                                    <div className="question-image-container" style={{ flex: '1 1 auto', maxWidth: '450px', textAlign: 'center', margin: 0 }}>
+                                                                        <img
+                                                                            src={q.image2}
+                                                                            alt="Question Illustration 2"
+                                                                            style={{ maxWidth: '100%', maxHeight: '350px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                                                                        />
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         )}
 
@@ -1420,13 +1433,26 @@ const Quiz = () => {
                                         {renderTextWithCode(displayLang === 'ar' ? (question.questionAr || question.questionEn) : question.questionEn)}
                                     </div>
 
-                                    {question.image && (
-                                        <div className="question-image-container" style={{ textAlign: 'center', margin: '1rem 0' }}>
-                                            <img
-                                                src={question.image}
-                                                alt="Question Illustration"
-                                                style={{ maxWidth: '100%', maxHeight: '400px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)' }}
-                                            />
+                                    {(question.image || question.image2) && (
+                                        <div className="question-images-grid" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', margin: '1rem 0' }}>
+                                            {question.image && (
+                                                <div className="question-image-container" style={{ flex: '1 1 auto', maxWidth: '450px', textAlign: 'center', margin: 0 }}>
+                                                    <img
+                                                        src={question.image}
+                                                        alt="Question Illustration 1"
+                                                        style={{ maxWidth: '100%', maxHeight: '350px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                                                    />
+                                                </div>
+                                            )}
+                                            {question.image2 && (
+                                                <div className="question-image-container" style={{ flex: '1 1 auto', maxWidth: '450px', textAlign: 'center', margin: 0 }}>
+                                                    <img
+                                                        src={question.image2}
+                                                        alt="Question Illustration 2"
+                                                        style={{ maxWidth: '100%', maxHeight: '350px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 
