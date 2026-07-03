@@ -753,38 +753,59 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }));
     };
 
+    // Ref map for option textEn inputs so we can read selectionStart/End
+    const optionInputRefs = useRef({});
+
     const insertFormatIntoOption = (idx, field, tagType, extra) => {
-        let textToInsert = '';
-        if (tagType === 'underline') {
-            textToInsert = `<u>نص</u>`;
-        } else if (tagType === 'bold') {
-            textToInsert = `<strong>نص</strong>`;
-        } else if (tagType === 'italic') {
-            textToInsert = `<em>نص</em>`;
-        } else if (tagType === 'code') {
-            textToInsert = `<code>code</code>`;
-        } else if (tagType === 'color') {
-            textToInsert = `<span style="color:${extra};">نص</span>`;
-        } else if (tagType === 'highlight') {
-            textToInsert = `<mark style="background:${extra};color:#000;">نص</mark>`;
-        } else if (tagType === 'table') {
+        const el = optionInputRefs.current[`${idx}-${field}`];
+        const currentVal = questionForm.options[idx]?.[field] || '';
+
+        // For table, no selection needed — just append
+        if (tagType === 'table') {
             const relName = prompt(isAr ? 'أدخل اسم الجدول / العلاقة (مثال: B):' : 'Enter relation name (e.g. B):');
             if (relName === null) return;
             const attrsInput = prompt(isAr ? 'أدخل الحقول مفصولة بفاصلة. ضع نجمة (*) قبل الحقل لتسطيره كمفتاح أساسي (مثال: *s1, b1, x, y):' : 'Enter attributes separated by commas. Put an asterisk (*) before an attribute to underline it (e.g., *s1, b1, x, y):');
             if (attrsInput === null) return;
             const cells = attrsInput.split(',').map(attr => {
                 const trimmed = attr.trim();
-                if (trimmed.startsWith('*')) {
-                    return `<td><u>${trimmed.substring(1)}</u></td>`;
-                }
-                return `<td>${trimmed}</td>`;
+                return trimmed.startsWith('*')
+                    ? `<td><u>${trimmed.substring(1)}</u></td>`
+                    : `<td>${trimmed}</td>`;
             });
-            textToInsert = `<table class="relation-table"><tr><td>${relName || 'Relation'}</td>${cells.join('')}</tr></table>`;
+            const tableTag = `<table class="relation-table"><tr><td>${relName || 'Relation'}</td>${cells.join('')}</tr></table>`;
+            pushOptionHistory(idx, currentVal);
+            updateQuestionOption(idx, field, currentVal + tableTag);
+            return;
         }
 
-        const currentVal = questionForm.options[idx][field] || '';
+        // Read selection from the real DOM input element
+        const start = el ? el.selectionStart : currentVal.length;
+        const end   = el ? el.selectionEnd   : currentVal.length;
+        const selected = currentVal.substring(start, end);
+        const placeholder = tagType === 'code' ? 'code' : 'نص';
+        const text = selected || placeholder;
+
+        let wrapped = '';
+        if (tagType === 'bold')      wrapped = `<strong>${text}</strong>`;
+        else if (tagType === 'italic')    wrapped = `<em>${text}</em>`;
+        else if (tagType === 'underline') wrapped = `<u>${text}</u>`;
+        else if (tagType === 'code')      wrapped = `<code>${text}</code>`;
+        else if (tagType === 'color')     wrapped = `<span style="color:${extra};">${text}</span>`;
+        else if (tagType === 'highlight') wrapped = `<mark style="background:${extra};color:#000;">${text}</mark>`;
+        else return;
+
+        const newVal = currentVal.substring(0, start) + wrapped + currentVal.substring(end);
         pushOptionHistory(idx, currentVal);
-        updateQuestionOption(idx, field, currentVal + textToInsert);
+        updateQuestionOption(idx, field, newVal);
+
+        // Restore caret after React re-render
+        setTimeout(() => {
+            if (!el) return;
+            el.focus();
+            const newCaret = start + wrapped.length;
+            el.selectionStart = newCaret;
+            el.selectionEnd   = newCaret;
+        }, 0);
     };
 
     // ── Format selected text in question textarea (bold, italic, color, etc.) ──
@@ -2573,6 +2594,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             />
                                             <input
                                                 className="qedit-opt-input"
+                                                ref={el => { optionInputRefs.current[`${idx}-textEn`] = el; }}
                                                 value={opt.textEn || ''}
                                                 onChange={e => {
                                                     pushOptionHistory(idx, opt.textEn || '');
