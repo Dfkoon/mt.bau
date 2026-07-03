@@ -1520,3 +1520,44 @@
     .qedit-footer { justify-content: stretch; }
     .qedit-btn-cancel, .qedit-btn-save { flex: 1; justify-content: center; }
 }
+
+/* Relation Table styling in admin dashboard and quiz preview */
+.relation-table {
+    border-collapse: collapse;
+    margin: 6px 0;
+    display: inline-table;
+    vertical-align: middle;
+}
+.relation-table td {
+    border: 1px solid var(--text-main, #f1f5f9);
+    padding: 3px 6px;
+    font-family: monospace;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-align: center;
+    background-color: #1a222d;
+    color: #f1f5f9;
+}
+[data-theme='light'] .relation-table td {
+    border: 1px solid #1e293b;
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+/* Option uploader styling */
+.qedit-opt-toolbar button {
+    transition: background-color 0.15s, border-color 0.15s;
+}
+.qedit-opt-toolbar button:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+[data-theme='light'] .qedit-opt-toolbar button {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #1e293b !important;
+}
+[data-theme='light'] .qedit-opt-toolbar button:hover {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(0, 0, 0, 0.18) !important;
+}

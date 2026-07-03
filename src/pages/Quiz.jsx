@@ -154,7 +154,7 @@ const renderTextWithCode = (text) => {
             }
 
             // For non-code parts, handle HTML or plain text with newlines
-            if (part.includes('<br>') || part.includes('<pre>') || part.includes('<code>') || part.includes('<div') || part.includes('<svg')) {
+            if (part.includes('<') || part.includes('</') || part.includes('<br>') || part.includes('<pre>') || part.includes('<code>') || part.includes('<div') || part.includes('<svg')) {
                 return <span key={index} dangerouslySetInnerHTML={{ __html: part }} />;
             }
 
@@ -168,7 +168,7 @@ const renderTextWithCode = (text) => {
     }
 
     // fallback for plain HTML or pure text
-    if (text.includes('<br>') || text.includes('<pre>') || text.includes('<code>') || text.includes('<div') || text.includes('<svg')) {
+    if (text.includes('<') || text.includes('</') || text.includes('<br>') || text.includes('<pre>') || text.includes('<code>') || text.includes('<div') || text.includes('<svg')) {
         return <span dangerouslySetInnerHTML={{ __html: text }} />;
     }
 
@@ -1078,7 +1078,14 @@ const Quiz = () => {
                                                                                     </table>
                                                                                 </div>
                                                                             ) : (
-                                                                                renderTextWithCode(displayLang === 'ar' ? (o.textAr || o.textEn) : o.textEn)
+                                                                                <div className="moodle-option-content" style={{ display: 'inline-flex', flexDirection: 'column', gap: '0.4rem', verticalAlign: 'middle', width: '100%' }}>
+                                                                                    {o.image && (
+                                                                                        <div className="moodle-option-image-wrapper" style={{ margin: '0.3rem 0' }}>
+                                                                                            <img src={o.image} alt="Option Choice" className="moodle-option-image" style={{ maxHeight: '150px', maxWidth: '100%', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                                                                                        </div>
+                                                                                    )}
+                                                                                    {renderTextWithCode(displayLang === 'ar' ? (o.textAr || o.textEn) : o.textEn)}
+                                                                                </div>
                                                                             )}
                                                                             {isSelected && isCorrect && <span className="moodle-check-icon"> ✔</span>}
                                                                             {isSelected && !isCorrect && <span className="moodle-cross-icon"> ❌</span>}
@@ -1135,9 +1142,20 @@ const Quiz = () => {
                                                         </div>
                                                         <div className="feedback-correct-answer">
                                                             {language === 'ar' ? 'الإجابة الصحيحة هي: ' : 'The correct answer is: '}
-                                                            {q.type === 'mcq'
-                                                                ? renderTextWithCode(displayLang === 'ar' ? (q.options.find(o => o.id === q.correctAnswer)?.textAr || q.options.find(o => o.id === q.correctAnswer)?.textEn) : q.options.find(o => o.id === q.correctAnswer)?.textEn)
-                                                                : q.type === 'matching'
+                                                            {q.type === 'mcq' ? (() => {
+                                                                const correctOpt = q.options.find(o => o.id === q.correctAnswer);
+                                                                if (!correctOpt) return null;
+                                                                return (
+                                                                    <div className="moodle-option-content" style={{ display: 'inline-flex', flexDirection: 'column', gap: '0.4rem', verticalAlign: 'middle' }}>
+                                                                        {correctOpt.image && (
+                                                                            <div className="moodle-option-image-wrapper" style={{ margin: '0.3rem 0' }}>
+                                                                                <img src={correctOpt.image} alt="Correct Choice" className="moodle-option-image" style={{ maxHeight: '100px', maxWidth: '100%', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                                                                            </div>
+                                                                        )}
+                                                                        {renderTextWithCode(displayLang === 'ar' ? (correctOpt.textAr || correctOpt.textEn) : correctOpt.textEn)}
+                                                                    </div>
+                                                                );
+                                                            })() : q.type === 'matching'
                                                                     ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
                                                                     : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
                                                         </div>
@@ -1526,7 +1544,14 @@ const Quiz = () => {
                                                                     </table>
                                                                 </div>
                                                             ) : (
-                                                                renderTextWithCode(displayLang === 'ar' ? (opt.textAr || opt.textEn) : opt.textEn)
+                                                                <div className="moodle-option-content" style={{ display: 'inline-flex', flexDirection: 'column', gap: '0.4rem', verticalAlign: 'middle', width: '100%' }}>
+                                                                    {opt.image && (
+                                                                        <div className="moodle-option-image-wrapper" style={{ margin: '0.3rem 0' }}>
+                                                                            <img src={opt.image} alt="Option Choice" className="moodle-option-image" style={{ maxHeight: '150px', maxWidth: '100%', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                                                                        </div>
+                                                                    )}
+                                                                    {renderTextWithCode(displayLang === 'ar' ? (opt.textAr || opt.textEn) : opt.textEn)}
+                                                                </div>
                                                             )}
                                                         </label>
                                                     </div>

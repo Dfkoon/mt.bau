@@ -722,8 +722,53 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         const newId = questionForm.options.some(o => o.id === nextLetter) ? `opt_${Date.now()}` : nextLetter;
         setQuestionForm(prev => ({
             ...prev,
-            options: [...prev.options, { id: newId, textAr: '', textEn: '' }]
+            options: [...prev.options, { id: newId, textAr: '', textEn: '', image: '' }]
         }));
+    };
+
+    const insertFormatIntoOption = (idx, field, tagType) => {
+        let textToInsert = '';
+        if (tagType === 'underline') {
+            textToInsert = '<u>s1</u>';
+        } else if (tagType === 'table') {
+            textToInsert = '<table class="relation-table"><tr><td>B</td><td><u>s1</u></td><td>b1</td><td>x</td><td>y</td></tr></table>';
+        }
+        
+        const currentVal = questionForm.options[idx][field] || '';
+        updateQuestionOption(idx, field, currentVal + textToInsert);
+    };
+
+    const handleOptionImageChange = async (idx, e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+            return;
+        }
+        try {
+            const compressed = await new Promise((resolve, reject) => {
+                const img = new Image();
+                const url = URL.createObjectURL(file);
+                img.onload = () => {
+                    URL.revokeObjectURL(url);
+                    const MAX = 600;
+                    let w = img.width, h = img.height;
+                    if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.onerror = reject;
+                img.src = url;
+            });
+            updateQuestionOption(idx, 'image', compressed);
+            toast.success(isAr ? '✅ تم تحميل صورة الخيار' : '✅ Option image loaded');
+        } catch (err) {
+            console.error(err);
+            toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+        }
+        e.target.value = '';
     };
 
     const saveQuestion = async () => {
@@ -2189,6 +2234,60 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 dir="ltr"
                                                 disabled={questionForm.type === 'true_false'}
                                             />
+                                            {/* Option image upload and text formatting helpers */}
+                                            {questionForm.type === 'mcq' && (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
+                                                    <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                                                        <button
+                                                            type="button"
+                                                            className="qmanage-add-btn compact-btn"
+                                                            title={isAr ? 'إضافة خط تحت النص (<u>)' : 'Add underline'}
+                                                            onClick={() => insertFormatIntoOption(idx, 'textEn', 'underline')}
+                                                            style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
+                                                        >
+                                                            <u>U</u> {isAr ? 'تسطير' : 'Underline'}
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="qmanage-add-btn compact-btn"
+                                                            title={isAr ? 'إضافة جدول علاقة قاعدة بيانات' : 'Add relation table'}
+                                                            onClick={() => insertFormatIntoOption(idx, 'textEn', 'table')}
+                                                            style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
+                                                        >
+                                                            🗂️ {isAr ? 'جدول علاقة' : 'Relation Table'}
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="qmanage-add-btn compact-btn"
+                                                            title={isAr ? 'تحميل صورة للخيار' : 'Upload option image'}
+                                                            onClick={() => document.getElementById(`opt-file-input-${idx}`).click()}
+                                                            style={{ fontSize: '0.72rem', padding: '0.2rem 0.5rem', width: 'auto', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', cursor: 'pointer' }}
+                                                        >
+                                                            🖼️ {isAr ? 'صورة الخيار' : 'Option Image'}
+                                                        </button>
+                                                        <input
+                                                            type="file"
+                                                            id={`opt-file-input-${idx}`}
+                                                            accept="image/*"
+                                                            style={{ display: 'none' }}
+                                                            onChange={(e) => handleOptionImageChange(idx, e)}
+                                                        />
+                                                    </div>
+                                                    {opt.image && (
+                                                        <div className="qedit-opt-img-preview" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
+                                                            <img src={opt.image} alt="Option preview" style={{ maxHeight: '60px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                                                            <button
+                                                                type="button"
+                                                                className="qedit-opt-delete"
+                                                                style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem', margin: 0, width: 'auto' }}
+                                                                onClick={() => updateQuestionOption(idx, 'image', '')}
+                                                            >
+                                                                🗑️ {isAr ? 'إزالة الصورة' : 'Remove Image'}
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                             {/* Delete button for matching pool items */}
                                             {questionForm.type === 'matching' && (
                                                 <button
