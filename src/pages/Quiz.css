@@ -4182,6 +4182,7 @@ body:has(.moodle-theme-wrapper) {
     margin: 5px 0;
     display: inline-table;
     vertical-align: middle;
+    direction: ltr !important;
 }
 .relation-table td {
     border: 1px solid var(--text-main, #f1f5f9);

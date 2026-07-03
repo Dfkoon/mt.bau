@@ -729,9 +729,22 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const insertFormatIntoOption = (idx, field, tagType) => {
         let textToInsert = '';
         if (tagType === 'underline') {
-            textToInsert = '<u>s1</u>';
+            const selectedText = window.getSelection()?.toString() || '';
+            textToInsert = selectedText ? `<u>${selectedText}</u>` : '<u>s1</u>';
         } else if (tagType === 'table') {
-            textToInsert = '<table class="relation-table"><tr><td>B</td><td><u>s1</u></td><td>b1</td><td>x</td><td>y</td></tr></table>';
+            const relName = prompt(isAr ? 'أدخل اسم الجدول / العلاقة (مثال: B):' : 'Enter relation name (e.g. B):');
+            if (relName === null) return;
+            const attrsInput = prompt(isAr ? 'أدخل الحقول مفصولة بفاصلة. ضع نجمة (*) قبل الحقل لتسطيره كمفتاح أساسي (مثال: *s1, b1, x, y):' : 'Enter attributes separated by commas. Put an asterisk (*) before an attribute to underline it (e.g., *s1, b1, x, y):');
+            if (attrsInput === null) return;
+
+            const cells = attrsInput.split(',').map(attr => {
+                const trimmed = attr.trim();
+                if (trimmed.startsWith('*')) {
+                    return `<td><u>${trimmed.substring(1)}</u></td>`;
+                }
+                return `<td>${trimmed}</td>`;
+            });
+            textToInsert = `<table class="relation-table"><tr><td>${relName || 'Relation'}</td>${cells.join('')}</tr></table>`;
         }
         
         const currentVal = questionForm.options[idx][field] || '';
@@ -2234,6 +2247,21 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 dir="ltr"
                                                 disabled={questionForm.type === 'true_false'}
                                             />
+                                            {/* Live preview when HTML table is present */}
+                                            {(opt.textEn || '').includes('relation-table') && (
+                                                <div style={{ marginTop: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                                                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>{isAr ? '👁️ معاينة:' : '👁️ Preview:'}</span>
+                                                    <span dangerouslySetInnerHTML={{ __html: opt.textEn }} style={{ direction: 'ltr' }} />
+                                                    <button
+                                                        type="button"
+                                                        className="qedit-opt-delete"
+                                                        style={{ padding: '0.1rem 0.35rem', fontSize: '0.68rem', margin: 0, width: 'auto' }}
+                                                        onClick={() => updateQuestionOption(idx, 'textEn', '')}
+                                                    >
+                                                        🗑️ {isAr ? 'حذف الجدول' : 'Clear Table'}
+                                                    </button>
+                                                </div>
+                                            )}
                                             {/* Option image upload and text formatting helpers */}
                                             {questionForm.type === 'mcq' && (
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
