@@ -2690,7 +2690,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
                                                 placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
                                                 dir="rtl"
-                                                disabled={questionForm.type === 'true_false'}
                                             />
                                             <input
                                                 className="qedit-opt-input"
@@ -2708,7 +2707,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 }}
                                                 placeholder="English option text"
                                                 dir="ltr"
-                                                disabled={questionForm.type === 'true_false'}
                                             />
                                             {/* Live preview when HTML table is present */}
                                             {(opt.textEn || '').includes('relation-table') && (
@@ -2726,8 +2724,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 </div>
                                             )}
                                             {/* ── Option formatting toolbar — all question types ── */}
-                                            {questionForm.type !== 'true_false' && (
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
                                                     <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', alignItems: 'center' }}>
                                                         {/* Undo */}
                                                         <button type="button"
@@ -2792,11 +2789,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                                 onClick={() => updateQuestionOption(idx, 'image', '')}
                                                             >
                                                                 🗑️ {isAr ? 'إزالة الصورة' : 'Remove Image'}
-                                                            </button>
+                                                             </button>
                                                         </div>
                                                     )}
                                                 </div>
-                                            )}
                                             {/* Delete button for matching pool items */}
                                             {questionForm.type === 'matching' && (
                                                 <button

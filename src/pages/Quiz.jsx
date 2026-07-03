@@ -645,11 +645,12 @@ const Quiz = () => {
                 const num = parseInt(e.key);
                 if (!isNaN(num) && num > 0) {
                     let optId = null;
-                    if (question.type === 'mcq' && question.options && question.options[num - 1]) {
-                        optId = question.options[num - 1].id;
-                    } else if (question.type === 'true_false') {
-                        if (num === 1) optId = 'true';
-                        if (num === 2) optId = 'false';
+                    const opts = question.options && question.options.length >= 2 ? question.options : [
+                        { id: 'a' },
+                        { id: 'b' }
+                    ];
+                    if (opts[num - 1]) {
+                        optId = opts[num - 1].id;
                     }
                     if (optId) handleAnswerSelect(question.id, optId);
                 }
@@ -1157,26 +1158,29 @@ const Quiz = () => {
                                                                 );
                                                             })}
 
-                                                            {(q.type === 'tf' || q.type === 'true_false') && [
-                                                                { id: 'a', text: displayLang === 'ar' ? 'صح' : 'True' },
-                                                                { id: 'b', text: displayLang === 'ar' ? 'خطأ' : 'False' }
-                                                            ].map((val, oIdx) => {
-                                                                const letter = String.fromCharCode(97 + oIdx); // a, b
-                                                                const isSelected = userAnswer === val.id;
-                                                                const isOptionCorrect = val.id === q.correctAnswer;
-                                                                return (
-                                                                    <div key={val.id} className="moodle-radio-display">
-                                                                        <input type="radio" checked={isSelected} readOnly />
-                                                                        <label className={isSelected && isOptionCorrect ? 'moodle-correct-text' : (isSelected ? 'moodle-wrong-text' : '')}>
-                                                                            <span className="moodle-option-letter">{letter}.</span>{' '}
-                                                                            {val.text}
-                                                                            {isSelected && isCorrect && <span className="moodle-check-icon"> ✔</span>}
-                                                                            {isSelected && !isCorrect && <span className="moodle-cross-icon"> ❌</span>}
-                                                                            {!isSelected && isOptionCorrect && <span className="moodle-check-icon"> (✔)</span>}
-                                                                        </label>
-                                                                    </div>
-                                                                );
-                                                            })}
+                                                            {(q.type === 'tf' || q.type === 'true_false') && (
+                                                                (q.options && q.options.length >= 2 ? q.options : [
+                                                                    { id: 'a', textAr: 'صح', textEn: 'True' },
+                                                                    { id: 'b', textAr: 'خطأ', textEn: 'False' }
+                                                                ]).map((opt, oIdx) => {
+                                                                    const letter = String.fromCharCode(97 + oIdx); // a, b
+                                                                    const isSelected = userAnswer === opt.id;
+                                                                    const isOptionCorrect = opt.id === q.correctAnswer;
+                                                                    const text = displayLang === 'ar' ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
+                                                                    return (
+                                                                        <div key={opt.id} className="moodle-radio-display">
+                                                                            <input type="radio" checked={isSelected} readOnly />
+                                                                            <label className={isSelected && isOptionCorrect ? 'moodle-correct-text' : (isSelected ? 'moodle-wrong-text' : '')}>
+                                                                                <span className="moodle-option-letter">{letter}.</span>{' '}
+                                                                                {renderTextWithCode(text)}
+                                                                                {isSelected && isCorrect && <span className="moodle-check-icon"> ✔</span>}
+                                                                                {isSelected && !isCorrect && <span className="moodle-cross-icon"> ❌</span>}
+                                                                                {!isSelected && isOptionCorrect && <span className="moodle-check-icon"> (✔)</span>}
+                                                                            </label>
+                                                                        </div>
+                                                                    );
+                                                                })
+                                                            )}
 
                                                             {q.type === 'matching' && (q.subQuestions || []).map((sub, sIdx) => {
                                                                 const userSubAns = userAnswer?.[sub.id];
@@ -1585,8 +1589,11 @@ const Quiz = () => {
                                     )}
 
                                     <div className="moodle-q-options-display">
-                                        {question.type === 'mcq' ? (
-                                            question.options.map((opt, oIdx) => {
+                                        {(question.type === 'mcq' || question.type === 'true_false') ? (
+                                            (question.options && question.options.length >= 2 ? question.options : [
+                                                { id: 'a', textAr: 'صح', textEn: 'True' },
+                                                { id: 'b', textAr: 'خطأ', textEn: 'False' }
+                                            ]).map((opt, oIdx) => {
                                                 const letter = String.fromCharCode(97 + oIdx); // a, b, c, d
                                                 const isSelected = userAnswers[question.id] === opt.id;
                                                 return (
@@ -1633,7 +1640,7 @@ const Quiz = () => {
                                                     </div>
                                                 );
                                             })
-                                        ) : question.type === 'matching' ? (
+                                        ) : (
                                             <div className="moodle-matching-container">
                                                 {(question.subQuestions || []).map((sub, sIdx) => {
                                                     const currentAnswer = userAnswers[question.id]?.[sub.id] || '';
@@ -1670,27 +1677,6 @@ const Quiz = () => {
                                                     );
                                                 })}
                                             </div>
-                                        ) : (
-                                            [
-                                                { id: 'a', text: displayLang === 'ar' ? 'صح' : 'True' },
-                                                { id: 'b', text: displayLang === 'ar' ? 'خطأ' : 'False' }
-                                            ].map((val, oIdx) => {
-                                                const letter = String.fromCharCode(97 + oIdx); // a, b
-                                                const isSelected = userAnswers[question.id] === val.id;
-                                                return (
-                                                    <div
-                                                        key={val.id}
-                                                        className={`moodle-radio-display ${isSelected ? 'selected' : ''}`}
-                                                        onClick={() => handleAnswerSelect(question.id, val.id)}
-                                                    >
-                                                        <input type="radio" checked={isSelected} readOnly />
-                                                        <label>
-                                                            <span className="moodle-option-letter">{letter}.</span>{' '}
-                                                            {val.text}
-                                                        </label>
-                                                    </div>
-                                                );
-                                            })
                                         )}
                                     </div>
                                 </div>
