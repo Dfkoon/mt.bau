@@ -1,6 +1,7 @@
-import { db } from '../config/firebase'; // Removed storage import as it's no longer needed for uploads
+import { db, storage } from '../config/firebase';
 import { collection, addDoc, doc, deleteDoc, query, orderBy, serverTimestamp, onSnapshot, updateDoc } from 'firebase/firestore';
 import { uploadToCloudinary, validateFile } from './cloudinaryService';
+import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 const CONTRIBUTIONS_COLLECTION = 'quizContributions';
 
@@ -16,15 +17,45 @@ export const submitContribution = async (file, subjectName = 'General', contribu
         console.log(`Starting Cloudinary upload for: ${file.name}`);
 
         // 2. Upload to Cloudinary
-        // Note: onTask is not supported directly by fetch, but we can fake progress if needed 
-        // or just use the simplified flow. Cloudinary client-side upload via fetch doesn't emit granular progress events 
-        // as easily as XHR/Firebase Task, so we might simulate or just jump to 100%.
+        // Note: prefer Cloudinary when configured, otherwise fallback to Firebase Storage
         if (onProgress) onProgress(10); // Start
 
-        const result = await uploadToCloudinary(file, {
-            folder: 'koon-contributions',
-            tags: ['student-contribution', contributionType, subjectName]
-        });
+        let result;
+        const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.trim();
+        if (CLOUD_NAME && CLOUD_NAME !== 'your_cloudinary_cloud_name') {
+            try {
+                result = await uploadToCloudinary(file, {
+                    folder: 'koon-contributions',
+                    tags: ['student-contribution', contributionType, subjectName]
+                });
+            } catch (cloudErr) {
+                console.warn('Cloudinary upload failed, falling back to Firebase Storage:', cloudErr);
+            }
+        }
+
+        // If Cloudinary not used or failed, upload to Firebase Storage
+        if (!result) {
+            // create storage path
+            const timestamp = Date.now();
+            const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+            const path = `contributions/${timestamp}_${safeName}`;
+            const sRef = storageRef(storage, path);
+
+            // upload with resumable task
+            const uploadTask = uploadBytesResumable(sRef, file);
+
+            if (onTask) onTask(uploadTask);
+
+            result = await new Promise((resolve, reject) => {
+                uploadTask.on('state_changed', (snapshot) => {
+                    const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    if (onProgress) onProgress(10 + Math.round(prog * 0.8));
+                }, (err) => reject(err), async () => {
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                    resolve({ url, publicId: path, format: file.type, bytes: file.size });
+                });
+            });
+        }
 
         // 3. Save metadata to Firestore
         console.log(`Saving metadata to Firestore for ${file.name}...`);
@@ -48,7 +79,13 @@ export const submitContribution = async (file, subjectName = 'General', contribu
 
     } catch (error) {
         console.error('Contribution submission failed:', error);
-        return { success: false, error: error.message };
+
+        // If the thrown error contains friendly/localized messages, include them in the response
+        if (error && error.friendly) {
+            return { success: false, error: error.code || error.message, messageAr: error.friendly.ar, messageEn: error.friendly.en };
+        }
+
+        return { success: false, error: error.message || 'Submission failed' };
     }
 };
 
@@ -68,7 +105,10 @@ export const submitLinkContribution = async (linkUrl, subjectName = 'General', c
         return { success: true, id: docRef.id, url: linkUrl };
     } catch (error) {
         console.error('Link contribution failed:', error);
-        return { success: false, error: error.message };
+        if (error && error.friendly) {
+            return { success: false, error: error.code || error.message, messageAr: error.friendly.ar, messageEn: error.friendly.en };
+        }
+        return { success: false, error: error.message || 'Link submission failed' };
     }
 };
 

@@ -57,18 +57,20 @@
 
 /* Global Title Styles - White, No Shadows */
 h1, h2, h3, h4, h5, h6 {
-  color: #ffffff;
+  color: var(--text-main);
   text-shadow: none;
   filter: none;
   letter-spacing: -0.5px;
 }
 
-[data-theme="light"] h1,
-[data-theme="light"] h2,
-[data-theme="light"] h3,
-[data-theme="light"] h4,
-[data-theme="light"] h5,
-[data-theme="light"] h6 {
+
+/* Ensure headings follow theme text color; force white only on dark theme */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
   color: #ffffff;
 }
 
@@ -108,9 +110,17 @@ section {
 }
 
 .glass-card:hover {
-  background: rgba(var(--text-main-rgb), 0.08);
   transform: translateY(-5px);
   border-color: var(--primary-light);
+}
+
+/* Theme specific hover to avoid darkening light cards */
+[data-theme="dark"] .glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .glass-card:hover {
+  background: rgba(0, 0, 0, 0.03);
 }
 
 /* Animations */
@@ -144,12 +154,12 @@ section {
   animation: fadeIn 0.8s forwards;
 }
 
-/* Force Light Text on Dark Backgrounds (Heros) */
-.force-white-text {
+/* Force Light Text on Dark Backgrounds (Heros) - only in dark theme */
+[data-theme="dark"] .force-white-text {
   color: #ffffff !important;
 }
 
-.force-muted-white {
+[data-theme="dark"] .force-muted-white {
   color: rgba(255, 255, 255, 0.8) !important;
 }
 
