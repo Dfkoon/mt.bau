@@ -247,6 +247,19 @@ const ReportModal = () => {
         }
     };
 
+    // Build WhatsApp URL with simplified message
+    const buildWhatsAppUrl = (details) => {
+        if (!details) return '#';
+        const phone = String(details.phone).replace(/\D/g, '');
+        const normalized = phone.startsWith('0')
+            ? '962' + phone.substring(1)
+            : phone.startsWith('962')
+            ? phone
+            : '962' + phone;
+        const msg = `مرحباً ${details.studentName}،\nمعك فريق مكانك الجامعي 🎓\n\nالمنسق رح يرفق كشف مطبوع وجاهز\n\nشكراً لتعاملك معنا 💙`;
+        return `https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`;
+    };
+
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#F6F4EE', fontFamily: 'Tajawal, sans-serif' }}>
@@ -653,13 +666,7 @@ const ReportModal = () => {
                         <b>
                             <a
                                 className="whatsapp-link"
-                                href={(() => {
-                                    const phone = String(reportDetails.phone).replace(/\D/g, '');
-                                    const normalized = phone.startsWith('0') ? '962' + phone.substring(1) : phone.startsWith('962') ? phone : '962' + phone;
-                                    const itemsList = reportDetails.items.map((it, i) => `${i+1}. ${it.name} (${it.statusText})`).join('\n');
-                                    const msg = `مرحباً ${reportDetails.studentName}،\nمعك فريق مكانك الجامعي 🎓\n\nإليك كشفك المفصل بالمواد:\n\n${itemsList}\n\nللمزيد من التفاصيل يمكنك مراجعة الكشف الإلكتروني من خلال موقع مكانك الجامعي.\nشكراً لتعاملك معنا 💙`;
-                                    return `https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`;
-                                })()}
+                                href={buildWhatsAppUrl(reportDetails)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="فتح واتساب"
