@@ -3175,6 +3175,14 @@ td{color:#2f3d4f;}
             const mats = d.materials || [];
             return acc + mats.filter(m => (typeof m === 'object' ? m.status : d.status) === 'reserved').length;
         }, 0);
+        const totalMaterialsCount = allDonations.reduce((acc, d) => {
+            const mats = d.materials || [];
+            return acc + mats.length;
+        }, 0);
+        const deliveredCount = allDonations.reduce((acc, d) => {
+            const mats = d.materials || [];
+            return acc + mats.filter(m => (typeof m === 'object' ? m.status : d.status) === 'completed').length;
+        }, 0);
 
         return (
             <div className="material-exchange-page staff-mode">
@@ -3217,6 +3225,13 @@ td{color:#2f3d4f;}
                                 <span className="stat-label">{isAr ? 'إجمالي التبرعات' : 'Total Donations'}</span>
                             </div>
                         </div>
+                        <div className="stat-card" style={{ '--stat-color': '#e67e22', '--stat-rgb': '230,126,34' }}>
+                            <div className="stat-icon">📚</div>
+                            <div className="stat-info">
+                                <span className="stat-value">{totalMaterialsCount}</span>
+                                <span className="stat-label">{isAr ? 'إجمالي المواد' : 'Total Materials'}</span>
+                            </div>
+                        </div>
                         <div className="stat-card" style={{ '--stat-color': '#f39c12', '--stat-rgb': '243,156,18' }}>
                             <div className="stat-icon">⏳</div>
                             <div className="stat-info">
@@ -3236,6 +3251,13 @@ td{color:#2f3d4f;}
                             <div className="stat-info">
                                 <span className="stat-value">{reservedCount}</span>
                                 <span className="stat-label">{isAr ? 'مواد محجوزة' : 'Reserved'}</span>
+                            </div>
+                        </div>
+                        <div className="stat-card" style={{ '--stat-color': '#1abc9c', '--stat-rgb': '26,188,156' }}>
+                            <div className="stat-icon">🤝</div>
+                            <div className="stat-info">
+                                <span className="stat-value">{deliveredCount}</span>
+                                <span className="stat-label">{isAr ? 'المواد المسلمة' : 'Delivered'}</span>
                             </div>
                         </div>
                     </div>
@@ -3458,6 +3480,12 @@ td{color:#2f3d4f;}
                                     >
                                         ⚡ {isAr ? 'الجدول المشترك (للتسليم)' : 'Shared Table (Handover)'}
                                     </button>
+                                    <button
+                                        className={`sub-tab-btn ${staffSubTab === 'delivered' ? 'active' : ''}`}
+                                        onClick={() => setStaffSubTab('delivered')}
+                                    >
+                                        🤝 {isAr ? 'المواد التي تم تسليمها' : 'Delivered Materials'}
+                                    </button>
                                 </div>
 
                                 {/* ─── Sub-Filters ─── */}
@@ -3562,7 +3590,13 @@ td{color:#2f3d4f;}
                                         ? (adminSubFilter === 'all' ? (isAr ? 'الكل' : 'all') : adminSubFilter === 'ahmad' ? (systemSettings.ahmadNameAr || 'أحمد') : (systemSettings.saraNameAr || 'سارة'))
                                         : (isAr ? loggedInUser.nameAr : loggedInUser.nameEn);
 
-                                    const recordsCount = staffSubTab === 'donations' ? filteredDonations.length : bookings.length;
+                                    const recordsCount = staffSubTab === 'donations'
+                                        ? filteredDonations.length
+                                        : staffSubTab === 'delivered'
+                                            ? bookings.filter(b => b.status === 'completed').length
+                                            : staffSubTab === 'bookings'
+                                                ? bookings.filter(b => b.status === 'reserved').length
+                                                : bookings.length;
 
                                     return (
                                         <div className="export-toolbar">
@@ -3583,8 +3617,10 @@ td{color:#2f3d4f;}
                                                 onClick={() => {
                                                     if (staffSubTab === 'donations') {
                                                         exportToCSV(filteredDonations, `donations-${exportLabel}`);
+                                                    } else if (staffSubTab === 'delivered') {
+                                                        exportBookingsToCSV(bookings.filter(b => b.status === 'completed'), `delivered-${exportLabel}`);
                                                     } else {
-                                                        exportBookingsToCSV(bookings, `bookings-${exportLabel}`);
+                                                        exportBookingsToCSV(bookings.filter(b => b.status === 'reserved'), `bookings-${exportLabel}`);
                                                     }
                                                 }}
                                                 title={isAr ? 'تصدير إلى Excel/CSV' : 'Export to Excel/CSV'}
@@ -3596,8 +3632,10 @@ td{color:#2f3d4f;}
                                                 onClick={() => {
                                                     if (staffSubTab === 'donations') {
                                                         exportToPDF(filteredDonations, `donations-${exportLabel}`);
+                                                    } else if (staffSubTab === 'delivered') {
+                                                        exportBookingsToPDF(bookings.filter(b => b.status === 'completed'), `delivered-${exportLabel}`);
                                                     } else {
-                                                        exportBookingsToPDF(bookings, `bookings-${exportLabel}`);
+                                                        exportBookingsToPDF(bookings.filter(b => b.status === 'reserved'), `bookings-${exportLabel}`);
                                                     }
                                                 }}
                                                 title={isAr ? 'طباعة / تصدير PDF' : 'Print / Export PDF'}
@@ -3650,6 +3688,7 @@ td{color:#2f3d4f;}
                                         ).filter(donationMatchesSearch);
 
                                     const filteredBookings = [];
+                                    const filteredDelivered = [];
                                     allDonations.forEach(donation => {
                                         const passFilter = isAdminUser
                                             ? (adminSubFilter === 'all'
@@ -3683,7 +3722,11 @@ td{color:#2f3d4f;}
                                                         createdAt: m.takerInfo?.bookedAt || donation.lastUpdated || donation.createdAt
                                                     };
                                                     if (bookingMatchesSearch(bookingRecord)) {
-                                                        filteredBookings.push(bookingRecord);
+                                                        if (m.status === 'reserved') {
+                                                            filteredBookings.push(bookingRecord);
+                                                        } else if (m.status === 'completed') {
+                                                            filteredDelivered.push(bookingRecord);
+                                                        }
                                                     }
                                                 }
                                             });
@@ -4039,6 +4082,105 @@ td{color:#2f3d4f;}
                                                                                         <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
                                                                                     </div>
                                                                                 )}
+                                                                            </td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {/* ─── جدول المواد التي تم تسليمها ─── */}
+                                            {staffSubTab === 'delivered' && (
+                                                <div className="formal-table-wrapper">
+                                                    <div className="formal-table-header">
+                                                        <span className="formal-table-title">🤝 {isAr ? 'جدول المواد التي تم تسليمها' : 'Delivered Materials Table'}</span>
+                                                        <span className="formal-table-count">{isAr ? `إجمالي: ${filteredDelivered.length} مادة` : `Total: ${filteredDelivered.length} materials`}</span>
+                                                    </div>
+                                                    {filteredDelivered.length === 0 ? (
+                                                        <div className="empty-state">📭 {isAr ? 'لا توجد مواد مسلمة بعد' : 'No delivered materials yet'}</div>
+                                                    ) : (
+                                                        <div className="formal-table-scroll">
+                                                            <table className="formal-table bookings-formal-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>{isAr ? 'اسم المستلم' : 'Recipient Name'}</th>
+                                                                        <th>{isAr ? 'هاتف المستلم' : 'Recipient Phone'}</th>
+                                                                        <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
+                                                                        <th>{isAr ? 'الجنس' : 'Gender'}</th>
+                                                                        <th>{isAr ? 'المادة المسلمة' : 'Delivered Material'}</th>
+                                                                        <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                                        <th>{isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
+                                                                        <th>{isAr ? 'حالة التسليم' : 'Delivery Status'}</th>
+                                                                        <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {filteredDelivered.map((booking, idx) => (
+                                                                        <tr key={booking.id} className="formal-row status-row-completed">
+                                                                            <td className="row-num">{idx + 1}</td>
+                                                                            <td className="donor-name-cell"><strong>{booking.takerInfo?.name || '—'}</strong></td>
+                                                                            <td dir="ltr" className="phone-cell">{booking.takerInfo?.phone || '—'}</td>
+                                                                            <td dir="ltr" className="email-cell">{booking.takerInfo?.email || '—'}</td>
+                                                                            <td>
+                                                                                <span className={`gender-badge gender-${booking.takerInfo?.gender || booking.donorGender}`}>
+                                                                                    {(booking.takerInfo?.gender || booking.donorGender) === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td className="materials-cell">
+                                                                                <strong>{booking.materialName}</strong>
+                                                                                {booking.materialDescription && <p className="material-note">{booking.materialDescription}</p>}
+                                                                            </td>
+                                                                            <td>{booking.donorName}</td>
+                                                                            <td dir="ltr" className="email-cell">{booking.donorEmail || '—'}</td>
+                                                                            <td>
+                                                                                <span className="status-badge status-completed">
+                                                                                    {isAr ? '✅ تم التسليم' : '✅ Delivered'}
+                                                                                </span>
+                                                                            </td>
+                                                                            <td className="actions-cell">
+                                                                                <div className="view-only-actions-row" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="action-btn print-report-btn"
+                                                                                        onClick={() => openMaterialReport(booking, 'booker')}
+                                                                                        style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                                                    >
+                                                                                        🖨️ {isAr ? 'كشف/طباعة' : 'Report/Print'}
+                                                                                    </button>
+                                                                                    {isAdminUser ? (
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            className="action-btn delete-btn"
+                                                                                            onClick={() => handleCancelBooking(booking.donationId, booking.materialIndex)}
+                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
+                                                                                        >
+                                                                                            🔓 {isAr ? 'إلغاء التسليم' : 'Cancel Delivery'}
+                                                                                        </button>
+                                                                                    ) : (
+                                                                                        (isAdminUser || isCoordinatorApprovedToEdit({ id: booking.donationId }) || (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking)) ? (
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                className="action-btn delete-btn"
+                                                                                                onClick={() => {
+                                                                                                    if (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking) {
+                                                                                                        handleCancelBooking(booking.donationId, booking.materialIndex);
+                                                                                                    } else {
+                                                                                                        openActionRequestModal(booking.donationId, 'cancelBooking', booking.materialIndex, booking);
+                                                                                                    }
+                                                                                                }}
+                                                                                                style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
+                                                                                            >
+                                                                                                🔓 {isAr ? 'إلغاء التسليم' : 'Cancel Delivery'}
+                                                                                            </button>
+                                                                                        ) : (
+                                                                                            <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
+                                                                                        )
+                                                                                    )}
+                                                                                </div>
                                                                             </td>
                                                                         </tr>
                                                                     ))}
