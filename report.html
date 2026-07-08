@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كشف حركة المواد - الحاجز</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2A3C;
+    --ink-light:#2E4258;
+    --gold:#C08A2E;
+    --gold-soft:#F1DFB8;
+    --bg:#F6F4EE;
+    --card:#FFFFFF;
+    --slate:#5C6B7A;
+    --line:#E4E0D4;
+    --status-donated-bg:#E8F1F1;
+    --status-donated-text:#155E68;
+    --status-reserved-bg:#FBF0DC;
+    --status-reserved-text:#8A5E14;
+    --status-delivered-bg:#E9F3EB;
+    --status-delivered-text:#2E6B3F;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--bg);
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    padding:36px 16px;
+  }
+
+  .sheet{
+    width:100%;
+    max-width:880px;
+    background:var(--card);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(27,42,60,0.08), 0 12px 34px rgba(27,42,60,0.10);
+    position:relative;
+  }
+
+  .accent-bar{ height:6px; background:linear-gradient(90deg, var(--ink) 0%, var(--gold) 100%); }
+
+  header{
+    background:var(--ink);
+    color:#fff;
+    padding:28px 36px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+  }
+  header .title-block h1{
+    font-family:'Tajawal', sans-serif;
+    font-weight:700;
+    font-size:24px;
+    margin:0 0 6px;
+    letter-spacing:0.2px;
+  }
+  header .title-block p{
+    margin:0;
+    font-size:13px;
+    color:#C7D0DA;
+  }
+  header .meta{
+    text-align:left;
+    font-size:12.5px;
+    color:#C7D0DA;
+    line-height:1.9;
+    white-space:nowrap;
+  }
+  header .meta b{ color:#fff; font-weight:600; }
+  header .meta .report-no{
+    display:inline-block;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:6px;
+    padding:3px 10px;
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    font-weight:600;
+    color:var(--gold-soft);
+  }
+
+  .pilgrim{
+    padding:24px 36px 8px;
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+  }
+  .pilgrim-field{ min-width:150px; }
+  .pilgrim-field span{
+    display:block;
+    font-size:11.5px;
+    color:var(--slate);
+    margin-bottom:4px;
+  }
+  .pilgrim-field b{
+    font-family:'Tajawal', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    color:var(--ink);
+  }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    padding:20px 36px 4px;
+  }
+  .stat-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+    text-align:center;
+    background:#FCFBF8;
+  }
+  .stat-card .num{
+    font-family:'Tajawal', sans-serif;
+    font-weight:900;
+    font-size:26px;
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .stat-card.donated .num{ color:var(--status-donated-text); }
+  .stat-card.reserved .num{ color:var(--status-reserved-text); }
+  .stat-card.delivered .num{ color:var(--status-delivered-text); }
+  .stat-card .lbl{ font-size:12.5px; color:var(--slate); }
+
+  .section-title{
+    padding:22px 36px 10px;
+    font-family:'Tajawal', sans-serif;
+    font-weight:700;
+    font-size:15.5px;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title::before{
+    content:"";
+    width:4px;
+    height:16px;
+    background:var(--gold);
+    border-radius:2px;
+    display:inline-block;
+  }
+
+  table{
+    width:calc(100% - 72px);
+    margin:0 36px 8px;
+    border-collapse:collapse;
+    font-size:13.5px;
+  }
+  thead th{
+    background:#F1EFE7;
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    font-weight:700;
+    text-align:right;
+    padding:11px 12px;
+    border-bottom:2px solid var(--line);
+    white-space:nowrap;
+  }
+  thead th:first-child{ text-align:center; width:40px; }
+  tbody td{
+    padding:11px 12px;
+    border-bottom:1px solid var(--line);
+    color:var(--ink-light);
+    vertical-align:middle;
+  }
+  tbody td:first-child{ text-align:center; color:var(--slate); font-weight:600; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:nth-child(even){ background:#FCFBF8; }
+
+  .badge{
+    display:inline-block;
+    padding:4px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .badge.donated{ background:var(--status-donated-bg); color:var(--status-donated-text); }
+  .badge.reserved{ background:var(--status-reserved-bg); color:var(--status-reserved-text); }
+  .badge.delivered{ background:var(--status-delivered-bg); color:var(--status-delivered-text); }
+
+  .empty-row td{
+    text-align:center;
+    color:var(--slate);
+    font-style:normal;
+    padding:16px;
+  }
+
+  .perforation{
+    margin:22px 36px 0;
+    border-top:1.5px dashed var(--line);
+    position:relative;
+  }
+  .perforation::before, .perforation::after{
+    content:"";
+    position:absolute;
+    top:-9px;
+    width:18px; height:18px;
+    background:var(--bg);
+    border-radius:50%;
+  }
+  .perforation::before{ right:-27px; }
+  .perforation::after{ left:-27px; }
+
+  footer{
+    padding:18px 36px 26px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  footer .note{
+    font-size:12px;
+    color:var(--slate);
+    line-height:1.8;
+    max-width:480px;
+  }
+  footer .system{
+    font-size:11.5px;
+    color:var(--slate);
+    text-align:left;
+  }
+  footer .system b{ color:var(--ink); font-family:'Tajawal',sans-serif; }
+
+  .ribbon{
+    position:absolute;
+    top:18px;
+    left:-42px;
+    transform:rotate(-45deg);
+    background:var(--gold);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 46px;
+    font-family:'Tajawal', sans-serif;
+    box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .actions{
+    max-width:880px;
+    width:100%;
+    margin:16px auto 0;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+  }
+  .btn{
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    padding:10px 20px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .btn.primary{
+    background:var(--ink);
+    color:#fff;
+    border-color:var(--ink);
+  }
+
+  @media print{
+    body{ background:#fff; padding:0; }
+    .actions{ display:none; }
+    .sheet{ box-shadow:none; border-radius:0; }
+  }
+
+  @media (max-width:640px){
+    header{ flex-direction:column; }
+    header .meta{ text-align:right; }
+    .stats{ grid-template-columns:1fr; }
+    table{ font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <div class="ribbon">إلكتروني</div>
+  <div class="accent-bar"></div>
+
+  <header>
+    <div class="title-block">
+      <h1>كشف حركة المواد</h1>
+      <p>تقرير تفصيلي بالمواد المتبرع بها والمحجوزة والمسلمة لهذا الحاجز</p>
+    </div>
+    <div class="meta">
+      <div>رقم الكشف&nbsp; <span class="report-no">MKT-2026-004821</span></div>
+      <div>تاريخ الإصدار: &nbsp;<b>٨ يوليو ٢٠٢٦ - ١٢:٤٠ م</b></div>
+      <div>المنسق: &nbsp;<b>فريق مكاتك</b></div>
+    </div>
+  </header>
+
+  <div class="pilgrim">
+    <div class="pilgrim-field">
+      <span>اسم الحاجز</span>
+      <b>سنس السعودي</b>
+    </div>
+    <div class="pilgrim-field">
+      <span>رقم الهاتف</span>
+      <b>0797880384</b>
+    </div>
+    <div class="pilgrim-field">
+      <span>تاريخ التسجيل</span>
+      <b>١ يوليو ٢٠٢٦</b>
+    </div>
+    <div class="pilgrim-field">
+      <span>حالة الحاجز</span>
+      <b style="color:#8A5E14;">لديه حجز نشط</b>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card donated">
+      <div class="num">0</div>
+      <div class="lbl">مواد متبرع بها متاحة</div>
+    </div>
+    <div class="stat-card reserved">
+      <div class="num">1</div>
+      <div class="lbl">مواد محجوزة</div>
+    </div>
+    <div class="stat-card delivered">
+      <div class="num">0</div>
+      <div class="lbl">مواد مسلَّمة</div>
+    </div>
+  </div>
+
+  <div class="section-title">تفاصيل المواد</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>م</th>
+        <th>اسم المادة</th>
+        <th>التصنيف</th>
+        <th>تاريخ الإجراء</th>
+        <th>تاريخ التسليم</th>
+        <th>الحالة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>اللغة العربية التطبيقية</td>
+        <td>مادة محجوزة</td>
+        <td>٨ يوليو ٢٠٢٦</td>
+        <td>—</td>
+        <td><span class="badge reserved">بانتظار التسليم</span></td>
+      </tr>
+      <tr class="empty-row">
+        <td colspan="6">لا توجد مواد متبرع بها أو مسلَّمة مسجّلة على هذا الرقم حتى الآن</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="perforation"></div>
+
+  <footer>
+    <div class="note">
+      يرجى الاحتفاظ بهذا الكشف ومشاركته عند التواصل مع فريق التنسيق.
+      هذا المستند صادر إلكترونيًا من نظام مكاتك، ولا يحتاج إلى ختم أو توقيع لاعتماده.
+    </div>
+    <div class="system">
+      <div><b>نظام مكاتك</b></div>
+      <div>تقرير آلي — لا يُعتد به كوثيقة رسمية بديلة عن السجل الأصلي</div>
+    </div>
+  </footer>
+</div>
+
+<div class="actions">
+  <button class="btn" onclick="window.print()">🖶 طباعة / حفظ PDF</button>
+</div>
+
+</body>
+</html>

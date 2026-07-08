@@ -187,14 +187,14 @@ const FileUploader = ({ onClose }) => {
                     setTimeout(() => onClose(), 2500);
                 } else {
                     setStatus('error');
-                    setErrorDetails(result.error || 'Submission failed');
-                    toast.error(language === 'ar' ? 'فشل الإرسال' : 'Failed to send');
+                    setErrorDetails(result.messageAr || result.error || 'Submission failed');
+                    toast.error(language === 'ar' ? (result.messageAr || 'فشل الإرسال') : (result.messageEn || 'Failed to send'));
                     setIsUploading(false);
                 }
             } catch (error) {
                 setStatus('error');
-                setErrorDetails(error.message);
-                toast.error(language === 'ar' ? 'فشل الإرسال' : 'Failed to send');
+                setErrorDetails(error.friendly?.ar || error.message || 'Submission failed');
+                toast.error(language === 'ar' ? (error.friendly?.ar || 'فشل الإرسال') : (error.friendly?.en || 'Failed to send'));
                 setIsUploading(false);
             }
             return;
@@ -249,21 +249,21 @@ const FileUploader = ({ onClose }) => {
                 setTimeout(() => onClose(), 2500);
             } else {
                 setStatus('error');
-                const firstError = results.find(r => !r.success)?.error || 'Unknown error';
-                setErrorDetails(firstError);
+                const failedResult = results.find(r => !r.success) || { error: 'Unknown error' };
+                setErrorDetails(failedResult.messageAr || failedResult.error || 'Unknown error');
                 setStatusMessage(language === 'ar' ? 'فشل رفع بعض الملفات' : 'Some files failed to upload');
                 toast.error(language === 'ar'
-                    ? `فشل رفع ${failedCount} ملفات، يرجى المحاولة لاحقاً`
-                    : `Failed to upload ${failedCount} files, please try again`);
+                    ? (failedResult.messageAr || `فشل رفع ${failedCount} ملفات، يرجى المحاولة لاحقاً`)
+                    : (failedResult.messageEn || `Failed to upload ${failedCount} files, please try again`));
                 setIsUploading(false);
             }
         } catch (error) {
             console.error('Upload error:', error);
             activeTasks.current.forEach(t => t.cancel?.());
             setStatus('error');
-            setErrorDetails(error.message);
+            setErrorDetails(error.friendly?.ar || error.message || 'Upload failed');
             setStatusMessage(language === 'ar' ? 'حدث خطأ أثناء الرفع' : 'Upload failed');
-            toast.error(language === 'ar' ? 'حدث خطأ أثناء الرفع' : 'Upload failed');
+            toast.error(language === 'ar' ? (error.friendly?.ar || 'حدث خطأ أثناء الرفع') : (error.friendly?.en || 'Upload failed'));
             setIsUploading(false);
             setUploadProgress(0);
         }

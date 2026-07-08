@@ -43,7 +43,7 @@ async function getTOTPToken(secret, timeOffset = 0) {
     try {
         const secretClean = secret.replace(/\s+/g, '').toUpperCase();
         const keyBytes = hexToBytes(base32tohex(secretClean));
-        
+
         const cryptoKey = await window.crypto.subtle.importKey(
             "raw",
             keyBytes,
@@ -51,7 +51,7 @@ async function getTOTPToken(secret, timeOffset = 0) {
             false,
             ["sign"]
         );
-        
+
         const counter = Math.floor((Date.now() / 1000 + timeOffset) / 30);
         const counterBytes = new Uint8Array(8);
         let temp = counter;
@@ -59,22 +59,22 @@ async function getTOTPToken(secret, timeOffset = 0) {
             counterBytes[i] = temp & 0xff;
             temp = Math.floor(temp / 256);
         }
-        
+
         const signature = await window.crypto.subtle.sign(
             "HMAC",
             cryptoKey,
             counterBytes
         );
-        
+
         const digest = new Uint8Array(signature);
         const offset = digest[digest.length - 1] & 0xf;
-        
+
         const binary =
             ((digest[offset] & 0x7f) << 24) |
             ((digest[offset + 1] & 0xff) << 16) |
             ((digest[offset + 2] & 0xff) << 8) |
             (digest[offset + 3] & 0xff);
-            
+
         const otp = binary % 1000000;
         return otp.toString().padStart(6, '0');
     } catch (e) {
@@ -158,6 +158,10 @@ const MaterialExchange = () => {
         donationEndTime: '',   // ISO datetime string — end of collection/donation period
         bookingStartTime: ''    // ISO datetime string — start of booking/exchange period
     });
+    const [showMaterialReportModal, setShowMaterialReportModal] = useState(false);
+    const [materialReportData, setMaterialReportData] = useState(null);
+    const [materialReportType, setMaterialReportType] = useState(null);
+    const [reportPrinted, setReportPrinted] = useState(false);
     const [settingsLoaded, setSettingsLoaded] = useState(false);
     const [permissionsSelection, setPermissionsSelection] = useState('ahmad');
     const [bookingOpen, setBookingOpen] = useState(false);
@@ -224,7 +228,7 @@ const MaterialExchange = () => {
     const [pendingStaffKey, setPendingStaffKey] = useState('');
     const [pendingStaffEmail, setPendingStaffEmail] = useState('');
     const [pendingStaffName, setPendingStaffName] = useState('');
-    
+
     // ── 2FA STAFF STATES ───────────────────────────────────────────
     const [pendingStaffTotpSecret, setPendingStaffTotpSecret] = useState('');
     const [totpCodeInput, setTotpCodeInput] = useState('');
@@ -1260,7 +1264,7 @@ const MaterialExchange = () => {
 
         if (matchedKey && passwords[matchedKey] === password) {
             const user = staffUsersDynamic[matchedKey];
-            
+
             // ── Permanently Enforced 2FA — fetch and generate secret on the fly if missing ──
             let totpSecret = '';
             try {
@@ -1690,12 +1694,12 @@ const MaterialExchange = () => {
             if (type === 'donor') {
                 name = data.studentName || '';
                 phone = String(data.phoneNumber || data.studentPhone || '').replace(/\D/g, '');
-                
-                const donorItems = allDonations.filter(item => 
+
+                const donorItems = allDonations.filter(item =>
                     phonesMatch(item.phoneNumber || item.studentPhone, phone)
                 );
 
-                                                const delivered = [];
+                const delivered = [];
                 const remaining = [];
 
                 donorItems.forEach(don => {
@@ -1843,6 +1847,195 @@ Please contact us to coordinate the pickup. Thank you.`;
             console.error('Error generating WhatsApp link:', error);
             return '#';
         }
+    };
+
+    const normalizePhoneNumber = (raw) => {
+        if (!raw) return '';
+        return String(raw).replace(/\D/g, '');
+    };
+
+    const openMaterialReport = (data, type) => {
+        const rawPhone = type === 'donor'
+            ? data.phoneNumber || data.studentPhone || ''
+            : data.takerInfo?.phone || '';
+        const phone = normalizePhoneNumber(rawPhone);
+        const url = `${window.location.origin}${window.location.pathname}#/report?phone=${phone}&type=${type}`;
+        window.open(url, '_blank');
+    };
+
+
+    const closeMaterialReport = () => {
+        setShowMaterialReportModal(false);
+        setMaterialReportData(null);
+        setMaterialReportType(null);
+        setReportPrinted(false);
+    };
+
+    const getReportTitle = (type) => type === 'donor'
+        ? (isAr ? 'كشف المواد المتبرع بها' : 'Donated Materials Report')
+        : (isAr ? 'كشف المواد المحجوزة' : 'Booked Materials Report');
+
+    const getReportWhatsAppLink = (data, type) => {
+        const name = type === 'donor'
+            ? data.studentName || ''
+            : data.takerInfo?.name || '';
+        const rawPhone = type === 'donor'
+            ? data.phoneNumber || data.studentPhone || ''
+            : data.takerInfo?.phone || '';
+        let finalPhone = normalizePhoneNumber(rawPhone);
+        if (finalPhone.startsWith('00962')) finalPhone = finalPhone.substring(2);
+        if (finalPhone.length === 10 && finalPhone.startsWith('0')) finalPhone = '962' + finalPhone.substring(1);
+        else if (finalPhone.length === 9 && /^[789]/.test(finalPhone)) finalPhone = '962' + finalPhone;
+        if (!finalPhone) return '#';
+
+        const verb = type === 'donor'
+            ? (isAr ? 'تبرعت بها' : 'donated')
+            : (isAr ? 'حجزتها' : 'booked');
+        const messageText = isAr
+            ? `السلام عليكم ورحمة الله وبركاته،\n\nإليك كشف بالمواد التي ${verb} عبر نظام مكانك.\n\nيمكنك حفظ الكشف أو طباعته من الشاشة ثم مشاركته.\n\nشكراً لتعاونك.`
+            : `Hello ${name},\n\nHere is the report of the materials you ${verb} through the Makanak system.\n\nPlease save or print the report from the screen before sharing it.\n\nThank you.`;
+
+        return `https://wa.me/${finalPhone}?text=${encodeURIComponent(messageText)}`;
+    };
+
+    const buildMaterialReportItems = (data, type) => {
+        if (!data) return [];
+        if (type === 'donor') {
+            return Array.isArray(data.materials) ? data.materials.map((item, index) => ({
+                id: index,
+                name: typeof item === 'object' ? item.name || '—' : String(item || '—'),
+                status: typeof item === 'object' ? item.status || 'pending' : 'pending',
+                date: typeof item === 'object' ? item.date || '' : ''
+            })) : [];
+        }
+        return [{
+            id: 0,
+            name: data.materialName || '—',
+            status: data.status || 'reserved',
+            date: data.date || ''
+        }];
+    };
+
+    const formatReportDate = (value) => {
+        if (!value) return '—';
+        try {
+            const date = typeof value === 'object' && value.seconds
+                ? new Date(value.seconds * 1000)
+                : new Date(value);
+            return date.toLocaleDateString(isAr ? 'ar-JO' : 'en-US');
+        } catch {
+            return String(value);
+        }
+    };
+
+    const MaterialReportModal = () => {
+        if (!showMaterialReportModal || !materialReportData) return null;
+        const items = buildMaterialReportItems(materialReportData, materialReportType);
+        const title = getReportTitle(materialReportType);
+        const clientName = materialReportType === 'donor'
+            ? materialReportData.studentName || '—'
+            : materialReportData.takerInfo?.name || '—';
+        const phone = materialReportType === 'donor'
+            ? materialReportData.phoneNumber || materialReportData.studentPhone || '—'
+            : materialReportData.takerInfo?.phone || '—';
+        const statusLabel = materialReportType === 'donor'
+            ? (isAr ? 'المتبرع' : 'Donor')
+            : (isAr ? 'الحاجز' : 'Booker');
+
+        return (
+            <div className="modal-overlay" onClick={closeMaterialReport}>
+                <div className="report-sheet" onClick={(e) => e.stopPropagation()} dir={isAr ? 'rtl' : 'ltr'}>
+                    <div className="sheet">
+                        <div className="ribbon">{isAr ? 'إلكتروني' : 'Electronic'}</div>
+                        <div className="accent-bar"></div>
+
+                        <header>
+                            <div className="title-block">
+                                <h1>{title}</h1>
+                                <p>{isAr ? 'كشف تفصيلي بالمواد التي تم التبرع بها أو حجزها.' : 'A detailed report of materials donated or booked by this user.'}</p>
+                            </div>
+                            <div className="meta">
+                                <div>{isAr ? 'رقم الكشف' : 'Report No.'} <span className="report-no">{materialReportData.id || '—'}</span></div>
+                                <div>{isAr ? 'تاريخ الإصدار:' : 'Issued:'} <b>{new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</b></div>
+                                <div>{isAr ? 'المنسق:' : 'Coordinator:'} <b>{loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
+                            </div>
+                        </header>
+
+                        <div className="pilgrim">
+                            <div className="pilgrim-field">
+                                <span>{isAr ? 'اسم العميل' : 'Client Name'}</span>
+                                <b>{clientName}</b>
+                            </div>
+                            <div className="pilgrim-field">
+                                <span>{isAr ? 'رقم الهاتف' : 'Phone Number'}</span>
+                                <b>{phone}</b>
+                            </div>
+                            <div className="pilgrim-field">
+                                <span>{isAr ? 'تاريخ التقرير' : 'Report Date'}</span>
+                                <b>{new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</b>
+                            </div>
+                            <div className="pilgrim-field">
+                                <span>{isAr ? 'نوع الكشف' : 'Report Type'}</span>
+                                <b>{statusLabel}</b>
+                            </div>
+                        </div>
+
+                        <div className="section-title">{isAr ? 'تفاصيل المواد' : 'Materials Details'}</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>{isAr ? 'م' : '#'}</th>
+                                    <th>{isAr ? 'اسم المادة' : 'Material Name'}</th>
+                                    <th>{isAr ? 'الحالة' : 'Status'}</th>
+                                    <th>{isAr ? 'تاريخ' : 'Date'}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items.length > 0 ? items.map((item, index) => (
+                                    <tr key={item.id || index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.name}</td>
+                                        <td>{item.status}</td>
+                                        <td>{formatReportDate(item.date)}</td>
+                                    </tr>
+                                )) : (
+                                    <tr className="empty-row">
+                                        <td colSpan="4">{isAr ? 'لا توجد مواد مرتبطة بهذا الكشف.' : 'No materials found for this report.'}</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+
+                        <footer>
+                            <div className="note">
+                                {isAr ? 'يمكنك طباعة هذا الكشف واحتفظ بنسخة رسمية لمتابعة حالة المواد.' : 'Print this report and keep a copy to track the material status.'}
+                            </div>
+                            <div className="system">
+                                <b>{isAr ? 'مكانك' : 'Makanak'}</b><br />{isAr ? 'نظام إدارة المواد الطلابية' : 'Student Material Management System'}
+                            </div>
+                        </footer>
+                    </div>
+                    <div className="report-sheet-actions">
+                        <button type="button" className="btn primary" onClick={() => { setReportPrinted(true); window.print(); }}>
+                            {isAr ? 'طباعة' : 'Print'}
+                        </button>
+                        <button type="button" className="btn" onClick={closeMaterialReport}>{isAr ? 'إغلاق' : 'Close'}</button>
+                        {reportPrinted && (
+                            <button type="button" className="btn" onClick={() => {
+                                const link = getReportWhatsAppLink(materialReportData, materialReportType);
+                                if (link === '#') {
+                                    toast.error(isAr ? 'رقم الهاتف غير متوفر أو غير صالح' : 'Phone number is invalid or missing');
+                                    return;
+                                }
+                                window.open(link, '_blank');
+                            }}>
+                                {isAr ? 'إرسال رسالة' : 'Send Message'}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
     };
 
     const handleUpdateTakerGender = async (donationId, materialIndex, newGender) => {
@@ -2028,7 +2221,7 @@ Please contact us to coordinate the pickup. Thank you.`;
 
                 toast.success(isAr ? '📨 تم إرسال طلب التعديل — بانتظار موافقة الإدارة' : '📨 Edit request sent — Waiting for admin approval');
                 toast.info(isAr ? 'لم تتغير البيانات بعد — ستُطبّق عند موافقة الأدمن' : 'Data not changed yet — will apply upon admin approval');
-                
+
                 setShowEditModal(false);
                 setSelectedDonationForEdit(null);
                 setEditCoordinatorNotes('');
@@ -2595,7 +2788,7 @@ Please contact us to coordinate the pickup. Thank you.`;
 
     // fetchStaffStatuses replaced by real-time onSnapshot listener (see useEffect above)
     // Kept as no-op to avoid breaking any residual call-sites
-    const fetchStaffStatuses = () => {};
+    const fetchStaffStatuses = () => { };
 
     const handleArchiveCampaign = async () => {
         if (!archiveName.trim()) {
@@ -3308,9 +3501,7 @@ td{color:#2f3d4f;}
                                         <div className="coordinator-mode-note">
                                             {coordinatorSubTab === 'delegated' ? (
                                                 <p>{isAr ? 'أنت في وضع المنسق المفوض: يمكنك تعديل وحذف المواد المفوضة لك بالكامل.' : 'You are in Delegated mode: you can edit and delete materials delegated to you.'}</p>
-                                            ) : (
-                                                <p>{isAr ? 'أنت في وضع العرض فقط: لا يمكنك تعديل أو حذف دون طلب موافقة الإدارة.' : 'You are in Main section view-only mode: edits require admin approval.'}</p>
-                                            )}
+                                            ) : null}
                                         </div>
                                     </>
                                 )}
@@ -3613,11 +3804,6 @@ td{color:#2f3d4f;}
                                                                                                     ✅ {isAr ? 'اعتماد' : 'Approve'}
                                                                                                 </button>
                                                                                             )}
-                                                                                            {donation.adminApprovalRequests?.some(req => req.status === 'pending') && (
-                                                                                                <button className="action-btn request-review-btn" style={{ fontSize: '0.85em', padding: '6px 10px' }} onClick={() => openApprovalRequestsModal(donation)}>
-                                                                                                    🔔 {isAr ? 'طلبات' : 'Requests'}
-                                                                                                </button>
-                                                                                            )}
                                                                                         </td>
                                                                                     )}
                                                                                 </tr>
@@ -3723,63 +3909,22 @@ td{color:#2f3d4f;}
                                                                                     </td>
                                                                                 )}
                                                                                 <td className="actions-cell">
-                                                                                    {isAdminUser && donation.adminApprovalRequests?.some(req => req.status === 'pending') && (
-                                                                                        <button className="action-btn request-review-btn" onClick={() => openApprovalRequestsModal(donation)}>
-                                                                                            🔔 {isAr ? 'مراجعة طلبات الإدارة' : 'Review Admin Requests'}
-                                                                                        </button>
-                                                                                    )}
                                                                                     {canEditDonation(donation) && (
                                                                                         <button className="action-btn edit-btn" onClick={() => { setSelectedDonationForEdit(JSON.parse(JSON.stringify(donation))); setShowEditModal(true); }}>
                                                                                             ✏️ {isAr ? 'تعديل' : 'Edit'}
                                                                                         </button>
                                                                                     )}
-                                                                                    {!canEditDonation(donation) && (
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="action-btn request-approval-btn"
-                                                                                            onClick={() => {
-                                                                                                // Open edit modal so coordinator fills proposed changes — submitted for admin approval
-                                                                                                setSelectedDonationForEdit(JSON.parse(JSON.stringify(donation)));
-                                                                                                setShowEditModal(true);
-                                                                                            }}
-                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
-                                                                                        >
-                                                                                            📝 {isAr ? 'طلب تعديل' : 'Request Edit'}
-                                                                                        </button>
-                                                                                    )}
-                                                                                    <a
-                                                                                        href={generateWhatsAppLink(donation, 'donor')}
-                                                                                        target="_blank"
-                                                                                        rel="noopener noreferrer"
-                                                                                        className="action-btn message-btn"
-                                                                                        onClick={(e) => {
-                                                                                            const link = generateWhatsAppLink(donation, 'donor');
-                                                                                            if (link === '#') {
-                                                                                                e.preventDefault();
-                                                                                                toast.error(isAr ? 'رقم الهاتف غير متوفر أو غير صالح' : 'Phone number is invalid or missing');
-                                                                                            } else {
-                                                                                                toast.success(isAr ? 'جاري فتح واتساب...' : 'Opening WhatsApp...');
-                                                                                            }
-                                                                                        }}
-                                                                                        style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="action-btn print-report-btn"
+                                                                                        onClick={() => openMaterialReport(donation, 'donor')}
+                                                                                        style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                                                                                     >
-                                                                                        💬 {isAr ? 'رسالة واتس' : 'WhatsApp'}
-                                                                                    </a>
+                                                                                        🖨️ {isAr ? 'كشف/طباعة' : 'Report/Print'}
+                                                                                    </button>
                                                                                     {canDeleteDonation && (
                                                                                         <button className="action-btn delete-btn" onClick={() => handleDeleteDonation(donation.id)}>
                                                                                             🗑️ {isAr ? 'حذف' : 'Delete'}
-                                                                                        </button>
-                                                                                    )}
-                                                                                    {!canDeleteDonation && (
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="action-btn request-approval-btn"
-                                                                                            onClick={() => {
-                                                                                                openActionRequestModal(donation.id, 'deleteDonation', null, donation);
-                                                                                            }}
-                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
-                                                                                        >
-                                                                                            ⚠️ {isAr ? 'طلب حذف' : 'Request Delete'}
                                                                                         </button>
                                                                                     )}
                                                                                 </td>
@@ -3856,24 +4001,14 @@ td{color:#2f3d4f;}
                                                                                                 ✅ {isAr ? 'تم التسليم' : 'Mark Delivered'}
                                                                                             </button>
                                                                                         )}
-                                                                                        <a
-                                                                                            href={generateWhatsAppLink(booking, 'booker')}
-                                                                                            target="_blank"
-                                                                                            rel="noopener noreferrer"
-                                                                                            className="action-btn message-btn"
-                                                                                            onClick={(e) => {
-                                                                                                const link = generateWhatsAppLink(booking, 'booker');
-                                                                                                if (link === '#') {
-                                                                                                    e.preventDefault();
-                                                                                                    toast.error(isAr ? 'رقم الهاتف غير متوفر أو غير صالح' : 'Phone number is invalid or missing');
-                                                                                                } else {
-                                                                                                    toast.success(isAr ? 'جاري فتح واتساب...' : 'Opening WhatsApp...');
-                                                                                                }
-                                                                                            }}
-                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            className="action-btn print-report-btn"
+                                                                                            onClick={() => openMaterialReport(booking, 'booker')}
+                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                                                                                         >
-                                                                                            💬 {isAr ? 'رسالة واتس' : 'WhatsApp'}
-                                                                                        </a>
+                                                                                            🖨️ {isAr ? 'كشف/طباعة' : 'Report/Print'}
+                                                                                        </button>
                                                                                         {(isAdminUser || isCoordinatorApprovedToEdit({ id: booking.donationId }) || (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking)) && (
                                                                                             <button
                                                                                                 type="button"
@@ -3892,20 +4027,16 @@ td{color:#2f3d4f;}
                                                                                         )}
                                                                                     </>
                                                                                 ) : (
-                                                                                    <div className="view-only-actions-row">
+                                                                                    <div className="view-only-actions-row" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                                                        <button
+                                                                                            type="button"
+                                                                                            className="action-btn print-report-btn"
+                                                                                            onClick={() => openMaterialReport(booking, 'booker')}
+                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                                                        >
+                                                                                            🖨️ {isAr ? 'كشف/طباعة' : 'Report/Print'}
+                                                                                        </button>
                                                                                         <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
-                                                                                        {!isAdminUser && (
-                                                                                            <>
-                                                                                                {booking.status === 'reserved' && (
-                                                                                                    <button className="action-btn request-approval-btn" onClick={() => handleRequestAdminApproval({ donationId: booking.donationId, materialIndex: booking.materialIndex, actionType: 'completeBooking' })}>
-                                                                                                        ⚠️ {isAr ? 'طلب موافقة تسليم' : 'Request Delivery Approval'}
-                                                                                                    </button>
-                                                                                                )}
-                                                                                                <button className="action-btn request-approval-btn" onClick={() => handleRequestAdminApproval({ donationId: booking.donationId, materialIndex: booking.materialIndex, actionType: 'cancelBooking' })}>
-                                                                                                    ⚠️ {isAr ? 'طلب موافقة إلغاء' : 'Request Cancel Approval'}
-                                                                                                </button>
-                                                                                            </>
-                                                                                        )}
                                                                                     </div>
                                                                                 )}
                                                                             </td>
@@ -4768,7 +4899,7 @@ td{color:#2f3d4f;}
                                                 {sectionSaving === 'femaleTasks' ? '⏳' : '💾'} {isAr ? 'حفظ مهام الإناث' : 'Save Female Tasks'}
                                             </button>
                                         </div>
-                                     </div>
+                                    </div>
 
                                     {/* Auto-Delete Timer Card */}
                                     <div className="settings-card">
@@ -4997,7 +5128,7 @@ td{color:#2f3d4f;}
                             const formatLastSeenRelative = (userKey) => {
                                 const status = staffStatuses[userKey];
                                 if (!status) return isAr ? 'غير متصل' : 'Offline';
-                                
+
                                 const online = isUserOnline(userKey);
                                 if (online) {
                                     if (status.statusState === 'idle') {
@@ -5063,7 +5194,7 @@ td{color:#2f3d4f;}
                                             const online = isUserOnline(staff.key);
                                             const isIdle = online && status.statusState === 'idle';
                                             const actionCount = getActionCount(staff.key);
-                                            
+
                                             // Status class for CSS styling
                                             let statusClass = '';
                                             let statusLabel = isAr ? 'غير متصل' : 'Offline';
@@ -5565,6 +5696,7 @@ td{color:#2f3d4f;}
 
     return (
         <div className="material-exchange-page">
+            <MaterialReportModal />
 
             {/* Login Modal — two-step secret gateway */}
             {showLoginModal && (
@@ -5907,13 +6039,13 @@ td{color:#2f3d4f;}
                         <div className="modal-header">
                             <h2>🛡️ {isAr ? 'تأمين الحساب بـ 2FA' : 'Secure Account with 2FA'}</h2>
                             <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '8px 0 16px', lineHeight: '1.5' }}>
-                                {isAr 
+                                {isAr
                                     ? `امسح رمز الاستجابة السريعة (QR Code) باستخدام تطبيق Authenticator الخاص بك (مثل Google Authenticator أو Authy) أو أدخل المفتاح السري يدوياً لتوليد الرموز.`
                                     : `Scan the QR code with your authenticator app (Google Authenticator, Authy, etc.) or enter the secret manually to generate login codes.`
                                 }
                             </p>
                         </div>
-                        
+
                         <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
                             <div style={{ background: '#fff', padding: '12px', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.05)' }}>
                                 <img src={setup2faData.qrUrl} alt="2FA QR Code" style={{ display: 'block', width: '180px', height: '180px' }} />
@@ -6352,10 +6484,9 @@ td{color:#2f3d4f;}
                                                     <span className="step-dot"></span>
                                                     <span>{isAr ? 'استلمنا تبرعك' : 'Donation received'}</span>
                                                 </div>
-                                                <div className={`journey-step ${
-                                                    item.itemStatus === 'approved' || item.itemStatus === 'reserved' || item.itemStatus === 'completed'
-                                                        ? 'step-done' : 'step-pending'
-                                                }`}>
+                                                <div className={`journey-step ${item.itemStatus === 'approved' || item.itemStatus === 'reserved' || item.itemStatus === 'completed'
+                                                    ? 'step-done' : 'step-pending'
+                                                    }`}>
                                                     <span className="step-dot"></span>
                                                     <span>{isAr ? 'تمت الموافقة' : 'Approved'}</span>
                                                 </div>

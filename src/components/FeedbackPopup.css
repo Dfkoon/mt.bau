@@ -179,3 +179,93 @@
     color: var(--text-main);
     border-color: var(--primary);
 }
+
+/* Hide legacy action buttons and use the mandatory feedback form */
+.feedback-actions,
+.btn-rate,
+.btn-later {
+    display: none !important;
+}
+
+.feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+    z-index: 1;
+    text-align: left;
+}
+
+.feedback-label {
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.4rem;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.star-button {
+    background: transparent;
+    border: none;
+    font-size: 2.2rem;
+    color: rgba(151, 151, 151, 0.65);
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.star-button:hover,
+.star-button.selected {
+    color: #ffc107;
+    transform: scale(1.08);
+}
+
+.feedback-textarea {
+    width: 100%;
+    min-height: 130px;
+    border-radius: 26px;
+    border: 1px solid rgba(110, 121, 145, 0.18);
+    padding: 1rem 1.2rem;
+    resize: vertical;
+    font-size: 1rem;
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.feedback-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
+}
+
+.feedback-error {
+    color: #d32f2f;
+    font-weight: 700;
+    text-align: center;
+}
+
+.feedback-submit-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    padding: 16px 28px;
+    border-radius: 50px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    font-size: 1rem;
+}
+
+.feedback-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+}
+
+.feedback-submit-btn:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+}

@@ -13,6 +13,8 @@ import watermarkLogo from '../assets/logo-watermark.png';
 import quizHero from '../assets/heros/quiz_hero.png';
 import { Highlight, themes } from 'prism-react-renderer';
 import { motion, AnimatePresence } from 'framer-motion';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
 import './Quiz.css';
 
 // Pure HTML5 Canvas Confetti for celebration upon passing the quiz
@@ -143,7 +145,7 @@ const CodeBlock = ({ code, language = 'cpp' }) => (
                     </div>
                     <span style={{ fontSize: '0.65rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>IDE View</span>
                 </div>
-                
+
                 {/* Body */}
                 <div style={{ display: 'flex', overflowX: 'auto' }}>
                     {/* Line numbers */}
@@ -191,6 +193,20 @@ const CodeBlock = ({ code, language = 'cpp' }) => (
 const renderTextWithCode = (text) => {
     if (!text) return null;
 
+    const renderMath = (raw) => raw.replace(/(\$\$[\s\S]+?\$\$|\$[^\$\n][\s\S]*?\$)/g, (match) => {
+        const isBlock = match.startsWith('$$') && match.endsWith('$$');
+        const content = isBlock ? match.slice(2, -2) : match.slice(1, -1);
+        try {
+            return katex.renderToString(content, {
+                displayMode: isBlock,
+                throwOnError: false,
+                errorColor: '#bf0000'
+            });
+        } catch (e) {
+            return match;
+        }
+    });
+
     // Modern multi-language support for markdown code blocks
     // Note: We split by the regex but use a capturing group so matches are included in the array
     const parts = text.split(/```(?:java|cpp|javascript|sql|python)?([\s\S]*?)```/i);
@@ -201,26 +217,23 @@ const renderTextWithCode = (text) => {
                 return <CodeBlock key={index} code={part} />;
             }
 
-            // For non-code parts, handle HTML or plain text with newlines
-            if (part.includes('<') || part.includes('</') || part.includes('<br>') || part.includes('<pre>') || part.includes('<code>') || part.includes('<div') || part.includes('<svg')) {
-                return <span key={index} dangerouslySetInnerHTML={{ __html: part }} />;
+            const html = renderMath(part);
+            const isHtml = /<[^>]+>/.test(html);
+            if (isHtml) {
+                return <span key={index} dangerouslySetInnerHTML={{ __html: html }} />;
             }
 
-            // Standard text: preserve newlines
-            return (
-                <span key={index} style={{ whiteSpace: 'pre-wrap' }}>
-                    {part}
-                </span>
-            );
+            return <span key={index} style={{ whiteSpace: 'pre-wrap' }}>{html}</span>;
         });
     }
 
-    // fallback for plain HTML or pure text
-    if (text.includes('<') || text.includes('</') || text.includes('<br>') || text.includes('<pre>') || text.includes('<code>') || text.includes('<div') || text.includes('<svg')) {
-        return <span dangerouslySetInnerHTML={{ __html: text }} />;
+    const html = renderMath(text);
+    const isHtml = /<[^>]+>/.test(html);
+    if (isHtml) {
+        return <span dangerouslySetInnerHTML={{ __html: html }} />;
     }
 
-    return <span style={{ whiteSpace: 'pre-wrap' }}>{text}</span>;
+    return <span style={{ whiteSpace: 'pre-wrap' }}>{html}</span>;
 };
 
 // Web Audio API for satisfying click sound without external assets
@@ -326,7 +339,7 @@ const Quiz = () => {
             const map = {};
             snap.forEach(d => { map[d.data().questionId] = d.data(); });
             setQuestionEdits(map);
-        }, () => {}); // silently fail — local data is fallback
+        }, () => { }); // silently fail — local data is fallback
 
         return () => unsubEdits();
     }, [quizId]);
@@ -392,8 +405,8 @@ const Quiz = () => {
         }, console.error);
 
         return () => unsubSubjectQuestions();
-    // Use selectedCategory?.id (string) not the object reference to avoid unnecessary re-runs
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // Use selectedCategory?.id (string) not the object reference to avoid unnecessary re-runs
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quizId, selectedCategory?.id]);
 
     // Merge base quiz data with extra quizzes
@@ -561,7 +574,7 @@ const Quiz = () => {
             setTimeLeft(timeLimit);
             setTimerActive(true);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [quizId, currentQuiz?.questions?.length]);
 
     // Handle back navigation state to restore selected subject category
@@ -579,6 +592,31 @@ const Quiz = () => {
     }, [quizId, location.state]);
 
     // Timer countdown effect
+    const normalizeTextAnswer = (value) => {
+        if (value == null) return '';
+        return value.toString().trim().toLowerCase().replace(/[\u200E\u200F]/g, '').replace(/[.,!?؛:]+$/, '').trim();
+    };
+
+    const isTextAnswerCorrect = (userAnswer, correctAnswer, correctAnswers = []) => {
+        const normalizedUser = normalizeTextAnswer(userAnswer);
+        if (!normalizedUser) return false;
+        const normalizedCorrect = normalizeTextAnswer(correctAnswer);
+        if (normalizedUser === normalizedCorrect) return true;
+        return correctAnswers.some(ans => normalizeTextAnswer(ans) === normalizedUser);
+    };
+
+    const isCorrectAnswer = (q, answer) => {
+        if (q.type === 'matching') {
+            return false;
+        }
+
+        if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
+            return isTextAnswerCorrect(answer, q.correctAnswer, q.correctAnswers || q.correctAnswerVariants || []);
+        }
+
+        return answer === q.correctAnswer;
+    };
+
     // Calculate Score — defined BEFORE the timer effect that calls it
     const finishQuiz = React.useCallback(() => {
         let calculatedScore = 0;
@@ -595,8 +633,12 @@ const Quiz = () => {
                         calculatedScore += subMarks;
                     }
                 });
+            } else if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
+                if (isCorrectAnswer(q, userAnswers[q.id])) {
+                    calculatedScore += q.marks || 1;
+                }
             } else {
-                if (userAnswers[q.id] === q.correctAnswer) {
+                if (isCorrectAnswer(q, userAnswers[q.id])) {
                     calculatedScore += q.marks || 1;
                 }
             }
@@ -821,7 +863,7 @@ const Quiz = () => {
                                     // Identify if the part refers to a valid quiz with questions
                                     const partId = part.id;
                                     const partData = quizData[partId];
-                                    
+
                                     // Sum static questions + dynamic questions from DB
                                     const dbQuestionsCount = dbSubjectQuestions.filter(q => q.partId === partId).length;
                                     const staticQuestionsCount = partData?.questions?.length || 0;
@@ -872,7 +914,7 @@ const Quiz = () => {
                     </div>
 
                     {/* Moodle Style Summary & Review */}
-                    <div className="moodle-theme-wrapper" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+                    <div className={`moodle-theme-wrapper ${((currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both')) === 'en') ? 'force-ltr' : ''}`} dir={((currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both')) === 'en') ? 'ltr' : ((currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both')) === 'ar' ? 'rtl' : (language === 'ar' ? 'rtl' : 'ltr'))}>
 
                         {/* Moodle Top Navbar removed per user request */}
 
@@ -1035,7 +1077,7 @@ const Quiz = () => {
                                             });
                                             isCorrect = correctCount === subQuestions.length;
                                         } else {
-                                            isCorrect = userAnswer === q.correctAnswer;
+                                            isCorrect = isCorrectAnswer(q, userAnswer);
                                         }
 
                                         const subjectLangMode = currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both');
@@ -1170,7 +1212,11 @@ const Quiz = () => {
                                                                     <div key={o.id} className="moodle-radio-display">
                                                                         <input type="radio" checked={isSelected} readOnly />
                                                                         <label className={isSelected && isOptionCorrect ? 'moodle-correct-text' : (isSelected ? 'moodle-wrong-text' : '')}>
-                                                                            <span className="moodle-option-letter">{letter}.</span>{' '}
+                                                                            <span className="moodle-option-letter">{(() => {
+                                                                                const txt = displayLang === 'ar' ? (o.textAr || o.textEn) : (o.textEn || o.textAr);
+                                                                                if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                                                return String(oIdx + 1);
+                                                                            })()}</span>{' '}
                                                                             {o.tableData ? (
                                                                                 <div className="option-table-wrapper" style={{ display: 'inline-block', verticalAlign: 'middle', overflowX: 'auto' }}>
                                                                                     <table className="question-interactive-table opt-table">
@@ -1223,7 +1269,11 @@ const Quiz = () => {
                                                                         <div key={opt.id} className="moodle-radio-display">
                                                                             <input type="radio" checked={isSelected} readOnly />
                                                                             <label className={isSelected && isOptionCorrect ? 'moodle-correct-text' : (isSelected ? 'moodle-wrong-text' : '')}>
-                                                                                <span className="moodle-option-letter">{letter}.</span>{' '}
+                                                                                <span className="moodle-option-letter">{(() => {
+                                                                                    const txt = displayLang === 'ar' ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
+                                                                                    if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                                                    return String(oIdx + 1);
+                                                                                })()}</span>{' '}
                                                                                 {renderTextWithCode(text)}
                                                                                 {isSelected && isCorrect && <span className="moodle-check-icon"> ✔</span>}
                                                                                 {isSelected && !isCorrect && <span className="moodle-cross-icon"> ❌</span>}
@@ -1274,8 +1324,8 @@ const Quiz = () => {
                                                                     </div>
                                                                 );
                                                             })() : q.type === 'matching'
-                                                                    ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
-                                                                    : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
+                                                                ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
+                                                                : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
                                                         </div>
                                                         {(q.explanation || q.explanationAr) && (
                                                             <div className="explanation" style={{ marginTop: '1rem', borderLeft: language === 'en' ? '4px solid #FFC107' : 'none', borderRight: language === 'ar' ? '4px solid #FFC107' : 'none' }}>
@@ -1389,7 +1439,7 @@ const Quiz = () => {
         };
 
         return (
-            <div className="moodle-theme-wrapper active-quiz-mode" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+            <div className="moodle-theme-wrapper active-quiz-mode" dir={(subjectLangMode === 'en') ? 'ltr' : (subjectLangMode === 'ar' ? 'rtl' : (language === 'ar' ? 'rtl' : 'ltr'))}>
                 {/* Moodle Top Navbar removed per user request */}
 
                 {/* Moodle Breadcrumbs */}
@@ -1641,7 +1691,7 @@ const Quiz = () => {
                                     )}
 
                                     <div className="moodle-q-options-display">
-                                        {(question.type === 'mcq' || question.type === 'true_false') ? (
+                                        {((question.type === 'mcq' || question.type === 'true_false') && question.type !== 'text' && question.type !== 'short_answer' && question.type !== 'fill') ? (
                                             (question.options && question.options.length >= 2 ? question.options : [
                                                 { id: 'a', textAr: 'صح', textEn: 'True' },
                                                 { id: 'b', textAr: 'خطأ', textEn: 'False' }
@@ -1656,7 +1706,11 @@ const Quiz = () => {
                                                     >
                                                         <input type="radio" checked={isSelected} readOnly />
                                                         <label>
-                                                            <span className="moodle-option-letter">{letter}.</span>{' '}
+                                                            <span className="moodle-option-letter">{(() => {
+                                                                const txt = displayLang === 'ar' ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
+                                                                if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                                return String(oIdx + 1);
+                                                            })()}</span>{' '}
                                                             {opt.tableData ? (
                                                                 <div className="option-table-wrapper" style={{ overflowX: 'auto', display: 'inline-block', verticalAlign: 'middle' }}>
                                                                     <table className="question-interactive-table opt-table">
@@ -1692,6 +1746,31 @@ const Quiz = () => {
                                                     </div>
                                                 );
                                             })
+                                        ) : question.type === 'text' || question.type === 'short_answer' || question.type === 'fill' ? (
+                                            <div className="moodle-text-answer-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
+                                                <input
+                                                    type="text"
+                                                    className="moodle-text-answer-input"
+                                                    value={userAnswers[question.id] || ''}
+                                                    placeholder={language === 'ar' ? 'اكتب إجابتك هنا...' : 'Type your answer here...'}
+                                                    onChange={(e) => handleAnswerSelect(question.id, e.target.value)}
+                                                    style={{
+                                                        width: '100%',
+                                                        minHeight: '48px',
+                                                        padding: '0.85rem 1rem',
+                                                        borderRadius: '8px',
+                                                        border: '1px solid #ced4da',
+                                                        background: '#fff',
+                                                        color: '#212529',
+                                                        fontSize: '0.95rem'
+                                                    }}
+                                                />
+                                                {q.correctAnswer && showResults && (
+                                                    <div style={{ color: '#495057', fontSize: '0.95rem' }}>
+                                                        <strong>{language === 'ar' ? 'الإجابة الصحيحة:' : 'Correct answer:'}</strong> {q.correctAnswer}
+                                                    </div>
+                                                )}
+                                            </div>
                                         ) : (
                                             <div className="moodle-matching-container">
                                                 {(question.subQuestions || []).map((sub, sIdx) => {

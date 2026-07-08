@@ -32,10 +32,13 @@ import AboutUs from './pages/AboutUs';
 
 import Legal from './pages/Legal';
 import './index.css';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from './config/firebase';
 
 import FeedbackPopup from './components/FeedbackPopup';
 
 import NashmiGuide from './components/NashmiGuide';
+import ReportModal from './components/ReportModal';
 
 const HomePage = () => {
   const location = useLocation();
@@ -89,25 +92,45 @@ const HomePage = () => {
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [showFeedbackPopup, setShowFeedbackPopup] = React.useState(false);
+  const [feedbackPopupEnabled, setFeedbackPopupEnabled] = React.useState(false);
+  const [feedbackPopupLoaded, setFeedbackPopupLoaded] = React.useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   React.useEffect(() => {
-    // Check if user has already rated or dismissed in this session
-    const hasSeenPopup = sessionStorage.getItem('hasSeenFeedbackPopup');
+    const loadSettings = async () => {
+      try {
+        const settingsDoc = await getDoc(doc(db, 'system_configs', 'global_settings'));
+        if (settingsDoc.exists()) {
+          const data = settingsDoc.data();
+          setFeedbackPopupEnabled(data.feedbackPopupEnabled ?? true);
+        } else {
+          setFeedbackPopupEnabled(true);
+        }
+      } catch (err) {
+        console.warn('Failed to load feedback popup setting:', err);
+        setFeedbackPopupEnabled(true);
+      } finally {
+        setFeedbackPopupLoaded(true);
+      }
+    };
 
-    if (!hasSeenPopup) {
-      // Show popup after 5 minutes (300,000 ms)
-      // For testing, you might want to reduce this time
-      const timer = setTimeout(() => {
-        setShowFeedbackPopup(true);
-      }, 5 * 60 * 1000);
-
-      return () => clearTimeout(timer);
-    }
+    loadSettings();
   }, []);
+
+  React.useEffect(() => {
+    if (!feedbackPopupLoaded || !feedbackPopupEnabled) return;
+    const hasSeenPopup = sessionStorage.getItem('hasSeenFeedbackPopup');
+    if (hasSeenPopup) return;
+
+    const timer = window.setTimeout(() => {
+      setShowFeedbackPopup(true);
+    }, 180000);
+
+    return () => window.clearTimeout(timer);
+  }, [feedbackPopupLoaded, feedbackPopupEnabled]);
 
   const handleClosePopup = () => {
     setShowFeedbackPopup(false);
@@ -130,37 +153,45 @@ function App() {
           },
         }}
       />
-      <div className="app-container">
-        <Navbar toggleSidebar={toggleSidebar} />
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <Routes>
+        {/* Standalone report page - no navbar/footer */}
+        <Route path="/report" element={<ReportModal />} />
 
-        <FeedbackPopup
-          isOpen={showFeedbackPopup}
-          onClose={handleClosePopup}
-        />
+        {/* All other pages wrapped in site layout */}
+        <Route path="*" element={
+          <div className="app-container">
+            <Navbar toggleSidebar={toggleSidebar} />
+            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-        <main>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/materials" element={<StudyMaterials />} />
-            <Route path="/plans" element={<AcademicPlans />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/quiz/:quizId" element={<Quiz />} />
-            <Route path="/calendar" element={<AcademicCalendar />} />
-            <Route path="/grading" element={<GradingSystem />} />
-            <Route path="/exchange" element={<MaterialExchange />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            <FeedbackPopup
+              isOpen={showFeedbackPopup}
+              onClose={handleClosePopup}
+            />
 
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/about" element={<AboutUs />} />
+            <main>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/materials" element={<StudyMaterials />} />
+                <Route path="/plans" element={<AcademicPlans />} />
+                <Route path="/quiz" element={<Quiz />} />
+                <Route path="/quiz/:quizId" element={<Quiz />} />
+                <Route path="/calendar" element={<AcademicCalendar />} />
+                <Route path="/grading" element={<GradingSystem />} />
+                <Route path="/exchange" element={<MaterialExchange />} />
+                <Route path="/admin" element={<AdminDashboard />} />
 
-            <Route path="/legal" element={<Legal />} />
-          </Routes>
-        </main>
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/about" element={<AboutUs />} />
 
-        <NashmiGuide />
-        <Footer />
-      </div>
+                <Route path="/legal" element={<Legal />} />
+              </Routes>
+            </main>
+
+            <NashmiGuide />
+            <Footer />
+          </div>
+        } />
+      </Routes>
     </Router>
   );
 }

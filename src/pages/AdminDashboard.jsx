@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { db } from '../config/firebase';
 import {
     collection, query, orderBy, limit, getDocs,
-    doc, updateDoc, deleteDoc, where, onSnapshot,
+    doc, getDoc, updateDoc, deleteDoc, where, onSnapshot,
     setDoc, serverTimestamp
 } from 'firebase/firestore';
 import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
@@ -12,6 +12,7 @@ import FileUploader from '../components/FileUploader';
 import { subscribeToContributions, approveContribution, deleteContribution } from '../services/contributionsService';
 import { quizCategories, quizData as staticBaseQuizData } from '../data/quizData';
 import { extraQuizData as staticExtraQuizData } from '../data/quizDataExtra';
+import { createWorker } from 'tesseract.js';
 import './AdminDashboard.css';
 
 // ── CAPTCHA helpers ──────────────────────────────────────────────────
@@ -125,18 +126,37 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     // ── Admin password from Firestore ──
     const [adminPasswordFromDB, setAdminPasswordFromDB] = useState('admin2024');
+    const [feedbackPopupEnabled, setFeedbackPopupEnabled] = useState(true);
+
     useEffect(() => {
         (async () => {
             try {
-                const snap = await getDocs(query(collection(db, 'system_configs')));
-                snap.forEach(d => {
-                    if (d.id === 'global_settings' && d.data().adminPassword) {
-                        setAdminPasswordFromDB(d.data().adminPassword);
+                const settingsRef = doc(db, 'system_configs', 'global_settings');
+                const settingsSnap = await getDoc(settingsRef);
+                if (settingsSnap.exists()) {
+                    const data = settingsSnap.data();
+                    if (data.adminPassword) {
+                        setAdminPasswordFromDB(data.adminPassword);
                     }
-                });
+                    setFeedbackPopupEnabled(data.feedbackPopupEnabled ?? true);
+                }
             } catch { /* ignore */ }
         })();
     }, []);
+
+    const toggleFeedbackPopupEnabled = async () => {
+        try {
+            const newValue = !feedbackPopupEnabled;
+            await setDoc(doc(db, 'system_configs', 'global_settings'), {
+                feedbackPopupEnabled: newValue,
+            }, { merge: true });
+            setFeedbackPopupEnabled(newValue);
+            toast.success(isAr ? 'تم تحديث إعداد نافذة التقييم' : 'Feedback popup setting updated');
+        } catch (err) {
+            console.error('Failed to update feedback popup setting', err);
+            toast.error(isAr ? 'فشل تحديث إعدادات النظام' : 'Failed to update system setting');
+        }
+    };
 
     // Generate captcha
     const genCaptcha = useCallback(() => {
@@ -213,7 +233,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const [editingQuestion, setEditingQuestion] = useState(null);
     const [showQuestionModal, setShowQuestionModal] = useState(false);
     const [questionForm, setQuestionForm] = useState({ id: '', type: 'mcq', questionAr: '', questionEn: '', options: [], correctAnswer: '', marks: 1.0, image: '', image2: '', codeBlock: '' });
-    
+
     // Hidden file inputs for question image upload from device inside quizzes tab
     const quizImageInputRef = useRef(null);
     const [quizImageUploading, setQuizImageUploading] = useState(false);
@@ -222,6 +242,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const quizImage2InputRef = useRef(null);
     const [quizImage2Uploading, setQuizImage2Uploading] = useState(false);
     const [quizImage2Progress, setQuizImage2Progress] = useState(0);
+
+    const ocrInputRef = useRef(null);
+    const [ocrScanning, setOcrScanning] = useState(false);
+    const [ocrProgress, setOcrProgress] = useState(0);
 
     // ── Per-option undo history (Ctrl+Z) ──
     const optionHistories = useRef({}); // { idx: ['val0','val1',...] }
@@ -503,12 +527,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     }, [qManageSubjects]);
 
     const activeSubject = allSubjects.find(s => s.id === selectedSubjectId);
-    
+
     const allParts = useMemo(() => {
         if (!selectedSubjectId) return [];
         const staticParts = activeSubject?.parts || [];
         const list = [...staticParts];
-        
+
         const dynamicParts = qManageParts.filter(p => p.subjectId === selectedSubjectId);
         dynamicParts.forEach(dp => {
             if (!list.some(p => p.id === dp.id)) {
@@ -708,19 +732,21 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             });
         } else {
             setEditingQuestion(null);
+            const baseTs = Date.now();
+            const initialOptions = [
+                { id: `opt_${baseTs}_1`, textAr: '', textEn: '' },
+                { id: `opt_${baseTs}_2`, textAr: '', textEn: '' },
+                { id: `opt_${baseTs}_3`, textAr: '', textEn: '' },
+                { id: `opt_${baseTs}_4`, textAr: '', textEn: '' }
+            ];
             setQuestionForm({
                 id: '',
                 type: 'mcq',
                 questionAr: '',
                 questionEn: '',
-                options: [
-                    { id: 'a', textAr: '', textEn: '' },
-                    { id: 'b', textAr: '', textEn: '' },
-                    { id: 'c', textAr: '', textEn: '' },
-                    { id: 'd', textAr: '', textEn: '' }
-                ],
+                options: initialOptions,
                 subQuestions: [],
-                correctAnswer: 'a',
+                correctAnswer: initialOptions[0].id,
                 marks: 1.0,
                 image: '',
                 image2: '',
@@ -731,6 +757,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     };
 
     const updateQuestionOption = (idx, field, val) => {
+        // Debug log to verify input changes reach this handler
+        try {
+            // eslint-disable-next-line no-console
+            console.debug('updateQuestionOption ->', { idx, field, val });
+        } catch (e) { }
         setQuestionForm(prev => ({
             ...prev,
             options: prev.options.map((o, i) => i === idx ? { ...o, [field]: val } : o)
@@ -747,8 +778,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     };
 
     const addQuestionOption = () => {
-        const nextLetter = String.fromCharCode(97 + questionForm.options.length);
-        const newId = questionForm.options.some(o => o.id === nextLetter) ? `opt_${Date.now()}` : nextLetter;
+        const newId = `opt_${Date.now()}`;
         setQuestionForm(prev => ({
             ...prev,
             options: [...prev.options, { id: newId, textAr: '', textEn: '', image: '' }]
@@ -782,17 +812,17 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
         // Read selection from the real DOM input element
         const start = el ? el.selectionStart : currentVal.length;
-        const end   = el ? el.selectionEnd   : currentVal.length;
+        const end = el ? el.selectionEnd : currentVal.length;
         const selected = currentVal.substring(start, end);
         const placeholder = tagType === 'code' ? 'code' : 'نص';
         const text = selected || placeholder;
 
         let wrapped = '';
-        if (tagType === 'bold')      wrapped = `<strong>${text}</strong>`;
-        else if (tagType === 'italic')    wrapped = `<em>${text}</em>`;
+        if (tagType === 'bold') wrapped = `<strong>${text}</strong>`;
+        else if (tagType === 'italic') wrapped = `<em>${text}</em>`;
         else if (tagType === 'underline') wrapped = `<u>${text}</u>`;
-        else if (tagType === 'code')      wrapped = `<code>${text}</code>`;
-        else if (tagType === 'color')     wrapped = `<span style="color:${extra};">${text}</span>`;
+        else if (tagType === 'code') wrapped = `<code>${text}</code>`;
+        else if (tagType === 'color') wrapped = `<span style="color:${extra};">${text}</span>`;
         else if (tagType === 'highlight') wrapped = `<mark style="background:${extra};color:#000;">${text}</mark>`;
         else return;
 
@@ -806,7 +836,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             el.focus();
             const newCaret = start + wrapped.length;
             el.selectionStart = newCaret;
-            el.selectionEnd   = newCaret;
+            el.selectionEnd = newCaret;
         }, 0);
     };
 
@@ -820,17 +850,17 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         if (!el) return;
 
         const start = el.selectionStart;
-        const end   = el.selectionEnd;
+        const end = el.selectionEnd;
         const currentVal = field === 'questionAr' ? questionForm.questionAr : questionForm.questionEn;
         const selected = currentVal.substring(start, end);
 
         let wrapped = '';
-        if (tagType === 'bold')      wrapped = `<strong>${selected || 'نص'}</strong>`;
-        else if (tagType === 'italic')    wrapped = `<em>${selected || 'نص'}</em>`;
+        if (tagType === 'bold') wrapped = `<strong>${selected || 'نص'}</strong>`;
+        else if (tagType === 'italic') wrapped = `<em>${selected || 'نص'}</em>`;
         else if (tagType === 'underline') wrapped = `<u>${selected || 'نص'}</u>`;
-        else if (tagType === 'color')     wrapped = `<span style="color:${extra};">${selected || 'نص'}</span>`;
+        else if (tagType === 'color') wrapped = `<span style="color:${extra};">${selected || 'نص'}</span>`;
         else if (tagType === 'highlight') wrapped = `<mark style="background:${extra};color:#000;">${selected || 'نص'}</mark>`;
-        else if (tagType === 'code')      wrapped = `<code>${selected || 'code'}</code>`;
+        else if (tagType === 'code') wrapped = `<code>${selected || 'code'}</code>`;
 
         const newVal = currentVal.substring(0, start) + wrapped + currentVal.substring(end);
         setQuestionForm(prev => ({ ...prev, [field]: newVal }));
@@ -839,7 +869,27 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         setTimeout(() => {
             el.focus();
             el.selectionStart = start + wrapped.length;
-            el.selectionEnd   = start + wrapped.length;
+            el.selectionEnd = start + wrapped.length;
+        }, 0);
+    };
+
+    const insertTextIntoQuestion = (field, text) => {
+        const ref = field === 'questionAr' ? questionArRef : questionEnRef;
+        const el = ref.current;
+        if (!el) return;
+
+        const start = el.selectionStart ?? (field === 'questionAr' ? questionForm.questionAr.length : questionForm.questionEn.length);
+        const end = el.selectionEnd ?? start;
+        const currentVal = field === 'questionAr' ? questionForm.questionAr : questionForm.questionEn;
+        const newVal = currentVal.substring(0, start) + text + currentVal.substring(end);
+
+        setQuestionForm(prev => ({ ...prev, [field]: newVal }));
+
+        setTimeout(() => {
+            el.focus();
+            const caret = start + text.length;
+            el.selectionStart = caret;
+            el.selectionEnd = caret;
         }, 0);
     };
 
@@ -877,7 +927,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     </div>
                     <span style={{ fontSize: '0.65rem', color: '#888', textTransform: 'uppercase', letterSpacing: '0.05em' }}>IDE View</span>
                 </div>
-                
+
                 {/* Body */}
                 <div style={{ display: 'flex', overflowX: 'auto' }}>
                     <div style={{
@@ -917,8 +967,71 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     };
 
     // Colors available in the question text color picker
-    const QUESTION_COLORS = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899'];
-    const HIGHLIGHT_COLORS = ['#fde68a','#bbf7d0','#bfdbfe','#fca5a5','#e9d5ff','#fed7aa'];
+    const QUESTION_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899'];
+    const HIGHLIGHT_COLORS = ['#fde68a', '#bbf7d0', '#bfdbfe', '#fca5a5', '#e9d5ff', '#fed7aa'];
+
+    const handleOcrImageChange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (file.size > 10 * 1024 * 1024) {
+            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+            e.target.value = '';
+            return;
+        }
+        setOcrScanning(true);
+        setOcrProgress(5);
+        const worker = createWorker({
+            logger: m => {
+                if (m.status === 'recognizing text') setOcrProgress(Math.round(m.progress * 100));
+            }
+        });
+        try {
+            await worker.load();
+            await worker.loadLanguage('eng+ara');
+            await worker.initialize('eng+ara');
+            const { data: { text } } = await worker.recognize(file);
+            await worker.terminate();
+            setOcrProgress(100);
+            const parsed = parseOcrText(text);
+            if (!parsed) {
+                toast.error(isAr ? 'لم يتم استخراج نص واضح من الصورة' : 'Could not extract clear text from the image');
+                return;
+            }
+            const isArabic = /[\u0600-\u06FF]/.test(parsed.question);
+            setQuestionForm(prev => ({
+                ...prev,
+                questionAr: isArabic ? parsed.question : prev.questionAr,
+                questionEn: isArabic ? prev.questionEn : parsed.question,
+                options: parsed.options.length ? parsed.options.map((opt, idx) => ({
+                    id: prev.options[idx]?.id || `opt_${Date.now()}_${idx}`,
+                    textAr: isArabic ? opt : '',
+                    textEn: isArabic ? '' : opt,
+                })) : prev.options,
+            }));
+            toast.success(isAr ? '✅ تم استخراج السؤال بنجاح' : '✅ Question scanned successfully');
+        } catch (err) {
+            console.error(err);
+            toast.error(isAr ? 'فشل مسح الصورة ضوئياً' : 'OCR scan failed');
+        } finally {
+            setOcrScanning(false);
+            setOcrProgress(0);
+            e.target.value = '';
+        }
+    };
+
+    const parseOcrText = (raw) => {
+        if (!raw) return null;
+        const cleaned = raw.replace(/[\u2028\u2029]/g, '\n');
+        const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+        if (lines.length < 2) return null;
+        const filtered = lines.filter(l => !/^(select one|choose|اختر|select|answer|إجابة)/i.test(l));
+        if (filtered.length < 2) return null;
+        const question = filtered[0];
+        const optionLines = filtered.slice(1).map(l => l.replace(/^[a-d][\).\-\s]+/i, '').trim()).filter(Boolean);
+        const options = optionLines.slice(0, 4);
+        if (options.length === 0) return null;
+        return { question, options };
+    };
 
     const handleOptionImageChange = async (idx, e) => {
         const file = e.target.files?.[0];
@@ -1314,6 +1427,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             <p>{isAr ? 'تبديل وضع الصيانة للموقع وتعطيل الوصول العام مؤقتاً.' : 'Toggle site maintenance mode and temporarily disable public access.'}</p>
                                         </div>
                                         <div className="admin-general-block">
+                                            <h5>{isAr ? 'نافذة التقييم' : 'Feedback Popup'}</h5>
+                                            <p>{isAr ? 'تفعيل أو إيقاف عرض نموذج التقييم بعد ٣ دقائق من وصول الزائر.' : 'Enable or disable the rating popup shown 3 minutes after visitor arrival.'}</p>
+                                            <button
+                                                className={`admin-action-btn ${feedbackPopupEnabled ? 'approve' : 'decline'}`}
+                                                onClick={toggleFeedbackPopupEnabled}
+                                            >
+                                                {feedbackPopupEnabled ? (isAr ? 'مفعّلة' : 'Enabled') : (isAr ? 'متوقفة' : 'Disabled')}
+                                            </button>
+                                        </div>
+                                        <div className="admin-general-block">
                                             <h5>{isAr ? 'كلمة مرور المشرف' : 'Admin Password'}</h5>
                                             <p>{isAr ? 'تحقق من كلمة المرور الحالية أو قم بتحديثها من خلال إعدادات النظام.' : 'Review the current admin password or update it via system settings.'}</p>
                                         </div>
@@ -1665,7 +1788,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     {activeTab === 'quizzes' && (
                         <div className="admin-panel-section quizzes-management-section">
                             <div className="qmanage-layout">
-                                
+
                                 {/* Column 1: Subjects List */}
                                 <div className="qmanage-column subjects-col">
                                     <div className="qmanage-col-header">
@@ -1676,8 +1799,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     </div>
                                     <div className="qmanage-list">
                                         {allSubjects.map(sub => (
-                                            <div 
-                                                key={sub.id} 
+                                            <div
+                                                key={sub.id}
                                                 className={`qmanage-item-card ${selectedSubjectId === sub.id ? 'active' : ''}`}
                                                 onClick={() => {
                                                     setSelectedSubjectId(sub.id);
@@ -1690,8 +1813,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                     <span className="qmanage-item-id">ID: {sub.id}</span>
                                                 </div>
                                                 {sub.isDynamic && (
-                                                    <button 
-                                                        className="qmanage-item-delete-btn" 
+                                                    <button
+                                                        className="qmanage-item-delete-btn"
                                                         onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
                                                         title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
                                                     >
@@ -1723,8 +1846,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 <div className="qmanage-empty">{isAr ? 'لا توجد اختبارات مضافة بعد' : 'No quiz parts yet'}</div>
                                             ) : (
                                                 allParts.map(part => (
-                                                    <div 
-                                                        key={part.id} 
+                                                    <div
+                                                        key={part.id}
                                                         className={`qmanage-item-card ${selectedPartId === part.id ? 'active' : ''}`}
                                                         onClick={() => setSelectedPartId(part.id)}
                                                     >
@@ -1733,8 +1856,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                             <span className="qmanage-item-id">ID: {part.id}</span>
                                                         </div>
                                                         {part.isDynamic && (
-                                                            <button 
-                                                                className="qmanage-item-delete-btn" 
+                                                            <button
+                                                                className="qmanage-item-delete-btn"
                                                                 onClick={(e) => { e.stopPropagation(); deletePart(part.id); }}
                                                                 title={isAr ? 'حذف الجزء بالكامل' : 'Delete entire part'}
                                                             >
@@ -1775,7 +1898,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                             <span className="qmanage-q-badge">Q{idx + 1}</span>
                                                             <span className="qmanage-q-badge badge-points">{q.marks || 1} pt</span>
                                                             {q.isDynamic && <span className="qmanage-q-badge badge-db">Db</span>}
-                                                            
+
                                                             <div style={{ marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto', display: 'flex', gap: '0.4rem' }}>
                                                                 <button className="qmanage-q-action-btn" onClick={() => openQuestionModal(q)}>✏️</button>
                                                                 {q.isDynamic && (
@@ -2035,7 +2158,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                         >
                                             {/* Option label + correct radio + delete */}
                                             <div className="qedit-option-top">
-                                                <span className="qedit-opt-id">{(opt.id || String.fromCharCode(65 + idx)).toUpperCase()}</span>
+                                                <span className="qedit-opt-id">{(() => {
+                                                    const txt = isAr ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
+                                                    if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                    return String(idx + 1);
+                                                })()}</span>
                                                 <label className="qedit-correct-label">
                                                     <input
                                                         type="radio"
@@ -2392,12 +2519,41 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     </select>
                                 </div>
                             </div>
+                            <div className="qedit-field" style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+                                {isAr ? 'استخدم $...$ أو $$...$$ للرياضيات. أمثلة: $x^2$, $\sqrt{x}$, $\cos x$, $\frac{a}{b}$، ويمكن كتابة القسمة الطويلة بنمط الكسر.' : 'Use $...$ or $$...$$ for math. Examples: $x^2$, $\sqrt{x}$, $\cos x$, $\frac{a}{b}$, and long division can be written as a fraction.'}
+                            </div>
                             <div className="qedit-field">
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.55rem' }}>
+                                    <input
+                                        ref={ocrInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleOcrImageChange}
+                                        style={{ display: 'none' }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="qmanage-add-btn"
+                                        onClick={() => ocrInputRef.current?.click()}
+                                        disabled={ocrScanning}
+                                        style={{ padding: '0.28rem 0.6rem', fontSize: '0.75rem' }}
+                                    >
+                                        {ocrScanning ? (isAr ? 'جاري المسح...' : 'Scanning...') : (isAr ? '📷 مسح من صورة' : '📷 Scan from image')}
+                                    </button>
+                                    {ocrScanning && (
+                                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                                            {ocrProgress}%
+                                        </span>
+                                    )}
+                                </div>
+                                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+                                    {isAr ? 'ارفع صورة للسؤال أو الخيارات وسيتم استخراج النص وإدخاله تلقائيًا في الحقول.' : 'Upload a photo of the question or options and the text will be filled in automatically.'}
+                                </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
                                     <label className="qedit-label" style={{ margin: 0 }}>🇸🇦 {isAr ? 'نص السؤال — عربي' : 'Question Text — Arabic'}</label>
-                                    <button 
-                                        type="button" 
-                                        className="qmanage-add-btn" 
+                                    <button
+                                        type="button"
+                                        className="qmanage-add-btn"
                                         style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem' }}
                                         onClick={async () => {
                                             if (!questionForm.questionAr) { toast.error(isAr ? 'يرجى كتابة النص بالعربي أولاً' : 'Please type Arabic text first'); return; }
@@ -2416,13 +2572,15 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 </div>
                                 {/* ── Formatting toolbar for Arabic question ── */}
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.35rem', alignItems: 'center' }}>
-                                    {[['B','bold','<strong>'],['I','italic','<em>'],['U','underline','<u>'],['</>','code','<code>']].map(([label, tag]) => (
+                                    {[['B', 'bold', '<strong>'], ['I', 'italic', '<em>'], ['U', 'underline', '<u>'], ['</>', 'code', '<code>']].map(([label, tag]) => (
                                         <button key={tag} type="button"
                                             onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionAr', tag); }}
-                                            style={{ fontWeight: tag==='bold'?'bold':'normal', fontStyle: tag==='italic'?'italic':'normal',
-                                                textDecoration: tag==='underline'?'underline':'none', fontFamily: tag==='code'?'monospace':'inherit',
+                                            style={{
+                                                fontWeight: tag === 'bold' ? 'bold' : 'normal', fontStyle: tag === 'italic' ? 'italic' : 'normal',
+                                                textDecoration: tag === 'underline' ? 'underline' : 'none', fontFamily: tag === 'code' ? 'monospace' : 'inherit',
                                                 fontSize: '0.75rem', padding: '0.15rem 0.4rem', border: '1px solid rgba(255,255,255,0.15)',
-                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit'
+                                            }}>
                                             {label}
                                         </button>
                                     ))}
@@ -2439,6 +2597,18 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionAr', 'highlight', c); }}
                                             title={`Highlight ${c}`}
                                             style={{ width: '16px', height: '16px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.2)', cursor: 'pointer', padding: 0 }} />
+                                    ))}
+                                    <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                    {[
+                                        { label: 'x²', value: '$x^2$' },
+                                        { label: '√x', value: '$\\sqrt{x}$' },
+                                        { label: 'a/b', value: '$\\frac{a}{b}$' }
+                                    ].map(item => (
+                                        <button key={item.label} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertTextIntoQuestion('questionAr', item.value); }}
+                                            style={{ fontSize: '0.72rem', padding: '0.15rem 0.4rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                            {item.label}
+                                        </button>
                                     ))}
                                 </div>
                                 <textarea
@@ -2461,9 +2631,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                             <div className="qedit-field">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
                                     <label className="qedit-label" style={{ margin: 0 }}>🇬🇧 {isAr ? 'نص السؤال — إنجليزي' : 'Question Text — English'}</label>
-                                    <button 
-                                        type="button" 
-                                        className="qmanage-add-btn" 
+                                    <button
+                                        type="button"
+                                        className="qmanage-add-btn"
                                         style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem' }}
                                         onClick={async () => {
                                             if (!questionForm.questionEn) { toast.error(isAr ? 'يرجى كتابة النص بالإنجليزي أولاً' : 'Please type English text first'); return; }
@@ -2482,13 +2652,15 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 </div>
                                 {/* ── Formatting toolbar for English question ── */}
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '0.35rem', alignItems: 'center' }}>
-                                    {[['B','bold'],['I','italic'],['U','underline'],['</>','code']].map(([label, tag]) => (
+                                    {[['B', 'bold'], ['I', 'italic'], ['U', 'underline'], ['</>', 'code']].map(([label, tag]) => (
                                         <button key={tag} type="button"
                                             onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionEn', tag); }}
-                                            style={{ fontWeight: tag==='bold'?'bold':'normal', fontStyle: tag==='italic'?'italic':'normal',
-                                                textDecoration: tag==='underline'?'underline':'none', fontFamily: tag==='code'?'monospace':'inherit',
+                                            style={{
+                                                fontWeight: tag === 'bold' ? 'bold' : 'normal', fontStyle: tag === 'italic' ? 'italic' : 'normal',
+                                                textDecoration: tag === 'underline' ? 'underline' : 'none', fontFamily: tag === 'code' ? 'monospace' : 'inherit',
                                                 fontSize: '0.75rem', padding: '0.15rem 0.4rem', border: '1px solid rgba(255,255,255,0.15)',
-                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit'
+                                            }}>
                                             {label}
                                         </button>
                                     ))}
@@ -2505,6 +2677,18 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             onMouseDown={e => { e.preventDefault(); insertFormatIntoQuestion('questionEn', 'highlight', c); }}
                                             title={`Highlight ${c}`}
                                             style={{ width: '16px', height: '16px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.2)', cursor: 'pointer', padding: 0 }} />
+                                    ))}
+                                    <span style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                    {[
+                                        { label: 'x²', value: '$x^2$' },
+                                        { label: '√x', value: '$\\sqrt{x}$' },
+                                        { label: 'a/b', value: '$\\frac{a}{b}$' }
+                                    ].map(item => (
+                                        <button key={item.label} type="button"
+                                            onMouseDown={e => { e.preventDefault(); insertTextIntoQuestion('questionEn', item.value); }}
+                                            style={{ fontSize: '0.72rem', padding: '0.15rem 0.4rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                            {item.label}
+                                        </button>
                                     ))}
                                 </div>
                                 <textarea
@@ -2646,7 +2830,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     {questionForm.options.map((opt, idx) => (
                                         <div key={opt.id || idx} className={`qedit-option ${questionForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}>
                                             <div className="qedit-option-top">
-                                                <span className="qedit-opt-id">{(opt.id || String.fromCharCode(65 + idx)).toUpperCase()}</span>
+                                                <span className="qedit-opt-id">{(() => {
+                                                    const txt = isAr ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
+                                                    if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                    return String(idx + 1);
+                                                })()}</span>
                                                 {questionForm.type !== 'matching' && (
                                                     <label className="qedit-correct-label">
                                                         <input
@@ -2725,74 +2913,76 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             )}
                                             {/* ── Option formatting toolbar — all question types ── */}
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
-                                                    <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                                                        {/* Undo */}
-                                                        <button type="button"
-                                                            onMouseDown={e => { e.preventDefault(); undoOptionChange(idx, 'textEn'); }}
-                                                            title={isAr ? 'تراجع (Ctrl+Z)' : 'Undo (Ctrl+Z)'}
-                                                            style={{ fontSize: '0.8rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
-                                                            ↩
+                                                <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                                                    {/* Undo */}
+                                                    <button type="button"
+                                                        onMouseDown={e => { e.preventDefault(); undoOptionChange(idx, 'textEn'); }}
+                                                        title={isAr ? 'تراجع (Ctrl+Z)' : 'Undo (Ctrl+Z)'}
+                                                        style={{ fontSize: '0.8rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                                        ↩
+                                                    </button>
+                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                    {/* Bold / Italic / Underline / Code */}
+                                                    {[['B', 'bold'], ['I', 'italic'], ['U', 'underline'], ['</>', 'code']].map(([lbl, tag]) => (
+                                                        <button key={tag} type="button"
+                                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', tag); }}
+                                                            style={{
+                                                                fontWeight: tag === 'bold' ? 'bold' : 'normal', fontStyle: tag === 'italic' ? 'italic' : 'normal',
+                                                                textDecoration: tag === 'underline' ? 'underline' : 'none', fontFamily: tag === 'code' ? 'monospace' : 'inherit',
+                                                                fontSize: '0.72rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)',
+                                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit'
+                                                            }}>
+                                                            {lbl}
                                                         </button>
-                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                        {/* Bold / Italic / Underline / Code */}
-                                                        {[['B','bold'],['I','italic'],['U','underline'],['</>','code']].map(([lbl, tag]) => (
-                                                            <button key={tag} type="button"
-                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', tag); }}
-                                                                style={{ fontWeight: tag==='bold'?'bold':'normal', fontStyle: tag==='italic'?'italic':'normal',
-                                                                    textDecoration: tag==='underline'?'underline':'none', fontFamily: tag==='code'?'monospace':'inherit',
-                                                                    fontSize: '0.72rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)',
-                                                                    background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
-                                                                {lbl}
-                                                            </button>
-                                                        ))}
-                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                        {/* Text colors */}
-                                                        {QUESTION_COLORS.map(c => (
-                                                            <button key={c} type="button"
-                                                                className="color-dot"
-                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'color', c); }}
-                                                                title={`Color ${c}`}
-                                                                style={{ width: '14px', height: '14px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
-                                                        ))}
-                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                        {/* Highlight colors */}
-                                                        {HIGHLIGHT_COLORS.map(c => (
-                                                            <button key={c} type="button"
-                                                                className="color-dot"
-                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'highlight', c); }}
-                                                                title={`Highlight ${c}`}
-                                                                style={{ width: '14px', height: '14px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.25)', cursor: 'pointer', padding: 0 }} />
-                                                        ))}
-                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                        {/* Relation table */}
-                                                        <button type="button"
-                                                            onClick={() => insertFormatIntoOption(idx, 'textEn', 'table')}
-                                                            style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
-                                                            🗂️
-                                                        </button>
-                                                        {/* Image upload */}
-                                                        <button type="button"
-                                                            onClick={() => document.getElementById(`opt-file-input-${idx}`).click()}
-                                                            style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
-                                                            🖼️
-                                                        </button>
-                                                        <input type="file" id={`opt-file-input-${idx}`} accept="image/*"
-                                                            style={{ display: 'none' }} onChange={(e) => handleOptionImageChange(idx, e)} />
-                                                    </div>
-                                                    {opt.image && (
-                                                        <div className="qedit-opt-img-preview" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
-                                                            <img src={opt.image} alt="Option preview" style={{ maxHeight: '60px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }} />
-                                                            <button
-                                                                type="button"
-                                                                className="qedit-opt-delete"
-                                                                style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem', margin: 0, width: 'auto' }}
-                                                                onClick={() => updateQuestionOption(idx, 'image', '')}
-                                                            >
-                                                                🗑️ {isAr ? 'إزالة الصورة' : 'Remove Image'}
-                                                             </button>
-                                                        </div>
-                                                    )}
+                                                    ))}
+                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                    {/* Text colors */}
+                                                    {QUESTION_COLORS.map(c => (
+                                                        <button key={c} type="button"
+                                                            className="color-dot"
+                                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'color', c); }}
+                                                            title={`Color ${c}`}
+                                                            style={{ width: '14px', height: '14px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
+                                                    ))}
+                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                    {/* Highlight colors */}
+                                                    {HIGHLIGHT_COLORS.map(c => (
+                                                        <button key={c} type="button"
+                                                            className="color-dot"
+                                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'highlight', c); }}
+                                                            title={`Highlight ${c}`}
+                                                            style={{ width: '14px', height: '14px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.25)', cursor: 'pointer', padding: 0 }} />
+                                                    ))}
+                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                    {/* Relation table */}
+                                                    <button type="button"
+                                                        onClick={() => insertFormatIntoOption(idx, 'textEn', 'table')}
+                                                        style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
+                                                        🗂️
+                                                    </button>
+                                                    {/* Image upload */}
+                                                    <button type="button"
+                                                        onClick={() => document.getElementById(`opt-file-input-${idx}`).click()}
+                                                        style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
+                                                        🖼️
+                                                    </button>
+                                                    <input type="file" id={`opt-file-input-${idx}`} accept="image/*"
+                                                        style={{ display: 'none' }} onChange={(e) => handleOptionImageChange(idx, e)} />
                                                 </div>
+                                                {opt.image && (
+                                                    <div className="qedit-opt-img-preview" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
+                                                        <img src={opt.image} alt="Option preview" style={{ maxHeight: '60px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                                                        <button
+                                                            type="button"
+                                                            className="qedit-opt-delete"
+                                                            style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem', margin: 0, width: 'auto' }}
+                                                            onClick={() => updateQuestionOption(idx, 'image', '')}
+                                                        >
+                                                            🗑️ {isAr ? 'إزالة الصورة' : 'Remove Image'}
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
                                             {/* Delete button for matching pool items */}
                                             {questionForm.type === 'matching' && (
                                                 <button

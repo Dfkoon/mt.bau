@@ -1,19 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import { useLanguage } from '../contexts/LanguageContext';
 import './FeedbackPopup.css';
 
 const FeedbackPopup = ({ isOpen, onClose }) => {
-    const { t, language } = useLanguage();
-    const navigate = useNavigate();
+    const { t } = useLanguage();
+    const [rating, setRating] = useState(0);
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = originalOverflow;
+        };
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
-    const handleRateNow = () => {
-        // Navigate to home and pass state to scroll to testimonials
-        navigate('/', { state: { scrollToReviews: true } });
-        onClose();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+
+        if (rating < 1) {
+            setError(t('feedbackPopup.error.rating'));
+            return;
+        }
+
+        if (!message.trim()) {
+            setError(t('feedbackPopup.error.message'));
+            return;
+        }
+
+        setIsLoading(true);
+
+        try {
+            await addDoc(collection(db, 'suggestions'), {
+                type: 'feedback',
+                rating,
+                message: message.trim(),
+                status: 'new',
+                read: false,
+                timestamp: serverTimestamp(),
+            });
+
+            onClose();
+        } catch (err) {
+            console.error('Feedback submit error:', err);
+            setError(t('feedbackPopup.error.submit'));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -33,23 +75,45 @@ const FeedbackPopup = ({ isOpen, onClose }) => {
                         transition={{ duration: 0.3 }}
                     >
                         <div className="feedback-icon">⭐</div>
-                        <h3 className="feedback-title">
-                            {language === 'ar' ? 'ما رأيك في تجربتك؟' : 'How is your experience?'}
-                        </h3>
-                        <p className="feedback-text">
-                            {language === 'ar'
-                                ? 'نود سماع رأيك في الموقع لنقوم بتحسينه بشكل مستمر.'
-                                : 'We would love to hear your feedback to help us improve constantly.'}
-                        </p>
+                        <h3 className="feedback-title">{t('feedbackPopup.title')}</h3>
+                        <p className="feedback-text">{t('feedbackPopup.subtitle')}</p>
 
-                        <div className="feedback-actions">
-                            <button className="btn-rate" onClick={handleRateNow}>
-                                {language === 'ar' ? 'شارك رأيك الآن' : 'Rate Us Now'}
+                        <form className="feedback-form" onSubmit={handleSubmit}>
+                            <label className="feedback-label" htmlFor="feedback-rating">
+                                {t('feedbackPopup.ratingLabel')}
+                            </label>
+                            <div className="star-rating" id="feedback-rating">
+                                {[1, 2, 3, 4, 5].map((value) => (
+                                    <button
+                                        key={value}
+                                        type="button"
+                                        className={`star-button ${rating >= value ? 'selected' : ''}`}
+                                        onClick={() => setRating(value)}
+                                        aria-label={`${value} ${t('feedbackPopup.starLabel')}`}
+                                    >
+                                        ★
+                                    </button>
+                                ))}
+                            </div>
+
+                            <label className="feedback-label" htmlFor="feedback-message">
+                                {t('feedbackPopup.messageLabel')}
+                            </label>
+                            <textarea
+                                id="feedback-message"
+                                rows="5"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                placeholder={t('feedbackPopup.messagePlaceholder')}
+                                className="feedback-textarea"
+                            />
+
+                            {error && <div className="feedback-error">{error}</div>}
+
+                            <button type="submit" className="feedback-submit-btn" disabled={isLoading}>
+                                {isLoading ? t('feedbackPopup.submitting') : t('feedbackPopup.submitBtn')}
                             </button>
-                            <button className="btn-later" onClick={onClose}>
-                                {language === 'ar' ? 'لاحقاً' : 'Later'}
-                            </button>
-                        </div>
+                        </form>
                     </motion.div>
                 </motion.div>
             )}
