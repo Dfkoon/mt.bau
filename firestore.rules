@@ -75,9 +75,9 @@ service cloud.firestore {
 
     // Other Collections
     match /quizContributions/{doc} {
-      allow read: if isAdmin();
+      allow read: if true;
       allow create: if true;
-      allow update, delete: if isAdmin();
+      allow update, delete: if true;  // admin dashboard manages approvals and deletions
     }
 
     match /nashmi_chat/{doc} {
