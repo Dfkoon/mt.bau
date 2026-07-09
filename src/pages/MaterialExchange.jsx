@@ -3077,12 +3077,18 @@ Please contact us to coordinate the pickup. Thank you.`;
     };
 
     const exportToPDF = (donations, filename) => {
-        const statusMap = {
-            pending: isAr ? 'معلق' : 'Pending',
-            approved: isAr ? 'معتمد' : 'Approved',
-            reserved: isAr ? 'محجوز' : 'Reserved',
-            completed: isAr ? 'مكتمل' : 'Completed'
+        const getStatusHTML = (status) => {
+            if (status === 'completed') return `<span class="badge delivered">${isAr ? 'تم التسليم' : 'Delivered'}</span>`;
+            if (status === 'reserved') return `<span class="badge reserved">${isAr ? 'محجوز' : 'Reserved'}</span>`;
+            if (status === 'approved') return `<span class="badge donated">${isAr ? 'معتمد' : 'Approved'}</span>`;
+            return `<span class="badge pending">${isAr ? 'معلق' : 'Pending'}</span>`;
         };
+
+        const total = donations.length;
+        const approved = donations.filter(d => d.status === 'approved').length;
+        const reserved = donations.reduce((acc, d) => acc + (d.materials || []).filter(m => (typeof m === 'object' ? m.status : d.status) === 'reserved').length, 0);
+        const completed = donations.reduce((acc, d) => acc + (d.materials || []).filter(m => (typeof m === 'object' ? m.status : d.status) === 'completed').length, 0);
+
         const tableRows = donations.map(d => {
             const materialLabels = (d.materials || []).map(m => {
                 if (typeof m === 'object') {
@@ -3090,52 +3096,152 @@ Please contact us to coordinate the pickup. Thank you.`;
                 }
                 return m;
             }).join(', ');
-            const materialNotes = (d.materials || []).map(m => typeof m === 'object' ? (m.description || '') : '').filter(Boolean).join(' | ');
+            const materialNotes = (d.materials || []).map(m => typeof m === 'object' ? (m.description || '') : '').filter(Boolean).join(' | ') || '—';
             return `
             <tr>
-                <td>${d.studentName || ''}</td>
-                <td dir="ltr">${d.phoneNumber || ''}</td>
-                <td dir="ltr">${d.email || ''}</td>
+                <td style="font-weight:600;">${d.studentName || ''}</td>
+                <td dir="ltr" class="phone-cell">${d.phoneNumber || ''}</td>
+                <td dir="ltr">${d.email || '—'}</td>
                 <td>${d.studentGender === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female')}</td>
-                <td>${materialLabels}</td>
-                <td>${materialNotes}</td>
-                <td>${statusMap[d.status] || d.status || ''}</td>
+                <td style="font-weight:600; color:#1b2a3c;">${materialLabels || '—'}</td>
+                <td style="color:#5c6b7a; font-size:12px;">${materialNotes}</td>
+                <td>${getStatusHTML(d.status)}</td>
             </tr>`;
         }).join('');
+
         const title = isAr ? 'جدول تبرعات المواد الدراسية' : 'Material Donations Table';
         const dateStr = new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US');
         const win = window.open('', '_blank');
         win.document.write(`<!DOCTYPE html><html dir="${isAr ? 'rtl' : 'ltr'}">
-<head><meta charset="utf-8"><title>${filename}</title><style>
-body{font-family:'Tahoma','Arial',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};color:#222;background:#f2f4f7;}
-.page-shell{max-width:1120px;margin:0 auto;background:#fff;padding:28px 32px;border:1px solid #d8dde6;box-shadow:0 18px 55px rgba(15,23,42,0.08);}
-.header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
-.header-row h2{margin:0;font-size:24px;color:#1f3d69;letter-spacing:0.02em;text-transform:uppercase;}
-.meta{margin:8px 0 0;color:#4f5b74;font-size:14px;line-height:1.65;}
-.table-note{margin-top:16px;padding:16px 18px;background:#f5f9ff;border-left:4px solid #1f4e79;color:#254061;font-size:13px;}
-table{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;border:1px solid #c7d2df;box-shadow:0 8px 20px rgba(15,23,42,0.05);}
-th,td{padding:14px 12px;border:1px solid #d4dae3;vertical-align:top;}
-th{background:#1f4e79;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;text-align:${isAr ? 'right' : 'left'};}
-tr:nth-child(even){background:#f8fbff;}
-td{color:#2f3d4f;}
-tfoot td{background:#f0f4fb;font-weight:700;}
-.no-print{margin-bottom:16px;}
-.print-button{padding:10px 22px;background:#1f4e79;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:600;}
-@media print{.no-print{display:none;} body{padding:0;background:#fff;} .page-shell{box-shadow:none;border:none;margin:0;padding:0;}}
-</style></head>
+<head>
+    <meta charset="utf-8">
+    <title>${filename}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+        body{font-family:'Tajawal','Tahoma','Arial',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};color:#222;background:#f2f4f7;margin:0;}
+        .no-print{margin-bottom:20px;max-width:1120px;margin-left:auto;margin-right:auto;display:flex;justify-content:flex-start;}
+        .print-button{padding:10px 24px;background:#1B2A3C;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit;box-shadow:0 4px 14px rgba(27,42,60,0.25);transition:all 0.2s ease;}
+        .print-button:hover{transform:translateY(-1px);background:#253a52;}
+        .report-sheet{position:relative;max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;}
+        .sheet{background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(17,24,39,0.08),0 16px 50px rgba(17,24,39,0.12);position:relative;}
+        .accent-bar{height:6px;background:linear-gradient(90deg, #1B2A3C 0%, #C08A2E 100%);}
+        .ribbon{position:absolute;top:18px;left:-42px;transform:rotate(-45deg);background:#c08a2e;color:#fff;font-size:11px;font-weight:700;padding:4px 46px;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+        header{background:#1B2A3C;color:#ffffff;padding:28px 36px 24px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+        header .title-block h1{font-size:24px;margin:0 0 6px;font-weight:700;}
+        header .title-block p{margin:0;font-size:13px;color:#c7d0da;}
+        header .meta{text-align:left;font-size:12.5px;color:#c7d0da;line-height:1.9;white-space:nowrap;}
+        header .meta b{color:#fff;font-weight:600;}
+        header .meta .report-no{display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:6px;padding:3px 10px;font-weight:600;color:#f1dfb8;}
+        .pilgrim{padding:24px 36px 8px;display:flex;gap:28px;flex-wrap:wrap;}
+        .pilgrim-field{min-width:150px;flex:1;}
+        .pilgrim-field span{display:block;font-size:11.5px;color:#5c6b7a;margin-bottom:4px;}
+        .pilgrim-field b{font-weight:700;font-size:16px;color:#1b2a3c;}
+        .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:20px 36px 4px;}
+        .stat-card{border:1px solid #e4e0d4;border-radius:10px;padding:14px 16px;text-align:center;background:#fcfbf8;}
+        .stat-card .num{font-weight:900;font-size:26px;line-height:1;margin-bottom:6px;}
+        .stat-card.donated .num{color:#155e68;}
+        .stat-card.reserved .num{color:#8a5e14;}
+        .stat-card.delivered .num{color:#2e6b3f;}
+        .stat-card .lbl{font-size:12.5px;color:#5c6b7a;}
+        .section-title{padding:22px 36px 10px;font-weight:700;font-size:15.5px;color:#1b2a3c;display:flex;align-items:center;gap:8px;}
+        .section-title::before{content:"";width:4px;height:16px;background:#c08a2e;border-radius:2px;display:inline-block;}
+        table{width:calc(100% - 72px);margin:10px 36px 20px;border-collapse:collapse;background:#fff;border:1px solid #e4e0d4;}
+        table thead th{background:#fcfbf8;color:#1b2a3c;font-weight:700;font-size:13px;padding:12px 14px;border-bottom:2px solid #e4e0d4;text-align:${isAr ? 'right' : 'left'};}
+        table tbody td{padding:12px 14px;font-size:13px;color:#2f3d4f;border-bottom:1px solid #f0edf4;vertical-align:top;}
+        table tbody tr:last-child td{border-bottom:none;}
+        table tbody tr:nth-child(even){background:#fcfbf8;}
+        .badge{display:inline-block;padding:4px 10px;font-size:11.5px;font-weight:700;border-radius:6px;text-align:center;}
+        .badge.donated{background:#e8f1f1;color:#155e68;}
+        .badge.reserved{background:#fbf0dc;color:#8a5e14;}
+        .badge.delivered{background:#e9f3eb;color:#2e6b3f;}
+        .badge.pending{background:#f1f5f9;color:#64748b;}
+        footer{padding:24px 36px 28px;border-top:1px solid #f0edf4;display:flex;justify-content:space-between;align-items:center;gap:24px;}
+        footer .note{font-size:12px;color:#6c7b8a;max-width:60%;line-height:1.6;}
+        footer .system{text-align:left;font-size:12px;color:#6c7b8a;line-height:1.6;}
+        footer .system b{color:#1b2a3c;font-weight:700;}
+        @media print{.no-print{display:none;} body{padding:0;background:#fff;} .sheet{box-shadow:none;border-radius:0;}}
+    </style>
+</head>
 <body>
-<div class="page-shell">
-<button class="no-print print-button" onclick="window.print()">
-🖨️ ${isAr ? 'طباعة / حفظ PDF' : 'Print / Save as PDF'}</button>
-<div class="header-row"><h2>📚 ${title}</h2><div class="meta">${isAr ? 'تاريخ التصدير:' : 'Export Date:'} ${dateStr}<br>${isAr ? 'عدد التبرعات:' : 'Total:'} ${donations.length}</div></div>
-<div class="table-note">${isAr ? 'هذا الجدول معد للطباعة ويعرض السجلات بطريقة رسمية مناسبة للتوثيق.' : 'This table is formatted for printing and displays records in a formal layout suitable for documentation.'}</div>
-<table><thead><tr>
-<th>${isAr ? 'الاسم' : 'Name'}</th><th>${isAr ? 'الهاتف' : 'Phone'}</th>
-<th>${isAr ? 'البريد الإلكتروني' : 'Email'}</th><th>${isAr ? 'الجنس' : 'Gender'}</th>
-<th>${isAr ? 'المواد' : 'Materials'}</th>
-<th>${isAr ? 'الملاحظات' : 'Notes'}</th>
-<th>${isAr ? 'الحالة' : 'Status'}</th>
-</tr></thead><tbody>${tableRows}</tbody></table>
+<div class="no-print">
+    <button class="print-button" onclick="window.print()">🖨️ ${isAr ? 'طباعة / حفظ PDF' : 'Print / Save as PDF'}</button>
+</div>
+<div class="report-sheet">
+    <div class="sheet">
+        <div class="ribbon">${isAr ? 'إلكتروني' : 'Electronic'}</div>
+        <div class="accent-bar"></div>
+
+        <header>
+            <div class="title-block">
+                <h1>${title}</h1>
+                <p>${isAr ? 'تقرير تفصيلي بجدول التبرعات المقدمة من الطلاب للثيم والمرحلة الحالية.' : 'Detailed report of student donation records.'}</p>
+            </div>
+            <div class="meta">
+                <div>${isAr ? 'تاريخ التصدير:' : 'Export Date:'} <b>${dateStr}</b></div>
+                <div>${isAr ? 'عدد السجلات:' : 'Total Records:'} <b>${total}</b></div>
+                <div>${isAr ? 'المنسق المصدر:' : 'Issued By:'} <b>${loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
+            </div>
+        </header>
+
+        <div class="pilgrim">
+            <div class="pilgrim-field">
+                <span>${isAr ? 'نوع التقرير' : 'Report Type'}</span>
+                <b>${isAr ? 'سجلات التبرعات' : 'Donations Records'}</b>
+            </div>
+            <div class="pilgrim-field">
+                <span>${isAr ? 'الحالة العامة' : 'General Status'}</span>
+                <b><span style="color:#2ecc71;">${isAr ? 'نشط' : 'Active'}</span></b>
+            </div>
+            <div class="pilgrim-field">
+                <span>${isAr ? 'المرحلة الحالية' : 'Current Phase'}</span>
+                <b>${systemSettings.campaignPhase === 'collection' ? (isAr ? 'جمع المواد' : 'Collection') : (systemSettings.campaignPhase === 'exchange' ? (isAr ? 'تبادل وحجز' : 'Exchange') : (isAr ? 'موقوفة' : 'Suspended'))}</b>
+            </div>
+        </div>
+
+        {/* Summary Stats Cards */}
+        <div class="stats">
+            <div class="stat-card donated">
+                <div class="num">${approved}</div>
+                <div class="lbl">${isAr ? 'تبرعات معتمدة ومتاحة' : 'Approved Donations'}</div>
+            </div>
+            <div class="stat-card reserved">
+                <div class="num">${reserved}</div>
+                <div class="lbl">${isAr ? 'مواد محجوزة' : 'Reserved Materials'}</div>
+            </div>
+            <div class="stat-card delivered">
+                <div class="num">${completed}</div>
+                <div class="lbl">${isAr ? 'مواد مسلّمة' : 'Delivered Materials'}</div>
+            </div>
+        </div>
+
+        <div class="section-title">${isAr ? 'تفاصيل السجلات' : 'Records Details'}</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                    <th>${isAr ? 'الهاتف' : 'Phone'}</th>
+                    <th>${isAr ? 'البريد' : 'Email'}</th>
+                    <th>${isAr ? 'الجنس' : 'Gender'}</th>
+                    <th>${isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</th>
+                    <th>${isAr ? 'الملاحظات' : 'Notes'}</th>
+                    <th>${isAr ? 'الحالة' : 'Status'}</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRows}
+            </tbody>
+        </table>
+
+        <footer>
+            <div class="note">
+                ${isAr ? 'يرجى الاحتفاظ بهذا الكشف ومشاركته عند التواصل مع فريق التنسيق. هذا المستند صادر إلكترونياً من نظام مكانك، ولا يحتاج إلى ختم أو توقيع لاعتماده.' : 'Please keep this report and share it when contacting the coordination team. This document is issued electronically from the Makanak system and does not require a stamp or signature for validation.'}
+            </div>
+            <div class="system">
+                <b>${isAr ? 'نظام مكانك' : 'Makanak System'}</b><br>
+                ${isAr ? 'تقرير آلي - لا يُعتمد به كوثيقة رسمية بديلة عن السجل الأصلي' : 'Automated report - Not considered as a formal document replacement'}
+            </div>
+        </footer>
+    </div>
 </div>
 </body></html>`);
         win.document.close();
@@ -3174,55 +3280,164 @@ tfoot td{background:#f0f4fb;font-weight:700;}
     };
 
     const exportBookingsToPDF = (bookings, filename) => {
-        const statusMap = {
-            reserved: isAr ? 'محجوز' : 'Reserved',
-            completed: isAr ? 'تم التسليم' : 'Delivered'
+        const getStatusHTML = (status) => {
+            if (status === 'completed') return `<span class="badge delivered">${isAr ? 'تم التسليم' : 'Delivered'}</span>`;
+            if (status === 'reserved') return `<span class="badge reserved">${isAr ? 'محجوز' : 'Reserved'}</span>`;
+            return `<span class="badge pending">${isAr ? 'معلق' : 'Pending'}</span>`;
         };
+
+        const total = bookings.length;
+        const reserved = bookings.filter(b => b.status === 'reserved').length;
+        const completed = bookings.filter(b => b.status === 'completed').length;
+
         const tableRows = bookings.map(b => `
             <tr>
-                <td>${b.takerInfo?.name || ''}</td>
-                <td dir="ltr">${b.takerInfo?.phone || ''}</td>
-                <td dir="ltr">${b.takerEmail || ''}</td>
+                <td style="font-weight:600;">${b.takerInfo?.name || ''}</td>
+                <td dir="ltr" class="phone-cell">${b.takerInfo?.phone || ''}</td>
+                <td dir="ltr">${b.takerEmail || '—'}</td>
                 <td>${(b.takerInfo?.gender || b.donorGender) === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female')}</td>
-                <td>${b.materialName || ''}</td>
-                <td>${b.materialDescription || ''}</td>
+                <td style="font-weight:600; color:#1b2a3c;">${b.materialName || ''}</td>
+                <td style="color:#5c6b7a; font-size:12px;">${b.materialDescription || '—'}</td>
                 <td>${b.donorName || ''}</td>
-                <td dir="ltr">${b.donorEmail || ''}</td>
-                <td>${statusMap[b.status] || b.status || ''}</td>
+                <td dir="ltr">${b.donorEmail || '—'}</td>
+                <td>${getStatusHTML(b.status)}</td>
             </tr>`).join('');
+
         const title = isAr ? 'جدول الحجوزات الطلابية' : 'Student Bookings Table';
         const dateStr = new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US');
         const win = window.open('', '_blank');
         win.document.write(`<!DOCTYPE html><html dir="${isAr ? 'rtl' : 'ltr'}">
-<head><meta charset="utf-8"><title>${filename}</title><style>
-body{font-family:'Tahoma','Arial',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};color:#222;background:#f2f4f7;}
-.page-shell{max-width:1120px;margin:0 auto;background:#fff;padding:28px 32px;border:1px solid #d8dde6;box-shadow:0 18px 55px rgba(15,23,42,0.08);}
-.header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
-.header-row h2{margin:0;font-size:24px;color:#1b3b6b;letter-spacing:0.02em;text-transform:uppercase;}
-.meta{margin:8px 0 0;color:#4f5b74;font-size:14px;line-height:1.65;}
-.table-note{margin-top:16px;padding:16px 18px;background:#eef7ff;border-left:4px solid #2f72b7;color:#244a6e;font-size:13px;}
-table{width:100%;border-collapse:collapse;margin-top:20px;background:#fff;border:1px solid #c7d2df;box-shadow:0 8px 20px rgba(15,23,42,0.05);}
-th,td{padding:14px 12px;border:1px solid #d4dae3;vertical-align:top;}
-th{background:#2f72b7;color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;text-align:${isAr ? 'right' : 'left'};}
-tr:nth-child(even){background:#f7f9ff;}
-td{color:#2f3d4f;}
-.no-print{margin-bottom:16px;}
-.print-button{padding:10px 22px;background:#2f72b7;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:600;}
-@media print{.no-print{display:none;} body{padding:0;background:#fff;} .page-shell{box-shadow:none;border:none;margin:0;padding:0;}}
-</style></head>
+<head>
+    <meta charset="utf-8">
+    <title>${filename}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap');
+        body{font-family:'Tajawal','Tahoma','Arial',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};color:#222;background:#f2f4f7;margin:0;}
+        .no-print{margin-bottom:20px;max-width:1120px;margin-left:auto;margin-right:auto;display:flex;justify-content:flex-start;}
+        .print-button{padding:10px 24px;background:#1B2A3C;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit;box-shadow:0 4px 14px rgba(27,42,60,0.25);transition:all 0.2s ease;}
+        .print-button:hover{transform:translateY(-1px);background:#253a52;}
+        .report-sheet{position:relative;max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;}
+        .sheet{background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(17,24,39,0.08),0 16px 50px rgba(17,24,39,0.12);position:relative;}
+        .accent-bar{height:6px;background:linear-gradient(90deg, #1B2A3C 0%, #C08A2E 100%);}
+        .ribbon{position:absolute;top:18px;left:-42px;transform:rotate(-45deg);background:#c08a2e;color:#fff;font-size:11px;font-weight:700;padding:4px 46px;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+        header{background:#1B2A3C;color:#ffffff;padding:28px 36px 24px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+        header .title-block h1{font-size:24px;margin:0 0 6px;font-weight:700;}
+        header .title-block p{margin:0;font-size:13px;color:#c7d0da;}
+        header .meta{text-align:left;font-size:12.5px;color:#c7d0da;line-height:1.9;white-space:nowrap;}
+        header .meta b{color:#fff;font-weight:600;}
+        header .meta .report-no{display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:6px;padding:3px 10px;font-weight:600;color:#f1dfb8;}
+        .pilgrim{padding:24px 36px 8px;display:flex;gap:28px;flex-wrap:wrap;}
+        .pilgrim-field{min-width:150px;flex:1;}
+        .pilgrim-field span{display:block;font-size:11.5px;color:#5c6b7a;margin-bottom:4px;}
+        .pilgrim-field b{font-weight:700;font-size:16px;color:#1b2a3c;}
+        .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:20px 36px 4px;}
+        .stat-card{border:1px solid #e4e0d4;border-radius:10px;padding:14px 16px;text-align:center;background:#fcfbf8;}
+        .stat-card .num{font-weight:900;font-size:26px;line-height:1;margin-bottom:6px;}
+        .stat-card.donated .num{color:#155e68;}
+        .stat-card.reserved .num{color:#8a5e14;}
+        .stat-card.delivered .num{color:#2e6b3f;}
+        .stat-card .lbl{font-size:12.5px;color:#5c6b7a;}
+        .section-title{padding:22px 36px 10px;font-weight:700;font-size:15.5px;color:#1b2a3c;display:flex;align-items:center;gap:8px;}
+        .section-title::before{content:"";width:4px;height:16px;background:#c08a2e;border-radius:2px;display:inline-block;}
+        table{width:calc(100% - 72px);margin:10px 36px 20px;border-collapse:collapse;background:#fff;border:1px solid #e4e0d4;}
+        table thead th{background:#fcfbf8;color:#1b2a3c;font-weight:700;font-size:13px;padding:12px 14px;border-bottom:2px solid #e4e0d4;text-align:${isAr ? 'right' : 'left'};}
+        table tbody td{padding:12px 14px;font-size:13px;color:#2f3d4f;border-bottom:1px solid #f0edf4;vertical-align:top;}
+        table tbody tr:last-child td{border-bottom:none;}
+        table tbody tr:nth-child(even){background:#fcfbf8;}
+        .badge{display:inline-block;padding:4px 10px;font-size:11.5px;font-weight:700;border-radius:6px;text-align:center;}
+        .badge.donated{background:#e8f1f1;color:#155e68;}
+        .badge.reserved{background:#fbf0dc;color:#8a5e14;}
+        .badge.delivered{background:#e9f3eb;color:#2e6b3f;}
+        .badge.pending{background:#f1f5f9;color:#64748b;}
+        footer{padding:24px 36px 28px;border-top:1px solid #f0edf4;display:flex;justify-content:space-between;align-items:center;gap:24px;}
+        footer .note{font-size:12px;color:#6c7b8a;max-width:60%;line-height:1.6;}
+        footer .system{text-align:left;font-size:12px;color:#6c7b8a;line-height:1.6;}
+        footer .system b{color:#1b2a3c;font-weight:700;}
+        @media print{.no-print{display:none;} body{padding:0;background:#fff;} .sheet{box-shadow:none;border-radius:0;}}
+    </style>
+</head>
 <body>
-<div class="page-shell">
-<button class="no-print print-button" onclick="window.print()">
-🖨️ ${isAr ? 'طباعة / حفظ PDF' : 'Print / Save as PDF'}</button>
-<div class="header-row"><h2>📚 ${title}</h2><div class="meta">${isAr ? 'تاريخ التصدير:' : 'Export Date:'} ${dateStr}<br>${isAr ? 'عدد الحجوزات:' : 'Total:'} ${bookings.length}</div></div>
-<div class="table-note">${isAr ? 'هذا الجدول معد للطباعة ويعرض الحجوزات بطريقة رسمية وواضحة.' : 'This table is formatted for printing and displays bookings in a formal and clear manner.'}</div>
-<table><thead><tr>
-<th>${isAr ? 'اسم الحاجز' : 'Booker Name'}</th><th>${isAr ? 'الهاتف' : 'Phone'}</th>
-<th>${isAr ? 'البريد الإلكتروني' : 'Email'}</th><th>${isAr ? 'الجنس' : 'Gender'}</th>
-<th>${isAr ? 'المادة' : 'Material'}</th><th>${isAr ? 'ملاحظات المادة' : 'Material Notes'}</th>
-<th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th><th>${isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
-<th>${isAr ? 'الحالة' : 'Status'}</th>
-</tr></thead><tbody>${tableRows}</tbody></table>
+<div class="no-print">
+    <button class="print-button" onclick="window.print()">🖨️ ${isAr ? 'طباعة / حفظ PDF' : 'Print / Save as PDF'}</button>
+</div>
+<div class="report-sheet">
+    <div class="sheet">
+        <div class="ribbon">${isAr ? 'إلكتروني' : 'Electronic'}</div>
+        <div class="accent-bar"></div>
+
+        <header>
+            <div class="title-block">
+                <h1>${title}</h1>
+                <p>${isAr ? 'تقرير تفصيلي بجدول الحجوزات الطلابية للمرحلة الحالية.' : 'Detailed report of student booking records.'}</p>
+            </div>
+            <div class="meta">
+                <div>${isAr ? 'تاريخ التصدير:' : 'Export Date:'} <b>${dateStr}</b></div>
+                <div>${isAr ? 'عدد الحجوزات:' : 'Total Bookings:'} <b>${total}</b></div>
+                <div>${isAr ? 'المنسق المصدر:' : 'Issued By:'} <b>${loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
+            </div>
+        </header>
+
+        <div class="pilgrim">
+            <div class="pilgrim-field">
+                <span>${isAr ? 'نوع التقرير' : 'Report Type'}</span>
+                <b>${isAr ? 'سجلات الحجوزات' : 'Bookings Records'}</b>
+            </div>
+            <div class="pilgrim-field">
+                <span>${isAr ? 'الحالة العامة' : 'General Status'}</span>
+                <b><span style="color:#e67e22;">${isAr ? 'نشط' : 'Active'}</span></b>
+            </div>
+            <div class="pilgrim-field">
+                <span>${isAr ? 'المرحلة الحالية' : 'Current Phase'}</span>
+                <b>${systemSettings.campaignPhase === 'collection' ? (isAr ? 'جمع المواد' : 'Collection') : (systemSettings.campaignPhase === 'exchange' ? (isAr ? 'تبادل وحجز' : 'Exchange') : (isAr ? 'موقوفة' : 'Suspended'))}</b>
+            </div>
+        </div>
+
+        {/* Summary Stats Cards */}
+        <div class="stats">
+            <div class="stat-card donated">
+                <div class="num">${total}</div>
+                <div class="lbl">${isAr ? 'إجمالي الحجوزات' : 'Total Bookings'}</div>
+            </div>
+            <div class="stat-card reserved">
+                <div class="num">${reserved}</div>
+                <div class="lbl">${isAr ? 'حجوزات قيد التسليم' : 'Pending Handovers'}</div>
+            </div>
+            <div class="stat-card delivered">
+                <div class="num">${completed}</div>
+                <div class="lbl">${isAr ? 'حجوزات تم تسليمها' : 'Delivered Handovers'}</div>
+            </div>
+        </div>
+
+        <div class="section-title">${isAr ? 'تفاصيل السجلات' : 'Records Details'}</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>${isAr ? 'اسم الحاجز' : 'Booker Name'}</th>
+                    <th>${isAr ? 'الهاتف' : 'Phone'}</th>
+                    <th>${isAr ? 'البريد' : 'Email'}</th>
+                    <th>${isAr ? 'الجنس' : 'Gender'}</th>
+                    <th>${isAr ? 'المادة' : 'Material'}</th>
+                    <th>${isAr ? 'ملاحظات المادة' : 'Material Notes'}</th>
+                    <th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                    <th>${isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
+                    <th>${isAr ? 'الحالة' : 'Status'}</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRows}
+            </tbody>
+        </table>
+
+        <footer>
+            <div class="note">
+                ${isAr ? 'يرجى الاحتفاظ بهذا الكشف ومشاركته عند التواصل مع فريق التنسيق. هذا المستند صادر إلكترونياً من نظام مكانك، ولا يحتاج إلى ختم أو توقيع لاعتماده.' : 'Please keep this report and share it when contacting the coordination team. This document is issued electronically from the Makanak system and does not require a stamp or signature for validation.'}
+            </div>
+            <div class="system">
+                <b>${isAr ? 'نظام مكانك' : 'Makanak System'}</b><br>
+                ${isAr ? 'تقرير آلي - لا يُعتمد به كوثيقة رسمية بديلة عن السجل الأصلي' : 'Automated report - Not considered as a formal document replacement'}
+            </div>
+        </footer>
+    </div>
 </div>
 </body></html>`);
         win.document.close();
