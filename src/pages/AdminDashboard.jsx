@@ -205,6 +205,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const [contributions, setContributions] = useState([]);
     const [contributionsLoading, setContributionsLoading] = useState(true);
     const [showAdminUploader, setShowAdminUploader] = useState(false);
+    const [previewFile, setPreviewFile] = useState(null); // { url, type, name }
     const [selectedGeneralPage, setSelectedGeneralPage] = useState('system_settings');
     // ── Question-edit modal ──
     const [editingReport, setEditingReport] = useState(null);
@@ -1763,11 +1764,29 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 <span className={`badge ${contribution.status === 'approved' ? 'badge-approved' : 'badge-pending'}`} style={{ padding: '4px 8px', borderRadius: '6px', fontSize: '0.78rem', height: 'fit-content' }}>{contribution.status === 'approved' ? (isAr ? 'مُوافق عليها' : 'Approved') : (isAr ? 'قيد الانتظار' : 'Pending')}</span>
                                             </div>
                                             <div className="contribution-card-body" style={{ marginBottom: '16px' }}>
-                                                <p style={{ margin: '0 0 8px 0' }}>{contribution.fileType === 'link' ? (
-                                                    <a href={contribution.fileUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '0.9rem' }}>{contribution.fileUrl}</a>
+                                                {contribution.fileType === 'link' ? (
+                                                    <p style={{ margin: '0 0 8px 0' }}>
+                                                        <a href={contribution.fileUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '0.9rem' }}>{contribution.fileUrl}</a>
+                                                    </p>
                                                 ) : (
-                                                    <a href={contribution.fileUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline', fontWeight: 'bold', fontSize: '0.9rem' }}>{isAr ? '🔗 رابط الملف المرفوع' : '🔗 Uploaded file link'}</a>
-                                                )}</p>
+                                                    <div style={{ margin: '0 0 10px 0' }}>
+                                                        {/* Thumbnail preview for images */}
+                                                        {contribution.fileUrl && /(image\/|\.(png|jpg|jpeg|gif|webp|svg))/i.test(contribution.fileType || contribution.fileUrl) && (
+                                                            <img
+                                                                src={contribution.fileUrl}
+                                                                alt={contribution.fileName || 'preview'}
+                                                                style={{ width: '100%', maxHeight: '140px', objectFit: 'cover', borderRadius: '8px', cursor: 'pointer', marginBottom: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
+                                                                onClick={() => setPreviewFile({ url: contribution.fileUrl, type: contribution.fileType || 'image', name: contribution.fileName })}
+                                                            />
+                                                        )}
+                                                        <button
+                                                            onClick={() => setPreviewFile({ url: contribution.fileUrl, type: contribution.fileType || '', name: contribution.fileName })}
+                                                            style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.4)', color: '#60a5fa', padding: '5px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '5px' }}
+                                                        >
+                                                            👁️ {isAr ? 'معاينة الملف' : 'Preview File'}
+                                                        </button>
+                                                    </div>
+                                                )}
                                                 <p className="contribution-date" style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)' }}>{fmtDate(contribution.createdAt)}</p>
                                             </div>
                                             <div className="contribution-card-actions" style={{ display: 'flex', gap: '8px' }}>
@@ -1790,6 +1809,69 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     ))}
                                 </div>
                             )}
+                        </div>
+                    )}
+
+                    {/* ── File Preview Modal ── */}
+                    {previewFile && (
+                        <div
+                            onClick={() => setPreviewFile(null)}
+                            style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.88)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
+                        >
+                            <div
+                                onClick={e => e.stopPropagation()}
+                                style={{ background: '#1a1a2e', borderRadius: '16px', padding: '20px', maxWidth: '90vw', maxHeight: '90vh', width: '900px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: '0 25px 80px rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)' }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <h3 style={{ margin: 0, fontSize: '1rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '80%' }}>
+                                        👁️ {previewFile.name || (isAr ? 'معاينة الملف' : 'File Preview')}
+                                    </h3>
+                                    <div style={{ display: 'flex', gap: '8px', flexShrink: 0 }}>
+                                        <a
+                                            href={previewFile.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{ background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)', color: '#60a5fa', padding: '5px 12px', borderRadius: '6px', textDecoration: 'none', fontSize: '0.82rem' }}
+                                        >
+                                            🔗 {isAr ? 'فتح في تبويب' : 'Open in tab'}
+                                        </a>
+                                        <button
+                                            onClick={() => setPreviewFile(null)}
+                                            style={{ background: 'rgba(239,68,68,0.2)', border: '1px solid rgba(239,68,68,0.4)', color: '#f87171', padding: '5px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.82rem' }}
+                                        >
+                                            ✕ {isAr ? 'إغلاق' : 'Close'}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style={{ flex: 1, overflow: 'auto', borderRadius: '10px', background: '#0a0a1a', minHeight: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    {/(image\/|\.(png|jpg|jpeg|gif|webp|svg))/i.test(previewFile.type || previewFile.url) ? (
+                                        <img
+                                            src={previewFile.url}
+                                            alt={previewFile.name || 'preview'}
+                                            style={{ maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain', borderRadius: '8px' }}
+                                        />
+                                    ) : /(pdf)/i.test(previewFile.type || previewFile.url) ? (
+                                        <iframe
+                                            src={previewFile.url}
+                                            title={previewFile.name || 'PDF Preview'}
+                                            style={{ width: '100%', height: '70vh', border: 'none', borderRadius: '8px' }}
+                                        />
+                                    ) : (
+                                        <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '40px' }}>
+                                            <div style={{ fontSize: '3rem', marginBottom: '12px' }}>📄</div>
+                                            <p style={{ marginBottom: '16px' }}>{isAr ? 'لا يمكن معاينة هذا النوع من الملفات مباشرةً' : 'This file type cannot be previewed directly'}</p>
+                                            <a
+                                                href={previewFile.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{ color: '#60a5fa', textDecoration: 'underline' }}
+                                            >
+                                                {isAr ? 'فتح الملف في تبويب جديد' : 'Open file in new tab'}
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     )}
 
