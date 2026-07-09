@@ -1244,6 +1244,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         { id: 'feedback', label: isAr ? '💬 الآراء والشكاوى' : '💬 Feedback' },
         { id: 'testimonials', label: isAr ? '⭐ التقييمات' : '⭐ Testimonials' },
         { id: 'reports', label: isAr ? '🚩 بلاغات الأسئلة' : '🚩 Reports' },
+        { id: 'contributions', label: isAr ? '📁 مساهمات الطلاب' : '📁 Student Contributions' },
         { id: 'activity', label: isAr ? '📋 سجل الطلاب' : '📋 Activity Log' },
     ];
 
@@ -1709,6 +1710,85 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                         </div>
                                     </div>
                                 ))
+                            )}
+                        </div>
+                    )}
+
+                    {/* ══════════════════════════════════════════════════════ */}
+                    {/* TAB: Student Contributions                             */}
+                    {/* ══════════════════════════════════════════════════════ */}
+                    {activeTab === 'contributions' && (
+                        <div className="admin-panel-section admin-contributions-panel">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '10px' }}>
+                                <h3 style={{ margin: 0, fontSize: '1.4rem' }}>📁 {isAr ? 'مساهمات الطلاب الواردة' : 'Incoming Student Contributions'}</h3>
+                                <button
+                                    className="admin-action-btn approve"
+                                    onClick={() => setShowAdminUploader(true)}
+                                    style={{ padding: '8px 16px', borderRadius: '8px', fontSize: '0.9rem' }}
+                                >
+                                    📤 {isAr ? 'رفع مساهمة جديدة' : 'Upload New Contribution'}
+                                </button>
+                            </div>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+                                {isAr ? 'هذه المساهمات تأتي من قسم "ساهم في إثراء محتوى مكانك" في صفحات المواد والاختبارات.' : 'These contributions come from the "Share & Enrich Makanak Content" section.'}
+                            </p>
+                            
+                            <div className="contributions-filter-row" style={{ marginBottom: '1.5rem' }}>
+                                <select className="admin-filter-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
+                                    <option value="all">{isAr ? 'كل الحالات' : 'All Statuses'}</option>
+                                    <option value="pending">{isAr ? 'قيد الانتظار' : 'Pending'}</option>
+                                    <option value="approved">{isAr ? 'مُوافق عليها' : 'Approved'}</option>
+                                </select>
+                            </div>
+
+                            {contributionsLoading ? (
+                                <div className="admin-empty-state">
+                                    <div className="empty-icon">⏳</div>
+                                    <p>{isAr ? 'جارٍ تحميل المساهمات...' : 'Loading contributions...'}</p>
+                                </div>
+                            ) : contributions.filter(c => filterStatus === 'all' ? true : c.status === filterStatus).length === 0 ? (
+                                <div className="admin-empty-state">
+                                    <div className="empty-icon">📭</div>
+                                    <p>{isAr ? 'لا توجد مساهمات بهذه الحالة حالياً' : 'No contributions for this status yet'}</p>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
+                                    {contributions.filter(c => filterStatus === 'all' ? true : c.status === filterStatus).map(contribution => (
+                                        <div key={contribution.id} className={`contribution-card ${contribution.status === 'approved' ? 'approved' : 'pending'}`} style={{ margin: 0, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '16px' }}>
+                                            <div className="contribution-card-header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                                                <div>
+                                                    <strong style={{ display: 'block', fontSize: '1rem' }}>{contribution.studentName || (isAr ? 'طالب مجهول' : 'Anonymous Student')}</strong>
+                                                    <span className="contribution-meta" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{contribution.subjectName || (isAr ? 'عام' : 'General')} · {contribution.contributionType || (isAr ? 'نوع غير محدد' : 'Unspecified')}</span>
+                                                </div>
+                                                <span className={`badge ${contribution.status === 'approved' ? 'badge-approved' : 'badge-pending'}`} style={{ padding: '4px 8px', borderRadius: '6px', fontSize: '0.78rem', height: 'fit-content' }}>{contribution.status === 'approved' ? (isAr ? 'مُوافق عليها' : 'Approved') : (isAr ? 'قيد الانتظار' : 'Pending')}</span>
+                                            </div>
+                                            <div className="contribution-card-body" style={{ marginBottom: '16px' }}>
+                                                <p style={{ margin: '0 0 8px 0' }}>{contribution.fileType === 'link' ? (
+                                                    <a href={contribution.fileUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '0.9rem' }}>{contribution.fileUrl}</a>
+                                                ) : (
+                                                    <a href={contribution.fileUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline', fontWeight: 'bold', fontSize: '0.9rem' }}>{isAr ? '🔗 رابط الملف المرفوع' : '🔗 Uploaded file link'}</a>
+                                                )}</p>
+                                                <p className="contribution-date" style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)' }}>{fmtDate(contribution.createdAt)}</p>
+                                            </div>
+                                            <div className="contribution-card-actions" style={{ display: 'flex', gap: '8px' }}>
+                                                {contribution.status !== 'approved' && (
+                                                    <button className="admin-action-btn approve" style={{ flex: 1, padding: '6px 12px', borderRadius: '6px', fontSize: '0.85rem' }} onClick={async () => {
+                                                        const result = await approveContribution(contribution.id);
+                                                        if (result.success) toast.success(isAr ? 'تمت الموافقة على المساهمة' : 'Contribution approved');
+                                                    }}>
+                                                        ✅ {isAr ? 'موافق عليها' : 'Approve'}
+                                                    </button>
+                                                )}
+                                                <button className="admin-action-btn reject" style={{ flex: 1, padding: '6px 12px', borderRadius: '6px', fontSize: '0.85rem' }} onClick={async () => {
+                                                    const result = await deleteContribution(contribution.id);
+                                                    if (result.success) toast.success(isAr ? 'تم حذف المساهمة' : 'Contribution deleted');
+                                                }}>
+                                                    🗑️ {isAr ? 'حذف' : 'Delete'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             )}
                         </div>
                     )}

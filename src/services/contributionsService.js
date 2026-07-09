@@ -16,73 +16,16 @@ export const submitContribution = async (file, subjectName = 'General', contribu
 
         console.log(`Starting Cloudinary upload for: ${file.name}`);
 
-        // 2. Upload to Cloudinary
-        // Note: prefer Cloudinary when configured, otherwise fallback to Firebase Storage
         if (onProgress) onProgress(10); // Start
 
-        let result;
-        const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME?.trim();
-        if (CLOUD_NAME && CLOUD_NAME !== 'your_cloudinary_cloud_name') {
-            try {
-                result = await uploadToCloudinary(file, {
-                    folder: 'koon-contributions',
-                    tags: ['student-contribution', contributionType, subjectName],
-                    onProgress: (progressVal) => {
-                        if (onProgress) onProgress(progressVal);
-                    }
-                });
-            } catch (cloudErr) {
-                console.warn('Cloudinary upload failed, falling back to Firebase Storage:', cloudErr);
+        // 2. Upload to Cloudinary
+        const result = await uploadToCloudinary(file, {
+            folder: 'koon-contributions',
+            tags: ['student-contribution', contributionType, subjectName],
+            onProgress: (progressVal) => {
+                if (onProgress) onProgress(progressVal);
             }
-        }
-
-        // If Cloudinary not used or failed, upload to Firebase Storage
-        if (!result) {
-            // create storage path
-            const timestamp = Date.now();
-            const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-            const path = `contributions/${timestamp}_${safeName}`;
-            const sRef = storageRef(storage, path);
-
-            // upload with resumable task
-            const uploadTask = uploadBytesResumable(sRef, file);
-
-            if (onTask) onTask(uploadTask);
-
-            result = await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed', (snapshot) => {
-                    const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                    if (onProgress) onProgress(10 + Math.round(prog * 0.8));
-                }, (err) => {
-                    console.error('Firebase Storage upload error:', err);
-
-                    // Map common Firebase Storage error codes to friendly messages
-                    const mapped = new Error('FIREBASE_STORAGE_ERROR');
-                    mapped.code = err.code || 'storage/unknown';
-                    mapped.remote = err;
-                    mapped.friendly = {
-                        ar: 'فشل رفع الملف على الخادم. تحقق من صلاحيات التخزين أو حاول لاحقاً.',
-                        en: 'File upload failed on server. Check storage permissions or try again.'
-                    };
-
-                    if (err.code === 'storage/unauthorized') {
-                        mapped.friendly = {
-                            ar: 'غير مسموح بالرفع. راجع قواعد Firebase Storage.',
-                            en: 'Upload not allowed. Review Firebase Storage rules.'
-                        };
-                    } else if (err.code === 'storage/canceled') {
-                        mapped.friendly = { ar: 'تم إلغاء الرفع.', en: 'Upload canceled.' };
-                    } else if (err.code === 'storage/quota-exceeded') {
-                        mapped.friendly = { ar: 'نفدت سعة التخزين.', en: 'Storage quota exceeded.' };
-                    }
-
-                    return reject(mapped);
-                }, async () => {
-                    const url = await getDownloadURL(uploadTask.snapshot.ref);
-                    resolve({ url, publicId: path, format: file.type, bytes: file.size });
-                });
-            });
-        }
+        });
 
         // 3. Save metadata to Firestore
         console.log(`Saving metadata to Firestore for ${file.name}...`);
