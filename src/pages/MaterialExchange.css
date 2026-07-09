@@ -1145,6 +1145,45 @@
     color: #333333;
 }
 
+/* Modal hover transparency fix & translate fix */
+.booking-modal.glass-card:hover {
+    transform: none !important;
+}
+
+[data-theme='light'] .booking-modal.glass-card:hover {
+    background: #ffffff !important;
+}
+
+[data-theme='dark'] .booking-modal.glass-card:hover {
+    background: #0a0a0a !important;
+}
+
+/* Ensure inputs inside booking-modal are fully visible and readable in both themes */
+.booking-modal .form-input {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+}
+
+.booking-modal .form-input:focus {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: var(--primary) !important;
+}
+
+/* Light Theme overrides for inputs */
+[data-theme='light'] .booking-modal .form-input {
+    background: #f8fafc !important;
+    border: 1.5px solid #cbd5e1 !important;
+    color: #1e293b !important;
+}
+
+[data-theme='light'] .booking-modal .form-input:focus {
+    background: #ffffff !important;
+    border-color: var(--primary) !important;
+}
+
+
 @media (min-width: 1200px) {
     .booking-modal {
         max-width: 1100px;
