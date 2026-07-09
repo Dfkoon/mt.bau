@@ -4626,9 +4626,7 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                         // Filter bookings where donor gender ≠ taker gender OR gender data is incomplete
                                                         const sharedBookings = [];
                                                         allDonations.forEach(donation => {
-                                                            if (!isAdminUser && donation.delegatedTo !== loggedInUser.username) {
-                                                                return;
-                                                            }
+                                                            // All coordinators and admins can see the full shared table
                                                             if (donation.materials) {
                                                                 donation.materials.forEach((m, idx) => {
                                                                     if (typeof m === 'object' && (m.status === 'reserved' || m.status === 'completed')) {

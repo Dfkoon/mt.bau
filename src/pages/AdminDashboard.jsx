@@ -980,15 +980,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }
         setOcrScanning(true);
         setOcrProgress(5);
-        const worker = createWorker({
-            logger: m => {
-                if (m.status === 'recognizing text') setOcrProgress(Math.round(m.progress * 100));
-            }
-        });
         try {
-            await worker.load();
-            await worker.loadLanguage('eng+ara');
-            await worker.initialize('eng+ara');
+            const worker = await createWorker('eng+ara', 1, {
+                logger: m => {
+                    if (m.status === 'recognizing text') setOcrProgress(Math.round(m.progress * 100));
+                }
+            });
             const { data: { text } } = await worker.recognize(file);
             await worker.terminate();
             setOcrProgress(100);
