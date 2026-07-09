@@ -76,18 +76,18 @@ export const uploadToCloudinary = (file, options = {}) => {
                     err.code = 'CLOUDINARY_UPLOAD_ERROR';
                     if (/unknown api key/i.test(remoteMsg) || /invalid api key/i.test(remoteMsg)) {
                         err.friendly = {
-                            ar: 'مفتاح Cloudinary غير صحيح أو غير معروف. تحقق من إعدادات البيئة.',
-                            en: 'Cloudinary API key is invalid or unknown. Check your environment settings.'
+                            ar: `مفتاح Cloudinary غير صحيح أو غير معروف. (القيم النشطة حالياً في المتصفح -> السحابة: "${CLOUD_NAME}"، القالب: "${UPLOAD_PRESET}"). يرجى إعادة تشغيل السيرفر وتحديث الصفحة لتحديث القيم.`,
+                            en: `Cloudinary API key is invalid or unknown (Loaded values -> Cloud Name: "${CLOUD_NAME}", Preset: "${UPLOAD_PRESET}"). Restart your dev server and refresh.`
                         };
                     } else if (/upload preset/i.test(remoteMsg) || /invalid preset/i.test(remoteMsg)) {
                         err.friendly = {
-                            ar: 'قالب التحميل غير صحيح أو غير موجود. تحقق من `VITE_CLOUDINARY_UPLOAD_PRESET`.',
-                            en: 'Upload preset is invalid or missing. Check `VITE_CLOUDINARY_UPLOAD_PRESET`.'
+                            ar: `قالب التحميل (Upload Preset) غير صحيح أو غير موجود. (القيم النشطة -> السحابة: "${CLOUD_NAME}"، القالب: "${UPLOAD_PRESET}").`,
+                            en: `Upload preset is invalid or missing (Loaded values -> Cloud Name: "${CLOUD_NAME}", Preset: "${UPLOAD_PRESET}").`
                         };
                     } else {
                         err.friendly = {
-                            ar: `فشل رفع الملف: ${remoteMsg}`,
-                            en: `File upload failed: ${remoteMsg}`
+                            ar: `فشل رفع الملف: ${remoteMsg} (السحابة: "${CLOUD_NAME}"، القالب: "${UPLOAD_PRESET}")`,
+                            en: `File upload failed: ${remoteMsg} (Cloud: "${CLOUD_NAME}", Preset: "${UPLOAD_PRESET}")`
                         };
                     }
                     err.remote = remoteMsg;
