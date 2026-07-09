@@ -1850,9 +1850,9 @@ const Quiz = () => {
                                                         fontSize: '0.95rem'
                                                     }}
                                                 />
-                                                {q.correctAnswer && showResults && (
+                                                {question.correctAnswer && showResults && (
                                                     <div style={{ color: '#495057', fontSize: '0.95rem' }}>
-                                                        <strong>{language === 'ar' ? 'الإجابة الصحيحة:' : 'Correct answer:'}</strong> {q.correctAnswer}
+                                                        <strong>{language === 'ar' ? 'الإجابة الصحيحة:' : 'Correct answer:'}</strong> {question.correctAnswer}
                                                     </div>
                                                 )}
                                             </div>
