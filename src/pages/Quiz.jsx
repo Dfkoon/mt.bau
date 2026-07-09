@@ -1093,6 +1093,9 @@ const Quiz = () => {
                                         const userAnswer = effectiveUserAnswer;
 
                                         let isCorrect = false;
+                                        let earnedMarks = 0;
+                                        let statusText = '';
+
                                         if (q.type === 'matching') {
                                             const subQuestions = q.subQuestions || [];
                                             let correctCount = 0;
@@ -1100,8 +1103,49 @@ const Quiz = () => {
                                                 if (userAnswer?.[sub.id] === sub.correctAnswer) correctCount++;
                                             });
                                             isCorrect = correctCount === subQuestions.length;
+                                            earnedMarks = (correctCount / (subQuestions.length || 1)) * (q.marks || 1.00);
+                                            statusText = isCorrect 
+                                                ? (language === 'ar' ? 'صحيح' : 'Correct') 
+                                                : correctCount > 0 
+                                                    ? (language === 'ar' ? 'صحيح جزئياً' : 'Partially correct')
+                                                    : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
+                                        } else if (q.type === 'multi_select') {
+                                            const correct = q.correctAnswers || (q.correctAnswer ? q.correctAnswer.split(',').filter(Boolean) : []);
+                                            const selected = Array.isArray(userAnswer) ? userAnswer : [];
+                                            const qMarks = q.marks || 1;
+                                            let earned = 0;
+                                            if (correct.length > 0) {
+                                                let correctHits = selected.filter(id => correct.includes(id)).length;
+                                                let wrongHits = selected.filter(id => !correct.includes(id)).length;
+                                                const perMark = qMarks / correct.length;
+                                                earned = Math.max(0, (correctHits - wrongHits) * perMark);
+                                            }
+                                            earnedMarks = earned;
+                                            isCorrect = earned === qMarks;
+                                            statusText = earned === qMarks 
+                                                ? (language === 'ar' ? 'صحيح' : 'Correct') 
+                                                : earned > 0 
+                                                    ? (language === 'ar' ? 'صحيح جزئياً' : 'Partially correct')
+                                                    : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
+                                        } else if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
+                                            if (aiGradingResults[q.id]) {
+                                                const aiRes = aiGradingResults[q.id];
+                                                earnedMarks = aiRes.earnedMarks || 0;
+                                                isCorrect = aiRes.score === 1;
+                                                statusText = aiRes.score === 1
+                                                    ? (language === 'ar' ? 'صحيح' : 'Correct')
+                                                    : aiRes.score > 0
+                                                        ? (language === 'ar' ? 'صحيح جزئياً' : 'Partially correct')
+                                                        : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
+                                            } else {
+                                                isCorrect = isCorrectAnswer(q, userAnswer);
+                                                earnedMarks = isCorrect ? (q.marks || 1.00) : 0;
+                                                statusText = isCorrect ? (language === 'ar' ? 'صحيح' : 'Correct') : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
+                                            }
                                         } else {
                                             isCorrect = isCorrectAnswer(q, userAnswer);
+                                            earnedMarks = isCorrect ? (q.marks || 1.00) : 0;
+                                            statusText = isCorrect ? (language === 'ar' ? 'صحيح' : 'Correct') : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
                                         }
 
                                         const subjectLangMode = currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both');
@@ -1111,8 +1155,8 @@ const Quiz = () => {
                                             <div key={q.id} className="moodle-question-block" id={`question-${idx + 1}`}>
                                                 <div className="moodle-q-info-box">
                                                     <div className="moodle-q-num"><strong>{language === 'ar' ? 'سؤال ' : 'Question '} {idx + 1}</strong></div>
-                                                    <div className="moodle-q-status">{isCorrect ? (language === 'ar' ? 'صحيح' : 'Correct') : (language === 'ar' ? 'غير صحيح' : 'Incorrect')}</div>
-                                                    <div className="moodle-q-mark">{language === 'ar' ? `العلامة ${isCorrect ? (q.marks || 1.00).toFixed(2) : '0.00'} من ${(q.marks || 1.00).toFixed(2)}` : `Mark ${isCorrect ? (q.marks || 1.00).toFixed(2) : '0.00'} out of ${(q.marks || 1.00).toFixed(2)}`}</div>
+                                                    <div className="moodle-q-status">{statusText}</div>
+                                                    <div className="moodle-q-mark">{language === 'ar' ? `العلامة ${earnedMarks.toFixed(2)} من ${(q.marks || 1.00).toFixed(2)}` : `Mark ${earnedMarks.toFixed(2)} out of ${(q.marks || 1.00).toFixed(2)}`}</div>
                                                     <div className="moodle-q-flag">
                                                         <span className="flag-icon">⚑</span> {language === 'ar' ? 'تعليم السؤال' : 'Flag question'}
                                                     </div>
@@ -1351,15 +1395,54 @@ const Quiz = () => {
                                                                     </div>
                                                                 );
                                                             })}
+                                                            {(q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') && (
+                                                                <div className="moodle-essay-review-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                                                                    <div style={{ padding: '0.85rem 1.2rem', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.03)' }}>
+                                                                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>
+                                                                            {language === 'ar' ? 'إجابتك المكتوبة:' : 'Your written response:'}
+                                                                        </span>
+                                                                        <div style={{ fontSize: '1rem', fontStyle: 'italic', color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>
+                                                                            {userAnswer || (language === 'ar' ? 'لم يتم كتابة إجابة' : 'No answer provided')}
+                                                                        </div>
+                                                                    </div>
+                                                                    {aiGradingResults[q.id] && (
+                                                                        <div style={{ padding: '0.85rem 1.2rem', borderRadius: '8px', border: '1px solid rgba(139,92,246,0.3)', background: 'rgba(139,92,246,0.05)', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                                                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                                                <span style={{ fontWeight: 'bold', color: '#a78bfa', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                                                                    🤖 {language === 'ar' ? 'تقييم نشمي الذكي:' : 'Nashmi AI Assessment:'}
+                                                                                </span>
+                                                                                <span style={{ fontWeight: 'bold', color: '#10b981', fontSize: '0.95rem' }}>
+                                                                                    {aiGradingResults[q.id].earnedMarks} / {(q.marks || 1).toFixed(2)} {language === 'ar' ? 'علامة' : 'marks'}
+                                                                                </span>
+                                                                            </div>
+                                                                            <p style={{ margin: 0, fontSize: '0.88rem', color: '#d1d5db', lineHeight: '1.4' }}>
+                                                                                {language === 'ar' ? aiGradingResults[q.id].feedback : aiGradingResults[q.id].feedbackEn}
+                                                                            </p>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
 
                                                     <div className="moodle-q-feedback-box">
                                                         <div className="feedback-answer-state">
-                                                            {language === 'ar' ? 'إجابتك ' : 'Your answer is '}{isCorrect ? (language === 'ar' ? 'صحيحة.' : 'correct.') : (language === 'ar' ? 'غير صحيحة.' : 'incorrect.')}
+                                                            {q.type === 'text' || q.type === 'short_answer' || q.type === 'fill' ? (
+                                                                aiGradingResults[q.id] ? (
+                                                                    aiGradingResults[q.id].score === 1
+                                                                        ? (language === 'ar' ? 'إجابتك صحيحة تماماً.' : 'Your answer is fully correct.')
+                                                                        : aiGradingResults[q.id].score > 0
+                                                                            ? (language === 'ar' ? 'إجابتك صحيحة جزئياً.' : 'Your answer is partially correct.')
+                                                                            : (language === 'ar' ? 'إجابتك غير صحيحة.' : 'Your answer is incorrect.')
+                                                                ) : (
+                                                                    language === 'ar' ? 'بانتظار تقييم نشمي...' : 'Waiting for Nashmi assessment...'
+                                                                )
+                                                            ) : (
+                                                                (language === 'ar' ? 'إجابتك ' : 'Your answer is ') + (isCorrect ? (language === 'ar' ? 'صحيحة.' : 'correct.') : (language === 'ar' ? 'غير صحيحة.' : 'incorrect.'))
+                                                            )}
                                                         </div>
                                                         <div className="feedback-correct-answer">
-                                                            {language === 'ar' ? 'الإجابة الصحيحة هي: ' : 'The correct answer is: '}
+                                                            {language === 'ar' ? 'الإجابة النموذجية هي: ' : 'The correct answer is: '}
                                                             {q.type === 'mcq' ? (() => {
                                                                 const correctOpt = q.options.find(o => o.id === q.correctAnswer);
                                                                 if (!correctOpt) return null;
@@ -1375,7 +1458,9 @@ const Quiz = () => {
                                                                 );
                                                             })() : q.type === 'matching'
                                                                 ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
-                                                                : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
+                                                                : q.type === 'text' || q.type === 'short_answer' || q.type === 'fill'
+                                                                    ? (q.correctAnswer || (language === 'ar' ? 'لا توجد إجابة نموذجية محددة' : 'No model answer defined'))
+                                                                    : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
                                                         </div>
                                                         {(q.explanation || q.explanationAr) && (
                                                             <div className="explanation" style={{ marginTop: '1rem', borderLeft: language === 'en' ? '4px solid #FFC107' : 'none', borderRight: language === 'ar' ? '4px solid #FFC107' : 'none' }}>
