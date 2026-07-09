@@ -3084,30 +3084,44 @@ Please contact us to coordinate the pickup. Thank you.`;
             return `<span class="badge pending">${isAr ? 'معلق' : 'Pending'}</span>`;
         };
 
-        const total = donations.length;
         const approved = donations.filter(d => d.status === 'approved').length;
         const reserved = donations.reduce((acc, d) => acc + (d.materials || []).filter(m => (typeof m === 'object' ? m.status : d.status) === 'reserved').length, 0);
         const completed = donations.reduce((acc, d) => acc + (d.materials || []).filter(m => (typeof m === 'object' ? m.status : d.status) === 'completed').length, 0);
 
-        const tableRows = donations.map(d => {
-            const materialLabels = (d.materials || []).map(m => {
-                if (typeof m === 'object') {
-                    return m.description ? `${m.name} (${m.description})` : m.name;
-                }
-                return m;
-            }).join(', ');
-            const materialNotes = (d.materials || []).map(m => typeof m === 'object' ? (m.description || '') : '').filter(Boolean).join(' | ') || '—';
-            return `
-            <tr>
-                <td style="font-weight:600;">${d.studentName || ''}</td>
-                <td dir="ltr" class="phone-cell">${d.phoneNumber || ''}</td>
-                <td dir="ltr">${d.email || '—'}</td>
-                <td>${d.studentGender === 'male' ? (isAr ? 'ذكر' : 'Male') : (isAr ? 'أنثى' : 'Female')}</td>
-                <td style="font-weight:600; color:#1b2a3c;">${materialLabels || '—'}</td>
-                <td style="color:#5c6b7a; font-size:12px;">${materialNotes}</td>
-                <td>${getStatusHTML(d.status)}</td>
-            </tr>`;
-        }).join('');
+        const getCoordinatorLabel = (d) => {
+            const delegate = d.delegatedTo || (d.studentGender === 'male' ? 'ahmad' : 'sara');
+            if (delegate === 'ahmad') return `\u2642\uFE0F ${systemSettings.ahmadNameAr || '\u0623\u062D\u0645\u062F'}`;
+            if (delegate === 'sara') return `\u2640\uFE0F ${systemSettings.saraNameAr || '\u0633\u0627\u0631\u0629'}`;
+            return '\u2014';
+        };
+
+        const matRows = [];
+        donations.forEach(d => {
+            const mats = Array.isArray(d.materials) && d.materials.length > 0 ? d.materials : [null];
+            mats.forEach(m => {
+                const matName  = m ? (typeof m === 'object' ? (m.name || '\u2014') : String(m)) : '\u2014';
+                const matDesc  = m && typeof m === 'object' ? (m.description || '\u2014') : '\u2014';
+                const matSt    = m && typeof m === 'object' ? (m.status || d.status) : d.status;
+                const classLabel = matSt === 'completed'
+                    ? (isAr ? '\u0645\u0633\u0644\u0651\u0645\u0629' : 'Delivered')
+                    : matSt === 'reserved'
+                        ? (isAr ? '\u0645\u062D\u062C\u0648\u0632\u0629' : 'Reserved')
+                        : (isAr ? '\u0645\u062A\u0628\u0631\u0651\u0639 \u0628\u0647\u0627' : 'Available');
+                const coord = getCoordinatorLabel(d);
+                matRows.push(`
+                <tr>
+                    <td style="font-weight:600;">${d.studentName || ''}</td>
+                    <td dir="ltr" class="phone-cell">${d.phoneNumber || ''}</td>
+                    <td style="font-weight:600; color:#1b2a3c;">${matName}</td>
+                    <td style="color:#5c6b7a; font-size:12.5px;">${matDesc}</td>
+                    <td>${classLabel}</td>
+                    <td style="font-weight:600;">${coord}</td>
+                    <td>${getStatusHTML(matSt)}</td>
+                </tr>`);
+            });
+        });
+        const tableRows = matRows.join('');
+        const total = matRows.length;
 
         const title = isAr ? 'جدول تبرعات المواد الدراسية' : 'Material Donations Table';
         const dateStr = new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US');
@@ -3220,10 +3234,10 @@ Please contact us to coordinate the pickup. Thank you.`;
                 <tr>
                     <th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
                     <th>${isAr ? 'الهاتف' : 'Phone'}</th>
-                    <th>${isAr ? 'البريد' : 'Email'}</th>
-                    <th>${isAr ? 'الجنس' : 'Gender'}</th>
-                    <th>${isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</th>
+                    <th>${isAr ? 'اسم المادة' : 'Material Name'}</th>
                     <th>${isAr ? 'الملاحظات' : 'Notes'}</th>
+                    <th>${isAr ? 'التصنيف' : 'Classification'}</th>
+                    <th>${isAr ? 'المنسق المعني' : 'Coordinator'}</th>
                     <th>${isAr ? 'الحالة' : 'Status'}</th>
                 </tr>
             </thead>
