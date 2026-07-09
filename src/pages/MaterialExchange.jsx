@@ -178,8 +178,20 @@ const MaterialExchange = () => {
     // ── ADMIN / COORDINATOR FILTERS ──────────────────────────────
     const [adminSubFilter, setAdminSubFilter] = useState('all'); // 'all' | 'ahmad' | 'sara'
     const [coordinatorSubTab, setCoordinatorSubTab] = useState('delegated'); // 'main' | 'delegated'
-    const [staffSubTab, setStaffSubTab] = useState('donations'); // 'donations' | 'bookings'
+    const [staffSubTab, setStaffSubTab] = useState('donations'); // 'donations' | 'bookings' | 'schedule'
     const [staffSearchQuery, setStaffSearchQuery] = useState('');
+
+    // ── DELIVERY SCHEDULE STATE ───────────────────────────────────
+    const [deliverySchedules, setDeliverySchedules] = useState([]);
+    const [deliveryScheduleLoading, setDeliveryScheduleLoading] = useState(false);
+    const [showAddScheduleForm, setShowAddScheduleForm] = useState(false);
+    const [scheduleSearchQuery, setScheduleSearchQuery] = useState('');
+    const [scheduleFormData, setScheduleFormData] = useState({
+        donorName: '', donorPhone: '', materialName: '',
+        pickupDate: '', pickupTime: '',
+        assignedCoordinator: '', reminderMessage: '', notes: ''
+    });
+    const [scheduleFormLoading, setScheduleFormLoading] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [selectedDonationForEdit, setSelectedDonationForEdit] = useState(null);
     const [editCoordinatorNotes, setEditCoordinatorNotes] = useState('');
@@ -558,6 +570,7 @@ const MaterialExchange = () => {
     useEffect(() => {
         if (loggedInUser) {
             fetchAllDonations();
+            fetchDeliverySchedules();
             if (isAdminUser) fetchAuditLogs();
         }
     }, [loggedInUser, isAdminUser]);
@@ -978,6 +991,95 @@ const MaterialExchange = () => {
         } finally {
             setDashboardLoading(false);
         }
+    };
+
+    // ── DELIVERY SCHEDULE FUNCTIONS ───────────────────────────────
+    const fetchDeliverySchedules = async () => {
+        setDeliveryScheduleLoading(true);
+        try {
+            const q = query(collection(db, 'deliverySchedules'), orderBy('createdAt', 'desc'));
+            const snapshot = await getDocs(q);
+            setDeliverySchedules(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+        } catch (error) {
+            console.error('Error fetching delivery schedules:', error);
+        } finally {
+            setDeliveryScheduleLoading(false);
+        }
+    };
+
+    const handleAddDeliverySchedule = async () => {
+        const { donorName, materialName, pickupDate, assignedCoordinator } = scheduleFormData;
+        if (!donorName.trim() || !materialName.trim() || !pickupDate || !assignedCoordinator) {
+            toast.error(isAr ? '⚠️ يرجى ملء الحقول المطلوبة (الاسم، المادة، التاريخ، المنسق)' : '⚠️ Please fill required fields');
+            return;
+        }
+        setScheduleFormLoading(true);
+        try {
+            await addDoc(collection(db, 'deliverySchedules'), {
+                donorName: scheduleFormData.donorName.trim(),
+                donorPhone: scheduleFormData.donorPhone.trim(),
+                materialName: scheduleFormData.materialName.trim(),
+                pickupDate: scheduleFormData.pickupDate,
+                pickupTime: scheduleFormData.pickupTime,
+                assignedCoordinator: scheduleFormData.assignedCoordinator,
+                reminderMessage: scheduleFormData.reminderMessage.trim(),
+                notes: scheduleFormData.notes.trim(),
+                status: 'pending_contact',
+                createdBy: loggedInUser?.username || 'unknown',
+                createdAt: serverTimestamp()
+            });
+            toast.success(isAr ? '✅ تم إضافة موعد التسليم' : '✅ Delivery schedule added');
+            setScheduleFormData({ donorName: '', donorPhone: '', materialName: '', pickupDate: '', pickupTime: '', assignedCoordinator: '', reminderMessage: '', notes: '' });
+            setShowAddScheduleForm(false);
+            await fetchDeliverySchedules();
+        } catch (error) {
+            console.error('Error adding schedule:', error);
+            toast.error(isAr ? '❌ حدث خطأ أثناء الإضافة' : '❌ Error adding schedule');
+        } finally {
+            setScheduleFormLoading(false);
+        }
+    };
+
+    const handleUpdateScheduleStatus = async (scheduleId, newStatus) => {
+        try {
+            await updateDoc(doc(db, 'deliverySchedules', scheduleId), { status: newStatus, updatedAt: serverTimestamp(), updatedBy: loggedInUser?.username || 'unknown' });
+            setDeliverySchedules(prev => prev.map(s => s.id === scheduleId ? { ...s, status: newStatus } : s));
+            const labels = { pending_contact: isAr ? 'قيد الانتظار' : 'Pending', contacted: isAr ? 'تم التواصل' : 'Contacted', scheduled: isAr ? 'مؤكد' : 'Scheduled', completed: isAr ? 'مُسلّم' : 'Completed' };
+            toast.success(isAr ? `✅ تم تغيير الحالة إلى: ${labels[newStatus] || newStatus}` : `✅ Status updated to: ${labels[newStatus] || newStatus}`);
+        } catch (error) {
+            console.error('Error updating schedule status:', error);
+            toast.error(isAr ? '❌ خطأ في تحديث الحالة' : '❌ Error updating status');
+        }
+    };
+
+    const handleDeleteSchedule = async (scheduleId) => {
+        const confirmMsg = isAr ? 'هل أنت متأكد من حذف هذا الموعد؟' : 'Delete this schedule entry?';
+        if (!window.confirm(confirmMsg)) return;
+        try {
+            await deleteDoc(doc(db, 'deliverySchedules', scheduleId));
+            setDeliverySchedules(prev => prev.filter(s => s.id !== scheduleId));
+            toast.success(isAr ? '✅ تم حذف الموعد' : '✅ Schedule deleted');
+        } catch (error) {
+            console.error('Error deleting schedule:', error);
+            toast.error(isAr ? '❌ خطأ في الحذف' : '❌ Error deleting');
+        }
+    };
+
+    const generateScheduleWhatsAppLink = (schedule) => {
+        const phone = String(schedule.donorPhone || '').replace(/\D/g, '');
+        if (!phone) return '#';
+        const coordinator = schedule.assignedCoordinator === 'ahmad'
+            ? (isAr ? (systemSettings.ahmadNameAr || 'أحمد') : (systemSettings.ahmadNameEn || 'Ahmad'))
+            : (isAr ? (systemSettings.saraNameAr || 'سارة') : (systemSettings.saraNameEn || 'Sara'));
+        const dateStr = schedule.pickupDate
+            ? new Date(schedule.pickupDate + (schedule.pickupTime ? `T${schedule.pickupTime}` : '')).toLocaleString(isAr ? 'ar-JO' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: schedule.pickupTime ? '2-digit' : undefined, minute: schedule.pickupTime ? '2-digit' : undefined })
+            : '';
+        let msg = schedule.reminderMessage && schedule.reminderMessage.trim()
+            ? schedule.reminderMessage.trim()
+            : (isAr
+                ? `السلام عليكم ${schedule.donorName}،\n\nنُذكّرك بضرورة إحضار مادة "${schedule.materialName}" ${dateStr ? `يوم ${dateStr}` : ''} وتسليمها للمنسق ${coordinator}.\n\nشكراً لتعاونك — فريق حملة تبادل المواد 📚`
+                : `Hello ${schedule.donorName},\n\nThis is a reminder to bring "${schedule.materialName}" ${dateStr ? `on ${dateStr}` : ''} and hand it over to coordinator ${coordinator}.\n\nThank you — Material Exchange Team 📚`);
+        return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     };
 
     const handleInputChange = (e) => {
@@ -3486,6 +3588,12 @@ td{color:#2f3d4f;}
                                     >
                                         🤝 {isAr ? 'المواد التي تم تسليمها' : 'Delivered Materials'}
                                     </button>
+                                    <button
+                                        className={`sub-tab-btn ${staffSubTab === 'schedule' ? 'active' : ''}`}
+                                        onClick={() => { setStaffSubTab('schedule'); fetchDeliverySchedules(); }}
+                                    >
+                                        📅 {isAr ? 'جدول تسليم الحجوزات' : 'Delivery Schedule'}
+                                    </button>
                                 </div>
 
                                 {/* ─── Sub-Filters ─── */}
@@ -4438,7 +4546,369 @@ td{color:#2f3d4f;}
                             </div>
                         )}
 
+                        {/* DELIVERY SCHEDULE TAB */}
+                        {activeTab === 'donations' && staffSubTab === 'schedule' && (
+                            <div className="formal-table-wrapper">
+
+                                {/* ─── Header ─── */}
+                                <div className="formal-table-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                                    <div>
+                                        <span className="formal-table-title">
+                                            📅 {isAr ? 'جدول تسليم الحجوزات' : 'Delivery Schedule'}
+                                        </span>
+                                        <span className="formal-table-count" style={{ marginRight: isAr ? '0' : '8px', marginLeft: isAr ? '8px' : '0' }}>
+                                            {(() => {
+                                                const filtered = deliverySchedules.filter(s =>
+                                                    !scheduleSearchQuery || s.donorName?.includes(scheduleSearchQuery) || s.materialName?.includes(scheduleSearchQuery) || s.donorPhone?.includes(scheduleSearchQuery)
+                                                );
+                                                return isAr ? `${filtered.length} سجل` : `${filtered.length} record(s)`;
+                                            })()}
+                                        </span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                        <input
+                                            type="text"
+                                            placeholder={isAr ? '🔍 بحث...' : '🔍 Search...'}
+                                            value={scheduleSearchQuery}
+                                            onChange={e => setScheduleSearchQuery(e.target.value)}
+                                            style={{ padding: '6px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.08)', color: 'inherit', fontSize: '0.9rem', outline: 'none', minWidth: '180px' }}
+                                        />
+                                        <button
+                                            className="action-btn approve-btn"
+                                            onClick={() => setShowAddScheduleForm(prev => !prev)}
+                                            style={{ padding: '6px 14px', fontWeight: 'bold' }}
+                                        >
+                                            {showAddScheduleForm ? (isAr ? '❌ إلغاء' : '❌ Cancel') : (isAr ? '➕ إضافة موعد' : '➕ Add Schedule')}
+                                        </button>
+                                        <button
+                                            className="dashboard-refresh-btn"
+                                            onClick={fetchDeliverySchedules}
+                                            title={isAr ? 'تحديث' : 'Refresh'}
+                                            disabled={deliveryScheduleLoading}
+                                        >
+                                            {deliveryScheduleLoading ? '⏳' : '🔄'}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* ─── Add Form ─── */}
+                                {showAddScheduleForm && (
+                                    <div style={{
+                                        background: 'rgba(52,152,219,0.08)',
+                                        border: '1.5px solid rgba(52,152,219,0.25)',
+                                        borderRadius: '12px',
+                                        padding: '20px',
+                                        marginBottom: '20px',
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                                        gap: '14px'
+                                    }}>
+                                        <div style={{ gridColumn: '1 / -1' }}>
+                                            <h4 style={{ margin: '0 0 12px', fontSize: '1rem', opacity: 0.9 }}>
+                                                📋 {isAr ? 'إضافة موعد تسليم جديد' : 'New Delivery Appointment'}
+                                                <span style={{ fontSize: '0.78rem', opacity: 0.6, marginRight: isAr ? '8px' : '0', marginLeft: isAr ? '0' : '8px' }}>
+                                                    {isAr ? '(* مطلوب)' : '(* required)'}
+                                                </span>
+                                            </h4>
+                                        </div>
+
+                                        {/* Donor Name */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? '* اسم المتبرع' : '* Donor Name'}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={scheduleFormData.donorName}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, donorName: e.target.value }))}
+                                                placeholder={isAr ? 'محمد علي...' : 'John Doe...'}
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
+
+                                        {/* Donor Phone */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? 'رقم الهاتف' : 'Phone Number'}
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                dir="ltr"
+                                                value={scheduleFormData.donorPhone}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, donorPhone: e.target.value }))}
+                                                placeholder="07xx-xxx-xxxx"
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
+
+                                        {/* Material Name */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? '* اسم المادة' : '* Material Name'}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={scheduleFormData.materialName}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, materialName: e.target.value }))}
+                                                placeholder={isAr ? 'كيمياء عضوية...' : 'Organic Chemistry...'}
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
+
+                                        {/* Pickup Date */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? '* تاريخ الإحضار' : '* Pickup Date'}
+                                            </label>
+                                            <input
+                                                type="date"
+                                                value={scheduleFormData.pickupDate}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, pickupDate: e.target.value }))}
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
+
+                                        {/* Pickup Time */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? 'وقت الإحضار (اختياري)' : 'Pickup Time (optional)'}
+                                            </label>
+                                            <input
+                                                type="time"
+                                                value={scheduleFormData.pickupTime}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, pickupTime: e.target.value }))}
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
+
+                                        {/* Assigned Coordinator */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? '* المنسق المعني' : '* Assigned Coordinator'}
+                                            </label>
+                                            <select
+                                                value={scheduleFormData.assignedCoordinator}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, assignedCoordinator: e.target.value }))}
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(30,30,50,0.9)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                            >
+                                                <option value="">{isAr ? '— اختر المنسق —' : '— Select Coordinator —'}</option>
+                                                <option value="ahmad">♂️ {systemSettings.ahmadNameAr || 'أحمد'} ({systemSettings.ahmadNameEn || 'Ahmad'})</option>
+                                                <option value="sara">♀️ {systemSettings.saraNameAr || 'سارة'} ({systemSettings.saraNameEn || 'Sara'})</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Reminder Message */}
+                                        <div style={{ gridColumn: '1 / -1' }}>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? 'رسالة التذكير (واتساب) — اتركها فارغة للرسالة الافتراضية' : 'Reminder Message (WhatsApp) — leave blank for auto-generated'}
+                                            </label>
+                                            <textarea
+                                                value={scheduleFormData.reminderMessage}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, reminderMessage: e.target.value }))}
+                                                placeholder={isAr ? 'أكتب رسالة مخصصة أو اتركها فارغة...' : 'Custom message or leave blank for auto...'}
+                                                rows={3}
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box', resize: 'vertical', fontFamily: 'inherit' }}
+                                            />
+                                        </div>
+
+                                        {/* Notes */}
+                                        <div style={{ gridColumn: '1 / -1' }}>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', opacity: 0.7, marginBottom: '4px' }}>
+                                                {isAr ? 'ملاحظات داخلية' : 'Internal Notes'}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={scheduleFormData.notes}
+                                                onChange={e => setScheduleFormData(p => ({ ...p, notes: e.target.value }))}
+                                                placeholder={isAr ? 'ملاحظات للفريق...' : 'Notes for the team...'}
+                                                style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1.5px solid rgba(255,255,255,0.2)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: '0.9rem', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
+
+                                        {/* Submit */}
+                                        <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '10px', paddingTop: '4px' }}>
+                                            <button
+                                                className="action-btn delete-btn"
+                                                onClick={() => setShowAddScheduleForm(false)}
+                                                style={{ padding: '8px 20px' }}
+                                            >
+                                                {isAr ? 'إلغاء' : 'Cancel'}
+                                            </button>
+                                            <button
+                                                className="action-btn approve-btn"
+                                                onClick={handleAddDeliverySchedule}
+                                                disabled={scheduleFormLoading}
+                                                style={{ padding: '8px 20px', fontWeight: 'bold', minWidth: '120px' }}
+                                            >
+                                                {scheduleFormLoading ? '⏳...' : (isAr ? '✅ حفظ الموعد' : '✅ Save Schedule')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* ─── Table ─── */}
+                                {deliveryScheduleLoading ? (
+                                    <div className="empty-state" style={{ padding: '40px' }}>⏳ {isAr ? 'جاري التحميل...' : 'Loading...'}</div>
+                                ) : (() => {
+                                    const scheduleStatusMeta = {
+                                        pending_contact: { label: isAr ? 'لم يُتواصل بعد' : 'Not Contacted', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', icon: '⏳' },
+                                        contacted:       { label: isAr ? 'تم التواصل'    : 'Contacted',      color: '#3b82f6', bg: 'rgba(59,130,246,0.12)', icon: '📞' },
+                                        scheduled:       { label: isAr ? 'مؤكد الحضور'  : 'Confirmed',      color: '#a855f7', bg: 'rgba(168,85,247,0.12)', icon: '✔️' },
+                                        completed:       { label: isAr ? 'تم التسليم'   : 'Delivered',      color: '#22c55e', bg: 'rgba(34,197,94,0.12)',  icon: '✅' }
+                                    };
+
+                                    const filteredSchedules = deliverySchedules.filter(s => {
+                                        if (!scheduleSearchQuery) return true;
+                                        const q = scheduleSearchQuery.toLowerCase();
+                                        return (s.donorName || '').toLowerCase().includes(q) ||
+                                            (s.materialName || '').toLowerCase().includes(q) ||
+                                            (s.donorPhone || '').includes(q) ||
+                                            (s.notes || '').toLowerCase().includes(q);
+                                    });
+
+                                    if (filteredSchedules.length === 0) {
+                                        return (
+                                            <div className="empty-state">
+                                                📅 {scheduleSearchQuery
+                                                    ? (isAr ? 'لا توجد نتائج للبحث' : 'No results found')
+                                                    : (isAr ? 'لا توجد مواعيد تسليم بعد. اضغط "إضافة موعد" لإنشاء أول موعد.' : 'No delivery schedules yet. Click "Add Schedule" to get started.')}
+                                            </div>
+                                        );
+                                    }
+
+                                    return (
+                                        <div className="formal-table-scroll">
+                                            <table className="formal-table" style={{ minWidth: '960px' }}>
+                                                <thead>
+                                                    <tr>
+                                                        <th style={{ width: '40px' }}>#</th>
+                                                        <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                        <th>{isAr ? 'الهاتف' : 'Phone'}</th>
+                                                        <th>{isAr ? 'اسم المادة' : 'Material'}</th>
+                                                        <th>{isAr ? 'تاريخ الإحضار' : 'Pickup Date'}</th>
+                                                        <th>{isAr ? 'المنسق المعني' : 'Coordinator'}</th>
+                                                        <th>{isAr ? 'الحالة' : 'Status'}</th>
+                                                        <th>{isAr ? 'ملاحظات' : 'Notes'}</th>
+                                                        <th>{isAr ? 'بواسطة' : 'Added By'}</th>
+                                                        <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {filteredSchedules.map((schedule, idx) => {
+                                                        const meta = scheduleStatusMeta[schedule.status] || scheduleStatusMeta.pending_contact;
+                                                        const dateDisplay = schedule.pickupDate
+                                                            ? new Date(schedule.pickupDate + 'T00:00:00').toLocaleDateString(isAr ? 'ar-JO' : 'en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })
+                                                            : '—';
+                                                        const timeDisplay = schedule.pickupTime || '';
+                                                        const coordName = schedule.assignedCoordinator === 'ahmad'
+                                                            ? `♂️ ${systemSettings.ahmadNameAr || 'أحمد'}`
+                                                            : schedule.assignedCoordinator === 'sara'
+                                                                ? `♀️ ${systemSettings.saraNameAr || 'سارة'}`
+                                                                : schedule.assignedCoordinator || '—';
+                                                        const addedByName = schedule.createdBy === 'admin'
+                                                            ? (isAr ? '👑 الأدمن' : '👑 Admin')
+                                                            : schedule.createdBy === 'ahmad'
+                                                                ? `♂️ ${systemSettings.ahmadNameAr || 'أحمد'}`
+                                                                : schedule.createdBy === 'sara'
+                                                                    ? `♀️ ${systemSettings.saraNameAr || 'سارة'}`
+                                                                    : schedule.createdBy || '—';
+                                                        const nextStatuses = {
+                                                            pending_contact: ['contacted', 'scheduled', 'completed'],
+                                                            contacted: ['scheduled', 'completed', 'pending_contact'],
+                                                            scheduled: ['completed', 'contacted', 'pending_contact'],
+                                                            completed: ['pending_contact']
+                                                        };
+
+                                                        return (
+                                                            <tr key={schedule.id} className={`formal-row${schedule.status === 'completed' ? ' status-row-completed' : ''}`}>
+                                                                <td className="row-num">{idx + 1}</td>
+                                                                <td><strong>{schedule.donorName || '—'}</strong></td>
+                                                                <td dir="ltr" className="phone-cell">
+                                                                    {schedule.donorPhone ? (
+                                                                        <span>{schedule.donorPhone}</span>
+                                                                    ) : (
+                                                                        <span style={{ opacity: 0.4 }}>—</span>
+                                                                    )}
+                                                                </td>
+                                                                <td className="material-name-cell">
+                                                                    <strong>{schedule.materialName || '—'}</strong>
+                                                                </td>
+                                                                <td style={{ whiteSpace: 'nowrap' }}>
+                                                                    <div>{dateDisplay}</div>
+                                                                    {timeDisplay && (
+                                                                        <div style={{ fontSize: '0.8rem', opacity: 0.7, direction: 'ltr' }}>{timeDisplay}</div>
+                                                                    )}
+                                                                </td>
+                                                                <td>
+                                                                    <span className="delegated-to-badge">{coordName}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <select
+                                                                        value={schedule.status}
+                                                                        onChange={e => handleUpdateScheduleStatus(schedule.id, e.target.value)}
+                                                                        style={{
+                                                                            padding: '5px 10px',
+                                                                            borderRadius: '20px',
+                                                                            border: `1.5px solid ${meta.color}`,
+                                                                            background: meta.bg,
+                                                                            color: meta.color,
+                                                                            fontWeight: 'bold',
+                                                                            fontSize: '0.82rem',
+                                                                            cursor: 'pointer',
+                                                                            outline: 'none',
+                                                                            minWidth: '130px'
+                                                                        }}
+                                                                    >
+                                                                        <option value="pending_contact">{scheduleStatusMeta.pending_contact.icon} {scheduleStatusMeta.pending_contact.label}</option>
+                                                                        <option value="contacted">{scheduleStatusMeta.contacted.icon} {scheduleStatusMeta.contacted.label}</option>
+                                                                        <option value="scheduled">{scheduleStatusMeta.scheduled.icon} {scheduleStatusMeta.scheduled.label}</option>
+                                                                        <option value="completed">{scheduleStatusMeta.completed.icon} {scheduleStatusMeta.completed.label}</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <span style={{ fontSize: '0.85rem', opacity: 0.8 }}>
+                                                                        {schedule.notes || <span style={{ opacity: 0.35 }}>—</span>}
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span style={{ fontSize: '0.82rem', opacity: 0.75 }}>{addedByName}</span>
+                                                                </td>
+                                                                <td className="actions-cell">
+                                                                    {schedule.donorPhone && (
+                                                                        <a
+                                                                            href={generateScheduleWhatsAppLink(schedule)}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="action-btn message-btn"
+                                                                            title={isAr ? 'إرسال تذكير واتساب' : 'Send WhatsApp Reminder'}
+                                                                            style={{ marginInlineEnd: '4px' }}
+                                                                        >
+                                                                            💬 {isAr ? 'تذكير' : 'Remind'}
+                                                                        </a>
+                                                                    )}
+                                                                    {(isAdminUser || schedule.createdBy === loggedInUser?.username) && (
+                                                                        <button
+                                                                            className="action-btn delete-btn"
+                                                                            onClick={() => handleDeleteSchedule(schedule.id)}
+                                                                            title={isAr ? 'حذف الموعد' : 'Delete schedule'}
+                                                                        >
+                                                                            🗑️
+                                                                        </button>
+                                                                    )}
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+                        )}
+
                         {/* SETTINGS TAB (Admin only) */}
+
                         {activeTab === 'settings' && isAdminUser && (
                             <div className="settings-panel">
                                 <h3 className="settings-title">⚙️ {isAr ? 'إعدادات النظام' : 'System Settings'}</h3>
