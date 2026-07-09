@@ -3061,7 +3061,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 />
                             </div>
 
-                            {/* Code Block (Optional) */}
+{/* Code Block (Optional) */}
                             <div className="qedit-field">
                                 <label className="qedit-label">💻 {isAr ? 'كود برمجي مرافق للسؤال (اختياري)' : 'Associated Code Block (optional)'}</label>
                                 <textarea
@@ -3091,282 +3091,218 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 )}
                             </div>
 
-                            {/* ══ SubQuestions editor — shown only for matching type ══ */}
-                            {questionForm.type === 'matching' && (
-                                <div className="qedit-field" style={{ background: 'rgba(99,102,241,0.06)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(99,102,241,0.2)' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-                                        <label className="qedit-label" style={{ margin: 0 }}>
-                                            📝 {isAr ? 'الجمل الفرعية (كل جملة لها فراغ)' : 'Sub-sentences (each has a blank)'}
-                                        </label>
-                                        <button
-                                            type="button"
-                                            className="qmanage-add-btn"
-                                            style={{ padding: '0.2rem 0.6rem', fontSize: '0.75rem' }}
-                                            onClick={() => {
-                                                const newId = `sq${Date.now()}`;
-                                                setQuestionForm(prev => ({
-                                                    ...prev,
-                                                    subQuestions: [...(prev.subQuestions || []), { id: newId, textAr: '', textEn: '', correctAnswer: '' }]
-                                                }));
-                                            }}
-                                        >
-                                            + {isAr ? 'إضافة جملة' : 'Add Row'}
-                                        </button>
-                                    </div>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                                        {(questionForm.subQuestions || []).map((sub, sIdx) => (
-                                            <div key={sub.id} style={{ background: 'rgba(0,0,0,0.12)', borderRadius: '8px', padding: '0.6rem 0.8rem' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                                                    <span style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--accent-primary, #6366f1)' }}>
-                                                        {sIdx + 1}.
-                                                    </span>
-                                                    <button
-                                                        type="button"
-                                                        className="qedit-opt-delete"
-                                                        style={{ margin: 0 }}
-                                                        onClick={() => setQuestionForm(prev => ({
-                                                            ...prev,
-                                                            subQuestions: prev.subQuestions.filter((_, i) => i !== sIdx)
-                                                        }))}
-                                                    >🗑️</button>
-                                                </div>
-                                                <input
-                                                    className="qedit-opt-input"
-                                                    value={sub.textAr || ''}
-                                                    onChange={e => setQuestionForm(prev => ({
-                                                        ...prev,
-                                                        subQuestions: prev.subQuestions.map((s, i) => i === sIdx ? { ...s, textAr: e.target.value } : s)
-                                                    }))}
-                                                    placeholder={isAr ? 'نص الجملة بالعربي (اكتب ___ للفراغ)' : 'Arabic text (use ___ for blank)'}
-                                                    dir="rtl"
-                                                    style={{ marginBottom: '0.3rem' }}
-                                                />
-                                                <input
-                                                    className="qedit-opt-input"
-                                                    value={sub.textEn || ''}
-                                                    onChange={e => setQuestionForm(prev => ({
-                                                        ...prev,
-                                                        subQuestions: prev.subQuestions.map((s, i) => i === sIdx ? { ...s, textEn: e.target.value } : s)
-                                                    }))}
-                                                    placeholder="English text (use ___ for blank)"
-                                                    dir="ltr"
-                                                    style={{ marginBottom: '0.3rem' }}
-                                                />
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.78rem' }}>
-                                                    <span style={{ color: 'var(--text-secondary, #888)' }}>{isAr ? 'الإجابة الصحيحة:' : 'Correct answer:'}</span>
-                                                    <select
-                                                        className="qedit-opt-input"
-                                                        style={{ flex: 1, padding: '0.2rem 0.4rem', fontSize: '0.78rem' }}
-                                                        value={sub.correctAnswer || ''}
-                                                        onChange={e => setQuestionForm(prev => ({
-                                                            ...prev,
-                                                            subQuestions: prev.subQuestions.map((s, i) => i === sIdx ? { ...s, correctAnswer: e.target.value } : s)
-                                                        }))}
-                                                    >
-                                                        <option value="">{isAr ? '— اختر —' : '— choose —'}</option>
-                                                        {(questionForm.options || []).map(opt => (
-                                                            <option key={opt.id} value={opt.id}>
-                                                                {opt.textEn || opt.textAr || opt.id}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
                             {/* Options list */}
-                            <div className="qedit-field">
-                                <label className="qedit-label">
-                                    {questionForm.type === 'matching'
-                                        ? `🗂️ ${isAr ? 'قائمة الإجابات المشتركة (يختار الطالب منها لكل فراغ)' : 'Shared Answer Pool (student picks for each blank)'}`
-                                        : `📋 ${isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}`
-                                    }
-                                </label>
-                                <div className="qedit-options-list">
-                                    {questionForm.options.map((opt, idx) => (
-                                        <div key={opt.id || idx} className={`qedit-option ${questionForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}>
-                                            <div className="qedit-option-top">
-                                                <span className="qedit-opt-id">{(() => {
-                                                    const txt = isAr ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
-                                                    if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
-                                                    return String(idx + 1);
-                                                })()}</span>
-                                                {questionForm.type !== 'matching' && (
-                                                    <label className="qedit-correct-label">
-                                                        <input
-                                                            type="radio"
-                                                            name="quizCorrectAnswer"
-                                                            checked={questionForm.correctAnswer === opt.id}
-                                                            onChange={() => setQuestionForm(prev => ({ ...prev, correctAnswer: opt.id }))}
-                                                        />
-                                                        {isAr ? 'صحيحة ✅' : 'Correct ✅'}
-                                                    </label>
-                                                )}
-                                                <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto' }}>
-                                                    <button
-                                                        type="button"
-                                                        className="qmanage-add-btn"
-                                                        style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem' }}
-                                                        onClick={async () => {
-                                                            if (opt.textAr) {
-                                                                toast(isAr ? 'جاري الترجمة...' : 'Translating...');
-                                                                const res = await translateText(opt.textAr, 'ar2en');
-                                                                if (res) { updateQuestionOption(idx, 'textEn', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
-                                                            } else if (opt.textEn) {
-                                                                toast(isAr ? 'جاري الترجمة...' : 'Translating...');
-                                                                const res = await translateText(opt.textEn, 'en2ar');
-                                                                if (res) { updateQuestionOption(idx, 'textAr', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
-                                                            } else {
-                                                                toast.error(isAr ? 'اكتب نص الخيار أولاً' : 'Type option text first');
-                                                            }
-                                                        }}
-                                                    >
-                                                        🤖 {isAr ? 'ترجم' : 'Translate'}
-                                                    </button>
-                                                    {questionForm.type !== 'true_false' && questionForm.type !== 'matching' && (
-                                                        <button className="qedit-opt-delete" style={{ margin: 0 }} onClick={() => deleteQuestionOption(idx)}>🗑️</button>
+                            {questionForm.type !== 'short_answer' && questionForm.type !== 'text' ? (
+                                <div className="qedit-field">
+                                    <label className="qedit-label">
+                                        {questionForm.type === 'matching'
+                                            ? `🗂️ ${isAr ? 'قائمة الإجابات المشتركة (يختار الطالب منها لكل فراغ)' : 'Shared Answer Pool (student picks for each blank)'}`
+                                            : `📋 ${isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}`
+                                        }
+                                    </label>
+                                    <div className="qedit-options-list">
+                                        {questionForm.options.map((opt, idx) => (
+                                            <div key={opt.id || idx} className={`qedit-option ${questionForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}>
+                                                <div className="qedit-option-top">
+                                                    <span className="qedit-opt-id">{(() => {
+                                                        const txt = isAr ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
+                                                        if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                        return String(idx + 1);
+                                                    })()}</span>
+                                                    {questionForm.type !== 'matching' && (
+                                                        <label className="qedit-correct-label">
+                                                            <input
+                                                                type="radio"
+                                                                name="quizCorrectAnswer"
+                                                                checked={questionForm.correctAnswer === opt.id}
+                                                                onChange={() => setQuestionForm(prev => ({ ...prev, correctAnswer: opt.id }))}
+                                                            />
+                                                            {isAr ? 'صحيحة ✅' : 'Correct ✅'}
+                                                        </label>
                                                     )}
-                                                </div>
-                                            </div>
-                                            <input
-                                                className="qedit-opt-input"
-                                                value={opt.textAr || ''}
-                                                onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
-                                                onPaste={e => handlePasteInOption(e, idx)}
-                                                placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
-                                                dir="rtl"
-                                            />
-                                            <input
-                                                className="qedit-opt-input"
-                                                ref={el => { optionInputRefs.current[`${idx}-textEn`] = el; }}
-                                                value={opt.textEn || ''}
-                                                onChange={e => {
-                                                    pushOptionHistory(idx, opt.textEn || '');
-                                                    updateQuestionOption(idx, 'textEn', e.target.value);
-                                                }}
-                                                onPaste={e => handlePasteInOption(e, idx)}
-                                                onKeyDown={e => {
-                                                    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-                                                        e.preventDefault();
-                                                        undoOptionChange(idx, 'textEn');
-                                                    }
-                                                }}
-                                                placeholder="English option text"
-                                                dir="ltr"
-                                            />
-                                            {/* Live preview when HTML table is present */}
-                                            {(opt.textEn || '').includes('relation-table') && (
-                                                <div style={{ marginTop: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
-                                                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>{isAr ? '👁️ معاينة:' : '👁️ Preview:'}</span>
-                                                    <span dangerouslySetInnerHTML={{ __html: opt.textEn }} style={{ direction: 'ltr' }} />
-                                                    <button
-                                                        type="button"
-                                                        className="qedit-opt-delete"
-                                                        style={{ padding: '0.1rem 0.35rem', fontSize: '0.68rem', margin: 0, width: 'auto' }}
-                                                        onClick={() => updateQuestionOption(idx, 'textEn', '')}
-                                                    >
-                                                        🗑️ {isAr ? 'حذف الجدول' : 'Clear Table'}
-                                                    </button>
-                                                </div>
-                                            )}
-                                            {/* ── Option formatting toolbar — all question types ── */}
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
-                                                <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                                                    {/* Undo */}
-                                                    <button type="button"
-                                                        onMouseDown={e => { e.preventDefault(); undoOptionChange(idx, 'textEn'); }}
-                                                        title={isAr ? 'تراجع (Ctrl+Z)' : 'Undo (Ctrl+Z)'}
-                                                        style={{ fontSize: '0.8rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
-                                                        ↩
-                                                    </button>
-                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                    {/* Bold / Italic / Underline / Code */}
-                                                    {[['B', 'bold'], ['I', 'italic'], ['U', 'underline'], ['</>', 'code']].map(([lbl, tag]) => (
-                                                        <button key={tag} type="button"
-                                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', tag); }}
-                                                            style={{
-                                                                fontWeight: tag === 'bold' ? 'bold' : 'normal', fontStyle: tag === 'italic' ? 'italic' : 'normal',
-                                                                textDecoration: tag === 'underline' ? 'underline' : 'none', fontFamily: tag === 'code' ? 'monospace' : 'inherit',
-                                                                fontSize: '0.72rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)',
-                                                                background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit'
-                                                            }}>
-                                                            {lbl}
+                                                    <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto' }}>
+                                                        <button
+                                                            type="button"
+                                                            className="qmanage-add-btn"
+                                                            style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem' }}
+                                                            onClick={async () => {
+                                                                if (opt.textAr) {
+                                                                    toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                                                    const res = await translateText(opt.textAr, 'ar2en');
+                                                                    if (res) { updateQuestionOption(idx, 'textEn', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
+                                                                } else if (opt.textEn) {
+                                                                    toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                                                    const res = await translateText(opt.textEn, 'en2ar');
+                                                                    if (res) { updateQuestionOption(idx, 'textAr', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
+                                                                } else {
+                                                                    toast.error(isAr ? 'اكتب نص الخيار أولاً' : 'Type option text first');
+                                                                }
+                                                            }}
+                                                        >
+                                                            🤖 {isAr ? 'ترجم' : 'Translate'}
                                                         </button>
-                                                    ))}
-                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                    {/* Text colors */}
-                                                    {QUESTION_COLORS.map(c => (
-                                                        <button key={c} type="button"
-                                                            className="color-dot"
-                                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'color', c); }}
-                                                            title={`Color ${c}`}
-                                                            style={{ width: '14px', height: '14px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
-                                                    ))}
-                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                    {/* Highlight colors */}
-                                                    {HIGHLIGHT_COLORS.map(c => (
-                                                        <button key={c} type="button"
-                                                            className="color-dot"
-                                                            onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'highlight', c); }}
-                                                            title={`Highlight ${c}`}
-                                                            style={{ width: '14px', height: '14px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.25)', cursor: 'pointer', padding: 0 }} />
-                                                    ))}
-                                                    <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
-                                                    {/* Relation table */}
-                                                    <button type="button"
-                                                        onClick={() => insertFormatIntoOption(idx, 'textEn', 'table')}
-                                                        style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
-                                                        🗂️
-                                                    </button>
-                                                    {/* Image upload */}
-                                                    <button type="button"
-                                                        onClick={() => document.getElementById(`opt-file-input-${idx}`).click()}
-                                                        style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
-                                                        🖼️
-                                                    </button>
-                                                    <input type="file" id={`opt-file-input-${idx}`} accept="image/*"
-                                                        style={{ display: 'none' }} onChange={(e) => handleOptionImageChange(idx, e)} />
+                                                        {questionForm.type !== 'true_false' && questionForm.type !== 'matching' && (
+                                                            <button className="qedit-opt-delete" style={{ margin: 0 }} onClick={() => deleteQuestionOption(idx)}>🗑️</button>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                {opt.image && (
-                                                    <div className="qedit-opt-img-preview" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
-                                                        <img src={opt.image} alt="Option preview" style={{ maxHeight: '60px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                                                <input
+                                                    className="qedit-opt-input"
+                                                    value={opt.textAr || ''}
+                                                    onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
+                                                    onPaste={e => handlePasteInOption(e, idx)}
+                                                    placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
+                                                    dir="rtl"
+                                                />
+                                                <input
+                                                    className="qedit-opt-input"
+                                                    ref={el => { optionInputRefs.current[`${idx}-textEn`] = el; }}
+                                                    value={opt.textEn || ''}
+                                                    onChange={e => {
+                                                        pushOptionHistory(idx, opt.textEn || '');
+                                                        updateQuestionOption(idx, 'textEn', e.target.value);
+                                                    }}
+                                                    onPaste={e => handlePasteInOption(e, idx)}
+                                                    onKeyDown={e => {
+                                                        if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                                                            e.preventDefault();
+                                                            undoOptionChange(idx, 'textEn');
+                                                        }
+                                                    }}
+                                                    placeholder="English option text"
+                                                    dir="ltr"
+                                                />
+                                                {/* Live preview when HTML table is present */}
+                                                {(opt.textEn || '').includes('relation-table') && (
+                                                    <div style={{ marginTop: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+                                                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>{isAr ? '👁️ معاينة:' : '👁️ Preview:'}</span>
+                                                        <span dangerouslySetInnerHTML={{ __html: opt.textEn }} style={{ direction: 'ltr' }} />
                                                         <button
                                                             type="button"
                                                             className="qedit-opt-delete"
-                                                            style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem', margin: 0, width: 'auto' }}
-                                                            onClick={() => updateQuestionOption(idx, 'image', '')}
+                                                            style={{ padding: '0.1rem 0.35rem', fontSize: '0.68rem', margin: 0, width: 'auto' }}
+                                                            onClick={() => updateQuestionOption(idx, 'textEn', '')}
                                                         >
-                                                            🗑️ {isAr ? 'إزالة الصورة' : 'Remove Image'}
+                                                            🗑️ {isAr ? 'حذف الجدول' : 'Clear Table'}
                                                         </button>
                                                     </div>
                                                 )}
+                                                {/* ── Option formatting toolbar — all question types ── */}
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
+                                                    <div className="qedit-opt-toolbar" style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                                                        {/* Undo */}
+                                                        <button type="button"
+                                                            onMouseDown={e => { e.preventDefault(); undoOptionChange(idx, 'textEn'); }}
+                                                            title={isAr ? 'تراجع (Ctrl+Z)' : 'Undo (Ctrl+Z)'}
+                                                            style={{ fontSize: '0.8rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
+                                                            ↩
+                                                        </button>
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                        {/* Bold / Italic / Underline / Code */}
+                                                        {[['B', 'bold'], ['I', 'italic'], ['U', 'underline'], ['</>', 'code']].map(([lbl, tag]) => (
+                                                            <button key={tag} type="button"
+                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', tag); }}
+                                                                style={{
+                                                                    fontWeight: tag === 'bold' ? 'bold' : 'normal', fontStyle: tag === 'italic' ? 'italic' : 'normal',
+                                                                    textDecoration: tag === 'underline' ? 'underline' : 'none', fontFamily: tag === 'code' ? 'monospace' : 'inherit',
+                                                                    fontSize: '0.72rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)',
+                                                                    background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit'
+                                                                }}>
+                                                                {lbl}
+                                                            </button>
+                                                        ))}
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                        {/* Text colors */}
+                                                        {QUESTION_COLORS.map(c => (
+                                                            <button key={c} type="button"
+                                                                className="color-dot"
+                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'color', c); }}
+                                                                title={`Color ${c}`}
+                                                                style={{ width: '14px', height: '14px', borderRadius: '50%', background: c, border: '2px solid rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0 }} />
+                                                        ))}
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                        {/* Highlight colors */}
+                                                        {HIGHLIGHT_COLORS.map(c => (
+                                                            <button key={c} type="button"
+                                                                className="color-dot"
+                                                                onMouseDown={e => { e.preventDefault(); insertFormatIntoOption(idx, 'textEn', 'highlight', c); }}
+                                                                title={`Highlight ${c}`}
+                                                                style={{ width: '14px', height: '14px', borderRadius: '3px', background: c, border: '2px solid rgba(0,0,0,0.25)', cursor: 'pointer', padding: 0 }} />
+                                                        ))}
+                                                        <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
+                                                        {/* Relation table */}
+                                                        <button type="button"
+                                                            onClick={() => insertFormatIntoOption(idx, 'textEn', 'table')}
+                                                            style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
+                                                            🗂️
+                                                        </button>
+                                                        {/* Image upload */}
+                                                        <button type="button"
+                                                            onClick={() => document.getElementById(`opt-file-input-${idx}`).click()}
+                                                            style={{ fontSize: '0.68rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer' }}>
+                                                            🖼️
+                                                        </button>
+                                                        <input type="file" id={`opt-file-input-${idx}`} accept="image/*"
+                                                            style={{ display: 'none' }} onChange={(e) => handleOptionImageChange(idx, e)} />
+                                                    </div>
+                                                    {opt.image && (
+                                                        <div className="qedit-opt-img-preview" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
+                                                            <img src={opt.image} alt="Option preview" style={{ maxHeight: '60px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                                                            <button
+                                                                type="button"
+                                                                className="qedit-opt-delete"
+                                                                style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem', margin: 0, width: 'auto' }}
+                                                                onClick={() => updateQuestionOption(idx, 'image', '')}
+                                                            >
+                                                                🗑️ {isAr ? 'إزالة الصورة' : 'Remove Image'}
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {/* Delete button for matching pool items */}
+                                                {questionForm.type === 'matching' && (
+                                                    <button
+                                                        type="button"
+                                                        className="qedit-opt-delete"
+                                                        style={{ margin: '0.2rem 0 0', alignSelf: 'flex-end' }}
+                                                        onClick={() => deleteQuestionOption(idx)}
+                                                    >
+                                                        🗑️ {isAr ? 'حذف' : 'Remove'}
+                                                    </button>
+                                                )}
                                             </div>
-                                            {/* Delete button for matching pool items */}
-                                            {questionForm.type === 'matching' && (
-                                                <button
-                                                    type="button"
-                                                    className="qedit-opt-delete"
-                                                    style={{ margin: '0.2rem 0 0', alignSelf: 'flex-end' }}
-                                                    onClick={() => deleteQuestionOption(idx)}
-                                                >
-                                                    🗑️ {isAr ? 'حذف' : 'Remove'}
-                                                </button>
-                                            )}
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
+                                    {questionForm.type !== 'true_false' && (
+                                        <button className="qedit-add-option" onClick={addQuestionOption}>
+                                            + {isAr
+                                                ? (questionForm.type === 'matching' ? 'إضافة للقائمة' : 'إضافة خيار')
+                                                : (questionForm.type === 'matching' ? 'Add to Pool' : 'Add Option')
+                                            }
+                                        </button>
+                                    )}
                                 </div>
-                                {questionForm.type !== 'true_false' && (
-                                    <button className="qedit-add-option" onClick={addQuestionOption}>
-                                        + {isAr
-                                            ? (questionForm.type === 'matching' ? 'إضافة للقائمة' : 'إضافة خيار')
-                                            : (questionForm.type === 'matching' ? 'Add to Pool' : 'Add Option')
-                                        }
-                                    </button>
-                                )}
-                            </div>
+                            ) : questionForm.type === 'short_answer' ? (
+                                <div className="qedit-field" style={{ background: 'rgba(16,185,129,0.06)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(16,185,129,0.2)' }}>
+                                    <label className="qedit-label">🔑 {isAr ? 'الإجابة الصحيحة المقبولة' : 'Correct Accepted Answer'}</label>
+                                    <input
+                                        className="qedit-opt-input"
+                                        value={questionForm.correctAnswer || ''}
+                                        onChange={e => setQuestionForm(prev => ({ ...prev, correctAnswer: e.target.value }))}
+                                        placeholder={isAr ? 'اكتب الإجابة المطلوبة هنا (مثال: عمان)' : 'Type accepted answer (e.g. Amman)'}
+                                        style={{ border: '1px solid rgba(16,185,129,0.3)', background: 'rgba(0,0,0,0.15)' }}
+                                    />
+                                    <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '0.4rem 0 0' }}>
+                                        ⚠️ {isAr ? 'ملاحظة: يمكنك فصل الإجابات البديلة المقبولة بفاصلة عربية أو إنجليزية (مثال: عمان، عمان، عَمّان).' : 'Note: Separate alternative accepted spellings with commas.'}
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="qedit-field" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
+                                        📝 {isAr ? 'هذا سؤال مقالي (Essay). لا يتطلب إعداد إجابة صحيحة مسبقة حيث يكتب الطالب فقرة حرة بيده ويتم تقييمها يدوياً.' : 'This is an Essay/Text question. No predefined correct answer is required, students type free text.'}
+                                    </p>
+                                </div>
+                            )}
 
                             {/* Image device upload zone */}
                             <div className="qedit-field">
