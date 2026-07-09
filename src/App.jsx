@@ -122,7 +122,7 @@ function App() {
 
   React.useEffect(() => {
     if (!feedbackPopupLoaded || !feedbackPopupEnabled) return;
-    const hasSeenPopup = sessionStorage.getItem('hasSeenFeedbackPopup');
+    const hasSeenPopup = localStorage.getItem('koon_rated_v1');
     if (hasSeenPopup) return;
 
     const timer = window.setTimeout(() => {
@@ -134,7 +134,7 @@ function App() {
 
   const handleClosePopup = () => {
     setShowFeedbackPopup(false);
-    sessionStorage.setItem('hasSeenFeedbackPopup', 'true');
+    localStorage.setItem('koon_rated_v1', 'true');
   };
 
   return (

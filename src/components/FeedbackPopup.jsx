@@ -49,6 +49,8 @@ const FeedbackPopup = ({ isOpen, onClose }) => {
                 timestamp: serverTimestamp(),
             });
 
+            // Mark permanently so popup never shows again for this device/user
+            localStorage.setItem('koon_rated_v1', 'true');
             onClose();
         } catch (err) {
             console.error('Feedback submit error:', err);
@@ -57,6 +59,13 @@ const FeedbackPopup = ({ isOpen, onClose }) => {
             setIsLoading(false);
         }
     };
+
+    const handleSkip = () => {
+        // Permanently dismiss - will never show again
+        localStorage.setItem('koon_rated_v1', 'true');
+        onClose();
+    };
+
 
     return (
         <AnimatePresence>
@@ -112,6 +121,26 @@ const FeedbackPopup = ({ isOpen, onClose }) => {
 
                             <button type="submit" className="feedback-submit-btn" disabled={isLoading}>
                                 {isLoading ? t('feedbackPopup.submitting') : t('feedbackPopup.submitBtn')}
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleSkip}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    color: 'rgba(100,100,120,0.7)',
+                                    fontSize: '12px',
+                                    cursor: 'pointer',
+                                    marginTop: '8px',
+                                    textDecoration: 'underline',
+                                    display: 'block',
+                                    width: '100%',
+                                    textAlign: 'center',
+                                    padding: '4px'
+                                }}
+                            >
+                                {t ? (t('feedbackPopup.skip') || 'لن أقيّم') : 'لن أقيّم'}
                             </button>
                         </form>
                     </motion.div>
