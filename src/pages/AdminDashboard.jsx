@@ -247,6 +247,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const ocrInputRef = useRef(null);
     const [ocrScanning, setOcrScanning] = useState(false);
     const [ocrProgress, setOcrProgress] = useState(0);
+    // Persist last-used marks value so new questions inherit it instead of defaulting to 1
+    const lastMarksRef = useRef(1.0);
 
     // ── Per-option undo history (Ctrl+Z) ──
     const optionHistories = useRef({}); // { idx: ['val0','val1',...] }
@@ -748,7 +750,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 options: initialOptions,
                 subQuestions: [],
                 correctAnswer: initialOptions[0].id,
-                marks: 1.0,
+                marks: lastMarksRef.current,
                 image: '',
                 image2: '',
                 codeBlock: '',
@@ -892,6 +894,50 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             el.selectionStart = caret;
             el.selectionEnd = caret;
         }, 0);
+    };
+
+    const handlePasteInTextarea = async (e, field) => {
+        const clipboardItems = e.clipboardData?.items;
+        if (!clipboardItems) return;
+
+        for (const item of clipboardItems) {
+            if (item.type.startsWith('image/')) {
+                e.preventDefault();
+                const file = item.getAsFile();
+                if (!file) continue;
+
+                toast(isAr ? 'جاري رفع الصورة الملصقة...' : 'Uploading pasted image...');
+                try {
+                    const fd = new FormData();
+                    fd.append('file', file);
+                    fd.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'zkqqznab');
+                    fd.append('folder', 'quiz_images');
+
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'yp11vyap'}/image/upload`, {
+                        method: 'POST',
+                        body: fd
+                    });
+                    const data = await res.json();
+
+                    if (data.secure_url) {
+                        setQuestionForm(prev => {
+                            if (!prev.image) {
+                                return { ...prev, image: data.secure_url };
+                            } else {
+                                return { ...prev, image2: data.secure_url };
+                            }
+                        });
+                        toast.success(isAr ? '✅ تم رفع ولصق الصورة بنجاح!' : '✅ Image uploaded and pasted!');
+                    } else {
+                        toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    toast.error(isAr ? 'حدث خطأ أثناء رفع الصورة' : 'Error uploading image');
+                }
+                break;
+            }
+        }
     };
 
     const renderCodeBlock = (code) => {
@@ -2704,7 +2750,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                         type="number"
                                         step="0.5"
                                         value={questionForm.marks}
-                                        onChange={e => setQuestionForm(prev => ({ ...prev, marks: e.target.value }))}
+                                        onChange={e => {
+                                            const v = e.target.value;
+                                            lastMarksRef.current = v;
+                                            setQuestionForm(prev => ({ ...prev, marks: v }));
+                                        }}
                                     />
                                 </div>
                                 <div style={{ flex: 1 }}>
@@ -2746,6 +2796,68 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                             {ocrProgress}%
                                         </span>
                                     )}
+                                    {/* ── Paste image from clipboard ── */}
+                                    <button
+                                        type="button"
+                                        className="qmanage-add-btn"
+                                        style={{ padding: '0.28rem 0.6rem', fontSize: '0.75rem', background: 'rgba(139,92,246,0.15)', borderColor: 'rgba(139,92,246,0.4)', color: '#c4b5fd' }}
+                                        title={isAr ? 'الصق صورة من الحافظة (Ctrl+V)' : 'Paste image from clipboard (Ctrl+V)'}
+                                        onClick={async () => {
+                                            try {
+                                                const items = await navigator.clipboard.read();
+                                                let found = false;
+                                                for (const item of items) {
+                                                    const imageType = item.types.find(t => t.startsWith('image/'));
+                                                    if (imageType) {
+                                                        found = true;
+                                                        const blob = await item.getType(imageType);
+                                                        const file = new File([blob], `paste_${Date.now()}.png`, { type: imageType });
+                                                        const fd = new FormData();
+                                                        fd.append('file', file);
+                                                        fd.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'zkqqznab');
+                                                        fd.append('folder', 'quiz_images');
+                                                        toast(isAr ? 'جاري رفع الصورة...' : 'Uploading image...');
+                                                        const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'yp11vyap'}/image/upload`, { method: 'POST', body: fd });
+                                                        const data = await res.json();
+                                                        if (data.secure_url) {
+                                                            setQuestionForm(prev => ({ ...prev, image: data.secure_url }));
+                                                            toast.success(isAr ? '✅ تم لصق الصورة!' : '✅ Image pasted!');
+                                                        } else {
+                                                            toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                                if (!found) toast.error(isAr ? 'لا توجد صورة في الحافظة' : 'No image found in clipboard');
+                                            } catch {
+                                                toast.error(isAr ? 'تعذّر قراءة الحافظة — جرّب Ctrl+V في حقل السؤال' : 'Cannot read clipboard — try Ctrl+V in the question field');
+                                            }
+                                        }}
+                                    >
+                                        📋 {isAr ? 'لصق صورة' : 'Paste image'}
+                                    </button>
+                                    {/* ── Paste text from clipboard ── */}
+                                    <button
+                                        type="button"
+                                        className="qmanage-add-btn"
+                                        style={{ padding: '0.28rem 0.6rem', fontSize: '0.75rem', background: 'rgba(16,185,129,0.1)', borderColor: 'rgba(16,185,129,0.35)', color: '#6ee7b7' }}
+                                        title={isAr ? 'الصق نص من الحافظة في حقل السؤال' : 'Paste text from clipboard into question field'}
+                                        onClick={async () => {
+                                            try {
+                                                const text = await navigator.clipboard.readText();
+                                                if (!text) { toast.error(isAr ? 'الحافظة فارغة' : 'Clipboard is empty'); return; }
+                                                setQuestionForm(prev => ({
+                                                    ...prev,
+                                                    questionAr: prev.questionAr ? prev.questionAr + '\n' + text : text
+                                                }));
+                                                toast.success(isAr ? '✅ تم لصق النص في حقل السؤال العربي' : '✅ Text pasted into Arabic question field');
+                                            } catch {
+                                                toast.error(isAr ? 'تعذّر قراءة الحافظة' : 'Cannot read clipboard');
+                                            }
+                                        }}
+                                    >
+                                        📝 {isAr ? 'لصق نص' : 'Paste text'}
+                                    </button>
                                 </div>
                                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
                                     {isAr ? 'ارفع صورة للسؤال أو الخيارات وسيتم استخراج النص وإدخاله تلقائيًا في الحقول.' : 'Upload a photo of the question or options and the text will be filled in automatically.'}
@@ -2817,6 +2929,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     className="qedit-textarea"
                                     value={questionForm.questionAr}
                                     onChange={e => setQuestionForm(prev => ({ ...prev, questionAr: e.target.value }))}
+                                    onPaste={e => handlePasteInTextarea(e, 'questionAr')}
                                     dir="rtl"
                                     rows={3}
                                     placeholder="اكتب السؤال هنا..."
@@ -2897,6 +3010,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     className="qedit-textarea"
                                     value={questionForm.questionEn}
                                     onChange={e => setQuestionForm(prev => ({ ...prev, questionEn: e.target.value }))}
+                                    onPaste={e => handlePasteInTextarea(e, 'questionEn')}
                                     dir="ltr"
                                     rows={3}
                                     placeholder="Type question here..."
