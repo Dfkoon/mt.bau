@@ -1650,7 +1650,7 @@ const Quiz = () => {
                                         : (language === 'ar' ? 'لم تتم الإجابة بعد' : 'Not yet answered')}
                                 </div>
                                 <div className="moodle-q-mark">
-                                    {language === 'ar' ? 'الدرجة من 1.00' : 'Marked out of 1.00'}
+                                    {language === 'ar' ? `الدرجة من ${(question.marks || 1.00).toFixed(2)}` : `Marked out of ${(question.marks || 1.00).toFixed(2)}`}
                                 </div>
 
                                 {/* Mobile Timer Badge */}
