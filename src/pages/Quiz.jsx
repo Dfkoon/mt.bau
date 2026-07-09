@@ -610,6 +610,17 @@ const Quiz = () => {
             return false;
         }
 
+        if (q.type === 'multi_select') {
+            // answer is an array of selected option IDs
+            const correct = q.correctAnswers || (q.correctAnswer ? q.correctAnswer.split(',').filter(Boolean) : []);
+            const selected = Array.isArray(answer) ? answer : [];
+            if (!selected.length || !correct.length) return false;
+            // Must match exactly
+            return correct.length === selected.length &&
+                correct.every(id => selected.includes(id)) &&
+                selected.every(id => correct.includes(id));
+        }
+
         if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
             return isTextAnswerCorrect(answer, q.correctAnswer, q.correctAnswers || q.correctAnswerVariants || []);
         }
@@ -633,6 +644,19 @@ const Quiz = () => {
                         calculatedScore += subMarks;
                     }
                 });
+            } else if (q.type === 'multi_select') {
+                // Partial credit: marks_per_correct_answer * number_correct_selected
+                const correct = q.correctAnswers || (q.correctAnswer ? q.correctAnswer.split(',').filter(Boolean) : []);
+                const selected = Array.isArray(userAnswers[q.id]) ? userAnswers[q.id] : [];
+                const qMarks = q.marks || 1;
+                if (correct.length > 0) {
+                    let correctHits = selected.filter(id => correct.includes(id)).length;
+                    let wrongHits = selected.filter(id => !correct.includes(id)).length;
+                    // Award partial marks, deduct for wrong selections (floor at 0)
+                    const perMark = qMarks / correct.length;
+                    const earned = Math.max(0, (correctHits - wrongHits) * perMark);
+                    calculatedScore += earned;
+                }
             } else if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
                 if (isCorrectAnswer(q, userAnswers[q.id])) {
                     calculatedScore += q.marks || 1;
@@ -1204,6 +1228,32 @@ const Quiz = () => {
 
                                                         {/* User Answer Display */}
                                                         <div className="moodle-q-options-display">
+                                                            {q.type === 'multi_select' && (() => {
+                                                                const correct = q.correctAnswers || (q.correctAnswer ? q.correctAnswer.split(',').filter(Boolean) : []);
+                                                                const selected = Array.isArray(userAnswer) ? userAnswer : [];
+                                                                return (q.options || []).map((o, oIdx) => {
+                                                                    const isSelected = selected.includes(o.id);
+                                                                    const isCorrectOption = correct.includes(o.id);
+                                                                    const labelClass = isSelected && isCorrectOption ? 'moodle-correct-text'
+                                                                        : isSelected && !isCorrectOption ? 'moodle-wrong-text'
+                                                                        : !isSelected && isCorrectOption ? 'moodle-correct-text'
+                                                                        : '';
+                                                                    return (
+                                                                        <div key={o.id} className="moodle-radio-display">
+                                                                            <input type="checkbox" checked={isSelected} readOnly style={{ accentColor: '#6366f1' }} />
+                                                                            <label className={labelClass}>
+                                                                                <span className="moodle-option-letter">{(() => {
+                                                                                    const txt = displayLang === 'ar' ? (o.textAr || o.textEn) : (o.textEn || o.textAr);
+                                                                                    if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                                                    return String(oIdx + 1);
+                                                                                })()}</span>{' '}
+                                                                                {renderTextWithCode(displayLang === 'ar' ? (o.textAr || o.textEn) : (o.textEn || o.textAr))}
+                                                                                {!isSelected && isCorrectOption && <span style={{ marginRight: '0.4rem', color: '#22c55e', fontSize: '0.78rem' }}> ← {displayLang === 'ar' ? 'صحيحة' : 'correct'}</span>}
+                                                                            </label>
+                                                                        </div>
+                                                                    );
+                                                                });
+                                                            })()}
                                                             {q.type === 'mcq' && q.options.map((o, oIdx) => {
                                                                 const letter = String.fromCharCode(97 + oIdx); // a, b, c, d
                                                                 const isSelected = userAnswer === o.id;
@@ -1691,7 +1741,42 @@ const Quiz = () => {
                                     )}
 
                                     <div className="moodle-q-options-display">
-                                        {((question.type === 'mcq' || question.type === 'true_false') && question.type !== 'text' && question.type !== 'short_answer' && question.type !== 'fill') ? (
+                                        {question.type === 'multi_select' ? (
+                                            // Checkbox multi-select
+                                            (question.options || []).map((opt, oIdx) => {
+                                                const selected = Array.isArray(userAnswers[question.id]) ? userAnswers[question.id] : [];
+                                                const isChecked = selected.includes(opt.id);
+                                                return (
+                                                    <div
+                                                        key={opt.id}
+                                                        className={`moodle-radio-display ${isChecked ? 'selected' : ''}`}
+                                                        onClick={() => {
+                                                            const cur = Array.isArray(userAnswers[question.id]) ? [...userAnswers[question.id]] : [];
+                                                            const updated = cur.includes(opt.id) ? cur.filter(id => id !== opt.id) : [...cur, opt.id];
+                                                            handleAnswerSelect(question.id, updated);
+                                                        }}
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
+                                                        <input type="checkbox" checked={isChecked} readOnly style={{ accentColor: '#6366f1' }} />
+                                                        <label style={{ cursor: 'pointer' }}>
+                                                            <span className="moodle-option-letter">{(() => {
+                                                                const txt = displayLang === 'ar' ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
+                                                                if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
+                                                                return String(oIdx + 1);
+                                                            })()}</span>{' '}
+                                                            <div className="moodle-option-content" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: 1 }}>
+                                                                {opt.image && (
+                                                                    <div className="moodle-option-image-wrapper" style={{ margin: '0.3rem 0' }}>
+                                                                        <img src={opt.image} alt="Option Choice" className="moodle-option-image" style={{ maxHeight: '150px', maxWidth: '100%', borderRadius: '8px' }} />
+                                                                    </div>
+                                                                )}
+                                                                {renderTextWithCode(displayLang === 'ar' ? (opt.textAr || opt.textEn) : opt.textEn)}
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                );
+                                            })
+                                        ) : ((question.type === 'mcq' || question.type === 'true_false') && question.type !== 'text' && question.type !== 'short_answer' && question.type !== 'fill') ? (
                                             (question.options && question.options.length >= 2 ? question.options : [
                                                 { id: 'a', textAr: 'صح', textEn: 'True' },
                                                 { id: 'b', textAr: 'خطأ', textEn: 'False' }

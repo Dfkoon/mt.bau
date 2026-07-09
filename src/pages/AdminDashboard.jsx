@@ -702,8 +702,20 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     ];
                 }
                 correctAnswer = '';
-            } else if (prev.type === 'true_false' || prev.type === 'matching') {
-                // Switching back to MCQ
+            } else if (newType === 'multi_select') {
+                // Multi-select: keep or init options, clear correctAnswer (will be comma-separated)
+                if (prev.type === 'true_false' || prev.type === 'matching' || !options.length) {
+                    options = [
+                        { id: 'a', textAr: '', textEn: '' },
+                        { id: 'b', textAr: '', textEn: '' },
+                        { id: 'c', textAr: '', textEn: '' },
+                        { id: 'd', textAr: '', textEn: '' }
+                    ];
+                }
+                correctAnswer = '';
+                subQuestions = [];
+            } else if (prev.type === 'true_false' || prev.type === 'matching' || prev.type === 'multi_select') {
+                // Switching back to MCQ/short_answer/text
                 options = [
                     { id: 'a', textAr: '', textEn: '' },
                     { id: 'b', textAr: '', textEn: '' },
@@ -1173,7 +1185,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 toast.error(isAr ? 'يجب إدخال جملة فرعية واحدة على الأقل' : 'Please add at least 1 sub-question');
                 return;
             }
-        } else if (!questionForm.correctAnswer) {
+        } else if (questionForm.type === 'multi_select') {
+            const selectedCorrect = (questionForm.correctAnswer || '').split(',').filter(Boolean);
+            if (selectedCorrect.length < 2) {
+                toast.error(isAr ? 'يرجى تحديد إجابتين صحيحتين على الأقل' : 'Please select at least 2 correct answers');
+                return;
+            }
+        } else if (!questionForm.correctAnswer && questionForm.type !== 'text') {
             toast.error(isAr ? 'يرجى اختيار الإجابة الصحيحة' : 'Please select the correct answer');
             return;
         }
@@ -1198,6 +1216,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             if (questionForm.type === 'matching') {
                 docData.subQuestions = questionForm.subQuestions;
                 docData.correctAnswer = null;
+            } else if (questionForm.type === 'multi_select') {
+                // Store as array for easy lookup in Quiz.jsx
+                docData.correctAnswers = (questionForm.correctAnswer || '').split(',').filter(Boolean);
+                docData.correctAnswer = questionForm.correctAnswer; // keep string too for backwards compat
             } else {
                 docData.correctAnswer = questionForm.correctAnswer;
             }
@@ -2808,9 +2830,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                         value={questionForm.type}
                                         onChange={e => handleQuestionTypeChange(e.target.value)}
                                     >
-                                        <option value="mcq">MCQ</option>
+                                        <option value="mcq">{isAr ? 'اختيار من متعدد (MCQ)' : 'Multiple Choice (MCQ)'}</option>
+                                        <option value="multi_select">{isAr ? '☑️ اختيار متعدد الإجابات (Multi-Select)' : '☑️ Multi-Select (Multiple Correct)'}</option>
                                         <option value="true_false">{isAr ? 'صح أم خطأ (True/False)' : 'True / False'}</option>
                                         <option value="matching">{isAr ? 'تعبئة الفراغات بقائمة (Matching)' : 'Fill in the Blank (Matching)'}</option>
+                                        <option value="short_answer">{isAr ? 'إجابة قصيرة (Short Answer)' : 'Short Answer'}</option>
+                                        <option value="text">{isAr ? 'مقالي (Essay)' : 'Essay / Text'}</option>
                                     </select>
                                 </div>
                             </div>
@@ -3097,19 +3122,40 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                     <label className="qedit-label">
                                         {questionForm.type === 'matching'
                                             ? `🗂️ ${isAr ? 'قائمة الإجابات المشتركة (يختار الطالب منها لكل فراغ)' : 'Shared Answer Pool (student picks for each blank)'}`
+                                            : questionForm.type === 'multi_select'
+                                            ? `☑️ ${isAr ? 'الخيارات — ضع ✓ على كل إجابة صحيحة (يمكن أكثر من واحدة)' : 'Options — check ALL correct answers (can be multiple)'}`
                                             : `📋 ${isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}`
                                         }
                                     </label>
                                     <div className="qedit-options-list">
                                         {questionForm.options.map((opt, idx) => (
-                                            <div key={opt.id || idx} className={`qedit-option ${questionForm.correctAnswer === opt.id ? 'qedit-option--correct' : ''}`}>
+                                            <div key={opt.id || idx} className={`qedit-option ${
+                                                questionForm.type === 'multi_select'
+                                                    ? ((questionForm.correctAnswer || '').split(',').filter(Boolean).includes(opt.id) ? 'qedit-option--correct' : '')
+                                                    : (questionForm.correctAnswer === opt.id ? 'qedit-option--correct' : '')
+                                            }`}>
                                                 <div className="qedit-option-top">
                                                     <span className="qedit-opt-id">{(() => {
                                                         const txt = isAr ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr);
                                                         if (txt && txt.trim()) return txt.length > 18 ? txt.slice(0, 18) + '…' : txt;
                                                         return String(idx + 1);
                                                     })()}</span>
-                                                    {questionForm.type !== 'matching' && (
+                                                    {questionForm.type === 'multi_select' ? (
+                                                        <label className="qedit-correct-label">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={(questionForm.correctAnswer || '').split(',').filter(Boolean).includes(opt.id)}
+                                                                onChange={() => {
+                                                                    const current = (questionForm.correctAnswer || '').split(',').filter(Boolean);
+                                                                    const updated = current.includes(opt.id)
+                                                                        ? current.filter(id => id !== opt.id)
+                                                                        : [...current, opt.id];
+                                                                    setQuestionForm(prev => ({ ...prev, correctAnswer: updated.join(',') }));
+                                                                }}
+                                                            />
+                                                            {isAr ? 'صحيحة ✅' : 'Correct ✅'}
+                                                        </label>
+                                                    ) : questionForm.type !== 'matching' ? (
                                                         <label className="qedit-correct-label">
                                                             <input
                                                                 type="radio"
@@ -3119,7 +3165,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                             />
                                                             {isAr ? 'صحيحة ✅' : 'Correct ✅'}
                                                         </label>
-                                                    )}
+                                                    ) : null}
                                                     <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto' }}>
                                                         <button
                                                             type="button"
