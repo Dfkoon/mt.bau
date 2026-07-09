@@ -1110,6 +1110,50 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         e.target.value = '';
     };
 
+    const handlePasteInOption = async (e, idx) => {
+        const clipboardItems = e.clipboardData?.items;
+        if (!clipboardItems) return;
+
+        for (const item of clipboardItems) {
+            if (item.type.startsWith('image/')) {
+                e.preventDefault();
+                const file = item.getAsFile();
+                if (!file) continue;
+
+                if (file.size > 5 * 1024 * 1024) {
+                    toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+                    return;
+                }
+
+                toast(isAr ? 'جاري معالجة ولصق صورة الخيار...' : 'Processing and pasting option image...');
+                try {
+                    const compressed = await new Promise((resolve, reject) => {
+                        const img = new Image();
+                        const url = URL.createObjectURL(file);
+                        img.onload = () => {
+                            URL.revokeObjectURL(url);
+                            const MAX = 600;
+                            let w = img.width, h = img.height;
+                            if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = w; canvas.height = h;
+                            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                            resolve(canvas.toDataURL('image/jpeg', 0.8));
+                        };
+                        img.onerror = reject;
+                        img.src = url;
+                    });
+                    updateQuestionOption(idx, 'image', compressed);
+                    toast.success(isAr ? '✅ تم لصق صورة الخيار بنجاح!' : '✅ Option image pasted successfully!');
+                } catch (err) {
+                    console.error(err);
+                    toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                }
+                break;
+            }
+        }
+    };
+
     const saveQuestion = async () => {
         if (!selectedPartId) return;
         if (!questionForm.questionAr && !questionForm.questionEn) {
@@ -3191,6 +3235,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 className="qedit-opt-input"
                                                 value={opt.textAr || ''}
                                                 onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
+                                                onPaste={e => handlePasteInOption(e, idx)}
                                                 placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
                                                 dir="rtl"
                                             />
@@ -3202,6 +3247,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                     pushOptionHistory(idx, opt.textEn || '');
                                                     updateQuestionOption(idx, 'textEn', e.target.value);
                                                 }}
+                                                onPaste={e => handlePasteInOption(e, idx)}
                                                 onKeyDown={e => {
                                                     if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
                                                         e.preventDefault();
