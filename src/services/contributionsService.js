@@ -26,7 +26,10 @@ export const submitContribution = async (file, subjectName = 'General', contribu
             try {
                 result = await uploadToCloudinary(file, {
                     folder: 'koon-contributions',
-                    tags: ['student-contribution', contributionType, subjectName]
+                    tags: ['student-contribution', contributionType, subjectName],
+                    onProgress: (progressVal) => {
+                        if (onProgress) onProgress(progressVal);
+                    }
                 });
             } catch (cloudErr) {
                 console.warn('Cloudinary upload failed, falling back to Firebase Storage:', cloudErr);

@@ -13,84 +13,103 @@ const PLACEHOLDER_UPLOAD_PRESET = 'your_upload_preset';
  * @param {Object} options - Upload options
  * @returns {Promise<Object>} Upload result with URL and public_id
  */
-export const uploadToCloudinary = async (file, options = {}) => {
-    if (!CLOUD_NAME || CLOUD_NAME === PLACEHOLDER_CLOUD_NAME) {
-        const err = new Error('CLOUDINARY_CONFIG_MISSING');
-        err.code = 'CLOUDINARY_CONFIG_MISSING';
-        err.friendly = {
-            ar: 'إعدادات Cloudinary غير مضبوطة على الخادم. تواصل مع الإدارة.',
-            en: 'Cloudinary settings are not configured. Contact the admin.'
-        };
-        throw err;
-    }
-    if (!UPLOAD_PRESET || UPLOAD_PRESET === PLACEHOLDER_UPLOAD_PRESET) {
-        const err = new Error('CLOUDINARY_PRESET_MISSING');
-        err.code = 'CLOUDINARY_PRESET_MISSING';
-        err.friendly = {
-            ar: 'قالب التحميل (upload preset) غير مضبوط. تواصل مع الدعم.',
-            en: 'Upload preset is not configured. Contact support.'
-        };
-        throw err;
-    }
-
-    try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', UPLOAD_PRESET);
-
-        if (options.folder) formData.append('folder', options.folder);
-        if (options.tags) formData.append('tags', options.tags.join(','));
-
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, { method: 'POST', body: formData });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => null);
-            console.error('Cloudinary API Error:', errorData || response.statusText);
-
-            // Try to map common Cloudinary messages to friendly/localized messages
-            const remoteMsg = errorData?.error?.message || response.statusText || 'Upload failed';
-
-            const err = new Error('CLOUDINARY_UPLOAD_ERROR');
-            err.code = 'CLOUDINARY_UPLOAD_ERROR';
-            if (/unknown api key/i.test(remoteMsg) || /invalid api key/i.test(remoteMsg)) {
-                err.friendly = {
-                    ar: 'مفتاح Cloudinary غير صحيح أو غير معروف. تحقق من إعدادات البيئة.',
-                    en: 'Cloudinary API key is invalid or unknown. Check your environment settings.'
-                };
-                err.remote = remoteMsg;
-                throw err;
-            }
-
-            if (/upload preset/i.test(remoteMsg) || /invalid preset/i.test(remoteMsg)) {
-                err.friendly = {
-                    ar: 'قالب التحميل غير صحيح أو غير موجود. تحقق من `VITE_CLOUDINARY_UPLOAD_PRESET`.',
-                    en: 'Upload preset is invalid or missing. Check `VITE_CLOUDINARY_UPLOAD_PRESET`.'
-                };
-                err.remote = remoteMsg;
-                throw err;
-            }
-
-            // Generic fallback
+export const uploadToCloudinary = (file, options = {}) => {
+    return new Promise((resolve, reject) => {
+        if (!CLOUD_NAME || CLOUD_NAME === PLACEHOLDER_CLOUD_NAME) {
+            const err = new Error('CLOUDINARY_CONFIG_MISSING');
+            err.code = 'CLOUDINARY_CONFIG_MISSING';
             err.friendly = {
-                ar: `فشل رفع الملف: ${remoteMsg}`,
-                en: `File upload failed: ${remoteMsg}`
+                ar: 'إعدادات Cloudinary غير مضبوطة على الخادم. تواصل مع الإدارة.',
+                en: 'Cloudinary settings are not configured. Contact the admin.'
             };
-            err.remote = remoteMsg;
-            throw err;
+            return reject(err);
+        }
+        if (!UPLOAD_PRESET || UPLOAD_PRESET === PLACEHOLDER_UPLOAD_PRESET) {
+            const err = new Error('CLOUDINARY_PRESET_MISSING');
+            err.code = 'CLOUDINARY_PRESET_MISSING';
+            err.friendly = {
+                ar: 'قالب التحميل (upload preset) غير مضبوط. تواصل مع الدعم.',
+                en: 'Upload preset is not configured. Contact support.'
+            };
+            return reject(err);
         }
 
-        const data = await response.json();
-        return {
-            url: data.secure_url,
-            publicId: data.public_id,
-            format: data.format,
-            resourceType: data.resource_type,
-            bytes: data.bytes
-        };
-    } catch (error) {
-        console.error('Cloudinary Service Error:', error);
-        throw error;
-    }
+        try {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, true);
+
+            if (options.onProgress) {
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 100);
+                        options.onProgress(percentComplete);
+                    }
+                };
+            }
+
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        resolve({
+                            url: data.secure_url,
+                            publicId: data.public_id,
+                            format: data.format,
+                            resourceType: data.resource_type,
+                            bytes: data.bytes
+                        });
+                    } catch (e) {
+                        reject(new Error('Invalid JSON response from Cloudinary'));
+                    }
+                } else {
+                    let errorData;
+                    try {
+                        errorData = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        errorData = null;
+                    }
+                    console.error('Cloudinary API Error:', errorData || xhr.statusText);
+
+                    const remoteMsg = errorData?.error?.message || xhr.statusText || 'Upload failed';
+                    const err = new Error('CLOUDINARY_UPLOAD_ERROR');
+                    err.code = 'CLOUDINARY_UPLOAD_ERROR';
+                    if (/unknown api key/i.test(remoteMsg) || /invalid api key/i.test(remoteMsg)) {
+                        err.friendly = {
+                            ar: 'مفتاح Cloudinary غير صحيح أو غير معروف. تحقق من إعدادات البيئة.',
+                            en: 'Cloudinary API key is invalid or unknown. Check your environment settings.'
+                        };
+                    } else if (/upload preset/i.test(remoteMsg) || /invalid preset/i.test(remoteMsg)) {
+                        err.friendly = {
+                            ar: 'قالب التحميل غير صحيح أو غير موجود. تحقق من `VITE_CLOUDINARY_UPLOAD_PRESET`.',
+                            en: 'Upload preset is invalid or missing. Check `VITE_CLOUDINARY_UPLOAD_PRESET`.'
+                        };
+                    } else {
+                        err.friendly = {
+                            ar: `فشل رفع الملف: ${remoteMsg}`,
+                            en: `File upload failed: ${remoteMsg}`
+                        };
+                    }
+                    err.remote = remoteMsg;
+                    reject(err);
+                }
+            };
+
+            xhr.onerror = () => {
+                reject(new Error('Network error occurred during Cloudinary upload'));
+            };
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+            if (options.folder) formData.append('folder', options.folder);
+            if (options.tags) formData.append('tags', options.tags.join(','));
+
+            xhr.send(formData);
+        } catch (error) {
+            console.error('Cloudinary Service Error:', error);
+            reject(error);
+        }
+    });
 };
 
 /**
