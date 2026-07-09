@@ -1764,29 +1764,71 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                                 <span className={`badge ${contribution.status === 'approved' ? 'badge-approved' : 'badge-pending'}`} style={{ padding: '4px 8px', borderRadius: '6px', fontSize: '0.78rem', height: 'fit-content' }}>{contribution.status === 'approved' ? (isAr ? 'مُوافق عليها' : 'Approved') : (isAr ? 'قيد الانتظار' : 'Pending')}</span>
                                             </div>
                                             <div className="contribution-card-body" style={{ marginBottom: '16px' }}>
-                                                {contribution.fileType === 'link' ? (
-                                                    <p style={{ margin: '0 0 8px 0' }}>
-                                                        <a href={contribution.fileUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '0.9rem' }}>{contribution.fileUrl}</a>
-                                                    </p>
-                                                ) : (
-                                                    <div style={{ margin: '0 0 10px 0' }}>
-                                                        {/* Thumbnail preview for images */}
-                                                        {contribution.fileUrl && /(image\/|\.(png|jpg|jpeg|gif|webp|svg))/i.test(contribution.fileType || contribution.fileUrl) && (
+                                                {(() => {
+                                                    const ft = (contribution.fileType || '').toLowerCase();
+                                                    const fu = (contribution.fileUrl || '').toLowerCase();
+                                                    const isImage = /^(png|jpg|jpeg|gif|webp|svg)$/.test(ft) || /image\//.test(ft) || /\.(png|jpg|jpeg|gif|webp|svg)(\?|$)/.test(fu);
+                                                    const isPdf   = ft === 'pdf' || /application\/pdf/.test(ft) || /\.pdf(\?|$)/.test(fu);
+                                                    const isLink  = ft === 'link';
+
+                                                    if (isLink) return (
+                                                        <a href={contribution.fileUrl} target="_blank" rel="noopener noreferrer"
+                                                           style={{ color: '#3b82f6', textDecoration: 'underline', wordBreak: 'break-all', fontSize: '0.85rem', display: 'block', marginBottom: '8px' }}>
+                                                            🔗 {contribution.fileUrl}
+                                                        </a>
+                                                    );
+
+                                                    if (isImage) return (
+                                                        <div
+                                                            style={{ marginBottom: '10px', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', cursor: 'zoom-in', position: 'relative' }}
+                                                            onClick={() => setPreviewFile({ url: contribution.fileUrl, type: ft || 'image', name: contribution.fileName })}
+                                                            title={isAr ? 'اضغط للمعاينة الكاملة' : 'Click for full preview'}
+                                                        >
                                                             <img
                                                                 src={contribution.fileUrl}
                                                                 alt={contribution.fileName || 'preview'}
-                                                                style={{ width: '100%', maxHeight: '140px', objectFit: 'cover', borderRadius: '8px', cursor: 'pointer', marginBottom: '8px', border: '1px solid rgba(255,255,255,0.1)' }}
-                                                                onClick={() => setPreviewFile({ url: contribution.fileUrl, type: contribution.fileType || 'image', name: contribution.fileName })}
+                                                                style={{ width: '100%', maxHeight: '160px', objectFit: 'cover', display: 'block' }}
+                                                                onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
                                                             />
-                                                        )}
-                                                        <button
-                                                            onClick={() => setPreviewFile({ url: contribution.fileUrl, type: contribution.fileType || '', name: contribution.fileName })}
-                                                            style={{ background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.4)', color: '#60a5fa', padding: '5px 12px', borderRadius: '6px', cursor: 'pointer', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '5px' }}
+                                                            <div style={{ display: 'none', alignItems: 'center', justifyContent: 'center', height: '100px', color: 'var(--text-muted)', flexDirection: 'column', gap: '6px' }}>
+                                                                <span style={{ fontSize: '2rem' }}>🖼️</span>
+                                                                <span style={{ fontSize: '0.78rem' }}>{isAr ? 'صورة — اضغط للمعاينة' : 'Image — tap to preview'}</span>
+                                                            </div>
+                                                            <div style={{ position: 'absolute', bottom: '6px', right: '6px', background: 'rgba(0,0,0,0.55)', borderRadius: '5px', padding: '2px 7px', fontSize: '0.72rem', color: '#fff' }}>
+                                                                🔍 {isAr ? 'تكبير' : 'Zoom'}
+                                                            </div>
+                                                        </div>
+                                                    );
+
+                                                    if (isPdf) return (
+                                                        <div style={{ marginBottom: '10px', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', position: 'relative' }}>
+                                                            <iframe
+                                                                src={`${contribution.fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                                                                title={contribution.fileName || 'PDF'}
+                                                                style={{ width: '100%', height: '180px', border: 'none', pointerEvents: 'none', display: 'block', background: '#fff' }}
+                                                            />
+                                                            <div
+                                                                style={{ position: 'absolute', inset: 0, cursor: 'pointer', background: 'transparent' }}
+                                                                onClick={() => setPreviewFile({ url: contribution.fileUrl, type: 'pdf', name: contribution.fileName })}
+                                                                title={isAr ? 'اضغط للمعاينة الكاملة' : 'Click for full preview'}
+                                                            />
+                                                            <div style={{ position: 'absolute', bottom: '6px', right: '6px', background: 'rgba(0,0,0,0.6)', borderRadius: '5px', padding: '2px 7px', fontSize: '0.72rem', color: '#fff', pointerEvents: 'none' }}>
+                                                                📄 {isAr ? 'اضغط للفتح' : 'Tap to open'}
+                                                            </div>
+                                                        </div>
+                                                    );
+
+                                                    // Unknown file type — show icon block
+                                                    return (
+                                                        <div
+                                                            style={{ marginBottom: '10px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', height: '90px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '6px', cursor: 'pointer', background: 'rgba(255,255,255,0.02)' }}
+                                                            onClick={() => setPreviewFile({ url: contribution.fileUrl, type: ft, name: contribution.fileName })}
                                                         >
-                                                            👁️ {isAr ? 'معاينة الملف' : 'Preview File'}
-                                                        </button>
-                                                    </div>
-                                                )}
+                                                            <span style={{ fontSize: '2rem' }}>📎</span>
+                                                            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{contribution.fileName || (isAr ? 'ملف مرفق' : 'Attached file')}</span>
+                                                        </div>
+                                                    );
+                                                })()}
                                                 <p className="contribution-date" style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)' }}>{fmtDate(contribution.createdAt)}</p>
                                             </div>
                                             <div className="contribution-card-actions" style={{ display: 'flex', gap: '8px' }}>
