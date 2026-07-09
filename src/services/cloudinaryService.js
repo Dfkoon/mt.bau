@@ -35,6 +35,7 @@ export const uploadToCloudinary = (file, options = {}) => {
         }
 
         try {
+            console.log("Cloudinary Uploading config active in browser:", { CLOUD_NAME, UPLOAD_PRESET });
             const xhr = new XMLHttpRequest();
             xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, true);
 
