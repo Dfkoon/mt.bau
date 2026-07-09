@@ -2007,14 +2007,16 @@ Please contact us to coordinate the pickup. Thank you.`;
                 id: index,
                 name: typeof item === 'object' ? item.name || '—' : String(item || '—'),
                 status: typeof item === 'object' ? item.status || 'pending' : 'pending',
-                date: typeof item === 'object' ? item.date || '' : ''
+                actionDate: item.actionDate || data.createdAt || '',
+                deliveryDate: item.status === 'completed' ? item.completedAt || data.updatedAt || '' : ''
             })) : [];
         }
         return [{
             id: 0,
             name: data.materialName || '—',
             status: data.status || 'reserved',
-            date: data.date || ''
+            actionDate: data.createdAt || data.date || '',
+            deliveryDate: data.status === 'completed' ? data.completedAt || data.updatedAt || data.date || '' : ''
         }];
     };
 
@@ -2024,7 +2026,11 @@ Please contact us to coordinate the pickup. Thank you.`;
             const date = typeof value === 'object' && value.seconds
                 ? new Date(value.seconds * 1000)
                 : new Date(value);
-            return date.toLocaleDateString(isAr ? 'ar-JO' : 'en-US');
+            return date.toLocaleDateString(isAr ? 'ar-JO' : 'en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
         } catch {
             return String(value);
         }
@@ -2033,7 +2039,7 @@ Please contact us to coordinate the pickup. Thank you.`;
     const MaterialReportModal = () => {
         if (!showMaterialReportModal || !materialReportData) return null;
         const items = buildMaterialReportItems(materialReportData, materialReportType);
-        const title = getReportTitle(materialReportType);
+        const title = isAr ? 'كشف حركة المواد' : 'Material Movement Report';
         const clientName = materialReportType === 'donor'
             ? materialReportData.studentName || '—'
             : materialReportData.takerInfo?.name || '—';
@@ -2043,6 +2049,52 @@ Please contact us to coordinate the pickup. Thank you.`;
         const statusLabel = materialReportType === 'donor'
             ? (isAr ? 'المتبرع' : 'Donor')
             : (isAr ? 'الحاجز' : 'Booker');
+
+        // Calculate counts for stats
+        let donatedCount = 0;
+        let reservedCount = 0;
+        let completedCount = 0;
+
+        if (materialReportType === 'donor') {
+            const allMats = Array.isArray(materialReportData.materials) ? materialReportData.materials : [];
+            donatedCount = allMats.filter(m => {
+                const s = typeof m === 'object' ? m.status : 'pending';
+                return s === 'approved' || s === 'pending';
+            }).length;
+            reservedCount = allMats.filter(m => {
+                const s = typeof m === 'object' ? m.status : 'pending';
+                return s === 'reserved';
+            }).length;
+            completedCount = allMats.filter(m => {
+                const s = typeof m === 'object' ? m.status : 'pending';
+                return s === 'completed';
+            }).length;
+        } else {
+            const status = materialReportData.status || 'reserved';
+            if (status === 'completed') completedCount = 1;
+            else if (status === 'reserved') reservedCount = 1;
+            else donatedCount = 1;
+        }
+
+        const getUserStatus = () => {
+            if (materialReportType === 'donor') {
+                return <span style={{ color: '#2ecc71', fontWeight: 'bold' }}>{isAr ? 'متبرع نشط' : 'Active Donor'}</span>;
+            } else {
+                return <span style={{ color: '#e67e22', fontWeight: 'bold' }}>{isAr ? 'لديه حجز نشط' : 'Has Active Booking'}</span>;
+            }
+        };
+
+        const getStatusBadge = (status) => {
+            if (status === 'completed') {
+                return <span className="badge delivered">{isAr ? 'تم التسليم' : 'Delivered'}</span>;
+            } else if (status === 'reserved') {
+                return <span className="badge reserved">{isAr ? 'بانتظار التسليم' : 'Pending Delivery'}</span>;
+            } else if (status === 'approved') {
+                return <span className="badge donated">{isAr ? 'متاحة' : 'Available'}</span>;
+            } else {
+                return <span className="badge donated" style={{ background: '#f1f5f9', color: '#64748b' }}>{isAr ? 'قيد المراجعة' : 'Pending Review'}</span>;
+            }
+        };
 
         return (
             <div className="modal-overlay" onClick={closeMaterialReport}>
@@ -2054,10 +2106,10 @@ Please contact us to coordinate the pickup. Thank you.`;
                         <header>
                             <div className="title-block">
                                 <h1>{title}</h1>
-                                <p>{isAr ? 'كشف تفصيلي بالمواد التي تم التبرع بها أو حجزها.' : 'A detailed report of materials donated or booked by this user.'}</p>
+                                <p>{isAr ? 'تقرير تفصيلي بالمواد المتبرع بها والمحجوزة والمسلمة لهذا الحاجز' : 'Detailed report of materials donated, reserved, and delivered.'}</p>
                             </div>
                             <div className="meta">
-                                <div>{isAr ? 'رقم الكشف' : 'Report No.'} <span className="report-no">{materialReportData.id || '—'}</span></div>
+                                <div>{isAr ? 'رقم الكشف:' : 'Report No:'} <span className="report-no">{materialReportData.id ? materialReportData.id.substring(0, 10) : '—'}</span></div>
                                 <div>{isAr ? 'تاريخ الإصدار:' : 'Issued:'} <b>{new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</b></div>
                                 <div>{isAr ? 'المنسق:' : 'Coordinator:'} <b>{loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
                             </div>
@@ -2065,20 +2117,38 @@ Please contact us to coordinate the pickup. Thank you.`;
 
                         <div className="pilgrim">
                             <div className="pilgrim-field">
-                                <span>{isAr ? 'اسم العميل' : 'Client Name'}</span>
+                                <span>{materialReportType === 'donor' ? (isAr ? 'اسم المتبرع' : 'Donor Name') : (isAr ? 'اسم الحاجز' : 'Booker Name')}</span>
                                 <b>{clientName}</b>
                             </div>
                             <div className="pilgrim-field">
                                 <span>{isAr ? 'رقم الهاتف' : 'Phone Number'}</span>
-                                <b>{phone}</b>
+                                <b style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    {phone} {phone !== '—' && <span style={{ fontSize: '1.1rem', opacity: 0.6 }}>💬</span>}
+                                </b>
                             </div>
                             <div className="pilgrim-field">
-                                <span>{isAr ? 'تاريخ التقرير' : 'Report Date'}</span>
-                                <b>{new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</b>
+                                <span>{isAr ? 'تاريخ التسجيل' : 'Registration Date'}</span>
+                                <b>{formatReportDate(materialReportData.createdAt)}</b>
                             </div>
                             <div className="pilgrim-field">
-                                <span>{isAr ? 'نوع الكشف' : 'Report Type'}</span>
-                                <b>{statusLabel}</b>
+                                <span>{materialReportType === 'donor' ? (isAr ? 'حالة المتبرع' : 'Donor Status') : (isAr ? 'حالة الحاجز' : 'Booker Status')}</span>
+                                <b>{getUserStatus()}</b>
+                            </div>
+                        </div>
+
+                        {/* Summary Stats Cards */}
+                        <div className="stats">
+                            <div className="stat-card donated">
+                                <div className="num">{donatedCount}</div>
+                                <div className="lbl">{isAr ? 'مواد متبرع بها متاحة' : 'Available Donated Materials'}</div>
+                            </div>
+                            <div className="stat-card reserved">
+                                <div className="num">{reservedCount}</div>
+                                <div className="lbl">{isAr ? 'مواد محجوزة' : 'Reserved Materials'}</div>
+                            </div>
+                            <div className="stat-card delivered">
+                                <div className="num">{completedCount}</div>
+                                <div className="lbl">{isAr ? 'مواد مسلّمة' : 'Delivered Materials'}</div>
                             </div>
                         </div>
 
@@ -2088,21 +2158,33 @@ Please contact us to coordinate the pickup. Thank you.`;
                                 <tr>
                                     <th>{isAr ? 'م' : '#'}</th>
                                     <th>{isAr ? 'اسم المادة' : 'Material Name'}</th>
+                                    <th>{isAr ? 'التصنيف' : 'Classification'}</th>
+                                    <th>{isAr ? 'تاريخ الإجراء' : 'Action Date'}</th>
+                                    <th>{isAr ? 'تاريخ التسليم' : 'Delivery Date'}</th>
                                     <th>{isAr ? 'الحالة' : 'Status'}</th>
-                                    <th>{isAr ? 'تاريخ' : 'Date'}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {items.length > 0 ? items.map((item, index) => (
-                                    <tr key={item.id || index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.status}</td>
-                                        <td>{formatReportDate(item.date)}</td>
-                                    </tr>
-                                )) : (
+                                {items.length > 0 ? items.map((item, index) => {
+                                    const classification = item.status === 'completed'
+                                        ? (isAr ? 'مادة مسلّمة' : 'Delivered Material')
+                                        : item.status === 'reserved'
+                                            ? (isAr ? 'مادة محجوزة' : 'Reserved Material')
+                                            : (isAr ? 'مادة متبرع بها' : 'Donated Material');
+
+                                    return (
+                                        <tr key={item.id || index}>
+                                            <td>{index + 1}</td>
+                                            <td style={{ fontWeight: '600' }}>{item.name}</td>
+                                            <td style={{ color: '#5c6b7a' }}>{classification}</td>
+                                            <td>{formatReportDate(item.actionDate)}</td>
+                                            <td>{formatReportDate(item.deliveryDate)}</td>
+                                            <td>{getStatusBadge(item.status)}</td>
+                                        </tr>
+                                    );
+                                }) : (
                                     <tr className="empty-row">
-                                        <td colSpan="4">{isAr ? 'لا توجد مواد مرتبطة بهذا الكشف.' : 'No materials found for this report.'}</td>
+                                        <td colSpan="6">{isAr ? 'لا توجد مواد مرتبطة بهذا الكشف.' : 'No materials found for this report.'}</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -2110,16 +2192,17 @@ Please contact us to coordinate the pickup. Thank you.`;
 
                         <footer>
                             <div className="note">
-                                {isAr ? 'يمكنك طباعة هذا الكشف واحتفظ بنسخة رسمية لمتابعة حالة المواد.' : 'Print this report and keep a copy to track the material status.'}
+                                {isAr ? 'يرجى الاحتفاظ بهذا الكشف ومشاركته عند التواصل مع فريق التنسيق. هذا المستند صادر إلكترونياً من نظام مكانك، ولا يحتاج إلى ختم أو توقيع لاعتماده.' : 'Please keep this report and share it when contacting the coordination team. This document is issued electronically from the Makanak system and does not require a stamp or signature for validation.'}
                             </div>
                             <div className="system">
-                                <b>{isAr ? 'مكانك' : 'Makanak'}</b><br />{isAr ? 'نظام إدارة المواد الطلابية' : 'Student Material Management System'}
+                                <b>{isAr ? 'نظام مكانك' : 'Makanak System'}</b><br />
+                                {isAr ? 'تقرير آلي - لا يُعتمد به كوثيقة رسمية بديلة عن السجل الأصلي' : 'Automated report - Not considered as a formal document replacement'}
                             </div>
                         </footer>
                     </div>
                     <div className="report-sheet-actions">
                         <button type="button" className="btn primary" onClick={() => { setReportPrinted(true); window.print(); }}>
-                            {isAr ? 'طباعة' : 'Print'}
+                            🖨️ {isAr ? 'طباعة / حفظ PDF' : 'Print / Save PDF'}
                         </button>
                         <button type="button" className="btn" onClick={closeMaterialReport}>{isAr ? 'إغلاق' : 'Close'}</button>
                         {reportPrinted && (
