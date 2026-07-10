@@ -5220,7 +5220,27 @@ Thank you.`;return`https://wa.me/${Ve}?text=${encodeURIComponent(Je)}`},yy=(G,Z)
         footer .note{font-size:12px;color:#6c7b8a;max-width:60%;line-height:1.6;}
         footer .system{text-align:left;font-size:12px;color:#6c7b8a;line-height:1.6;}
         footer .system b{color:#1b2a3c;font-weight:700;}
-        @media print{.no-print{display:none;} body{padding:0;background:#fff;} .sheet{box-shadow:none;border-radius:0;}}
+        @media print {
+            @page {
+                margin: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body {
+                margin: 1.6cm 1.2cm;
+                background: #f6f4ee !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .sheet {
+                box-shadow: none !important;
+                border-radius: 14px !important;
+                border: 1px solid #e4e0d4 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -5363,7 +5383,27 @@ Thank you.`;return`https://wa.me/${Ve}?text=${encodeURIComponent(Je)}`},yy=(G,Z)
         footer .note{font-size:12px;color:#6c7b8a;max-width:60%;line-height:1.6;}
         footer .system{text-align:left;font-size:12px;color:#6c7b8a;line-height:1.6;}
         footer .system b{color:#1b2a3c;font-weight:700;}
-        @media print{.no-print{display:none;} body{padding:0;background:#fff;} .sheet{box-shadow:none;border-radius:0;}}
+        @media print {
+            @page {
+                margin: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body {
+                margin: 1.6cm 1.2cm;
+                background: #f6f4ee !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .sheet {
+                box-shadow: none !important;
+                border-radius: 14px !important;
+                border: 1px solid #e4e0d4 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -5513,7 +5553,27 @@ Thank you.`;return`https://wa.me/${Ve}?text=${encodeURIComponent(Je)}`},yy=(G,Z)
         footer .system{text-align:left;font-size:12px;color:#6c7b8a;line-height:1.6;}
         footer .system b{color:#1b2a3c;font-weight:700;}
         .empty-state{text-align:center;padding:40px;color:#5c6b7a;font-size:15px;}
-        @media print{.no-print{display:none;} body{padding:0;background:#fff;} .sheet{box-shadow:none;border-radius:0;}}
+        @media print {
+            @page {
+                margin: 0;
+            }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body {
+                margin: 1.6cm 1.2cm;
+                background: #f6f4ee !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .sheet {
+                box-shadow: none !important;
+                border-radius: 14px !important;
+                border: 1px solid #e4e0d4 !important;
+            }
+        }
     </style>
 </head>
 <body>
