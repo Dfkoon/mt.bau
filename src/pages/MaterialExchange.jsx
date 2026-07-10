@@ -3559,6 +3559,182 @@ Please contact us to coordinate the pickup. Thank you.`;
         toast.success(isAr ? '✅ تم فتح نافذة الطباعة' : '✅ Print window opened');
     };
 
+    const printDailyReport = (dateStr, dayLabel) => {
+        const daySchedules = deliverySchedules.filter(s => s.pickupDate === dateStr);
+
+        const tableRows = daySchedules.map((s, idx) => {
+            const coordinator = s.assignedCoordinator === 'ahmad' ? (isAr ? (systemSettings.ahmadNameAr || 'علي') : 'Ali')
+                : s.assignedCoordinator === 'sara' ? (isAr ? (systemSettings.saraNameAr || 'سندس') : 'Sondos')
+                : s.assignedCoordinator || '—';
+
+            const deliverer = s.finalDeliveryBy === 'ahmad' ? (isAr ? (systemSettings.ahmadNameAr || 'علي') : 'Ali')
+                : s.finalDeliveryBy === 'sara' ? (isAr ? (systemSettings.saraNameAr || 'سندس') : 'Sondos')
+                : s.finalDeliveryBy === 'admin' ? (isAr ? 'الأدمن حسين' : 'Admin Hussein')
+                : s.finalDeliveryBy || '—';
+
+            const statusLabel = s.status === 'completed' ? (isAr ? 'تم التسليم' : 'Delivered')
+                : s.status === 'scheduled' ? (isAr ? 'مؤكد' : 'Confirmed')
+                : s.status === 'contacted' ? (isAr ? 'تم التواصل' : 'Contacted')
+                : (isAr ? 'لم يُتواصل بعد' : 'Not Contacted');
+
+            const statusClass = s.status;
+
+            return `
+                <tr>
+                    <td style="text-align:center; font-weight:bold; border-bottom:1px solid #e4e0d4; padding:10px;">${idx + 1}</td>
+                    <td style="font-weight:600; color:#1b2a3c; border-bottom:1px solid #e4e0d4; padding:10px;">${s.materialName || '—'}</td>
+                    <td style="border-bottom:1px solid #e4e0d4; padding:10px;">
+                        <div style="font-weight:600;">${s.donorName || '—'}</div>
+                        <div style="font-size:11.5px; color:#5c6b7a;" dir="ltr">${s.donorPhone || '—'}</div>
+                    </td>
+                    <td style="border-bottom:1px solid #e4e0d4; padding:10px;">
+                        <div style="font-weight:600;">${s.bookerName || '—'}</div>
+                        <div style="font-size:11.5px; color:#5c6b7a;" dir="ltr">${s.bookerPhone || '—'}</div>
+                    </td>
+                    <td style="text-align:center; border-bottom:1px solid #e4e0d4; padding:10px;">
+                        <span style="display:block; font-weight:600;">${coordinator}</span>
+                        ${s.pickupTime ? `<span style="font-size:11px; color:#c08a2e;">⏰ ${s.pickupTime}</span>` : ''}
+                    </td>
+                    <td style="text-align:center; font-weight:600; color:#e67e22; border-bottom:1px solid #e4e0d4; padding:10px;">${deliverer}</td>
+                    <td style="text-align:center; border-bottom:1px solid #e4e0d4; padding:10px;">
+                        <span class="badge ${statusClass}">${statusLabel}</span>
+                    </td>
+                    <td style="font-size:11.5px; color:#5c6b7a; border-bottom:1px solid #e4e0d4; padding:10px; max-width:150px; word-break:break-word;">${s.notes || '—'}</td>
+                </tr>
+            `;
+        }).join('');
+
+        const win = window.open('', '_blank');
+        const formattedDate = new Date(dateStr + 'T00:00:00').toLocaleDateString(isAr ? 'ar-JO' : 'en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        win.document.write(`<!DOCTYPE html><html dir="${isAr ? 'rtl' : 'ltr'}">
+<head>
+    <meta charset="utf-8">
+    <title>${isAr ? 'كشف تسليم يوم' : 'Distribution Report'} - ${dayLabel}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+        body{font-family:'IBM Plex Sans Arabic','Tajawal',sans-serif;padding:24px;direction:${isAr ? 'rtl' : 'ltr'};color:#1B2A3C;background:#f6f4ee;margin:0;}
+        .no-print{margin-bottom:20px;max-width:1120px;margin-left:auto;margin-right:auto;display:flex;justify-content:flex-start;}
+        .print-button{padding:10px 24px;background:#1B2A3C;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(27,42,60,0.25);transition:all 0.2s ease;font-family:inherit;}
+        .print-button:hover{transform:translateY(-1px);background:#253a52;}
+        .report-sheet{position:relative;max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:1rem;}
+        .sheet{background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(17,24,39,0.08),0 16px 50px rgba(17,24,39,0.12);position:relative;}
+        .accent-bar{height:6px;background:linear-gradient(90deg, #1B2A3C 0%, #C08A2E 100%);}
+        .ribbon{position:absolute;top:18px;left:-42px;transform:rotate(-45deg);background:#c08a2e;color:#fff;font-size:11px;font-weight:700;padding:4px 46px;box-shadow:0 2px 6px rgba(0,0,0,0.15);}
+        header{background:#1B2A3C;color:#ffffff;padding:28px 36px 24px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;}
+        header *{color:#fff !important;}
+        header .title-block h1{font-family:'Tajawal',sans-serif;font-size:24px;margin:0 0 6px;font-weight:700;}
+        header .title-block p{margin:0;font-size:13px;color:#c7d0da;}
+        header .meta{text-align:left;font-size:12.5px;color:#c7d0da;line-height:1.9;white-space:nowrap;}
+        header .meta b{color:#fff;font-weight:600;}
+        header .meta .report-no{display:inline-block;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:6px;padding:3px 10px;font-weight:600;color:#f1dfb8;}
+        .pilgrim{padding:24px 36px 8px;display:flex;gap:28px;flex-wrap:wrap;}
+        .pilgrim-field{min-width:150px;flex:1;}
+        .pilgrim-field span{display:block;font-size:11.5px;color:#5c6b7a;margin-bottom:4px;}
+        .pilgrim-field b{font-family:'Tajawal',sans-serif;font-weight:700;font-size:16px;color:#1b2a3c;}
+        .section-title{padding:22px 36px 10px;font-family:'Tajawal',sans-serif;font-weight:700;font-size:15.5px;color:#1b2a3c;display:flex;align-items:center;gap:8px;}
+        .section-title::before{content:"";width:4px;height:16px;background:#c08a2e;border-radius:2px;display:inline-block;}
+        table{width:calc(100% - 72px);margin:10px 36px 20px;border-collapse:collapse;background:#fff;border:1px solid #e4e0d4;font-size:13.5px;}
+        table thead th{background:#fcfbf8;color:#1b2a3c;font-weight:700;font-size:13px;padding:12px 14px;border-bottom:2px solid #e4e0d4;text-align:${isAr ? 'right' : 'left'};}
+        table tbody td{padding:12px 14px;color:#2f3d4f;border-bottom:1px solid #f0edf4;vertical-align:middle;}
+        table tbody tr:last-child td{border-bottom:none;}
+        table tbody tr:nth-child(even){background:#fcfbf8;}
+        .badge{display:inline-block;padding:4px 10px;font-size:11.5px;font-weight:700;border-radius:20px;text-align:center;}
+        .badge.completed{background:#e9f3eb;color:#2e6b3f;}
+        .badge.scheduled{background:#f3e8ff;color:#7e22ce;}
+        .badge.contacted{background:#dbeafe;color:#1d4ed8;}
+        .badge.pending_contact{background:#fef3c7;color:#d97706;}
+        footer{padding:24px 36px 28px;border-top:1px solid #f0edf4;display:flex;justify-content:space-between;align-items:center;gap:24px;}
+        footer .note{font-size:12px;color:#6c7b8a;max-width:60%;line-height:1.6;text-align:right;}
+        footer .system{text-align:left;font-size:12px;color:#6c7b8a;line-height:1.6;}
+        footer .system b{color:#1b2a3c;font-weight:700;}
+        .empty-state{text-align:center;padding:40px;color:#5c6b7a;font-size:15px;}
+        @media print{.no-print{display:none;} body{padding:0;background:#fff;} .sheet{box-shadow:none;border-radius:0;}}
+    </style>
+</head>
+<body>
+<div class="no-print">
+    <button class="print-button" onclick="window.print()">🖨️ ${isAr ? 'طباعة الكشف / حفظ PDF' : 'Print / Save as PDF'}</button>
+</div>
+<div class="report-sheet">
+    <div class="sheet">
+        <div class="ribbon">${isAr ? 'رسمي' : 'Official'}</div>
+        <div class="accent-bar"></div>
+
+        <header>
+            <div class="title-block">
+                <h1>${isAr ? `كشف حركة تسليم المواد — يوم ${dayLabel}` : `Material Handover Sheet — ${dayLabel}`}</h1>
+                <p>${isAr ? 'تقرير تفصيلي بمواعيد الإحضار والتسليم المجدولة، متضمناً بيانات المتبرعين والحاجزين والمنسقين.' : 'Detailed report of scheduled pickups and deliveries.'}</p>
+            </div>
+            <div class="meta">
+                <div>${isAr ? 'التاريخ المجدول:' : 'Scheduled Date:'} <b>${formattedDate}</b></div>
+                <div>${isAr ? 'عدد الحالات المجدولة:' : 'Scheduled count:'} <b>${daySchedules.length}</b></div>
+                <div>${isAr ? 'المنسق المصدر:' : 'Issued By:'} <b>${loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
+            </div>
+        </header>
+
+        <div class="pilgrim">
+            <div class="pilgrim-field">
+                <span>${isAr ? 'اليوم' : 'Day'}</span>
+                <b>${dayLabel}</b>
+            </div>
+            <div class="pilgrim-field">
+                <span>${isAr ? 'التاريخ الهجري/الميلادي' : 'Date'}</span>
+                <b>${formattedDate}</b>
+            </div>
+            <div class="pilgrim-field">
+                <span>${isAr ? 'الحملة' : 'Campaign'}</span>
+                <b>${isAr ? 'مكانك الجامعي 🎓' : 'Makanak'}</b>
+            </div>
+        </div>
+
+        <div class="section-title">${isAr ? 'قائمة التسليمات اليومية' : 'Daily Deliveries List'}</div>
+        
+        ${daySchedules.length === 0 ? `
+            <div class="empty-state">
+                📭 ${isAr ? 'لا توجد مواعيد تسليم مجدولة لهذا اليوم.' : 'No deliveries scheduled for this day.'}
+            </div>
+        ` : `
+            <table style="width:calc(100% - 72px); margin:10px 36px 20px; border-collapse:collapse; background:#fff; border:1px solid #e4e0d4; font-size:13.5px;">
+                <thead>
+                    <tr>
+                        <th style="width:40px; text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">#</th>
+                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'المادة' : 'Material'}</th>
+                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'المتبرع وهاتفه' : 'Donor & Phone'}</th>
+                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'الحاجز وهاتفه' : 'Booker & Phone'}</th>
+                        <th style="text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">${isAr ? 'المنسق المعني' : 'Coordinator'}</th>
+                        <th style="text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">${isAr ? 'التسليم النهائي' : 'Final Delivery'}</th>
+                        <th style="text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">${isAr ? 'الحالة' : 'Status'}</th>
+                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'ملاحظات' : 'Notes'}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+        `}
+
+        <footer>
+            <div class="note">
+                ${isAr ? 'يرجى التنسيق والتأكد من استلام وتسليم المواد حسب السجل. هذا المستند صادر إلكترونياً من نظام مكانك الجامعي.' : 'Please coordinate handover according to the records. Issued electronically.'}
+            </div>
+            <div class="system">
+                <div><b>${isAr ? 'نظام مكانك الجامعي' : 'Makanak System'}</b></div>
+                <div>${isAr ? 'تقرير آلي للمتابعة والتوزيع' : 'Automated distribution report'}</div>
+            </div>
+        </footer>
+    </div>
+</div>
+</body>
+</html>`);
+        win.document.close();
+        toast.success(isAr ? '✅ تم فتح نافذة طباعة الكشف اليومي' : '✅ Daily print window opened');
+    };
+
     const getCoordinatorTasks = () => {
         if (!loggedInUser) return [];
         let tasksStr = systemSettings.sharedCoordinatorTasks || '';
@@ -5039,6 +5215,68 @@ Please contact us to coordinate the pickup. Thank you.`;
                                         >
                                             {deliveryScheduleLoading ? '⏳' : '🔄'}
                                         </button>
+                                    </div>
+                                </div>
+
+                                {/* ─── Daily Reports Actions ─── */}
+                                <div style={{
+                                    background: 'rgba(255, 255, 255, 0.05)',
+                                    border: '1.5px solid rgba(255, 255, 255, 0.08)',
+                                    borderRadius: '12px',
+                                    padding: '12px 18px',
+                                    marginTop: '16px',
+                                    marginBottom: '16px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '10px'
+                                }}>
+                                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <span>📋</span>
+                                        <span>{isAr ? 'كشوفات التوزيع اليومية للطباعة (منسق - متبرع - حاجز):' : 'Daily distribution reports for printing:'}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                        {[
+                                            { date: '2026-07-12', dayAr: 'الأحد ١٢ / ٧', dayEn: 'Sunday 12/7' },
+                                            { date: '2026-07-13', dayAr: 'الإثنين ١٣ / ٧', dayEn: 'Monday 13/7' },
+                                            { date: '2026-07-14', dayAr: 'الثلاثاء ١٤ / ٧', dayEn: 'Tuesday 14/7' },
+                                            { date: '2026-07-15', dayAr: 'الأربعاء ١٥ / ٧', dayEn: 'Wednesday 15/7' }
+                                        ].map(day => {
+                                            const count = deliverySchedules.filter(s => s.pickupDate === day.date).length;
+                                            return (
+                                                <button
+                                                    key={day.date}
+                                                    onClick={() => printDailyReport(day.date, isAr ? day.dayAr : day.dayEn)}
+                                                    style={{
+                                                        background: 'rgba(52, 152, 219, 0.15)',
+                                                        border: '1px solid rgba(52, 152, 219, 0.3)',
+                                                        borderRadius: '8px',
+                                                        padding: '8px 14px',
+                                                        color: '#3498db',
+                                                        cursor: 'pointer',
+                                                        fontWeight: 'bold',
+                                                        fontSize: '0.85rem',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '6px',
+                                                        transition: 'all 0.2s'
+                                                    }}
+                                                    onMouseOver={e => { e.currentTarget.style.background = 'rgba(52, 152, 219, 0.25)'; }}
+                                                    onMouseOut={e => { e.currentTarget.style.background = 'rgba(52, 152, 219, 0.15)'; }}
+                                                >
+                                                    <span>📅</span>
+                                                    <span>{isAr ? day.dayAr : day.dayEn}</span>
+                                                    <span style={{
+                                                        background: 'rgba(255,255,255,0.15)',
+                                                        color: '#fff',
+                                                        padding: '2px 6px',
+                                                        borderRadius: '6px',
+                                                        fontSize: '0.75rem',
+                                                        marginRight: isAr ? '4px' : '0',
+                                                        marginLeft: isAr ? '0' : '4px'
+                                                    }}>{count}</span>
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
