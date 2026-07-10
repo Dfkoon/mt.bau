@@ -5465,3 +5465,174 @@
     display: inline-block;
     border: 1px solid var(--glass-border, rgba(0,0,0,0.03));
 }
+
+/* Delivery Schedules Grid Layout */
+.delivery-schedules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .delivery-schedules-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.quadrant-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.quadrant-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+.compact-delivery-table th {
+    color: rgba(255, 255, 255, 0.5) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.compact-delivery-table td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+/* ─── Schedule Form: Theme-Aware Inputs ─── */
+.schedule-form-input,
+.schedule-form-select {
+    width: 100%;
+    padding: 7px 10px;
+    border-radius: 7px;
+    border: 1.5px solid var(--glass-border, rgba(0,0,0,0.12));
+    background: var(--input-bg, rgba(255,255,255,0.07));
+    color: var(--text-main, inherit);
+    font-size: 0.85rem;
+    outline: none;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.schedule-form-input:focus,
+.schedule-form-select:focus {
+    border-color: rgba(52, 152, 219, 0.5);
+}
+
+.schedule-form-input[readonly] {
+    opacity: 0.65;
+    cursor: default;
+}
+
+.schedule-form-input-lg,
+.schedule-form-select-lg {
+    padding: 8px 12px;
+    font-size: 0.88rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--glass-border, rgba(0,0,0,0.12));
+    background: var(--input-bg, rgba(255,255,255,0.07));
+    color: var(--text-main, inherit);
+    outline: none;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.schedule-form-input-lg:focus,
+.schedule-form-select-lg:focus {
+    border-color: rgba(52, 152, 219, 0.5);
+}
+
+/* Inline add form container */
+.schedule-inline-form {
+    background: var(--schedule-form-bg, rgba(52,152,219,0.06));
+    border: 1.5px solid rgba(52, 152, 219, 0.25);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 12px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+[data-theme="light"] .schedule-inline-form {
+    --schedule-form-bg: rgba(52, 152, 219, 0.04);
+    background: #f0f7ff;
+}
+
+.schedule-form-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-secondary, rgba(255,255,255,0.6));
+    margin-bottom: 3px;
+}
+
+/* Fix compact table header in light mode */
+[data-theme="light"] .compact-delivery-table th {
+    color: var(--text-secondary, #64748b) !important;
+}
+
+[data-theme="light"] .compact-delivery-table td {
+    border-bottom: 1px solid var(--glass-border, rgba(0,0,0,0.06)) !important;
+}
+
+/* Quadrant card fix for light mode */
+[data-theme="light"] .quadrant-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1.5px solid var(--glass-border, rgba(0,0,0,0.08)) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+}
+
+[data-theme="light"] .quadrant-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12) !important;
+}
+
+/* Edit schedule modal overlay */
+.schedule-edit-modal-body {
+    background: var(--glass-bg, #1a1a2e);
+    border: 1.5px solid var(--glass-border, rgba(255,255,255,0.12));
+    border-radius: 18px;
+    padding: 28px;
+    max-width: 620px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+    color: var(--text-main, #fff);
+}
+
+/* ─── Light mode: fix table text colors in quadrant cards ─── */
+[data-theme="light"] .compact-delivery-table td,
+[data-theme="light"] .compact-delivery-table td * {
+    color: var(--text-primary, #1a1a2e);
+}
+
+[data-theme="light"] .compact-delivery-table td strong {
+    color: var(--text-main, #0f172a) !important;
+}
+
+[data-theme="light"] .compact-delivery-table td span[style*="opacity"] {
+    color: var(--text-secondary, #64748b) !important;
+    opacity: 1 !important;
+}
+
+/* Force readable text for donor/booker names in light mode */
+[data-theme="light"] .quadrant-card table strong {
+    color: var(--text-main, #0f172a) !important;
+}
+
+[data-theme="light"] .quadrant-card table .delivery-donor-name,
+[data-theme="light"] .quadrant-card table .delivery-booker-name {
+    color: var(--text-main, #0f172a) !important;
+}
+
+/* Material name cell (was #fff) */
+[data-theme="light"] .quadrant-card .material-name-cell {
+    color: var(--text-main, #0f172a) !important;
+}
+
+/* All td text in light mode should inherit theme color */
+[data-theme="light"] .quadrant-card td {
+    color: var(--text-primary, #1a1a2e) !important;
+}

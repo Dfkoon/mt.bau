@@ -629,7 +629,7 @@ const Quiz = () => {
     };
 
     // Calculate Score — defined BEFORE the timer effect that calls it
-    const finishQuiz = React.useCallback(() => {
+    const finishQuiz = React.useCallback(async () => {
         let calculatedScore = 0;
         let totalMarks = 0;
 
@@ -645,22 +645,18 @@ const Quiz = () => {
                     }
                 });
             } else if (q.type === 'multi_select') {
-                // Partial credit: marks_per_correct_answer * number_correct_selected
                 const correct = q.correctAnswers || (q.correctAnswer ? q.correctAnswer.split(',').filter(Boolean) : []);
                 const selected = Array.isArray(userAnswers[q.id]) ? userAnswers[q.id] : [];
                 const qMarks = q.marks || 1;
                 if (correct.length > 0) {
                     let correctHits = selected.filter(id => correct.includes(id)).length;
                     let wrongHits = selected.filter(id => !correct.includes(id)).length;
-                    // Award partial marks, deduct for wrong selections (floor at 0)
                     const perMark = qMarks / correct.length;
                     const earned = Math.max(0, (correctHits - wrongHits) * perMark);
                     calculatedScore += earned;
                 }
             } else if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
-                if (isCorrectAnswer(q, userAnswers[q.id])) {
-                    calculatedScore += q.marks || 1;
-                }
+                // Essay questions: AI grading — skip for first-pass sync score
             } else {
                 if (isCorrectAnswer(q, userAnswers[q.id])) {
                     calculatedScore += q.marks || 1;
@@ -672,6 +668,31 @@ const Quiz = () => {
         setShowResults(true);
         setTimerActive(false);
         window.scrollTo(0, 0);
+
+        // AI grade essay/short-answer questions asynchronously
+        const essayQs = currentQuiz.questions.filter(q =>
+            (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') &&
+            userAnswers[q.id] &&
+            String(userAnswers[q.id]).trim()
+        );
+
+        if (essayQs.length > 0) {
+            setAiGrading(true);
+            const results = {};
+            let essayScore = 0;
+            await Promise.all(essayQs.map(async q => {
+                const qText = q.questionAr || q.questionEn || q.question || '';
+                const modelAns = q.correctAnswer || '';
+                const studentAns = String(userAnswers[q.id] || '');
+                const qMarks = q.marks || 1;
+                const res = await gradeEssayAnswer(studentAns, modelAns, qText, qMarks);
+                results[q.id] = res;
+                essayScore += res.earnedMarks || 0;
+            }));
+            setAiGradingResults(results);
+            setScore(prev => +(prev + essayScore).toFixed(2));
+            setAiGrading(false);
+        }
 
         // Log quiz completion to analytics
         logQuizCompletion(
