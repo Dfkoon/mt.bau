@@ -196,7 +196,7 @@ function App() {
               </Routes>
             </main>
 
-            <NashmiGuide />
+            {/* <NashmiGuide /> */}
             <Footer />
           </div>
         } />
