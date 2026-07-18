@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Tajawal:wght@700;800&display=swap');
+
+/* ── Root overlay ─────────────────────────────────── */
+.splash-root {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    /* Deep burgundy base */
+    background: #1a0008;
+
+    transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Phase transitions */
+.splash-in  { opacity: 0; }
+.splash-hold { opacity: 1; }
+.splash-out  { opacity: 0; pointer-events: none; }
+
+/* ── Animated orbs ────────────────────────────────── */
+.splash-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(72px);
+    animation: orb-drift 6s ease-in-out infinite alternate;
+}
+
+.splash-orb-1 {
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(150, 10, 50, 0.75) 0%, transparent 70%);
+    top: -120px;
+    right: -100px;
+    animation-delay: 0s;
+    animation-duration: 7s;
+}
+
+.splash-orb-2 {
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(100, 5, 30, 0.65) 0%, transparent 70%);
+    bottom: -80px;
+    left: -80px;
+    animation-delay: 1.5s;
+    animation-duration: 8s;
+}
+
+.splash-orb-3 {
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, rgba(200, 20, 70, 0.4) 0%, transparent 70%);
+    top: 40%;
+    left: 45%;
+    animation-delay: 3s;
+    animation-duration: 5.5s;
+}
+
+@keyframes orb-drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(30px, -25px) scale(1.08); }
+    100% { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+/* ── Glass card ───────────────────────────────────── */
+.splash-glass {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border-radius: 28px;
+    padding: 2.4rem 3.5rem 2rem;
+    box-shadow:
+        0 30px 60px -20px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(180, 30, 70, 0.18) inset;
+
+    animation: card-pop 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes card-pop {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+/* ── Cursive word ─────────────────────────────────── */
+.splash-word {
+    font-family: 'Dancing Script', 'Tajawal', cursive;
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: 2px;
+
+    /* Shimmer animation */
+    background: linear-gradient(
+        120deg,
+        #ffffff 0%,
+        #f8cdd8 30%,
+        #e84080 55%,
+        #f8cdd8 75%,
+        #ffffff 100%
+    );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 2.8s linear infinite;
+}
+
+@keyframes shimmer {
+    from { background-position: 200% center; }
+    to   { background-position: -200% center; }
+}
+
+/* ── Tagline ──────────────────────────────────────── */
+.splash-tagline {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+/* ── Mobile ───────────────────────────────────────── */
+@media (max-width: 480px) {
+    .splash-glass {
+        padding: 2rem 2.5rem 1.6rem;
+    }
+    .splash-orb-1 { width: 300px; height: 300px; }
+    .splash-orb-2 { width: 220px; height: 220px; }
+}

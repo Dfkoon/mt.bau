@@ -38,6 +38,7 @@ import { db } from './config/firebase';
 
 import FeedbackPopup from './components/FeedbackPopup';
 import CookieConsent from './components/CookieConsent';
+import SplashScreen from './components/SplashScreen';
 
 import NashmiGuide from './components/NashmiGuide';
 import ReportModal from './components/ReportModal';
@@ -97,6 +98,16 @@ function App() {
   const [feedbackPopupEnabled, setFeedbackPopupEnabled] = React.useState(false);
   const [feedbackPopupLoaded, setFeedbackPopupLoaded] = React.useState(false);
 
+  // Show splash once per browser session
+  const [showSplash, setShowSplash] = React.useState(() => {
+    return !sessionStorage.getItem('makanak_splash_shown');
+  });
+
+  const handleSplashFinish = React.useCallback(() => {
+    sessionStorage.setItem('makanak_splash_shown', 'true');
+    setShowSplash(false);
+  }, []);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -140,7 +151,9 @@ function App() {
   };
 
   return (
-    <Router>
+    <>
+      {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+      <Router>
       <ScrollToTop />
       <PageTitleUpdater />
       <Toaster
@@ -203,6 +216,7 @@ function App() {
       </Routes>
 
     </Router>
+    </>
   );
 }
 
