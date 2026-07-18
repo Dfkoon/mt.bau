@@ -50,11 +50,7 @@ export const logPageView = async (path, details = {}) => {
 
 export const getTotalStudentVisits = async () => {
     try {
-        const visitsQuery = query(
-            collection(db, 'page_views'),
-            where('type', '==', 'visit')
-        );
-        const snapshot = await getCountFromServer(visitsQuery);
+        const snapshot = await getCountFromServer(collection(db, 'page_views'));
         return Number(snapshot.data().count || 0);
     } catch (error) {
         console.error('Error fetching visitor count:', error);

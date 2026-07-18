@@ -111,7 +111,7 @@ const translations = {
         'hero.btn.exchange': 'تبادل المواد',
         'hero.stat.materials': 'مادة دراسية',
         'hero.stat.students': 'زائر',
-        'hero.stat.support': 'دعم أكاديمي',
+        'hero.stat.support': 'دعم إرشادي',
 
         // Marquee
         'marquee.label': 'عاجل',
@@ -450,7 +450,7 @@ const translations = {
         'hero.btn.exchange': 'Material Exchange',
         'hero.stat.materials': 'Study Materials',
         'hero.stat.students': 'Visitors',
-        'hero.stat.support': 'Academic Support',
+        'hero.stat.support': 'Guidance Support',
 
         // Marquee
         'marquee.label': 'Breaking',
