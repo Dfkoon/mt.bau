@@ -28,7 +28,7 @@ const SplashScreen = ({ onFinish }) => {
 
             {/* Glass card */}
             <div className="splash-glass">
-                <p className="splash-word">مكانك</p>
+                <p className="splash-word">makanak</p>
                 <span className="splash-tagline">منصتك الجامعية</span>
             </div>
         </div>
