@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
-  base: '/',
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/mt.bau/' : '/',
   plugins: [react()],
   resolve: {
     alias: {
