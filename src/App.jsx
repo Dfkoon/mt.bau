@@ -37,6 +37,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from './config/firebase';
 
 import FeedbackPopup from './components/FeedbackPopup';
+import CookieConsent from './components/CookieConsent';
 
 import NashmiGuide from './components/NashmiGuide';
 import ReportModal from './components/ReportModal';
@@ -174,6 +175,8 @@ function App() {
               isOpen={showFeedbackPopup}
               onClose={handleClosePopup}
             />
+
+            <CookieConsent />
 
             <main>
               <Routes>
