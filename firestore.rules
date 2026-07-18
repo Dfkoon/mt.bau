@@ -122,6 +122,11 @@ service cloud.firestore {
       allow read, write: if true;
     }
     
+    // Academic Courses Management
+    match /academic_courses/{doc} {
+      allow read, write: if true;
+    }
+    
     // Default Deny
     match /{document=**} {
       allow read, write: if isAdmin();

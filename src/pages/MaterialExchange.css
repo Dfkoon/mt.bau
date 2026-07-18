@@ -63,6 +63,44 @@
     position: relative;
 }
 
+/* ── Autofill Fix: Prevent browser from overriding input background ── */
+/* Dark theme autofill */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus,
+.form-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px rgba(30, 30, 40, 0.95) inset !important;
+    box-shadow: 0 0 0 1000px rgba(30, 30, 40, 0.95) inset !important;
+    -webkit-text-fill-color: #f1f5f9 !important;
+    caret-color: #f1f5f9;
+    border-color: var(--glass-border) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Light theme autofill */
+[data-theme='light'] .form-input:-webkit-autofill,
+[data-theme='light'] .form-input:-webkit-autofill:hover,
+[data-theme='light'] .form-input:-webkit-autofill:focus,
+[data-theme='light'] .form-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #fffef0 inset !important;
+    box-shadow: 0 0 0 1000px #fffef0 inset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    caret-color: #1a1a2e;
+    border-color: rgba(0, 0, 0, 0.15) !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Light theme login modal autofill — pure white */
+[data-theme='light'] .login-modal .form-input:-webkit-autofill,
+[data-theme='light'] .login-modal .form-input:-webkit-autofill:hover,
+[data-theme='light'] .login-modal .form-input:-webkit-autofill:focus,
+[data-theme='light'] .login-modal .form-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #fffef0 inset !important;
+    box-shadow: 0 0 0 1000px #fffef0 inset !important;
+    -webkit-text-fill-color: #1a1a2e !important;
+    caret-color: #1a1a2e;
+}
+
 .input-toggle-wrapper {
     display: flex;
     align-items: center;

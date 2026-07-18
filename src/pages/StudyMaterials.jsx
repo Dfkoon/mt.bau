@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { coursesData, categories, faculties } from '../data/coursesData';
 import { Link, useNavigate } from 'react-router-dom';
 import FileUploader from '../components/FileUploader';
+import { db } from '../config/firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 import { getQuizForCourse } from '../data/quizMapping';
 import { logMaterialDownload } from '../services/analyticsService';
@@ -21,6 +23,48 @@ const StudyMaterials = () => {
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [expandedCourse, setExpandedCourse] = useState(null);
     const [showUploader, setShowUploader] = useState(false);
+
+    const [localCoursesData, setLocalCoursesData] = useState(coursesData);
+
+    useEffect(() => {
+        const unsub = onSnapshot(collection(db, 'academic_courses'), (snap) => {
+            const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            const newData = {};
+            Object.keys(coursesData).forEach(catId => {
+                newData[catId] = [...coursesData[catId]];
+            });
+
+            list.forEach(dbC => {
+                const catId = dbC.category;
+                if (!newData[catId]) newData[catId] = [];
+
+                const idx = newData[catId].findIndex(c => String(c.id) === String(dbC.id));
+                if (dbC.deleted) {
+                    if (idx > -1) newData[catId].splice(idx, 1);
+                } else {
+                    const mapped = {
+                        id: dbC.id,
+                        name: dbC.name,
+                        nameEn: dbC.nameEn,
+                        icon: dbC.icon || '📚',
+                        specialization: dbC.specialization || null,
+                        files: dbC.files || {}
+                    };
+                    if (idx > -1) {
+                        newData[catId][idx] = mapped;
+                    } else if (dbC.custom) {
+                        newData[catId].push(mapped);
+                    }
+                }
+            });
+
+            setLocalCoursesData(newData);
+        }, (err) => {
+            console.error("Error fetching db courses in materials page:", err);
+        });
+        return () => unsub();
+    }, []);
 
     // Icons mapping for specializations to give them a premium look
     const specIcons = {
@@ -62,7 +106,7 @@ const StudyMaterials = () => {
 
         if ((isSearching && searchScope === 'all') || forceGlobal === 'all') {
             return categories.flatMap(cat =>
-                (coursesData[cat.id] || [])
+                (localCoursesData[cat.id] || [])
                     .filter(course => !course.specialization || course.specialization === selectedSpecialization)
                     .map(course => ({
                         ...course,
@@ -74,7 +118,7 @@ const StudyMaterials = () => {
 
         if ((isSearching && (searchScope === 'faculty' || forceGlobal === true)) || !selectedCategory) {
             return availableCategories.flatMap(cat =>
-                (coursesData[cat.id] || [])
+                (localCoursesData[cat.id] || [])
                     .filter(course => !course.specialization || course.specialization === selectedSpecialization)
                     .map(course => ({
                         ...course,
@@ -84,7 +128,7 @@ const StudyMaterials = () => {
             );
         }
 
-        return (coursesData[selectedCategory] || [])
+        return (localCoursesData[selectedCategory] || [])
             .filter(course => !course.specialization || course.specialization === selectedSpecialization)
             .map(course => ({
                 ...course,
@@ -291,51 +335,60 @@ const StudyMaterials = () => {
                                         <span className="expand-icon">◀</span>
                                     </div>
 
-                                    {expandedCourse === courseUniqueId && (Object.keys(course.files).length > 0 || getQuizForCourse(course)) && (
-                                        <div className="course-links">
-                                            {Object.entries(course.files).map(([type, url]) => (
-                                                <a
-                                                    key={type}
-                                                    href={url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className={`resource-link ${type}`}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        logMaterialDownload(
-                                                            language === 'ar' ? (course.nameAr || course.name) : course.name,
-                                                            getResourceLabel(type)
-                                                        );
-                                                    }}
-                                                >
-                                                    <span className="link-icon">{getResourceIcon(type)}</span>
-                                                    <span>{getResourceLabel(type)}</span>
-                                                </a>
-                                            ))}
+                                    {(() => {
+                                        const activeFiles = Object.entries(course.files || {}).filter(([_, url]) => url && url.trim().length > 0);
+                                        const hasActiveFiles = activeFiles.length > 0;
+                                        const quizId = getQuizForCourse(course);
 
-                                            {/* Interactive Quiz Button */}
-                                            {getQuizForCourse(course) && (
-                                                <button
-                                                    className="resource-link interactive_quiz"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        navigate(`/quiz#${getQuizForCourse(course)}`);
-                                                    }}
-                                                >
-                                                    <span className="link-icon">🎯</span>
-                                                    <span>{t('resource.interactive_quiz')}</span>
-                                                </button>
-                                            )}
-                                        </div>
-                                    )}
+                                        if (expandedCourse !== courseUniqueId) return null;
 
-                                    {expandedCourse === courseUniqueId && Object.keys(course.files).length === 0 && !getQuizForCourse(course) && (
-                                        <div className="course-links">
-                                            <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
-                                                {t('materials.no_sources')}
-                                            </p>
-                                        </div>
-                                    )}
+                                        if (hasActiveFiles || quizId) {
+                                            return (
+                                                <div className="course-links">
+                                                    {activeFiles.map(([type, url]) => (
+                                                        <a
+                                                            key={type}
+                                                            href={url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className={`resource-link ${type}`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                logMaterialDownload(
+                                                                    language === 'ar' ? (course.nameAr || course.name) : course.name,
+                                                                    getResourceLabel(type)
+                                                                );
+                                                            }}
+                                                        >
+                                                            <span className="link-icon">{getResourceIcon(type)}</span>
+                                                            <span>{getResourceLabel(type)}</span>
+                                                        </a>
+                                                    ))}
+
+                                                    {quizId && (
+                                                        <button
+                                                            className="resource-link interactive_quiz"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                navigate(`/quiz#${quizId}`);
+                                                            }}
+                                                        >
+                                                            <span className="link-icon">🎯</span>
+                                                            <span>{t('resource.interactive_quiz')}</span>
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            );
+                                        }
+
+                                        return (
+                                            <div className="course-links">
+                                                <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
+                                                    {t('materials.no_sources')}
+                                                </p>
+                                            </div>
+                                        );
+                                    })()}
                                 </div>
                             );
                         })}

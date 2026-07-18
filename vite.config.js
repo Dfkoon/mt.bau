@@ -4,7 +4,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
-  base: command === 'serve' ? '/' : '/mt.bau/',
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {

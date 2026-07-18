@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { db } from '../config/firebase';
+import { db, storage } from '../config/firebase';
 import { collection, addDoc, getDocs, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, setDoc, deleteDoc, limit, arrayUnion, onSnapshot, increment } from 'firebase/firestore';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import toast from 'react-hot-toast';
 import exchangeHero from '../assets/heros/exchange_hero.png';
 import { sendDonationToSheets, sendBookingToSheets } from '../services/googleSheetsService';
@@ -9,6 +10,7 @@ import { saveCourseDonation, saveCourseBooking } from '../services/courseStatusS
 import emailjs from '@emailjs/browser';
 import AdminDashboard from './AdminDashboard';
 import './MaterialExchange.css';
+
 
 
 // Campaign timing is now dynamic — loaded from Firestore system_configs/global_settings
@@ -98,7 +100,7 @@ const STAFF_USERS = {
     sara: { role: 'coordinator', nameAr: 'سارة', nameEn: 'Sara', gender: 'female' }
 };
 
-const MaterialExchange = () => {
+const MaterialExchange = ({ isEmbedded = false }) => {
     const { language, t } = useLanguage();
     const isAr = language === 'ar';
 
@@ -153,10 +155,14 @@ const MaterialExchange = () => {
         coordinatorMaleTasks: '',
         coordinatorFemaleTasks: '',
         sharedCoordinatorTasks: '',
+        coordinatorMaleTasksV2: [],
+        coordinatorFemaleTasksV2: [],
+        sharedCoordinatorTasksV2: [],
         taskAutoDeleteHours: 24,
         materialTrackerEnabled: false,
         donationEndTime: '',   // ISO datetime string — end of collection/donation period
         bookingStartTime: ''    // ISO datetime string — start of booking/exchange period
+
     });
     const [showMaterialReportModal, setShowMaterialReportModal] = useState(false);
     const [materialReportData, setMaterialReportData] = useState(null);
@@ -180,6 +186,20 @@ const MaterialExchange = () => {
     const [coordinatorSubTab, setCoordinatorSubTab] = useState('delegated'); // 'main' | 'delegated'
     const [staffSubTab, setStaffSubTab] = useState('donations'); // 'donations' | 'bookings' | 'schedule'
     const [staffSearchQuery, setStaffSearchQuery] = useState('');
+
+    // ── TASK MANAGEMENT STATE ──────────────────────────────────────
+    // editTasksV2: local editable copies of the V2 task arrays while in settings
+    const [editTasksV2, setEditTasksV2] = useState({
+        shared: [],
+        male: [],
+        female: []
+    });
+    // newTaskDraft: text + image for the task currently being typed
+    const [newTaskDraft, setNewTaskDraft] = useState({ shared: '', male: '', female: '' });
+    const [newTaskImageDraft, setNewTaskImageDraft] = useState({ shared: null, male: null, female: null });
+    const [taskImageUploading, setTaskImageUploading] = useState({ shared: false, male: false, female: false });
+    const taskImageInputRefs = { shared: useRef(), male: useRef(), female: useRef() };
+
 
     // ── DELIVERY SCHEDULE STATE ───────────────────────────────────
     const [deliverySchedules, setDeliverySchedules] = useState([]);
@@ -481,8 +501,12 @@ const MaterialExchange = () => {
                         coordinatorMaleTasks: data.coordinatorMaleTasks || '',
                         coordinatorFemaleTasks: data.coordinatorFemaleTasks || '',
                         sharedCoordinatorTasks: data.sharedCoordinatorTasks || '',
+                        coordinatorMaleTasksV2: data.coordinatorMaleTasksV2 || [],
+                        coordinatorFemaleTasksV2: data.coordinatorFemaleTasksV2 || [],
+                        sharedCoordinatorTasksV2: data.sharedCoordinatorTasksV2 || [],
                         taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
                         materialTrackerEnabled: data.materialTrackerEnabled !== undefined ? data.materialTrackerEnabled : false,
+                        donationFormFrozen: data.donationFormFrozen !== undefined ? data.donationFormFrozen : false,
                         donationEndTime: data.donationEndTime || '',
                         bookingStartTime: data.bookingStartTime || '',
                         ahmad2faSecret: data.ahmad2faSecret || '',
@@ -553,6 +577,9 @@ const MaterialExchange = () => {
                         coordinatorMaleTasks: data.coordinatorMaleTasks || '',
                         coordinatorFemaleTasks: data.coordinatorFemaleTasks || '',
                         sharedCoordinatorTasks: data.sharedCoordinatorTasks || '',
+                        coordinatorMaleTasksV2: data.coordinatorMaleTasksV2 || [],
+                        coordinatorFemaleTasksV2: data.coordinatorFemaleTasksV2 || [],
+                        sharedCoordinatorTasksV2: data.sharedCoordinatorTasksV2 || [],
                         taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
                         materialTrackerEnabled: data.materialTrackerEnabled !== undefined ? data.materialTrackerEnabled : false,
                         exchangeSuspendedMessageAr: data.exchangeSuspendedMessageAr || '',
@@ -560,6 +587,12 @@ const MaterialExchange = () => {
                         donationEndTime: data.donationEndTime || '',
                         bookingStartTime: data.bookingStartTime || '',
                         taskCompletions: data.taskCompletions || { ahmad: {}, sara: {} }
+                    });
+                    // Sync V2 task arrays into editTasksV2
+                    setEditTasksV2({
+                        shared: data.sharedCoordinatorTasksV2 || [],
+                        male: data.coordinatorMaleTasksV2 || [],
+                        female: data.coordinatorFemaleTasksV2 || []
                     });
                 }
             } catch (error) {
@@ -1176,6 +1209,10 @@ const MaterialExchange = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (systemSettings.donationFormFrozen) {
+            toast.error(isAr ? 'نموذج التبرع متوقف مؤقتاً من قبل الإدارة' : 'Donation form is temporarily paused by administration');
+            return;
+        }
         if (donationCaptchaInput.trim().toUpperCase() !== donationCaptchaText) {
             setDonationCaptchaError(true);
             toast.error(isAr ? 'رمز التحقق غير صحيح' : 'Incorrect verification code');
@@ -1534,6 +1571,12 @@ const MaterialExchange = () => {
             setLoginError('');
             setCaptchaInput('');
             setCaptchaError(false);
+
+            if (user.role === 'admin') {
+                setTimeout(() => {
+                    window.location.hash = '/admin';
+                }, 100);
+            }
         } else {
             setLoginError(isAr ? 'اسم المستخدم أو كلمة المرور غير صحيحة' : 'Incorrect username or password');
             generateCaptcha();
@@ -1666,6 +1709,12 @@ const MaterialExchange = () => {
             setPendingStaffKey('');
             setPendingStaffTotpSecret('');
             toast.success(isAr ? 'تم تسجيل الدخول بنجاح! 🔐' : 'Logged in successfully! 🔐');
+
+            if (user.role === 'admin') {
+                setTimeout(() => {
+                    window.location.hash = '/admin';
+                }, 100);
+            }
         } else {
             setTotpError(true);
             toast.error(isAr ? 'رمز التحقق الثنائي غير صحيح' : 'Incorrect 2FA code');
@@ -3939,7 +3988,8 @@ Please contact us to coordinate the pickup. Thank you.`;
             <div className="material-exchange-page staff-mode">
                 <div className="staff-dashboard-container">
 
-                    {/* ─── Gradient Header ──────────────────────── */}
+                    {/* ─── Gradient Header (hidden when embedded in AdminDashboard) ── */}
+                    {!isEmbedded && (
                     <div className="dashboard-header-card">
                         <div className="dashboard-header-left">
                             <div className="dashboard-title-group">
@@ -3966,6 +4016,7 @@ Please contact us to coordinate the pickup. Thank you.`;
                             </button>
                         </div>
                     </div>
+                    )} {/* end !isEmbedded header */}
 
                     {/* ─── Stats Row ────────────────────────────── */}
                     <div className="dashboard-stats-row">
@@ -5981,6 +6032,44 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                 </div>
                                             </label>
                                         </div>
+                                        <div className="settings-field live-control-field">
+                                            <label className="permission-toggle-label">
+                                                <span className="permission-icon">🔒</span>
+                                                <div className="permission-text-block">
+                                                    <strong>{isAr ? 'تجميد نموذج التبرع' : 'Freeze Donation Form'}</strong>
+                                                    <small>{isAr ? 'يوقف إرسال نموذج التبرع من حيث الحجوزات مؤقتاً مع بقاء الحملة نشطة.' : 'Temporarily stops donation form submissions while keeping the campaign active.'}</small>
+                                                </div>
+                                                <div className="toggle-switch-wrapper">
+                                                    <input
+                                                        type="checkbox"
+                                                        id="toggleDonationFormFrozen"
+                                                        className="toggle-checkbox"
+                                                        checked={systemSettings.donationFormFrozen || false}
+                                                        onChange={async () => {
+                                                            const frozen = !systemSettings.donationFormFrozen;
+                                                            setSystemSettings(prev => ({ ...prev, donationFormFrozen: frozen }));
+                                                            setEditSettings(prev => ({ ...prev, donationFormFrozen: frozen }));
+                                                            try {
+                                                                const settingsRef = doc(db, 'system_configs', 'global_settings');
+                                                                await setDoc(settingsRef, { donationFormFrozen: frozen }, { merge: true });
+                                                                toast.success(isAr ? (frozen ? 'تم تجميد نموذج التبرع' : 'تم تفعيل نموذج التبرع') : (frozen ? 'Donation form frozen' : 'Donation form activated'));
+                                                                addAuditLog(
+                                                                    frozen
+                                                                        ? (isAr ? 'قام بتجميد نموذج التبرع' : 'Froze donation form')
+                                                                        : (isAr ? 'قام بتفعيل نموذج التبرع' : 'Activated donation form'),
+                                                                    frozen ? 'Froze donation form' : 'Activated donation form',
+                                                                    { donationFormFrozen: frozen }
+                                                                );
+                                                            } catch (error) {
+                                                                console.error('Error updating donation form freeze:', error);
+                                                                toast.error(isAr ? 'فشل تحديث الحالة' : 'Failed to update status');
+                                                            }
+                                                        }}
+                                                    />
+                                                    <label htmlFor="toggleDonationFormFrozen" className="toggle-label-switch"></label>
+                                                </div>
+                                            </label>
+                                        </div>
                                     </div>
 
                                     {/* Campaign messages in-place editor */}
@@ -7653,6 +7742,12 @@ Please contact us to coordinate the pickup. Thank you.`;
                                 <span>{isAr ? 'نراكم الفصل القادم! 👋' : 'See you next semester! 👋'}</span>
                             </div>
                         </div>
+                    ) : systemSettings.donationFormFrozen ? (
+                        <div className="campaign-suspension-notice">
+                            <div className="suspension-icon">🔒</div>
+                            <h3>{isAr ? 'نموذج التبرع مغلق حالياً' : 'Donation Form Closed'}</h3>
+                            <p>{isAr ? 'تم إيقاف استقبال التبرعات بالمواد مؤقتاً، مع بقاء إمكانية حجز المواد المتوفرة أدناه.' : 'Receiving material donations is temporarily closed, while booking available materials below remains open.'}</p>
+                        </div>
                     ) : (
                         <form className="material-form" onSubmit={handleSubmit}>
                             <div className="form-row">
@@ -7738,7 +7833,12 @@ Please contact us to coordinate the pickup. Thank you.`;
                                 <p className="disclaimer-content">
                                     {isAr
                                         ? 'المواد التي يتم التبرع بها تصبح من ضمن المواد المحجوزة لدى الموقع، وتبقى تحت تصرف مسؤول الموقع أو المنسقين المعتمدين إلى حين انتهاء الحملة. يتم التواصل مع المتبرعين أو الحاجزين من قبل مسؤول الموقع أو المنسقين المعتمدين فقط. الموقع يخلي مسؤوليته عن أي تواصل يتم من قبل أي شخص آخر باسم الموقع.'
-                                        : 'Donated materials become part of the reserved materials of the website and remain under the control of the site administrator or approved coordinators until the end of the campaign. Communication with donors or reservers is carried out only by the site administrator or approved coordinators. We disclaim responsibility for any communication by anyone else in the name of the website.'}
+                                        : 'Donated materials become part of the reserved materials managed by the site and remain under the control of the site administrator or approved coordinators until the end of the campaign. Communication is carried out only by authorized coordinators or the site administrator. We disclaim responsibility for any communication by anyone else in the name of the website.'}
+                                </p>
+                                <p className="disclaimer-content" style={{ marginTop: '0.6rem', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '0.6rem', fontWeight: 600 }}>
+                                    {isAr
+                                        ? 'موعد تسليم المواد متوقع يكون خلال الأسبوع الأول أو الثاني من بداية الدوام الرسمي. على كل من يرغب في حجز مادة أن يكون على إدراك تام بأنه بحاجة إليها فعلاً — لا يُقبل إلغاء التسليم بحجة عدم الرغبة في المادة بعد تأكيد الحجز.'
+                                        : 'Material delivery is expected during the first or second week of the official semester. Anyone wishing to book a material must be fully aware that they genuinely need it — cancellation of delivery will not be accepted after booking confirmation on the grounds of no longer wanting the material.'}
                                 </p>
                             </div>
                             {/* ── CAPTCHA — Verification Code ── */}
@@ -8149,6 +8249,17 @@ Please contact us to coordinate the pickup. Thank you.`;
                                 {bookingCaptchaError && (
                                     <div className="captcha-error-msg">⚠️ {isAr ? 'رمز التحقق غير صحيح — حاول مرة أخرى' : 'Incorrect code — please try again'}</div>
                                 )}
+                            </div>
+                            <div className="disclaimer-box" style={{ margin: '0.5rem 0 1rem 0' }}>
+                                <h4 className="disclaimer-title">
+                                    <i className="fas fa-exclamation-triangle"></i>
+                                    {isAr ? 'تنويه هام قبل تأكيد الحجز' : 'Important Note Before Confirming'}
+                                </h4>
+                                <p className="disclaimer-content">
+                                    {isAr
+                                        ? 'موعد تسليم المواد متوقع يكون خلال الأسبوع الأول أو الثاني من بداية الدوام الرسمي. بتأكيدك للحجز أنت تُقر بأنك بحاجة فعلية لهذه المادة وعلى إدراك تام بذلك — لا يُقبل إلغاء التسليم بحجة عدم الرغبة في المادة بعد تأكيد الحجز.'
+                                        : 'Material delivery is expected during the first or second week of the official semester. By confirming your booking, you acknowledge that you genuinely need this material — cancellation of delivery will not be accepted after booking confirmation on the grounds of no longer wanting it.'}
+                                </p>
                             </div>
                             <button type="submit" className="submit-btn full-width" disabled={loading}>
                                 {loading ? (isAr ? 'جاري الحجز...' : 'Booking...') : (isAr ? 'تأكيد الحجز' : 'Confirm Booking')}
