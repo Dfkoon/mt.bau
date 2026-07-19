@@ -6,7 +6,7 @@ import './AcademicCalendar.css';
 
 const AcademicCalendar = () => {
     const { language, t } = useLanguage();
-    const [selectedSemester, setSelectedSemester] = useState('secondSemester');
+    const [selectedSemester, setSelectedSemester] = useState('summerSemester');
     const [searchQuery, setSearchQuery] = useState('');
     const [filterType, setFilterType] = useState('all'); // all, exams, holidays, deadlines
     const [viewMode, setViewMode] = useState('list'); // list, grid

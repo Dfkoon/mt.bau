@@ -81,7 +81,6 @@ const HomePage = () => {
       <ProjectsSection />
 
       <ServicesSection />
-      <FeatureShowcase />
       <UsefulSitesSection />
       <div id="testimonials-section">
         <Testimonials />
@@ -98,15 +97,9 @@ function App() {
   const [feedbackPopupEnabled, setFeedbackPopupEnabled] = React.useState(false);
   const [feedbackPopupLoaded, setFeedbackPopupLoaded] = React.useState(false);
 
-  // Show splash once per browser session
-  const [showSplash, setShowSplash] = React.useState(() => {
-    return !sessionStorage.getItem('makanak_splash_shown');
-  });
-
-  const handleSplashFinish = React.useCallback(() => {
-    sessionStorage.setItem('makanak_splash_shown', 'true');
-    setShowSplash(false);
-  }, []);
+  // Splash screen disabled
+  const [showSplash] = React.useState(false);
+  const handleSplashFinish = React.useCallback(() => {}, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

@@ -55,6 +55,8 @@ const HeroSection = () => {
                     <h1 className="hero-title">
                         {t('hero.title')} <span className="highlight">{t('hero.title.highlight')}</span>
                     </h1>
+                    <span className="frame-corner frame-bl" />
+                    <span className="frame-corner frame-br" />
                 </div>
                 <p className="hero-subtitle">
                     {t('hero.subtitle')}

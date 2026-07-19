@@ -107,10 +107,34 @@ const Testimonials = () => {
 
     // Use Firebase testimonials if available, otherwise use fallback
     // Merge Firebase testimonials with fallback ones
+    const florkMaleAvatars = [
+        '/assets/avatars/flork_cool.png',
+        '/assets/avatars/flork_cool_v2.png',
+        '/assets/avatars/flork_crying.png'
+    ];
+    const florkFemaleAvatars = [
+        '/assets/avatars/flork_heart.png',
+        '/assets/avatars/flork_female_grad.png',
+        '/assets/avatars/flork_female_cool.png'
+    ];
+
     const testimonials = [
         ...firebaseTestimonials,
         ...(fallbackTestimonials[language] || fallbackTestimonials.ar)
-    ];
+    ].map((t, idx) => {
+        let avatar = t.avatar;
+        if (!avatar || !avatar.startsWith('/assets/avatars/flork')) {
+            const isFemale = t.gender === 'female' || 
+                            (t.role && t.role.toLowerCase().includes('female')) || 
+                            (t.author && t.author.includes('طالبة'));
+            const avatarList = isFemale ? florkFemaleAvatars : florkMaleAvatars;
+            avatar = avatarList[idx % avatarList.length];
+        }
+        return {
+            ...t,
+            avatar
+        };
+    });
 
     usePreloadImages(testimonials.map((t) => t.avatar));
 
@@ -268,7 +292,7 @@ const Testimonials = () => {
                                     />
                                     {testimonials.map((t, i) => (
                                         <motion.img
-                                            key={t.avatar}
+                                            key={t.id || i}
                                             src={t.avatar}
                                             alt={t.author}
                                             className="author-avatar"
