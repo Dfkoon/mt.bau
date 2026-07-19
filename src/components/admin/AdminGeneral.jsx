@@ -46,7 +46,7 @@ const AdminGeneral = () => {
                         feedbackPopupEnabled: data.feedbackPopupEnabled ?? true,
                         secretGatewayCode: data.secretGatewayCode || 'makanak2025',
                         adminPassword: data.adminPassword || 'admin2024',
-                        campaignPhase: data.campaignPhase || 'suspended',
+                        campaignPhase: data.campaignPhase === 'booking' ? 'exchange' : (data.campaignPhase === 'donation' ? 'collection' : (data.campaignPhase || 'suspended')),
                         exchangeSuspendedMessageAr: data.exchangeSuspendedMessageAr || '',
                         exchangeSuspendedMessageEn: data.exchangeSuspendedMessageEn || '',
                     });
@@ -277,8 +277,8 @@ const AdminGeneral = () => {
                             disabled={saving}
                         >
                             <option value="suspended">{isAr ? 'معطّلة / متوقفة مؤقتاً' : 'Suspended'}</option>
-                            <option value="donation">{isAr ? 'مرحلة التبرع بالمواد' : 'Donation Phase'}</option>
-                            <option value="booking">{isAr ? 'مرحلة حجز الكتب والمواد' : 'Booking Phase'}</option>
+                            <option value="collection">{isAr ? 'مرحلة التبرع بالمواد' : 'Donation Phase'}</option>
+                            <option value="exchange">{isAr ? 'مرحلة حجز الكتب والمواد' : 'Booking Phase'}</option>
                         </select>
                     </div>
 

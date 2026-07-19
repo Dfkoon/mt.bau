@@ -466,7 +466,9 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 const docSnap = await getDoc(settingsRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    const phase = data.campaignPhase || 'suspended';
+                    let phase = data.campaignPhase || 'suspended';
+                    if (phase === 'booking') phase = 'exchange';
+                    if (phase === 'donation') phase = 'collection';
                     setSystemSettings(prev => ({
                         ...prev,
                         campaignPhase: phase,
