@@ -694,11 +694,29 @@ const Quiz = () => {
             setAiGrading(false);
         }
 
+        // Collect wrong answers for the activity log (max 10 to stay within Firestore doc limits)
+        const wrongQuestions = currentQuiz.questions
+            .filter(q => {
+                if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill' || q.type === 'matching') return false;
+                return !isCorrectAnswer(q, userAnswers[q.id]);
+            })
+            .slice(0, 10)
+            .map(q => ({
+                questionText: (q.questionAr || q.questionEn || q.question || '').slice(0, 120),
+                correctAnswer: q.correctAnswer || '',
+                studentAnswer: userAnswers[q.id] || '',
+            }));
+
         // Log quiz completion to analytics
         logQuizCompletion(
             quizId,
             currentQuiz.titleAr || currentQuiz.title || quizId,
-            `${calculatedScore.toFixed(2)}/${totalMarks.toFixed(2)}`
+            `${calculatedScore.toFixed(2)}/${totalMarks.toFixed(2)}`,
+            {
+                courseName: currentSubject ? (currentSubject.titleAr || currentSubject.title || '') : '',
+                partTitle: currentQuiz.titleAr || currentQuiz.title || quizId,
+                wrongQuestions,
+            }
         );
 
         if (calculatedScore / totalMarks >= 0.5) {

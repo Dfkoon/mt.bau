@@ -39,7 +39,6 @@ const fmtDate = (ts, lang) => {
     if (!ts) return '—';
     const d = ts.seconds ? new Date(ts.seconds * 1000) : new Date(ts);
     if (isNaN(d.getTime())) return '—';
-
     const locale = lang === 'ar' ? 'ar-JO' : 'en-US';
     const timeStr = d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
     const dateStr = d.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
@@ -50,7 +49,6 @@ const getRelativeTime = (d, lang) => {
     if (!d || isNaN(d.getTime())) return '';
     const now = new Date();
     const diffSec = Math.floor((now - d) / 1000);
-
     if (diffSec < 60) return lang === 'ar' ? 'الآن' : 'Just now';
     const diffMin = Math.floor(diffSec / 60);
     if (diffMin < 60) return lang === 'ar' ? `قبل ${diffMin} د` : `${diffMin}m ago`;
@@ -78,6 +76,35 @@ const TypeBadge = ({ type, lang }) => {
     );
 };
 
+// Parse score like "8.00/10.00" → { earned, total, pct }
+const parseScore = (scoreStr) => {
+    if (!scoreStr) return null;
+    const match = String(scoreStr).match(/^([\d.]+)\/([\d.]+)$/);
+    if (!match) return null;
+    const earned = parseFloat(match[1]);
+    const total = parseFloat(match[2]);
+    if (!total) return null;
+    return { earned, total, pct: Math.round((earned / total) * 100) };
+};
+
+const ScorePill = ({ scoreStr }) => {
+    const parsed = parseScore(scoreStr);
+    if (!parsed) return <span style={{ color: 'var(--adm-muted)' }}>{scoreStr || '—'}</span>;
+    const { earned, total, pct } = parsed;
+    const color = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+    return (
+        <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+            background: `${color}22`, border: `1px solid ${color}55`,
+            borderRadius: '999px', padding: '0.2rem 0.7rem',
+            fontWeight: 700, fontSize: '0.83rem', color,
+        }}>
+            {earned}/{total}
+            <span style={{ opacity: 0.75, fontWeight: 500, fontSize: '0.74rem' }}>({pct}%)</span>
+        </span>
+    );
+};
+
 const AdminActivityLog = () => {
     const { language } = useLanguage();
     const isAr = language === 'ar';
@@ -87,6 +114,7 @@ const AdminActivityLog = () => {
     const [filterType, setFilterType] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [expandedWrong, setExpandedWrong] = useState({}); // { logId: bool }
     const pageSize = 15;
 
     useEffect(() => {
@@ -104,7 +132,6 @@ const AdminActivityLog = () => {
         fetchLogs();
     }, []);
 
-    // Summary statistics
     const stats = useMemo(() => {
         const total = logs.length;
         const visits = logs.filter(l => l.type === 'visit').length;
@@ -113,34 +140,25 @@ const AdminActivityLog = () => {
         return { total, visits, quizzes, materials };
     }, [logs]);
 
-    // Filtered logs
     const filteredLogs = useMemo(() => {
         return logs.filter(item => {
             const matchesType = filterType === 'all' || item.type === filterType;
             if (!matchesType) return false;
-
             if (!searchQuery.trim()) return true;
             const q = searchQuery.toLowerCase().trim();
-            const studentName = (item.studentName || '').toLowerCase();
-            const studentPhone = (item.studentPhone || '').toLowerCase();
-            const pathLabel = getPathLabel(item.path, language).toLowerCase();
-            const quizTitle = (item.quizTitle || item.quizId || '').toLowerCase();
-            const courseName = (item.courseName || '').toLowerCase();
-
-            return studentName.includes(q) ||
-                studentPhone.includes(q) ||
-                pathLabel.includes(q) ||
-                quizTitle.includes(q) ||
-                courseName.includes(q);
+            return (
+                (item.studentName || '').toLowerCase().includes(q) ||
+                (item.studentPhone || '').toLowerCase().includes(q) ||
+                getPathLabel(item.path, language).toLowerCase().includes(q) ||
+                (item.quizTitle || item.quizId || '').toLowerCase().includes(q) ||
+                (item.courseName || '').toLowerCase().includes(q) ||
+                (item.partTitle || '').toLowerCase().includes(q)
+            );
         });
     }, [logs, filterType, searchQuery, language]);
 
-    // Reset pagination on filter change
-    useEffect(() => {
-        setCurrentPage(1);
-    }, [filterType, searchQuery]);
+    useEffect(() => { setCurrentPage(1); }, [filterType, searchQuery]);
 
-    // Paginated list
     const totalPages = Math.ceil(filteredLogs.length / pageSize) || 1;
     const paginatedLogs = useMemo(() => {
         const start = (currentPage - 1) * pageSize;
@@ -161,46 +179,45 @@ const AdminActivityLog = () => {
     return (
         <div className="admin-panel-section admin-fade-in log-section-wrapper" dir={isAr ? 'rtl' : 'ltr'}>
 
-            {/* Header Title */}
+            {/* Header */}
             <div className="log-header-title-bar">
                 <div>
                     <h3 className="admin-section-title" style={{ margin: 0 }}>
                         📋 <span>{isAr ? 'سجل الطلاب والأنشطة' : 'Student Activity Log'}</span>
                     </h3>
                     <p className="log-subtitle">
-                        {isAr ? 'متابعة تفاعلات الطلاب، زيارات الصفحات، ونتائج الاختبارات مباشرة' : 'Real-time overview of student page visits, quizzes, and downloads'}
+                        {isAr
+                            ? 'متابعة تفاعلات الطلاب، زيارات الصفحات، ونتائج الاختبارات مباشرة'
+                            : 'Real-time overview of student page visits, quizzes, and downloads'}
                     </p>
                 </div>
             </div>
 
-            {/* Top Summary Stat Cards */}
+            {/* Stat Cards */}
             <div className="log-stats-grid">
                 <div className="log-stat-card">
-                    <div className="stat-card-icon" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#c4b5fd' }}>📊</div>
+                    <div className="stat-card-icon" style={{ background: 'rgba(139,92,246,0.15)', color: '#c4b5fd' }}>📊</div>
                     <div className="stat-card-data">
                         <span className="stat-card-value">{stats.total}</span>
                         <span className="stat-card-label">{isAr ? 'إجمالي الأنشطة' : 'Total Activities'}</span>
                     </div>
                 </div>
-
                 <div className="log-stat-card">
-                    <div className="stat-card-icon" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#93c5fd' }}>🌐</div>
+                    <div className="stat-card-icon" style={{ background: 'rgba(59,130,246,0.15)', color: '#93c5fd' }}>🌐</div>
                     <div className="stat-card-data">
                         <span className="stat-card-value">{stats.visits}</span>
                         <span className="stat-card-label">{isAr ? 'زيارات الصفحات' : 'Page Visits'}</span>
                     </div>
                 </div>
-
                 <div className="log-stat-card">
-                    <div className="stat-card-icon" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#6ee7b7' }}>🎯</div>
+                    <div className="stat-card-icon" style={{ background: 'rgba(16,185,129,0.15)', color: '#6ee7b7' }}>🎯</div>
                     <div className="stat-card-data">
                         <span className="stat-card-value">{stats.quizzes}</span>
                         <span className="stat-card-label">{isAr ? 'اختبارات مكتملة' : 'Quizzes Completed'}</span>
                     </div>
                 </div>
-
                 <div className="log-stat-card">
-                    <div className="stat-card-icon" style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fcd34d' }}>📂</div>
+                    <div className="stat-card-icon" style={{ background: 'rgba(245,158,11,0.15)', color: '#fcd34d' }}>📂</div>
                     <div className="stat-card-data">
                         <span className="stat-card-value">{stats.materials}</span>
                         <span className="stat-card-label">{isAr ? 'تفاعلات المواد' : 'Material Views'}</span>
@@ -208,29 +225,22 @@ const AdminActivityLog = () => {
                 </div>
             </div>
 
-            {/* Filter and Search Bar */}
+            {/* Filter & Search */}
             <div className="log-controls-bar">
                 <div className="log-search-box">
                     <span className="search-icon">🔍</span>
                     <input
                         type="text"
-                        placeholder={isAr ? 'ابحث باسم الطالب، رقم الهاتف، أو اسم الصفحة...' : 'Search student, phone, or page...'}
+                        placeholder={isAr ? 'ابحث باسم الطالب، رقم الهاتف، اسم المادة...' : 'Search student, phone, or course...'}
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         className="log-search-input"
                     />
-                    {searchQuery && (
-                        <button className="clear-search-btn" onClick={() => setSearchQuery('')}>✕</button>
-                    )}
+                    {searchQuery && <button className="clear-search-btn" onClick={() => setSearchQuery('')}>✕</button>}
                 </div>
-
                 <div className="log-filter-box">
                     <label className="filter-label">{isAr ? 'نوع النشاط:' : 'Type:'}</label>
-                    <select
-                        className="log-select-input"
-                        value={filterType}
-                        onChange={e => setFilterType(e.target.value)}
-                    >
+                    <select className="log-select-input" value={filterType} onChange={e => setFilterType(e.target.value)}>
                         <option value="all">{isAr ? '⚡ كل الأنشطة' : 'All Activities'}</option>
                         <option value="visit">{isAr ? '🌐 زيارات الصفحات' : 'Page Visits'}</option>
                         <option value="quiz_completed">{isAr ? '🎯 نتائج الاختبارات' : 'Quiz Completions'}</option>
@@ -239,7 +249,7 @@ const AdminActivityLog = () => {
                 </div>
             </div>
 
-            {/* Table Container */}
+            {/* Table */}
             <div className="log-table-card">
                 <table className="log-custom-table">
                     <thead>
@@ -258,88 +268,191 @@ const AdminActivityLog = () => {
                                     <p>{isAr ? 'لا توجد سجلات مطابقة للبحث' : 'No matching logs found'}</p>
                                 </td>
                             </tr>
-                        ) : (
-                            paginatedLogs.map(v => {
-                                const datetime = fmtDate(v.timestamp, language);
-                                const relTime = datetime.rawDate ? getRelativeTime(datetime.rawDate, language) : '';
-                                const isGuest = !v.studentName || v.studentName === 'Guest' || v.studentName === 'مجهول';
+                        ) : paginatedLogs.map(v => {
+                            const datetime = fmtDate(v.timestamp, language);
+                            const relTime = datetime.rawDate ? getRelativeTime(datetime.rawDate, language) : '';
+                            const isGuest = !v.studentName || v.studentName === 'Guest' || v.studentName === 'مجهول';
+                            const wrongQs = Array.isArray(v.wrongQuestions) ? v.wrongQuestions : [];
+                            const isWrongExpanded = !!expandedWrong[v.id];
 
-                                return (
-                                    <tr key={v.id} className="log-table-row">
-                                        {/* Type Badge */}
-                                        <td className="log-cell-type">
-                                            <TypeBadge type={v.type} lang={language} />
-                                        </td>
+                            return (
+                                <tr key={v.id} className="log-table-row">
 
-                                        {/* Student Info */}
-                                        <td className="log-cell-student">
-                                            <div className="student-profile-item">
-                                                <div className={`student-avatar ${isGuest ? 'guest' : 'registered'}`}>
-                                                    {isGuest ? '👤' : (v.studentName[0] || '🎓')}
-                                                </div>
-                                                <div className="student-details-meta">
-                                                    <span className="student-name">
-                                                        {isGuest ? (isAr ? 'زائر مجهول' : 'Anonymous Guest') : v.studentName}
+                                    {/* Type */}
+                                    <td className="log-cell-type">
+                                        <TypeBadge type={v.type} lang={language} />
+                                    </td>
+
+                                    {/* Student */}
+                                    <td className="log-cell-student">
+                                        <div className="student-profile-item">
+                                            <div className={`student-avatar ${isGuest ? 'guest' : 'registered'}`}>
+                                                {isGuest ? '👤' : (v.studentName?.[0] || '🎓')}
+                                            </div>
+                                            <div className="student-details-meta">
+                                                <span className="student-name">
+                                                    {isGuest ? (isAr ? 'زائر مجهول' : 'Anonymous Guest') : v.studentName}
+                                                </span>
+                                                {v.studentPhone && <span className="student-phone">📞 {v.studentPhone}</span>}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {/* Details */}
+                                    <td className="log-cell-details">
+
+                                        {/* PAGE VISIT */}
+                                        {v.type === 'visit' && (
+                                            <div className="detail-item visit-detail">
+                                                <span className="detail-label">{isAr ? 'زار صفحة:' : 'Visited:'}</span>
+                                                <span className="detail-tag">{getPathLabel(v.path, language)}</span>
+                                            </div>
+                                        )}
+
+                                        {/* QUIZ COMPLETED */}
+                                        {v.type === 'quiz_completed' && (
+                                            <div className="detail-item quiz-detail" style={{ display: 'flex', flexDirection: 'column', gap: '0.38rem' }}>
+
+                                                {/* Course name badge */}
+                                                {v.courseName && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
+                                                        <span style={{
+                                                            fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.04em',
+                                                            color: 'var(--adm-muted)', textTransform: 'uppercase',
+                                                        }}>
+                                                            {isAr ? 'المادة:' : 'Course:'}
+                                                        </span>
+                                                        <span style={{
+                                                            background: 'rgba(99,102,241,0.14)', color: '#a5b4fc',
+                                                            border: '1px solid rgba(99,102,241,0.25)',
+                                                            borderRadius: '7px', padding: '0.13rem 0.55rem',
+                                                            fontWeight: 700, fontSize: '0.8rem',
+                                                        }}>
+                                                            📚 {v.courseName}
+                                                        </span>
+                                                    </div>
+                                                )}
+
+                                                {/* Part/Chapter */}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
+                                                    <span style={{
+                                                        fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.04em',
+                                                        color: 'var(--adm-muted)', textTransform: 'uppercase',
+                                                    }}>
+                                                        {isAr ? 'الجزء:' : 'Part:'}
                                                     </span>
-                                                    {v.studentPhone && (
-                                                        <span className="student-phone">📞 {v.studentPhone}</span>
-                                                    )}
+                                                    <span style={{ fontWeight: 600, fontSize: '0.87rem' }}>
+                                                        🎯 {v.partTitle || v.quizTitle || v.quizId}
+                                                    </span>
                                                 </div>
-                                            </div>
-                                        </td>
 
-                                        {/* Activity Content */}
-                                        <td className="log-cell-details">
-                                            {v.type === 'visit' && (
-                                                <div className="detail-item visit-detail">
-                                                    <span className="detail-label">{isAr ? 'زار صفحة:' : 'Visited:'}</span>
-                                                    <span className="detail-tag">{getPathLabel(v.path, language)}</span>
+                                                {/* Score */}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                                    <span style={{
+                                                        fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.04em',
+                                                        color: 'var(--adm-muted)', textTransform: 'uppercase',
+                                                    }}>
+                                                        {isAr ? 'النتيجة:' : 'Score:'}
+                                                    </span>
+                                                    <ScorePill scoreStr={v.score} />
                                                 </div>
-                                            )}
 
-                                            {v.type === 'quiz_completed' && (
-                                                <div className="detail-item quiz-detail">
-                                                    <div className="quiz-title-row">
-                                                        <span>🎯 {v.quizTitle || v.quizId}</span>
+                                                {/* Wrong answers button */}
+                                                {wrongQs.length > 0 && (
+                                                    <div style={{ marginTop: '0.15rem' }}>
+                                                        <button
+                                                            onClick={() => setExpandedWrong(prev => ({ ...prev, [v.id]: !prev[v.id] }))}
+                                                            style={{
+                                                                background: isWrongExpanded ? 'rgba(239,68,68,0.18)' : 'rgba(239,68,68,0.09)',
+                                                                border: '1px solid rgba(239,68,68,0.32)',
+                                                                borderRadius: '8px', padding: '0.22rem 0.7rem',
+                                                                color: '#fca5a5', fontSize: '0.77rem', fontWeight: 700,
+                                                                cursor: 'pointer',
+                                                                display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                                                                transition: 'background 0.18s',
+                                                            }}
+                                                        >
+                                                            ❌ {wrongQs.length} {isAr ? 'إجابة خاطئة' : 'wrong answers'}
+                                                            <span style={{ fontSize: '0.65rem' }}>{isWrongExpanded ? '▲' : '▼'}</span>
+                                                        </button>
+
+                                                        {isWrongExpanded && (
+                                                            <div style={{
+                                                                marginTop: '0.45rem',
+                                                                background: 'rgba(239,68,68,0.06)',
+                                                                border: '1px solid rgba(239,68,68,0.15)',
+                                                                borderRadius: '10px',
+                                                                padding: '0.6rem 0.85rem',
+                                                                display: 'flex', flexDirection: 'column', gap: '0.5rem',
+                                                            }}>
+                                                                {wrongQs.map((wq, i) => (
+                                                                    <div key={i} style={{
+                                                                        borderBottom: i < wrongQs.length - 1 ? '1px solid rgba(239,68,68,0.12)' : 'none',
+                                                                        paddingBottom: i < wrongQs.length - 1 ? '0.45rem' : 0,
+                                                                    }}>
+                                                                        <div style={{ fontSize: '0.79rem', fontWeight: 600, color: 'var(--adm-text)', marginBottom: '0.22rem' }}>
+                                                                            ❓ {wq.questionText}
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.74rem' }}>
+                                                                            <span style={{ color: '#34d399' }}>
+                                                                                ✅ {isAr ? 'الصواب:' : 'Correct:'} <strong>{wq.correctAnswer}</strong>
+                                                                            </span>
+                                                                            <span style={{ color: '#f87171' }}>
+                                                                                ✗ {isAr ? 'أجاب:' : 'Answered:'} <strong>{wq.studentAnswer || (isAr ? 'لم يجب' : 'No answer')}</strong>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                    <div className="quiz-score-pill">
-                                                        📊 {isAr ? `النتيجة: ` : `Score: `}
-                                                        <strong style={{ color: '#10b981' }}>{v.score}</strong>
-                                                    </div>
-                                                </div>
-                                            )}
+                                                )}
 
-                                            {v.type === 'material_view' && (
-                                                <div className="detail-item material-detail">
-                                                    <div className="material-course">📂 {v.courseName}</div>
-                                                    {v.materialName && (
-                                                        <div className="material-name">📄 {v.materialName}</div>
-                                                    )}
-                                                </div>
-                                            )}
-
-                                            {v.type !== 'visit' && v.type !== 'quiz_completed' && v.type !== 'material_view' && (
-                                                <div className="detail-item generic-detail">
-                                                    <span>{v.details || v.path || '—'}</span>
-                                                </div>
-                                            )}
-                                        </td>
-
-                                        {/* Date & Time */}
-                                        <td className="log-cell-time">
-                                            <div className="time-display-box">
-                                                <span className="time-exact">{datetime.dateStr} — {datetime.timeStr}</span>
-                                                {relTime && <span className="time-relative">{relTime}</span>}
+                                                {/* All correct */}
+                                                {wrongQs.length === 0 && v.score && (
+                                                    <span style={{
+                                                        display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                                                        fontSize: '0.75rem', color: '#10b981', fontWeight: 700,
+                                                        background: 'rgba(16,185,129,0.1)',
+                                                        border: '1px solid rgba(16,185,129,0.25)',
+                                                        borderRadius: '7px', padding: '0.15rem 0.55rem',
+                                                    }}>
+                                                        ✅ {isAr ? 'جميع الإجابات صحيحة' : 'All answers correct'}
+                                                    </span>
+                                                )}
                                             </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        )}
+                                        )}
+
+                                        {/* MATERIAL VIEW */}
+                                        {v.type === 'material_view' && (
+                                            <div className="detail-item material-detail">
+                                                <div className="material-course">📂 {v.courseName}</div>
+                                                {v.materialName && <div className="material-name">📄 {v.materialName}</div>}
+                                            </div>
+                                        )}
+
+                                        {/* OTHER */}
+                                        {v.type !== 'visit' && v.type !== 'quiz_completed' && v.type !== 'material_view' && (
+                                            <div className="detail-item generic-detail">
+                                                <span>{v.details || v.path || '—'}</span>
+                                            </div>
+                                        )}
+                                    </td>
+
+                                    {/* Timestamp */}
+                                    <td className="log-cell-time">
+                                        <div className="time-display-box">
+                                            <span className="time-exact">{datetime.dateStr} — {datetime.timeStr}</span>
+                                            {relTime && <span className="time-relative">{relTime}</span>}
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
 
-                {/* Footer Pagination */}
+                {/* Pagination */}
                 {filteredLogs.length > 0 && (
                     <div className="log-pagination-footer">
                         <span className="pagination-info">
@@ -347,25 +460,14 @@ const AdminActivityLog = () => {
                                 ? `عرض ${(currentPage - 1) * pageSize + 1} - ${Math.min(currentPage * pageSize, filteredLogs.length)} من أصل ${filteredLogs.length} سجل`
                                 : `Showing ${(currentPage - 1) * pageSize + 1} - ${Math.min(currentPage * pageSize, filteredLogs.length)} of ${filteredLogs.length} logs`}
                         </span>
-
                         <div className="pagination-btn-group">
-                            <button
-                                className="pag-btn"
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                            >
+                            <button className="pag-btn" disabled={currentPage === 1}
+                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}>
                                 {isAr ? 'السابق' : 'Previous'}
                             </button>
-
-                            <span className="pag-page-num">
-                                {currentPage} / {totalPages}
-                            </span>
-
-                            <button
-                                className="pag-btn"
-                                disabled={currentPage >= totalPages}
-                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                            >
+                            <span className="pag-page-num">{currentPage} / {totalPages}</span>
+                            <button className="pag-btn" disabled={currentPage >= totalPages}
+                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}>
                                 {isAr ? 'التالي' : 'Next'}
                             </button>
                         </div>

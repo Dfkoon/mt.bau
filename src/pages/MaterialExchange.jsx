@@ -6669,47 +6669,80 @@ Please contact us to coordinate the pickup. Thank you.`;
                                         {archives.map(arch => {
                                             const archDate = arch.archivedAt?.toDate ? arch.archivedAt.toDate() : arch.archivedAt ? new Date(arch.archivedAt) : null;
                                             const archDonations = arch.donationsData || [];
+                                            const totalDonations = arch.totalDonations || archDonations.length;
+                                            const approvedCount = archDonations.filter(d => d.status === 'approved').length;
+                                            const reservedCount = archDonations.filter(d => d.status === 'reserved').length;
+                                            const pendingCount = archDonations.filter(d => d.status === 'pending').length;
+                                            const isExpanded = selectedArchive?.id === arch.id;
                                             return (
-                                                <div key={arch.id} className="archive-item-card">
-                                                    <div className="archive-item-left">
-                                                        <div className="archive-item-icon">🗃️</div>
-                                                        <div className="archive-item-info">
-                                                            <h4>{arch.label}</h4>
-                                                            <p>
-                                                                📅 {archDate ? archDate.toLocaleDateString(isAr ? 'ar-JO' : 'en-US') : '—'}
-                                                                &nbsp;·&nbsp; 📦 {arch.totalDonations || archDonations.length} {isAr ? 'تبرع' : 'donations'}
-                                                            </p>
+                                                <div key={arch.id} className={`archive-item-card ${isExpanded ? 'archive-item-expanded' : ''}`}>
+                                                    {/* Top row: icon + title + date + actions */}
+                                                    <div className="archive-item-top">
+                                                        <div className="archive-item-left">
+                                                            <div className="archive-item-icon">🗃️</div>
+                                                            <div className="archive-item-info">
+                                                                <h4>{arch.label}</h4>
+                                                                <p className="archive-item-date">
+                                                                    📅 {archDate ? archDate.toLocaleDateString(isAr ? 'ar-JO' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="archive-item-actions">
+                                                            <button className="export-btn export-csv-btn"
+                                                                onClick={() => exportToCSV(archDonations, arch.label)}>
+                                                                📊 Excel
+                                                            </button>
+                                                            <button className="export-btn export-pdf-btn"
+                                                                onClick={() => exportToPDF(archDonations, arch.label)}>
+                                                                🖨️ PDF
+                                                            </button>
+                                                            <button className="archive-expand-btn"
+                                                                onClick={() => setSelectedArchive(isExpanded ? null : arch)}>
+                                                                {isExpanded ? (isAr ? '▲ إخفاء' : '▲ Hide') : (isAr ? '▼ عرض التفاصيل' : '▼ Show Details')}
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div className="archive-item-actions">
-                                                        <button className="export-btn export-csv-btn"
-                                                            onClick={() => exportToCSV(archDonations, arch.label)}>
-                                                            📊 {isAr ? 'Excel' : 'Excel'}
-                                                        </button>
-                                                        <button className="export-btn export-pdf-btn"
-                                                            onClick={() => exportToPDF(archDonations, arch.label)}>
-                                                            🖨️ PDF
-                                                        </button>
-                                                        <button className="archive-expand-btn"
-                                                            onClick={() => setSelectedArchive(selectedArchive?.id === arch.id ? null : arch)}>
-                                                            {selectedArchive?.id === arch.id ? '▲' : '▼'} {isAr ? 'تفاصيل' : 'Details'}
-                                                        </button>
+
+                                                    {/* Stats bar — always visible */}
+                                                    <div className="archive-item-stats">
+                                                        <div className="archive-stat-chip archive-stat-total">
+                                                            <span className="astat-num">{totalDonations}</span>
+                                                            <span className="astat-lbl">{isAr ? 'إجمالي التبرعات' : 'Total Donations'}</span>
+                                                        </div>
+                                                        <div className="archive-stat-chip archive-stat-approved">
+                                                            <span className="astat-num">{approvedCount}</span>
+                                                            <span className="astat-lbl">{isAr ? 'معتمدة' : 'Approved'}</span>
+                                                        </div>
+                                                        <div className="archive-stat-chip archive-stat-reserved">
+                                                            <span className="astat-num">{reservedCount}</span>
+                                                            <span className="astat-lbl">{isAr ? 'محجوزة' : 'Reserved'}</span>
+                                                        </div>
+                                                        {pendingCount > 0 && (
+                                                            <div className="archive-stat-chip archive-stat-pending">
+                                                                <span className="astat-num">{pendingCount}</span>
+                                                                <span className="astat-lbl">{isAr ? 'معلقة' : 'Pending'}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                    {selectedArchive?.id === arch.id && archDonations.length > 0 && (
+
+                                                    {/* Expanded donors table */}
+                                                    {isExpanded && archDonations.length > 0 && (
                                                         <div className="archive-detail-table-wrapper">
                                                             <table className="donations-table archive-table">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th>{isAr ? '#' : '#'}</th>
                                                                         <th>{isAr ? 'الاسم' : 'Name'}</th>
                                                                         <th>{isAr ? 'الهاتف' : 'Phone'}</th>
                                                                         <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                        <th>{isAr ? 'المواد' : 'Materials'}</th>
+                                                                        <th>{isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</th>
                                                                         <th>{isAr ? 'الحالة' : 'Status'}</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
                                                                     {archDonations.map((d, i) => (
                                                                         <tr key={i}>
+                                                                            <td style={{ color: 'var(--adm-muted)', fontWeight: 600 }}>{i + 1}</td>
                                                                             <td><strong>{d.studentName}</strong></td>
                                                                             <td dir="ltr">{d.phoneNumber}</td>
                                                                             <td>
@@ -6718,11 +6751,23 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                                                 </span>
                                                                             </td>
                                                                             <td>{(d.materials || []).map(m => typeof m === 'object' ? m.name : m).join(', ')}</td>
-                                                                            <td><span className={`status-badge status-${d.status}`}>{d.status}</span></td>
+                                                                            <td>
+                                                                                <span className={`status-badge status-${d.status}`}>
+                                                                                    {d.status === 'approved' ? (isAr ? '✅ معتمد' : '✅ Approved')
+                                                                                        : d.status === 'reserved' ? (isAr ? '🔒 محجوز' : '🔒 Reserved')
+                                                                                            : d.status === 'pending' ? (isAr ? '⏳ بانتظار' : '⏳ Pending')
+                                                                                                : d.status}
+                                                                                </span>
+                                                                            </td>
                                                                         </tr>
                                                                     ))}
                                                                 </tbody>
                                                             </table>
+                                                        </div>
+                                                    )}
+                                                    {isExpanded && archDonations.length === 0 && (
+                                                        <div className="empty-state" style={{ padding: '1.5rem', margin: '0.5rem 0 0' }}>
+                                                            {isAr ? 'لا توجد بيانات مفصّلة لهذا الأرشيف.' : 'No detailed records for this archive.'}
                                                         </div>
                                                     )}
                                                 </div>

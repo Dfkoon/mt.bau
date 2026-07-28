@@ -74,14 +74,19 @@ export const logMaterialDownload = async (courseName, materialName) => {
 /**
  * Log when a student successfully completes a quiz attempt.
  * @param {string} quizId - The identifier of the quiz
- * @param {string} quizTitle - The title of the quiz
+ * @param {string} quizTitle - The title of the quiz (part/chapter name)
  * @param {string} score - The final grade achieved (e.g. "8/10")
+ * @param {Object} extra - Additional context: { courseName, partTitle, wrongQuestions }
+ *   wrongQuestions: Array of { questionText, correctAnswer, studentAnswer }
  */
-export const logQuizCompletion = async (quizId, quizTitle, score) => {
+export const logQuizCompletion = async (quizId, quizTitle, score, extra = {}) => {
     return logPageView('/quiz/complete', {
         type: 'quiz_completed',
         quizId,
         quizTitle,
-        score
+        score,
+        courseName: extra.courseName || '',
+        partTitle: extra.partTitle || quizTitle || '',
+        wrongQuestions: extra.wrongQuestions || [],
     });
 };
