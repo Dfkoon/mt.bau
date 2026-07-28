@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { db } from '../config/firebase';
 import {
  collection, query, orderBy, limit, getDocs,
@@ -382,7 +383,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
 
  // ── Dashboard data state ──
- const [activeTab, setActiveTab] = useState('analytics');
+ const [searchParams, setSearchParams] = useSearchParams();
+ const [activeTab, setActiveTabState] = useState(() => searchParams.get('tab') || 'analytics');
+
+ const setActiveTab = (tabId) => {
+   setActiveTabState(tabId);
+   setSearchParams({ tab: tabId }, { replace: true });
+ };
  const [pageViews, setPageViews] = useState([]);
  const [suggestions, setSuggestions] = useState([]);
  const [testimonials, setTestimonials] = useState([]);
@@ -1929,9 +1936,9 @@ const selectedGeneralPageData = generalAdminPages.find(p => p.id === selectedGen
  {q.isDynamic && <span className="qmanage-q-badge badge-db">Db</span>}
 
  <div style={{ marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto', display: 'flex', gap: '0.4rem' }}>
- <button className="qmanage-q-action-btn" onClick={() => openQuestionModal(q)}></button>
+ <button className="qmanage-q-action-btn" onClick={() => openQuestionModal(q)} title={isAr ? 'تعديل السؤال' : 'Edit Question'}></button>
  {q.isDynamic && (
- <button className="qmanage-q-action-btn delete" onClick={() => deleteQuestion(q.id)}></button>
+ <button className="qmanage-q-action-btn delete" onClick={() => deleteQuestion(q.id)} title={isAr ? 'حذف السؤال' : 'Delete Question'}></button>
  )}
  </div>
  </div>

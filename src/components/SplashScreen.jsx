@@ -1,123 +1,116 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './SplashScreen.css';
 
 const SplashScreen = ({ onFinish }) => {
-    const [phase, setPhase] = useState('in');
-    const [filled, setFilled] = useState(false);
     const textRef = useRef(null);
+    const [visible, setVisible] = useState(true);
 
     useEffect(() => {
-        // ── Stroke-draw animation ──────────────────────
-        const initStroke = () => {
+        const tryAnimate = () => {
             const el = textRef.current;
             if (!el) return;
 
+            // Use getComputedTextLength for SVG text
             let len = 0;
-            try { len = el.getComputedTextLength(); } catch (e) {}
+            try { len = el.getComputedTextLength(); } catch (_) {}
 
             if (len <= 0) {
-                // Font not ready yet — retry
-                setTimeout(initStroke, 80);
+                setTimeout(tryAnimate, 60);
                 return;
             }
 
+            // Set up stroke draw animation
             el.style.strokeDasharray  = `${len}`;
             el.style.strokeDashoffset = `${len}`;
+            el.style.fill             = 'none';
 
-            // Two rAFs so the initial dashoffset is painted before we add transition
             requestAnimationFrame(() => requestAnimationFrame(() => {
                 if (!textRef.current) return;
+                // Draw stroke over 2.6s
                 textRef.current.style.transition =
-                    'stroke-dashoffset 2.8s cubic-bezier(0.25, 0.1, 0.25, 1)';
+                    'stroke-dashoffset 2.6s cubic-bezier(0.4, 0, 0.2, 1)';
                 textRef.current.style.strokeDashoffset = '0';
 
-                // After stroke finishes → fade in fill
-                setTimeout(() => setFilled(true), 2900);
+                // After stroke drawn → fade in fill (make stroke invisible, fill visible)
+                setTimeout(() => {
+                    if (!textRef.current) return;
+                    textRef.current.style.transition = 'fill 0.6s ease, stroke 0.6s ease';
+                    textRef.current.style.fill       = 'url(#shimmer)';
+                    textRef.current.style.stroke     = 'transparent';
+                }, 2700);
             }));
         };
 
-        // Wait for Sacramento font to be ready
+        const kick = () => setTimeout(tryAnimate, 100);
         if (document.fonts?.ready) {
-            document.fonts.ready.then(() => setTimeout(initStroke, 120));
+            document.fonts.ready.then(kick);
         } else {
-            setTimeout(initStroke, 500);
+            kick();
         }
 
-        // ── Phase timers (30 s total) ──────────────────
-        const holdTimer = setTimeout(() => setPhase('hold'), 600);
-        const outTimer  = setTimeout(() => setPhase('out'),  29000);
-        const doneTimer = setTimeout(() => onFinish(),       29700);
+        // Fade out after 4.2 seconds, call onFinish at 4.9s
+        const fadeOut = setTimeout(() => setVisible(false), 4200);
+        const done    = setTimeout(() => onFinish && onFinish(), 4900);
 
         return () => {
-            clearTimeout(holdTimer);
-            clearTimeout(outTimer);
-            clearTimeout(doneTimer);
+            clearTimeout(fadeOut);
+            clearTimeout(done);
         };
     }, [onFinish]);
 
     return (
-        <div className={`splash-root splash-${phase}`}>
-            {/* Animated orbs */}
-            <div className="splash-orb splash-orb-1" />
-            <div className="splash-orb splash-orb-2" />
-            <div className="splash-orb splash-orb-3" />
-
-            {/* Glass card */}
-            <div className="splash-glass">
-                <svg
-                    className="splash-svg"
-                    viewBox="0 0 540 140"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <defs>
-                        <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%"   stopColor="#ffffff" />
-                            <stop offset="30%"  stopColor="#f8cdd8" />
-                            <stop offset="55%"  stopColor="#e84080" />
-                            <stop offset="75%"  stopColor="#f8cdd8" />
-                            <stop offset="100%" stopColor="#ffffff" />
-                        </linearGradient>
-
-                        {/* Animated shimmer gradient */}
-                        <linearGradient id="sgAnim" x1="-100%" y1="0%" x2="100%" y2="0%"
-                            gradientUnits="userSpaceOnUse">
-                            <stop offset="0%"   stopColor="#ffffff" />
-                            <stop offset="40%"  stopColor="#f8cdd8" />
-                            <stop offset="60%"  stopColor="#e84080" />
-                            <stop offset="100%" stopColor="#ffffff" />
-                            <animateTransform
-                                attributeName="gradientTransform"
-                                type="translate"
-                                from="-540 0"
-                                to="540 0"
-                                dur="3s"
-                                repeatCount="indefinite"
-                            />
-                        </linearGradient>
-                    </defs>
-
-                    <text
-                        ref={textRef}
-                        x="270"
-                        y="108"
-                        textAnchor="middle"
-                        fontFamily="'Sacramento', cursive"
-                        fontSize="96"
-                        /* fill changes from none → gradient once stroke drawing finishes */
-                        fill={filled ? 'url(#sgAnim)' : 'none'}
-                        stroke="url(#sg)"
-                        strokeWidth="1.2"
-                        style={{
-                            transition: filled ? 'fill 0.5s ease' : 'none',
-                            paintOrder: 'stroke fill',
-                        }}
+        <div className={`splash-root${visible ? '' : ' splash-exit'}`}>
+            <svg
+                className="splash-svg"
+                viewBox="0 0 620 160"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <defs>
+                    {/* Shimmer gradient that sweeps left→right */}
+                    <linearGradient
+                        id="shimmer"
+                        x1="0%" y1="0%" x2="100%" y2="0%"
+                        gradientUnits="userSpaceOnUse"
                     >
-                        makanak
-                    </text>
-                </svg>
+                        <stop offset="0%"   stopColor="#ffffff" />
+                        <stop offset="35%"  stopColor="#f0b8c8" />
+                        <stop offset="55%"  stopColor="#e8305a" />
+                        <stop offset="75%"  stopColor="#f0b8c8" />
+                        <stop offset="100%" stopColor="#ffffff" />
+                        <animateTransform
+                            attributeName="gradientTransform"
+                            type="translate"
+                            from="-620 0"
+                            to="620 0"
+                            dur="2.5s"
+                            begin="2.7s"
+                            repeatCount="indefinite"
+                        />
+                    </linearGradient>
 
-                <span className="splash-tagline">منصتك الجامعية</span>
-            </div>
+                    {/* Stroke gradient for drawing phase */}
+                    <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%"   stopColor="#ffffff" />
+                        <stop offset="50%"  stopColor="#f8d0dc" />
+                        <stop offset="100%" stopColor="#ffffff" />
+                    </linearGradient>
+                </defs>
+
+                <text
+                    ref={textRef}
+                    x="310"
+                    y="118"
+                    textAnchor="middle"
+                    fontFamily="'Sacramento', cursive"
+                    fontSize="108"
+                    fill="none"
+                    stroke="url(#strokeGrad)"
+                    strokeWidth="1.5"
+                    style={{ paintOrder: 'stroke fill' }}
+                >
+                    makanak
+                </text>
+            </svg>
         </div>
     );
 };

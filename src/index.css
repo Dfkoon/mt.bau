@@ -489,3 +489,45 @@ section {
   color: #ffffff;
   text-shadow: 0 0 8px rgba(211, 47, 47, 0.6);
 }
+
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+
+  .print-section {
+    position: static !important;
+    visibility: visible !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-section table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    page-break-inside: avoid !important;
+  }
+
+  .print-section th,
+  .print-section td {
+    border: 1px solid #666 !important;
+    color: #000000 !important;
+    background: transparent !important;
+  }
+
+  a[href]:after {
+    content: none !important;
+  }
+}

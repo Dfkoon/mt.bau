@@ -2819,11 +2819,27 @@ body:has(.moodle-theme-wrapper) {
 
 @media (max-width: 768px) {
     .moodle-question-block {
-        flex-direction: column;
+        flex-direction: column !important;
         gap: 0.75rem;
+    }
+    /* RTL override — must also be column on mobile */
+    [dir="rtl"] .moodle-question-block {
+        flex-direction: column !important;
+    }
+    /* Reset order so info-box appears on top */
+    [dir="rtl"] .moodle-question-block .moodle-q-info-box {
+        order: 0 !important;
+    }
+    [dir="rtl"] .moodle-question-block .moodle-q-content-box {
+        order: 1 !important;
     }
     .moodle-q-info-box {
         width: 100% !important;
+        min-width: 0 !important;
+    }
+    /* Ensure the review layout padding is mobile-friendly */
+    .moodle-review-layout {
+        padding: 1rem !important;
     }
 }
 
