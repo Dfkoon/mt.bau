@@ -1495,6 +1495,20 @@ const Quiz = () => {
                                                                         {renderTextWithCode(displayLang === 'ar' ? (correctOpt.textAr || correctOpt.textEn) : correctOpt.textEn)}
                                                                     </div>
                                                                 );
+                                                            })() : q.type === 'multi_select' ? (() => {
+                                                                const correctIds = q.correctAnswers || (q.correctAnswer ? (Array.isArray(q.correctAnswer) ? q.correctAnswer : q.correctAnswer.split(',').filter(Boolean)) : []);
+                                                                const correctOpts = (q.options || []).filter(o => correctIds.includes(o.id));
+                                                                if (correctOpts.length === 0) return language === 'ar' ? 'موضحة أعلاه' : 'Indicated above';
+                                                                return (
+                                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', marginTop: '0.3rem' }}>
+                                                                        {correctOpts.map(opt => (
+                                                                            <div key={opt.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                                                <span style={{ color: '#22c55e' }}>✓</span>
+                                                                                {renderTextWithCode(displayLang === 'ar' ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr))}
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                );
                                                             })() : q.type === 'matching'
                                                                 ? (language === 'ar' ? 'موضحة باللون الأخضر أعلاه' : 'indicated in green above')
                                                                 : q.type === 'text' || q.type === 'short_answer' || q.type === 'fill'
