@@ -1563,8 +1563,26 @@ const Quiz = () => {
                                                         if (userAnswer?.[sub.id] === sub.correctAnswer) correctCount++;
                                                     });
                                                     isCorrect = correctCount === subQuestions.length;
+                                                } else if (q.type === 'multi_select') {
+                                                    const correct = q.correctAnswers || (q.correctAnswer ? (Array.isArray(q.correctAnswer) ? q.correctAnswer : q.correctAnswer.split(',').filter(Boolean)) : []);
+                                                    const selected = Array.isArray(userAnswer) ? userAnswer : [];
+                                                    const qMarks = q.marks || 1;
+                                                    let earned = 0;
+                                                    if (correct.length > 0) {
+                                                        let correctHits = selected.filter(id => correct.includes(id)).length;
+                                                        let wrongHits = selected.filter(id => !correct.includes(id)).length;
+                                                        const perMark = qMarks / correct.length;
+                                                        earned = Math.max(0, (correctHits - wrongHits) * perMark);
+                                                    }
+                                                    isCorrect = earned === qMarks;
+                                                } else if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
+                                                    if (aiGradingResults[q.id]) {
+                                                        isCorrect = aiGradingResults[q.id].score === 1;
+                                                    } else {
+                                                        isCorrect = isCorrectAnswer(q, userAnswer);
+                                                    }
                                                 } else {
-                                                    isCorrect = userAnswer === q.correctAnswer;
+                                                    isCorrect = isCorrectAnswer(q, userAnswer);
                                                 }
                                                 const isFlagged = flaggedQuestions.has(q.id);
 
