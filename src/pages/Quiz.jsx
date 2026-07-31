@@ -786,7 +786,7 @@ const Quiz = () => {
             }
 
             // Select answers using numbers 1-4 for MCQ/TF
-            if (question && (question.type === 'mcq' || question.type === 'true_false')) {
+            if (question && question.type !== 'multi_select' && question.type !== 'text' && question.type !== 'short_answer' && question.type !== 'fill' && question.type !== 'matching') {
                 const num = parseInt(e.key);
                 if (!isNaN(num) && num > 0) {
                     let optId = null;
@@ -1932,7 +1932,7 @@ const Quiz = () => {
                                                     </div>
                                                 );
                                             })
-                                        ) : ((question.type === 'mcq' || question.type === 'true_false') && question.type !== 'text' && question.type !== 'short_answer' && question.type !== 'fill') ? (
+                                        ) : (question.type !== 'multi_select' && question.type !== 'text' && question.type !== 'short_answer' && question.type !== 'fill' && question.type !== 'matching') ? (
                                             (question.options && question.options.length >= 2 ? question.options : [
                                                 { id: 'a', textAr: 'صح', textEn: 'True' },
                                                 { id: 'b', textAr: 'خطأ', textEn: 'False' }
