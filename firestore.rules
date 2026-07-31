@@ -2,10 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Admin Helper Function
+    // Auth Helpers
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
     function isAdmin() {
-      return request.auth != null && 
-             request.auth.token.email in ['admin@koon.bau.jo', 'hussienaldayyat@gmail.com'];
+      return isAuthenticated() && 
+             (request.auth.token.email in ['admin@koon.bau.jo', 'hussienaldayyat@gmail.com'] ||
+              request.auth.token.admin == true);
     }
     
     // Validation Helpers
@@ -15,40 +20,42 @@ service cloud.firestore {
                     data.keys().hasAny(['content']) ? data.content :
                     data.keys().hasAny(['quote']) ? data.quote : '';
       
-      return content is string && content.size() >= 5 && content.size() <= 2000;
+      return content is string && content.size() >= 3 && content.size() <= 4000;
     }
     
     function isValidEmail(email) {
       return email is string && email.matches('.*@.*\\..*');
     }
 
-    // Material Donations (Consolidated & Fixed)
+    // Material Donations
     match /materialDonations/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAuthenticated();
     }
     
     // QnA / Suggestions
     match /qna/{doc} {
-      allow read: if resource.data.isPublic == true || isAdmin();
+      allow read: if resource.data.isPublic == true || isAuthenticated();
       allow create: if isValidMessage(request.resource.data) && (request.resource.data.type is string);
-      allow update, delete: if isAdmin();
+      allow update, delete: if isAuthenticated();
     }
     
     match /suggestions/{doc} {
-      // Admin dashboard reads without Firebase Auth → allow all reads
       allow read: if true;
       allow create: if isValidMessage(request.resource.data) && (request.resource.data.type is string);
-      allow update, delete: if true;  // custom-auth admin dashboard manages these
+      allow update, delete: if isAuthenticated();
     }
 
     // Question Reports
     match /question_reports/{report} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAuthenticated();
     }
 
     // Page Views / Analytics
     match /page_views/{view} {
-      // Admin dashboard reads these without Firebase Auth → allow all reads
       allow read: if true;
       allow create: if true;
       allow update, delete: if false;
@@ -56,80 +63,88 @@ service cloud.firestore {
 
     // Question Edits (admin corrections applied live in Quiz.jsx for all students)
     match /question_edits/{edit} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
     // Subscribers
     match /subscribers/{doc} {
-      allow read, delete: if isAdmin();
+      allow read, delete: if isAuthenticated();
       allow create: if isValidEmail(request.resource.data.email);
     }
 
     // Testimonials
     match /testimonials/{doc} {
-      // Admin dashboard reads all testimonials (approved or not)
       allow read: if true;
       allow create: if isValidMessage(request.resource.data);
-      allow update, delete: if true;  // admin dashboard manages approvals
+      allow update, delete: if isAuthenticated();
     }
 
-    // Other Collections
+    // Quiz Contributions
     match /quizContributions/{doc} {
       allow read: if true;
       allow create: if true;
-      allow update, delete: if true;  // admin dashboard manages approvals and deletions
+      allow update, delete: if isAuthenticated();
     }
 
     match /nashmi_chat/{doc} {
-      allow read: if isAdmin();
+      allow read: if isAuthenticated();
       allow create: if true;
-      allow update, delete: if isAdmin();
+      allow update, delete: if isAuthenticated();
     }
 
     // Campaign Archives
     match /campaignArchives/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
-    // System Configs
+    // System Configs (Public read for site settings, authenticated write)
     match /system_configs/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
     // Material Exchange Audit Logs
     match /materialExchangeLogs/{doc} {
-      allow read, write: if true;
+      allow read, write: if isAuthenticated();
     }
 
     // Coordinator & Staff Activity Statuses
     match /staff_status/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
     // Delivery Schedules (shared table for coordinators & admin)
     match /deliverySchedules/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
 
-    // Dynamic Quiz Management
+    // Dynamic Quiz Management (Protected writes against deletion/tampering)
     match /quiz_subjects/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
     match /quiz_parts/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
     match /quiz_questions/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
     
     // Academic Courses Management
     match /academic_courses/{doc} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
     
-    // Default Deny
+    // Default Rule: Authenticated Only
     match /{document=**} {
-      allow read, write: if isAdmin();
+      allow read, write: if isAuthenticated();
     }
   }
 }
