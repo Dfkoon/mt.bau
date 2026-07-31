@@ -3133,10 +3133,28 @@ Please contact us to coordinate the pickup. Thank you.`;
             return;
         }
         try {
+            const deliverySchedulesData = deliverySchedules.map(s => ({
+                id: s.id || '',
+                donorName: s.donorName || '',
+                donorPhone: s.donorPhone || '',
+                donorGender: s.donorGender || '',
+                takerName: s.takerName || s.takerInfo?.name || '',
+                takerPhone: s.takerPhone || s.takerInfo?.phone || '',
+                takerGender: s.takerGender || s.takerInfo?.gender || '',
+                materialName: s.materialName || '',
+                pickupDate: s.pickupDate || '',
+                pickupTime: s.pickupTime || '',
+                status: s.status || '',
+                coordinatorId: s.coordinatorId || '',
+                coordinatorName: s.coordinatorName || '',
+                createdAt: s.createdAt || null
+            }));
+
             await addDoc(collection(db, 'campaignArchives'), {
                 label: archiveName.trim(),
                 archivedAt: new Date(),
                 totalDonations: allDonations.length,
+                totalDeliverySchedules: deliverySchedules.length,
                 donationsData: allDonations.map(d => ({
                     id: d.id || '',
                     studentName: d.studentName || '',
@@ -3159,26 +3177,30 @@ Please contact us to coordinate the pickup. Thank you.`;
                         return { name: String(m), description: '', status: 'pending', takerInfo: null };
                     }),
                     createdAt: d.createdAt || null
-                }))
+                })),
+                deliverySchedulesData
             });
 
             // Delete all current active donations from materialDonations collection
-            const deletePromises = allDonations.map(d => deleteDoc(doc(db, 'materialDonations', d.id)));
-            await Promise.all(deletePromises);
+            const deleteDonationPromises = allDonations.map(d => deleteDoc(doc(db, 'materialDonations', d.id)));
+            // Delete all current delivery schedules from deliverySchedules collection
+            const deleteSchedulePromises = deliverySchedules.map(s => deleteDoc(doc(db, 'deliverySchedules', s.id)));
+            await Promise.all([...deleteDonationPromises, ...deleteSchedulePromises]);
 
             toast.success(isAr
-                ? `✅ تم أرشفة ${allDonations.length} تبرع بنجاح تحت "${archiveName.trim()}"`
-                : `✅ Archived ${allDonations.length} donations as "${archiveName.trim()}"`);
+                ? `✅ تم أرشفة كافة أقسام الحملة (${allDonations.length} تبرع و ${deliverySchedules.length} جدول تسليم) بنجاح تحت "${archiveName.trim()}"`
+                : `✅ Archived all campaign sections (${allDonations.length} donations & ${deliverySchedules.length} schedules) as "${archiveName.trim()}"`);
             setShowArchiveModal(false);
             setArchiveName('');
             fetchArchives();
             fetchDonations();
             fetchAllDonations();
+            fetchDeliverySchedules();
 
             addAuditLog(
-                `قام بأرشفة كافة التبرعات (${allDonations.length}) تحت اسم الأرشيف "${archiveName.trim()}" وبدء دورة جديدة`,
-                `Archived all active donations (${allDonations.length}) under archive label "${archiveName.trim()}" and started a new cycle`,
-                { archiveName: archiveName.trim(), count: allDonations.length }
+                `قام بأرشفة كافة التبرعات وجداول تسليم الحجوزات (${allDonations.length} تبرع و ${deliverySchedules.length} تسليم) تحت اسم الأرشيف "${archiveName.trim()}" وبدء دورة جديدة`,
+                `Archived all donations and delivery schedules (${allDonations.length} donations & ${deliverySchedules.length} schedules) under "${archiveName.trim()}" and started a new cycle`,
+                { archiveName: archiveName.trim(), donationsCount: allDonations.length, schedulesCount: deliverySchedules.length }
             );
         } catch (e) {
             console.error('Archive error:', e);
@@ -6723,6 +6745,12 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                                 <span className="astat-lbl">{isAr ? 'معلقة' : 'Pending'}</span>
                                                             </div>
                                                         )}
+                                                        {(arch.totalDeliverySchedules !== undefined || (arch.deliverySchedulesData || []).length > 0) && (
+                                                            <div className="archive-stat-chip" style={{ background: 'rgba(116, 185, 255, 0.15)', borderColor: 'rgba(116, 185, 255, 0.3)' }}>
+                                                                <span className="astat-num" style={{ color: '#74b9ff' }}>{arch.totalDeliverySchedules || (arch.deliverySchedulesData || []).length}</span>
+                                                                <span className="astat-lbl" style={{ color: '#74b9ff' }}>{isAr ? 'جدول تسليم الحجوزات' : 'Delivery Schedules'}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
 
                                                     {/* Expanded donors table */}
@@ -6797,6 +6825,58 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                                     ))}
                                                                 </tbody>
                                                             </table>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Expanded delivery schedules table */}
+                                                    {isExpanded && (arch.deliverySchedulesData || []).length > 0 && (
+                                                        <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px dashed rgba(255,255,255,0.15)' }}>
+                                                            <h5 style={{ margin: '0 0 0.8rem 0', display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#74b9ff', fontSize: '0.95rem' }}>
+                                                                📅 {isAr ? 'جدول تسليم الحجوزات المؤرشفة' : 'Archived Delivery Schedules'} ({arch.deliverySchedulesData.length})
+                                                            </h5>
+                                                            <div className="archive-detail-table-wrapper">
+                                                                <table className="donations-table archive-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>{isAr ? 'المادة' : 'Material'}</th>
+                                                                            <th>{isAr ? 'المتبرع' : 'Donor'}</th>
+                                                                            <th>{isAr ? 'الحاجز' : 'Booker'}</th>
+                                                                            <th>{isAr ? 'موعد التسليم' : 'Pickup Date & Time'}</th>
+                                                                            <th>{isAr ? 'المنسق' : 'Coordinator'}</th>
+                                                                            <th>{isAr ? 'الحالة' : 'Status'}</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {arch.deliverySchedulesData.map((s, idx) => (
+                                                                            <tr key={idx}>
+                                                                                <td style={{ color: 'var(--adm-muted)', fontWeight: 600 }}>{idx + 1}</td>
+                                                                                <td><strong>{s.materialName || '—'}</strong></td>
+                                                                                <td>
+                                                                                    <div>{s.donorName || '—'}</div>
+                                                                                    <div style={{ fontSize: '0.78rem', color: 'var(--adm-muted)' }} dir="ltr">{s.donorPhone || ''}</div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div>{s.takerName || '—'}</div>
+                                                                                    <div style={{ fontSize: '0.78rem', color: 'var(--adm-muted)' }} dir="ltr">{s.takerPhone || ''}</div>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <div>📅 {s.pickupDate || '—'}</div>
+                                                                                    <div style={{ fontSize: '0.78rem', color: 'var(--adm-muted)' }}>⏰ {s.pickupTime || '—'}</div>
+                                                                                </td>
+                                                                                <td>{s.coordinatorName || s.coordinatorId || '—'}</td>
+                                                                                <td>
+                                                                                    <span className={`status-badge status-${s.status || 'pending'}`}>
+                                                                                        {s.status === 'completed' ? (isAr ? '✅ تم التسليم' : '✅ Delivered')
+                                                                                            : s.status === 'delivered_later' ? (isAr ? '⏳ يتساقط لاحقاً' : '⏳ Delivered Later')
+                                                                                                : (isAr ? '⏳ بانتظار التسليم' : '⏳ Pending')}
+                                                                                    </span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        ))}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                     )}
                                                     {isExpanded && archDonations.length === 0 && (
