@@ -207,6 +207,14 @@ const renderTextWithCode = (text) => {
         }
     });
 
+    const sanitizeHtml = (htmlStr) => {
+        if (!htmlStr) return '';
+        return htmlStr
+            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+            .replace(/on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+            .replace(/javascript\s*:/gi, '');
+    };
+
     // Modern multi-language support for markdown code blocks
     // Note: We split by the regex but use a capturing group so matches are included in the array
     const parts = text.split(/```(?:java|cpp|javascript|sql|python)?([\s\S]*?)```/i);
@@ -220,7 +228,7 @@ const renderTextWithCode = (text) => {
             const html = renderMath(part);
             const isHtml = /<[^>]+>/.test(html);
             if (isHtml) {
-                return <span key={index} dangerouslySetInnerHTML={{ __html: html }} />;
+                return <span key={index} dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }} />;
             }
 
             return <span key={index} style={{ whiteSpace: 'pre-wrap' }}>{html}</span>;
@@ -230,7 +238,7 @@ const renderTextWithCode = (text) => {
     const html = renderMath(text);
     const isHtml = /<[^>]+>/.test(html);
     if (isHtml) {
-        return <span dangerouslySetInnerHTML={{ __html: html }} />;
+        return <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }} />;
     }
 
     return <span style={{ whiteSpace: 'pre-wrap' }}>{html}</span>;
