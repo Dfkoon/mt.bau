@@ -5350,9 +5350,9 @@ Please contact us to coordinate the pickup. Thank you.`;
                                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                         {[
                                             { date: '2026-07-12', dayAr: 'الأحد ١٢ / ٧', dayEn: 'Sunday 12/7' },
-                                            { date: '2026-07-13', dayAr: 'الإثنين ١٣ / ٧', dayEn: 'Monday 13/7' },
-                                            { date: '2026-07-14', dayAr: 'الثلاثاء ١٤ / ٧', dayEn: 'Tuesday 14/7' },
-                                            { date: '2026-07-15', dayAr: 'الأربعاء ١٥ / ٧', dayEn: 'Wednesday 15/7' }
+                                            { date: '2026-07-13', dayAr: 'الإثنين ١٣ / ٧', dayEn: 'Monday 12/7' },
+                                            { date: '2026-07-14', dayAr: 'الثلاثاء ١٤ / ٧', dayEn: 'Tuesday 12/7' },
+                                            { date: '2026-07-15', dayAr: 'الأربعاء ١٥ / ٧', dayEn: 'Wednesday 12/7' }
                                         ].map(day => {
                                             const count = deliverySchedules.filter(s => s.pickupDate === day.date).length;
                                             return (
@@ -6735,7 +6735,7 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                                         <th>{isAr ? 'الاسم' : 'Name'}</th>
                                                                         <th>{isAr ? 'الهاتف' : 'Phone'}</th>
                                                                         <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                        <th>{isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</th>
+                                                                        <th>{isAr ? 'المواد + الحاجزون' : 'Materials + Bookers'}</th>
                                                                         <th>{isAr ? 'الحالة' : 'Status'}</th>
                                                                     </tr>
                                                                 </thead>
@@ -6750,7 +6750,41 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                                                     {d.studentGender === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
                                                                                 </span>
                                                                             </td>
-                                                                            <td>{(d.materials || []).map(m => typeof m === 'object' ? m.name : m).join(', ')}</td>
+                                                                            <td>
+                                                                                {(d.materials || []).map((m, mi) => {
+                                                                                    const matName = typeof m === 'object' ? (m.name || '—') : String(m);
+                                                                                    const matStatus = typeof m === 'object' ? m.status : 'pending';
+                                                                                    const taker = typeof m === 'object' ? (m.takerInfo || null) : null;
+                                                                                    return (
+                                                                                        <div key={mi} style={{ marginBottom: '0.4rem', padding: '0.4rem 0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                                                                                                <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>📦 {matName}</span>
+                                                                                                <span className={`status-badge status-${matStatus}`} style={{ fontSize: '0.72rem', padding: '0.1rem 0.4rem' }}>
+                                                                                                    {matStatus === 'completed' ? (isAr ? '✅ تم التسليم' : '✅ Delivered')
+                                                                                                        : matStatus === 'reserved' ? (isAr ? '🔒 محجوز' : '🔒 Reserved')
+                                                                                                            : matStatus === 'approved' ? (isAr ? '✔ معتمد' : '✔ Approved')
+                                                                                                                : (isAr ? '⏳ معلق' : '⏳ Pending')}
+                                                                                                </span>
+                                                                                            </div>
+                                                                                            {taker && (taker.name || taker.phone) ? (
+                                                                                                <div style={{ marginTop: '0.3rem', paddingTop: '0.3rem', borderTop: '1px dashed rgba(255,255,255,0.15)', display: 'flex', gap: '0.8rem', flexWrap: 'wrap', fontSize: '0.78rem', color: 'rgba(255,255,255,0.7)' }}>
+                                                                                                    <span>👤 {isAr ? 'الحاجز:' : 'Booker:'} <strong style={{ color: '#fff' }}>{taker.name || '—'}</strong></span>
+                                                                                                    <span dir="ltr">📞 {taker.phone || '—'}</span>
+                                                                                                    {taker.gender && (
+                                                                                                        <span className={`gender-badge gender-${taker.gender}`} style={{ fontSize: '0.7rem', padding: '0.1rem 0.4rem' }}>
+                                                                                                            {taker.gender === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                                                                        </span>
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            ) : (
+                                                                                                <div style={{ marginTop: '0.2rem', fontSize: '0.74rem', color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>
+                                                                                                    {isAr ? 'غير محجوزة' : 'Not booked'}
+                                                                                                </div>
+                                                                                            )}
+                                                                                        </div>
+                                                                                    );
+                                                                                })}
+                                                                            </td>
                                                                             <td>
                                                                                 <span className={`status-badge status-${d.status}`}>
                                                                                     {d.status === 'approved' ? (isAr ? '✅ معتمد' : '✅ Approved')

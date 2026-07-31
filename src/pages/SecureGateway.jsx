@@ -337,50 +337,74 @@ const SecureGateway = () => {
         const username = usernameInput.trim().toLowerCase();
         const password = passwordInput;
 
-        const passwords = {
-            admin: systemSettings.adminPassword || 'admin2024',
-            ahmad: systemSettings.ahmadPassword || 'ahmad2024',
-            sara: systemSettings.saraPassword || 'sara2024'
+        // Build list of active coordinators (from coordinators array or fallback to legacy ahmad/sara)
+        const dynCoords = (systemSettings.coordinators && Array.isArray(systemSettings.coordinators) && systemSettings.coordinators.length > 0)
+            ? systemSettings.coordinators
+            : [
+                { key: 'ahmad', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', password: systemSettings.ahmadPassword || 'ahmad2024', gender: 'male' },
+                { key: 'sara', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', password: systemSettings.saraPassword || 'sara2024', gender: 'female' }
+            ];
+
+        // Combined staff lookup
+        const staffMap = {
+            admin: {
+                key: 'admin',
+                role: 'admin',
+                nameAr: 'الأدمن',
+                nameEn: 'Admin',
+                gender: null,
+                password: systemSettings.adminPassword || 'admin2024',
+                totpSecret: systemSettings.admin2faSecret || ''
+            }
         };
 
-        const staffUsersDynamic = {
-            admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
-            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
-            sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
-        };
+        dynCoords.forEach(c => {
+            staffMap[c.key.toLowerCase()] = {
+                key: c.key,
+                role: 'coordinator',
+                nameAr: c.nameAr || c.key,
+                nameEn: c.nameEn || c.key,
+                gender: c.gender || 'male',
+                email: c.email || '',
+                password: c.password || '',
+                totpSecret: systemSettings[`${c.key}2faSecret`] || c.totpSecret || ''
+            };
+        });
 
-        let matchedKey = null;
-        const adminNameAr = 'الأدمن'.trim().toLowerCase();
-        const ahmadNameAr = (systemSettings.ahmadNameAr || 'أحمد').trim().toLowerCase();
-        const saraNameAr = (systemSettings.saraNameAr || 'سارة').trim().toLowerCase();
-
-        if (username === 'admin' || username === adminNameAr || username === 'الأدمن') {
-            matchedKey = 'admin';
-        } else if (username === 'ahmad' || username === ahmadNameAr || username === 'أحمد') {
-            matchedKey = 'ahmad';
-        } else if (username === 'sara' || username === saraNameAr || username === 'سارة') {
-            matchedKey = 'sara';
+        // Match by key, nameAr, nameEn, or email
+        let matchedStaff = null;
+        if (username === 'admin' || username === 'الأدمن' || username === 'admin@koon.bau.jo') {
+            matchedStaff = staffMap.admin;
+        } else {
+            matchedStaff = Object.values(staffMap).find(s => 
+                s.key.toLowerCase() === username ||
+                (s.nameAr && s.nameAr.trim().toLowerCase() === username) ||
+                (s.nameEn && s.nameEn.trim().toLowerCase() === username) ||
+                (s.email && s.email.trim().toLowerCase() === username)
+            );
         }
 
-        if (matchedKey && passwords[matchedKey] === password) {
-            const user = staffUsersDynamic[matchedKey];
-            
-            // Get 2FA TOTP secret
-            let totpSecret = '';
-            if (matchedKey === 'admin') totpSecret = systemSettings.admin2faSecret || '';
-            else if (matchedKey === 'ahmad') totpSecret = systemSettings.ahmad2faSecret || '';
-            else if (matchedKey === 'sara') totpSecret = systemSettings.sara2faSecret || '';
+        if (matchedStaff && matchedStaff.password === password) {
+            const user = {
+                username: matchedStaff.key,
+                role: matchedStaff.role,
+                nameAr: matchedStaff.nameAr,
+                nameEn: matchedStaff.nameEn,
+                gender: matchedStaff.gender
+            };
+
+            const totpSecret = matchedStaff.totpSecret;
 
             if (totpSecret) {
-                setPendingStaffKey(matchedKey);
+                setPendingStaffKey(matchedStaff.key);
                 setPendingStaffTotpSecret(totpSecret);
                 setIsLoading(false);
                 setLoginStep(3); // transition to Step 3 (2FA)
                 setTotpInput('');
                 return;
             } else {
-                // No 2FA secret set -> Direct login (fallback)
-                executeLogin(matchedKey, user);
+                // No 2FA secret set -> Direct login
+                executeLogin(matchedStaff.key, user);
             }
         } else {
             setIsLoading(false);
