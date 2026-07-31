@@ -202,6 +202,112 @@ const AdminDashboard = ({ isEmbedded = false }) => {
    } catch { /* ignore */ }
    return false;
  });
+ const [feedbackPopupEnabled, setFeedbackPopupEnabled] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const settingsRef = doc(db, 'system_configs', 'global_settings');
+        const settingsSnap = await getDoc(settingsRef);
+        if (settingsSnap.exists()) {
+          const data = settingsSnap.data();
+          setFeedbackPopupEnabled(data.feedbackPopupEnabled ?? true);
+          setDbQrConfirmed(data.adminQrConfirmed || false);
+        }
+      } catch { /* ignore */ }
+    })();
+  }, []);
+
+  const toggleFeedbackPopupEnabled = async () => {
+    try {
+      const newValue = !feedbackPopupEnabled;
+      await setDoc(doc(db, 'system_configs', 'global_settings'), {
+        feedbackPopupEnabled: newValue,
+      }, { merge: true });
+      setFeedbackPopupEnabled(newValue);
+      toast.success(isAr ? 'تم تحديث إعداد نافذة التقييم' : 'Feedback popup setting updated');
+    } catch (err) {
+      console.error('Failed to update feedback popup setting', err);
+      toast.error(isAr ? 'فشل تحديث إعدادات النظام' : 'Failed to update system setting');
+    }
+  };
+
+  // Generate captcha
+  const genCaptcha = useCallback(() => {
+    const t = generateText();
+    setCaptchaText(t);
+    setCaptchaInput('');
+    setCaptchaErr(false);
+    setTimeout(() => drawCanvas(canvasRef.current, t), 50);
+  }, []);
+
+  useEffect(() => { if (!loggedIn) genCaptcha(); }, [loggedIn, genCaptcha]);
+
+  const verifyTOTP = async (secret, token) => {
+    const offsets = [0, -1, 1]; // Allow time drift
+    for (const offset of offsets) {
+      const currentToken = await getTOTPToken(secret, offset * 30);
+      if (currentToken === token) return true;
+    }
+    return false;
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (captchaInput.trim().toUpperCase() !== captchaText) {
+      setCaptchaErr(true);
+      genCaptcha();
+      return;
+    }
+
+    // Secure dynamic credential check from Firestore at login attempt time
+    let expectedPass = 'admin2024';
+    let secret = '';
+    try {
+      const settingsRef = doc(db, 'system_configs', 'global_settings');
+      const settingsSnap = await getDoc(settingsRef);
+      if (settingsSnap.exists()) {
+        const data = settingsSnap.data();
+        if (data.adminPassword) expectedPass = data.adminPassword;
+        if (data.admin2faSecret) secret = data.admin2faSecret;
+        if (data.adminQrConfirmed !== undefined) setDbQrConfirmed(data.adminQrConfirmed);
+      }
+    } catch (err) {
+      console.error("Failed to fetch settings for authentication check", err);
+    }
+
+    if (adminUsername.trim().toLowerCase() !== 'admin' || adminPwd !== expectedPass) {
+      setLoginErr(isAr ? 'اسم المستخدم أو كود التحقق غير صحيح' : 'Incorrect username or access code');
+      genCaptcha();
+      return;
+    }
+
+    // Credentials OK, move to 2FA step
+    if (!secret) {
+      secret = generateBase32Secret();
+      try {
+        const settingsRef = doc(db, 'system_configs', 'global_settings');
+        await setDoc(settingsRef, {
+          admin2faSecret: secret,
+          adminQrConfirmed: false
+        }, { merge: true });
+        setDbQrConfirmed(false);
+      } catch (err) {
+        console.error("Failed to generate and save admin 2FA secret", err);
+      }
+    }
+
+    setDb2faSecret(secret);
+
+    // Generate QR code URL
+    const issuer = "Makanak Al-Jamii";
+    const qrData = `otpauth://totp/${encodeURIComponent(issuer)}:admin?secret=${secret}&issuer=${encodeURIComponent(issuer)}`;
+    const generatedQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrData)}&color=0f172a&bgcolor=ffffff`;
+    setQrUrl(generatedQrUrl);
+
+    setLoginErr('');
+    setLoginStep(2);
+  };
 
  const [adminUsername, setAdminUsername] = useState('');
  const [adminPwd, setAdminPwd] = useState('');
@@ -221,102 +327,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
  const [qrUrl, setQrUrl] = useState('');
  const [showQrForce, setShowQrForce] = useState(false);
  const [show2faDropdown, setShow2faDropdown] = useState(false);
-
- // ── Admin password from Firestore ──
- const [adminPasswordFromDB, setAdminPasswordFromDB] = useState('admin2024');
- const [feedbackPopupEnabled, setFeedbackPopupEnabled] = useState(true);
-
- useEffect(() => {
-   (async () => {
-     try {
-       const settingsRef = doc(db, 'system_configs', 'global_settings');
-       const settingsSnap = await getDoc(settingsRef);
-       if (settingsSnap.exists()) {
-         const data = settingsSnap.data();
-         if (data.adminPassword) {
-           setAdminPasswordFromDB(data.adminPassword);
-         }
-         setFeedbackPopupEnabled(data.feedbackPopupEnabled ?? true);
-         setDb2faSecret(data.admin2faSecret || '');
-         setDbQrConfirmed(data.adminQrConfirmed || false);
-       }
-     } catch { /* ignore */ }
-   })();
- }, []);
-
- const toggleFeedbackPopupEnabled = async () => {
-   try {
-     const newValue = !feedbackPopupEnabled;
-     await setDoc(doc(db, 'system_configs', 'global_settings'), {
-       feedbackPopupEnabled: newValue,
-     }, { merge: true });
-     setFeedbackPopupEnabled(newValue);
-     toast.success(isAr ? 'تم تحديث إعداد نافذة التقييم' : 'Feedback popup setting updated');
-   } catch (err) {
-     console.error('Failed to update feedback popup setting', err);
-     toast.error(isAr ? 'فشل تحديث إعدادات النظام' : 'Failed to update system setting');
-   }
- };
-
- // Generate captcha
- const genCaptcha = useCallback(() => {
-   const t = generateText();
-   setCaptchaText(t);
-   setCaptchaInput('');
-   setCaptchaErr(false);
-   setTimeout(() => drawCanvas(canvasRef.current, t), 50);
- }, []);
-
- useEffect(() => { if (!loggedIn) genCaptcha(); }, [loggedIn, genCaptcha]);
-
- const verifyTOTP = async (secret, token) => {
-   const offsets = [0, -1, 1]; // Allow time drift
-   for (const offset of offsets) {
-     const currentToken = await getTOTPToken(secret, offset * 30);
-     if (currentToken === token) return true;
-   }
-   return false;
- };
-
- const handleLogin = async (e) => {
-   e.preventDefault();
-   if (captchaInput.trim().toUpperCase() !== captchaText) {
-     setCaptchaErr(true);
-     genCaptcha();
-     return;
-   }
-   if (adminUsername.trim().toLowerCase() !== 'admin' || adminPwd !== adminPasswordFromDB) {
-     setLoginErr(isAr ? 'اسم المستخدم أو كود التحقق غير صحيح' : 'Incorrect username or access code');
-     genCaptcha();
-     return;
-   }
-
-   // Credentials OK, move to 2FA step
-   let secret = db2faSecret;
-   if (!secret) {
-     secret = generateBase32Secret();
-     try {
-       const settingsRef = doc(db, 'system_configs', 'global_settings');
-       await setDoc(settingsRef, {
-         admin2faSecret: secret,
-         adminQrConfirmed: false
-       }, { merge: true });
-       setDb2faSecret(secret);
-       setDbQrConfirmed(false);
-     } catch (err) {
-       console.error("Failed to generate and save admin 2FA secret", err);
-     }
-   }
-
-   // Generate QR code URL
-   const issuer = "Makanak Al-Jamii";
-   const qrData = `otpauth://totp/${encodeURIComponent(issuer)}:admin?secret=${secret}&issuer=${encodeURIComponent(issuer)}`;
-   const generatedQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrData)}&color=0f172a&bgcolor=ffffff`;
-   setQrUrl(generatedQrUrl);
-
-   setLoginErr('');
-   setLoginStep(2);
- };
 
   const handleVerify2FA = async (e) => {
     e.preventDefault();
