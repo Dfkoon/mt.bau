@@ -9,6 +9,9 @@ export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     VitePWA({
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'static_logo.png'],
       manifest: {
@@ -39,10 +42,9 @@ export default defineConfig(({ command }) => ({
           }
         ]
       },
-      workbox: {
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
-        // Disable inlineWorkboxMode to prevent single-quote folder path escaping bug in workbox-build
-        inlineWorkboxRuntime: false
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
       },
       devOptions: {
         enabled: false
