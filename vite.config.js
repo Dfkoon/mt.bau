@@ -37,45 +37,12 @@ export default defineConfig(({ command }) => ({
             type: 'image/png',
             purpose: 'any maskable'
           }
-        ],
-        screenshots: [
-          {
-            src: '/favicon.png',
-            sizes: '512x512',
-            type: 'image/png',
-            form_factor: 'wide',
-            label: 'مكانك الجامعي - الشاشة الرئيسية'
-          }
         ]
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'cdnjs-cache',
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 30 }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'firebase-cache',
-              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 }
-            }
-          }
-        ]
+        // Disable inlineWorkboxMode to prevent single-quote folder path escaping bug in workbox-build
+        inlineWorkboxRuntime: false
       },
       devOptions: {
         enabled: false
