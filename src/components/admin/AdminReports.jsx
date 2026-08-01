@@ -177,10 +177,22 @@ const AdminReports = () => {
                                 </div>
                             )}
 
-                            {r.studentNote && (
-                                <div className="report-card-note">
-                                    <strong>{isAr ? '💡 ملاحظة الطالب: ' : '💡 Student Note: '}</strong>
-                                    <span>{r.studentNote}</span>
+                            {(r.studentNote || r.note || r.userComment || r.comment) && (
+                                <div className="report-card-note" style={{
+                                    background: 'rgba(156, 39, 176, 0.08)',
+                                    borderRight: '4px solid #9c27b0',
+                                    borderLeft: 'none',
+                                    padding: '10px 14px',
+                                    borderRadius: '8px',
+                                    marginTop: '12px',
+                                    marginBottom: '12px'
+                                }}>
+                                    <strong style={{ color: '#7b1fa2', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', marginBottom: '4px' }}>
+                                        💡 {isAr ? 'ملاحظة الطالب المكتوبة:' : 'Student Note:'}
+                                    </strong>
+                                    <span style={{ fontSize: '0.92rem', color: '#2c3e50', fontWeight: 600, display: 'block', lineHeight: 1.5 }}>
+                                        {r.studentNote || r.note || r.userComment || r.comment}
+                                    </span>
                                 </div>
                             )}
 

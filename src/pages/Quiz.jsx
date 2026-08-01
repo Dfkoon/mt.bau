@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { quizData as baseQuizData, quizCategories } from '../data/quizData';
 import { extraQuizData } from '../data/quizDataExtra';
 import FileUploader from '../components/FileUploader';
-import { submitQuestionReport } from '../services/quizReportService';
+import { submitQuestionReport, updateQuestionReportNote } from '../services/quizReportService';
 import { logQuizCompletion } from '../services/analyticsService';
 import { db } from '../config/firebase';
 import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
@@ -302,6 +302,7 @@ const Quiz = () => {
     const [score, setScore] = useState(0);
     const [flaggedQuestions, setFlaggedQuestions] = useState(new Set());
     const [quizNotes, setQuizNotes] = useState({}); // optional student notes keyed by question ID
+    const [reportDocIds, setReportDocIds] = useState({}); // maps questionId -> Firestore report document ID
     const [searchTerm, setSearchTerm] = useState('');
 
     // Timer and mobile navigation states
@@ -845,15 +846,15 @@ const Quiz = () => {
 
         // If newly flagged, send report to admin
         if (willBeFlagged) {
-            // Find subject name for context
             const subject = mergedCategories.find(cat =>
                 cat.id === quizId || (cat.parts && cat.parts.some(p => p.id === quizId))
             );
             const subName = subject ? (language === 'ar' ? (subject.nameAr || subject.name) : subject.name) : '';
+            const currentNote = (quizNotes[qId] || '').trim();
 
             const reportData = {
                 quizId: quizId,
-                quizTitle: currentQuiz.titleAr || currentQuiz.title,
+                quizTitle: currentQuiz ? (currentQuiz.titleAr || currentQuiz.title) : '',
                 subjectName: subName,
                 reportType: 'incorrect_answer',
                 questionId: qId,
@@ -862,11 +863,14 @@ const Quiz = () => {
                 type: q.type,
                 options: q.options || [],
                 correctAnswer: q.correctAnswer || '',
-                studentNote: (quizNotes[qId] || '').trim(),  // ← ملاحظة الطالب الخاصة بهذا السؤال
+                studentNote: currentNote,
             };
 
             submitQuestionReport(reportData).then(res => {
                 if (res.success) {
+                    if (res.id) {
+                        setReportDocIds(prev => ({ ...prev, [qId]: res.id }));
+                    }
                     toast.success(language === 'ar' ? 'تم إرسال بلاغ للمراجعة' : 'Report sent for review', {
                         style: {
                             borderRadius: '10px',
@@ -875,14 +879,55 @@ const Quiz = () => {
                         },
                         icon: '🚩'
                     });
-                    // Clear note for this specific question after sending
-                    setQuizNotes(prev => {
-                        const next = { ...prev };
-                        delete next[qId];
-                        return next;
-                    });
                 }
             });
+        }
+    };
+
+    // Save or update student note for a question
+    const handleSaveNote = async (q, overrideNoteVal) => {
+        const qId = q.id;
+        const noteText = (overrideNoteVal !== undefined ? overrideNoteVal : (quizNotes[qId] || '')).trim();
+        if (!noteText) return;
+
+        const existingReportId = reportDocIds[qId];
+
+        if (existingReportId) {
+            // Report already exists -> update studentNote in Firestore
+            const res = await updateQuestionReportNote(existingReportId, noteText);
+            if (res.success) {
+                toast.success(language === 'ar' ? 'تم حفظ وتحديث الملاحظة' : 'Note updated', { icon: '📝' });
+            }
+        } else {
+            // Report not sent yet -> flag the question and send report with studentNote
+            setFlaggedQuestions(prev => new Set(prev).add(qId));
+
+            const subject = mergedCategories.find(cat =>
+                cat.id === quizId || (cat.parts && cat.parts.some(p => p.id === quizId))
+            );
+            const subName = subject ? (language === 'ar' ? (subject.nameAr || subject.name) : subject.name) : '';
+
+            const reportData = {
+                quizId: quizId,
+                quizTitle: currentQuiz ? (currentQuiz.titleAr || currentQuiz.title) : '',
+                subjectName: subName,
+                reportType: 'incorrect_answer',
+                questionId: qId,
+                questionAr: q.questionAr || '',
+                questionEn: q.questionEn || '',
+                type: q.type,
+                options: q.options || [],
+                correctAnswer: q.correctAnswer || '',
+                studentNote: noteText,
+            };
+
+            const res = await submitQuestionReport(reportData);
+            if (res.success) {
+                if (res.id) {
+                    setReportDocIds(prev => ({ ...prev, [qId]: res.id }));
+                }
+                toast.success(language === 'ar' ? 'تم إرسال الملاحظة مع البلاغ' : 'Note sent with report', { icon: '📩' });
+            }
         }
     };
 
@@ -1772,7 +1817,12 @@ const Quiz = () => {
                                             const val = e.target.value;
                                             setQuizNotes(prev => ({ ...prev, [question.id]: val }));
                                         }}
-                                        placeholder={language === 'ar' ? 'اكتب ملاحظتك هنا...' : 'Write your note...'}
+                                        onBlur={e => {
+                                            e.target.style.borderColor = '#ddd';
+                                            const val = e.target.value.trim();
+                                            if (val) handleSaveNote(question, val);
+                                        }}
+                                        placeholder={language === 'ar' ? 'اكتب ملاحظتك هنا ثم اضغط إرسال...' : 'Write your note and click send...'}
                                         rows={3}
                                         style={{
                                             width: '100%',
@@ -1790,8 +1840,31 @@ const Quiz = () => {
                                             transition: 'border-color 0.2s'
                                         }}
                                         onFocus={e => e.target.style.borderColor = '#9c27b0'}
-                                        onBlur={e => e.target.style.borderColor = '#ddd'}
                                     />
+                                    <button
+                                        onClick={() => handleSaveNote(question)}
+                                        disabled={!quizNotes[question.id] || !quizNotes[question.id].trim()}
+                                        style={{
+                                            marginTop: '6px',
+                                            width: '100%',
+                                            background: quizNotes[question.id] && quizNotes[question.id].trim() ? 'linear-gradient(135deg, #d32f2f, #b71c1c)' : '#e0e0e0',
+                                            color: quizNotes[question.id] && quizNotes[question.id].trim() ? '#ffffff' : '#888888',
+                                            border: 'none',
+                                            borderRadius: '6px',
+                                            padding: '6px 10px',
+                                            fontSize: '0.78rem',
+                                            fontWeight: 700,
+                                            cursor: quizNotes[question.id] && quizNotes[question.id].trim() ? 'pointer' : 'not-allowed',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '6px',
+                                            transition: 'all 0.2s ease',
+                                            boxShadow: quizNotes[question.id] && quizNotes[question.id].trim() ? '0 2px 8px rgba(211, 47, 47, 0.3)' : 'none'
+                                        }}
+                                    >
+                                        📩 {language === 'ar' ? 'إرسال الملاحظة مع البلاغ' : 'Send Note with Report'}
+                                    </button>
                                 </div>
                             </div>
 
