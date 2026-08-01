@@ -42,6 +42,7 @@ import SplashScreen from './components/SplashScreen';
 
 import NashmiGuide from './components/NashmiGuide';
 import ReportModal from './components/ReportModal';
+import InstallPWAButton from './components/InstallPWAButton';
 
 const HomePage = () => {
   const location = useLocation();
@@ -147,6 +148,7 @@ function App() {
     <>
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       <Router>
+      <InstallPWAButton isAr={true} />
       <ScrollToTop />
       <PageTitleUpdater />
       <Toaster

@@ -9,6 +9,7 @@ import { sendDonationToSheets, sendBookingToSheets } from '../services/googleShe
 import { saveCourseDonation, saveCourseBooking } from '../services/courseStatusService';
 import emailjs from '@emailjs/browser';
 import AdminDashboard from './AdminDashboard';
+import QRBookingCard from '../components/QRBookingCard';
 import './MaterialExchange.css';
 
 
@@ -203,6 +204,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
 
     // ── DELIVERY SCHEDULE STATE ───────────────────────────────────
     const [deliverySchedules, setDeliverySchedules] = useState([]);
+    const [activeQRModal, setActiveQRModal] = useState(null);
     const [deliveryScheduleLoading, setDeliveryScheduleLoading] = useState(false);
     const [showAddScheduleForm, setShowAddScheduleForm] = useState(false);
     const [scheduleSearchQuery, setScheduleSearchQuery] = useState('');
@@ -1409,6 +1411,13 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             });
             toast.success(isAr ? 'تم حجز المادة بنجاح!' : 'Material booked successfully!', { duration: 5000 });
             setShowBookingModal(false);
+            setActiveQRModal({
+                bookingId: `BK-${Date.now().toString(36).toUpperCase()}`,
+                studentName: bookingData.name.trim(),
+                materialName: selectedMaterial?.materialName || selectedMaterial?.name || '',
+                donorName: selectedMaterial?.donorName || 'متبرع',
+                coordinatorName: selectedMaterial?.studentGender === 'male' ? (systemSettings.ahmadNameAr || 'أحمد') : (systemSettings.saraNameAr || 'سارة')
+            });
             setBookingData({ name: '', phone: '', gender: '' });
             generateBookingCaptcha();
             fetchDonations();
@@ -5760,6 +5769,13 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                                                 {canEdit && (
                                                                                     <div style={{ display: 'flex', gap: '4px', justifyContent: 'center', flexWrap: 'wrap' }}>
                                                                                         <button
+                                                                                            onClick={() => setActiveQRModal(schedule)}
+                                                                                            style={{ border: 'none', background: 'rgba(251,191,36,0.15)', cursor: 'pointer', padding: '4px 8px', fontSize: '0.78rem', color: '#fbbf24', borderRadius: '6px' }}
+                                                                                            title={isAr ? 'عرض بطاقة QR' : 'Show QR Card'}
+                                                                                        >
+                                                                                            📱
+                                                                                        </button>
+                                                                                        <button
                                                                                             onClick={() => {
                                                                                                 setEditingSchedule(schedule);
                                                                                                 setEditScheduleFormData({ ...schedule });
@@ -9026,6 +9042,21 @@ Please contact us to coordinate the pickup. Thank you.`;
                     </div>
                 );
             })()}
+
+            {/* QR Booking Modal */}
+            {activeQRModal && (
+                <QRBookingCard
+                    bookingId={activeQRModal.bookingId || activeQRModal.id}
+                    studentName={activeQRModal.studentName || activeQRModal.bookerName}
+                    materialName={activeQRModal.materialName}
+                    donorName={activeQRModal.donorName}
+                    coordinatorName={activeQRModal.coordinatorName || activeQRModal.assignedCoordinator}
+                    pickupDate={activeQRModal.pickupDate}
+                    pickupTime={activeQRModal.pickupTime}
+                    isAr={isAr}
+                    onClose={() => setActiveQRModal(null)}
+                />
+            )}
         </div>
     );
 };
