@@ -64,7 +64,7 @@ service cloud.firestore {
     // Question Edits (admin corrections applied live in Quiz.jsx for all students)
     match /question_edits/{edit} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if true;
     }
 
     // Subscribers
