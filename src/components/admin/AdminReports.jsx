@@ -41,8 +41,9 @@ const AdminReports = () => {
         try {
             await updateDoc(doc(db, 'question_reports', id), { status: 'resolved' });
             toast.success(isAr ? 'تم تمييز البلاغ كمحلول' : 'Marked report resolved');
-        } catch {
-            toast.error(isAr ? 'خطأ' : 'Error');
+        } catch (err) {
+            console.error('Error resolving report:', err);
+            toast.error((isAr ? 'تعذر تعديل البلاغ: ' : 'Failed to resolve report: ') + (err.message || err));
         }
     };
 
@@ -50,9 +51,10 @@ const AdminReports = () => {
         if (!window.confirm(isAr ? 'هل تريد حذف هذا البلاغ؟' : 'Delete this report?')) return;
         try {
             await deleteDoc(doc(db, 'question_reports', id));
-            toast.success(isAr ? 'تم الحذف' : 'Deleted');
-        } catch {
-            toast.error(isAr ? 'خطأ' : 'Error');
+            toast.success(isAr ? 'تم حذف البلاغ بنجاح' : 'Report deleted');
+        } catch (err) {
+            console.error('Error deleting report:', err);
+            toast.error((isAr ? 'تعذر حذف البلاغ: ' : 'Failed to delete report: ') + (err.message || err));
         }
     };
 

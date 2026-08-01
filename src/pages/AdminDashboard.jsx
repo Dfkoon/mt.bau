@@ -637,15 +637,24 @@ const AdminDashboard = ({ isEmbedded = false }) => {
  };
 
  const resolveReport = async (id) => {
- try {
- await updateDoc(doc(db, 'question_reports', id), { status: 'resolved' });
- toast.success(isAr ? 'تم وضع علامة محلول' : 'Marked resolved');
- } catch { toast.error('خطأ'); }
+  try {
+    await updateDoc(doc(db, 'question_reports', id), { status: 'resolved' });
+    toast.success(isAr ? 'تم وضع علامة محلول' : 'Marked resolved');
+  } catch (err) {
+    console.error('Error resolving report:', err);
+    toast.error((isAr ? 'تعذر الحفظ: ' : 'Error: ') + (err.message || err));
+  }
  };
 
  const deleteReport = async (id) => {
- if (!window.confirm(isAr ? 'حذف هذا البلاغ؟' : 'Delete this report?')) return;
- try { await deleteDoc(doc(db, 'question_reports', id)); toast.success(''); } catch { toast.error('خطأ'); }
+  if (!window.confirm(isAr ? 'حذف هذا البلاغ؟' : 'Delete this report?')) return;
+  try {
+    await deleteDoc(doc(db, 'question_reports', id));
+    toast.success(isAr ? 'تم حذف البلاغ' : 'Report deleted');
+  } catch (err) {
+    console.error('Error deleting report:', err);
+    toast.error((isAr ? 'تعذر الحذف: ' : 'Error: ') + (err.message || err));
+  }
  };
 
  // ── Question edit modal helpers ──
