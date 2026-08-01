@@ -267,7 +267,7 @@
 }
 
 /* Secondary Button Glass Styling */
-/* Dark Mode (Thim Al-Aswad): White Glass Box */
+/* Dark Mode (Thim Al-Aswad): White Glass Box, White Text */
 .btn-secondary {
     background: rgba(255, 255, 255, 0.16) !important;
     backdrop-filter: blur(14px);
@@ -289,23 +289,24 @@
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
 
-/* Light Mode (Thim Al-Abiadh): Black Glass Box */
+/* Light Mode (Thim Al-Abiadh): Light Glass Box, Black Text */
 [data-theme="light"] .btn-secondary {
-    background: rgba(15, 23, 42, 0.82) !important;
+    background: rgba(255, 255, 255, 0.85) !important;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
-    color: #ffffff !important;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border: 1.5px solid rgba(15, 23, 42, 0.2) !important;
+    color: #0f172a !important;
+    text-shadow: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="light"] .btn-secondary:hover {
-    background: rgba(15, 23, 42, 0.95) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-color: rgba(15, 23, 42, 0.4) !important;
 }
 
 /* Hero Stats Glass Box Styling */
-/* Dark Mode (Thim Al-Aswad): Translucent White Glass Box */
+/* Dark Mode (Thim Al-Aswad): White Text for Numbers & Labels */
 .hero-stats {
     display: inline-grid;
     grid-template-columns: repeat(3, 1fr);
@@ -325,7 +326,7 @@
     display: block;
     font-size: 1.3rem;
     font-weight: 900;
-    color: #fbbf24 !important;
+    color: #ffffff !important;
     margin-bottom: 0.25rem;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
     font-family: 'Outfit', 'Tajawal', sans-serif;
@@ -333,30 +334,30 @@
 
 .stat-label {
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.95) !important;
+    color: rgba(255, 255, 255, 0.92) !important;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 
-/* Light Mode (Thim Al-Abiadh): Translucent Black Glass Box */
+/* Light Mode (Thim Al-Abiadh): Pure Black Text for Numbers & Labels */
 [data-theme="light"] .hero-stats {
-    background: rgba(15, 23, 42, 0.85) !important;
+    background: rgba(255, 255, 255, 0.88) !important;
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1.5px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+    border: 1.5px solid rgba(15, 23, 42, 0.18) !important;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="light"] .stat-value {
-    color: #fbbf24 !important;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    color: #0f172a !important;
+    text-shadow: none;
 }
 
 [data-theme="light"] .stat-label {
-    color: rgba(255, 255, 255, 0.92) !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    color: #334155 !important;
+    text-shadow: none;
 }
 
 .btn-glow {
