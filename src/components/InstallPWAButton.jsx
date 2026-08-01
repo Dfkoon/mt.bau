@@ -49,7 +49,7 @@ const InstallPWAButton = ({ isAr = true }) => {
 
     return (
         <>
-            {/* Sleek Premium Floating Pill */}
+            {/* Sleek Makanak Brand Floating Capsule */}
             <div style={{
                 position: 'fixed',
                 bottom: '1.4rem',
@@ -57,22 +57,22 @@ const InstallPWAButton = ({ isAr = true }) => {
                 right: isAr ? 'auto' : '1.4rem',
                 zIndex: 99990,
                 direction: isAr ? 'rtl' : 'ltr',
-                animation: 'pwaSlideUp 0.4s ease-out'
+                animation: 'pwaSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
             }}>
                 <style>{`
                     @keyframes pwaSlideUp {
-                        from { opacity: 0; transform: translateY(20px); }
-                        to { opacity: 1; transform: translateY(0); }
+                        from { opacity: 0; transform: translateY(24px) scale(0.95); }
+                        to { opacity: 1; transform: translateY(0) scale(1); }
                     }
                 `}</style>
                 <div style={{
-                    background: 'linear-gradient(135deg, rgba(10, 22, 40, 0.95), rgba(18, 38, 70, 0.95))',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    border: '1.5px solid rgba(251, 191, 36, 0.55)',
+                    background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96))',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(211, 47, 47, 0.35)',
                     borderRadius: '50px',
-                    padding: '6px 12px 6px 16px',
-                    boxShadow: '0 10px 35px rgba(0,0,0,0.5), 0 0 20px rgba(251, 191, 36, 0.2)',
+                    padding: '5px 8px 5px 14px',
+                    boxShadow: '0 12px 35px rgba(0, 0, 0, 0.45), 0 0 20px rgba(211, 47, 47, 0.15)',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px'
@@ -82,30 +82,35 @@ const InstallPWAButton = ({ isAr = true }) => {
                         style={{
                             background: 'transparent',
                             border: 'none',
-                            color: '#fff',
+                            color: '#ffffff',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '8px',
+                            gap: '10px',
                             fontWeight: '700',
-                            fontSize: '0.85rem',
+                            fontSize: '0.86rem',
                             padding: '4px 0',
+                            fontFamily: "'Tajawal', 'IBM Plex Sans Arabic', sans-serif",
                             whiteSpace: 'nowrap'
                         }}
                     >
                         <span style={{
-                            fontSize: '1.2rem',
+                            fontSize: '0.95rem',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            background: 'rgba(251, 191, 36, 0.15)',
-                            padding: '4px',
-                            borderRadius: '50%'
+                            background: 'linear-gradient(135deg, #d32f2f, #b71c1c)',
+                            color: '#ffffff',
+                            boxShadow: '0 2px 10px rgba(211, 47, 47, 0.4)',
+                            flexShrink: 0
                         }}>
                             📲
                         </span>
-                        <span style={{ color: '#fbbf24', letterSpacing: '0.02em' }}>
-                            {isAr ? 'التثبيت وإنشاء اختصار' : 'Install & Create Shortcut'}
+                        <span style={{ color: '#ffffff', fontWeight: '700' }}>
+                            {isAr ? 'التثبيت وإنشاء اختصار' : 'Install & Add Shortcut'}
                         </span>
                     </button>
 
@@ -113,9 +118,9 @@ const InstallPWAButton = ({ isAr = true }) => {
                         onClick={() => setDismissed(true)}
                         title={isAr ? 'إغلاق' : 'Close'}
                         style={{
-                            background: 'rgba(255,255,255,0.08)',
-                            border: 'none',
-                            color: 'rgba(255,255,255,0.5)',
+                            background: 'rgba(255, 255, 255, 0.08)',
+                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                            color: 'rgba(255, 255, 255, 0.6)',
                             width: '24px',
                             height: '24px',
                             borderRadius: '50%',
@@ -123,42 +128,44 @@ const InstallPWAButton = ({ isAr = true }) => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '0.75rem',
-                            transition: 'all 0.2s ease'
+                            fontSize: '0.7rem',
+                            transition: 'all 0.2s ease',
+                            flexShrink: 0
                         }}
-                        onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.2)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.5)'; e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+                        onMouseEnter={e => { e.currentTarget.style.color = '#ffffff'; e.currentTarget.style.background = 'rgba(211, 47, 47, 0.4)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'; }}
                     >
                         ✕
                     </button>
                 </div>
             </div>
 
-            {/* Step-by-Step Guide Modal */}
+            {/* Step-by-Step Guide Modal in Makanak Crimson Theme */}
             {showGuideModal && (
                 <div style={{
                     position: 'fixed',
                     inset: 0,
                     zIndex: 99999,
-                    background: 'rgba(0,0,0,0.85)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
+                    background: 'rgba(10, 10, 15, 0.85)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     padding: '1.2rem',
-                    direction: isAr ? 'rtl' : 'ltr'
+                    direction: isAr ? 'rtl' : 'ltr',
+                    fontFamily: "'Tajawal', 'IBM Plex Sans Arabic', sans-serif"
                 }} onClick={() => setShowGuideModal(false)}>
                     <div style={{
-                        background: 'linear-gradient(145deg, #0a1727, #132742)',
-                        border: '1.5px solid rgba(251,191,36,0.5)',
+                        background: 'linear-gradient(145deg, #0f172a, #1e293b)',
+                        border: '1.5px solid rgba(211, 47, 47, 0.4)',
                         borderRadius: '24px',
                         padding: '1.8rem',
                         maxWidth: '420px',
                         width: '100%',
-                        color: '#fff',
-                        boxShadow: '0 25px 70px rgba(0,0,0,0.8), 0 0 30px rgba(251,191,36,0.15)',
-                        animation: 'modalPop 0.3s ease-out'
+                        color: '#ffffff',
+                        boxShadow: '0 25px 70px rgba(0, 0, 0, 0.8), 0 0 30px rgba(211, 47, 47, 0.2)',
+                        animation: 'modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
                     }} onClick={e => e.stopPropagation()}>
                         <style>{`
                             @keyframes modalPop {
@@ -170,23 +177,38 @@ const InstallPWAButton = ({ isAr = true }) => {
                         {/* Title */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.2rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                                <span style={{ fontSize: '1.6rem' }}>📲</span>
-                                <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#fbbf24', fontWeight: 800 }}>
+                                <span style={{
+                                    width: '38px',
+                                    height: '38px',
+                                    borderRadius: '12px',
+                                    background: 'linear-gradient(135deg, #d32f2f, #b71c1c)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '1.2rem',
+                                    boxShadow: '0 4px 12px rgba(211, 47, 47, 0.35)'
+                                }}>
+                                    📲
+                                </span>
+                                <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#ffffff', fontWeight: 800 }}>
                                     {isAr ? 'التثبيت وإنشاء اختصار للتطبيق' : 'Install & Add Shortcut'}
                                 </h3>
                             </div>
                             <button
                                 onClick={() => setShowGuideModal(false)}
                                 style={{
-                                    background: 'rgba(255,255,255,0.1)',
+                                    background: 'rgba(255,255,255,0.08)',
                                     border: 'none',
-                                    color: '#fff',
+                                    color: 'rgba(255,255,255,0.7)',
                                     width: '32px',
                                     height: '32px',
                                     borderRadius: '50%',
                                     cursor: 'pointer',
-                                    fontSize: '0.9rem'
+                                    fontSize: '0.9rem',
+                                    transition: 'all 0.2s ease'
                                 }}
+                                onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(211,47,47,0.4)'; }}
+                                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
                             >
                                 ✕
                             </button>
@@ -200,28 +222,28 @@ const InstallPWAButton = ({ isAr = true }) => {
                                 </p>
                                 <div style={{ background: 'rgba(255,255,255,0.04)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
-                                        <span style={{ background: '#fbbf24', color: '#1a1a1a', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>1</span>
+                                        <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>1</span>
                                         <span>{isAr ? 'اضغط على زر المشاركة في أسفل Safari' : 'Tap Share button in Safari'} <strong style={{ color: '#fbbf24' }}>(⎋)</strong></span>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                                        <span style={{ background: '#fbbf24', color: '#1a1a1a', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
+                                        <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
                                         <span>{isAr ? 'اختر "إضافة إلى الشاشة الرئيسية"' : 'Select "Add to Home Screen"'} <strong style={{ color: '#fbbf24' }}>(➕)</strong></span>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.95rem', lineHeight: 1.6 }}>
-                                <p style={{ margin: 0, color: 'rgba(255,255,255,0.7)' }}>
+                                <p style={{ margin: 0, color: 'rgba(255,255,255,0.75)' }}>
                                     {isAr ? 'خطوات التثبيت المباشرة من متصفح كروم / أندرويد:' : 'Direct installation steps for Chrome:'}
                                 </p>
                                 <div style={{ background: 'rgba(255,255,255,0.04)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
-                                        <span style={{ background: '#fbbf24', color: '#1a1a1a', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>1</span>
+                                        <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>1</span>
                                         <span>{isAr ? 'اضغط على نقاط القائمة الثلاث أعلى المتصفح' : 'Tap menu dots'} <strong style={{ color: '#fbbf24' }}>(⋮)</strong></span>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                                        <span style={{ background: '#fbbf24', color: '#1a1a1a', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
-                                        <span>{isAr ? 'اختر الخيار:' : 'Choose:'} <strong style={{ color: '#55efc4' }}>"التثبيت وإنشاء اختصار" 📲</strong></span>
+                                        <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
+                                        <span>{isAr ? 'اختر الخيار:' : 'Choose:'} <strong style={{ color: '#4ade80' }}>"التثبيت وإنشاء اختصار" 📲</strong></span>
                                     </div>
                                 </div>
                             </div>
@@ -232,16 +254,19 @@ const InstallPWAButton = ({ isAr = true }) => {
                             style={{
                                 width: '100%',
                                 marginTop: '1.4rem',
-                                background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
+                                background: 'linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%)',
                                 border: 'none',
-                                color: '#1a1a1a',
+                                color: '#ffffff',
                                 padding: '0.75rem',
                                 borderRadius: '14px',
                                 fontWeight: 800,
                                 fontSize: '0.95rem',
                                 cursor: 'pointer',
-                                boxShadow: '0 4px 15px rgba(251,191,36,0.3)'
+                                boxShadow: '0 4px 15px rgba(211, 47, 47, 0.4)',
+                                transition: 'transform 0.15s ease'
                             }}
+                            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                         >
                             {isAr ? 'فهمت ذلك 👍' : 'Got it 👍'}
                         </button>
