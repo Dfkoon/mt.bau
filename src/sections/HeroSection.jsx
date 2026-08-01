@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import Ballpit from '../components/Ballpit';
 import CountUp from '../components/CountUp';
 import { getTotalStudentVisits } from '../services/analyticsService';
+import heroVideo from '../assets/video/video1.mp4';
 import './HeroSection.css';
 
 const HeroSection = () => {
@@ -26,8 +27,6 @@ const HeroSection = () => {
         };
 
         loadVisitorCount();
-
-        // Initial check
         handleResize();
 
         window.addEventListener('resize', handleResize);
@@ -37,6 +36,20 @@ const HeroSection = () => {
     return (
         <section id="hero" className="hero-section">
             <div className="hero-background">
+
+                {/* ─── DIRECT BUNDLED ULTRA HD VIDEO ─── */}
+                <div className="hero-video-wrapper">
+                    <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        src={heroVideo}
+                        className="hero-bg-video"
+                    />
+                </div>
+
+                {/* ─── BALLPIT OPTION (DISABLED FROM DISPLAY & KEPT IN PROJECT CODEBASE) ───
                 <div className="ballpit-wrapper">
                     <Ballpit
                         count={ballCount}
@@ -47,6 +60,8 @@ const HeroSection = () => {
                         colors={['#000000', '#ffffff', '#007a3d', '#ce1126']}
                     />
                 </div>
+                ───────────── */}
+
                 <div className="overlay"></div>
             </div>
 
