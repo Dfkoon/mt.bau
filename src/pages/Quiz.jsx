@@ -320,20 +320,54 @@ const Quiz = () => {
     const [dbCurrentQuestions, setDbCurrentQuestions] = useState([]);
     const [dbSubjectQuestions, setDbSubjectQuestions] = useState([]);
 
-    // Load custom subjects and parts from Firestore
+    // AI grading for essay / short-answer questions
+    const [aiGrading, setAiGrading] = useState(false);
+    const [aiGradingResults, setAiGradingResults] = useState({});
+
+    // Load custom subjects and parts from Firestore (with localStorage fallback)
     useEffect(() => {
+        const getLocalSubs = () => {
+            try {
+                const raw = localStorage.getItem('koon_local_quiz_subjects');
+                return raw ? Object.values(JSON.parse(raw)) : [];
+            } catch (e) { return []; }
+        };
+        const getLocalParts = () => {
+            try {
+                const raw = localStorage.getItem('koon_local_quiz_parts');
+                return raw ? Object.values(JSON.parse(raw)) : [];
+            } catch (e) { return []; }
+        };
+
         const unsubSubjects = onSnapshot(collection(db, 'quiz_subjects'), (snap) => {
-            const list = [];
-            snap.forEach(d => list.push(d.data()));
-            setDbSubjects(list);
-        }, console.error);
+            const cloudList = [];
+            snap.forEach(d => cloudList.push(d.data()));
+            const localSubs = getLocalSubs();
+            const combined = [...cloudList];
+            localSubs.forEach(ls => {
+                if (!combined.some(c => c.id === ls.id)) combined.push(ls);
+            });
+            setDbSubjects(combined);
+        }, (err) => {
+            console.warn('Quiz.jsx: quiz_subjects fetch warning:', err?.message);
+            setDbSubjects(getLocalSubs());
+        });
 
         const unsubParts = onSnapshot(collection(db, 'quiz_parts'), (snap) => {
-            const list = [];
-            snap.forEach(d => list.push({ ...d.data(), fromDb: true }));
-            setDbParts(list);
+            const cloudList = [];
+            snap.forEach(d => cloudList.push({ ...d.data(), fromDb: true }));
+            const localParts = getLocalParts();
+            const combined = [...cloudList];
+            localParts.forEach(lp => {
+                if (!combined.some(c => c.id === lp.id)) combined.push({ ...lp, fromDb: true });
+            });
+            setDbParts(combined);
             setDbPartsLoaded(true);
-        }, console.error);
+        }, (err) => {
+            console.warn('Quiz.jsx: quiz_parts fetch warning:', err?.message);
+            setDbParts(getLocalParts().map(p => ({ ...p, fromDb: true })));
+            setDbPartsLoaded(true);
+        });
 
         return () => {
             unsubSubjects();
@@ -385,17 +419,28 @@ const Quiz = () => {
             return cat;
         });
 
-        // Add completely new subjects
+        // Add completely new subjects from Firestore (already merged with localStorage in useEffect)
         dbSubjects.forEach(sub => {
             const exists = cats.some(c => c.id === sub.id);
             if (!exists) {
                 const subParts = dbParts.filter(p => p.subjectId === sub.id);
-                cats.push({
-                    ...sub,
-                    parts: subParts
-                });
+                cats.push({ ...sub, parts: subParts });
             }
         });
+
+        // Also directly read localStorage to ensure offline-added subjects always show
+        try {
+            const raw = localStorage.getItem('koon_local_quiz_subjects');
+            if (raw) {
+                Object.values(JSON.parse(raw)).forEach(lSub => {
+                    if (!cats.some(c => c.id === lSub.id)) {
+                        const rawParts = localStorage.getItem('koon_local_quiz_parts');
+                        const localParts = rawParts ? Object.values(JSON.parse(rawParts)).filter(p => p.subjectId === lSub.id) : [];
+                        cats.push({ ...lSub, parts: localParts });
+                    }
+                });
+            }
+        } catch (e) {}
 
         return cats;
     }, [dbSubjects, dbParts]);
@@ -1275,16 +1320,22 @@ const Quiz = () => {
                                             if (aiGradingResults[q.id]) {
                                                 const aiRes = aiGradingResults[q.id];
                                                 earnedMarks = aiRes.earnedMarks || 0;
-                                                isCorrect = aiRes.score === 1;
-                                                statusText = aiRes.score === 1
-                                                    ? (language === 'ar' ? 'صحيح' : 'Correct')
-                                                    : aiRes.score > 0
-                                                        ? (language === 'ar' ? 'صحيح جزئياً' : 'Partially correct')
-                                                        : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
+                                                isCorrect = aiRes.score >= 0.7;
+                                                statusText = aiRes.score >= 0.9
+                                                    ? (language === 'ar' ? 'صحيح ✅' : 'Correct ✅')
+                                                    : aiRes.score >= 0.7
+                                                        ? (language === 'ar' ? 'صحيح (فكرة متقاربة) ✅' : 'Close Concept Match ✅')
+                                                        : aiRes.score > 0
+                                                            ? (language === 'ar' ? 'صحيح جزئياً 💡' : 'Partially correct 💡')
+                                                            : (language === 'ar' ? 'غير صحيح ❌' : 'Incorrect ❌');
+                                            } else if (aiGrading) {
+                                                isCorrect = false;
+                                                earnedMarks = 0;
+                                                statusText = language === 'ar' ? 'جاري التقييم... ⏳' : 'Evaluating... ⏳';
                                             } else {
                                                 isCorrect = isCorrectAnswer(q, userAnswer);
                                                 earnedMarks = isCorrect ? (q.marks || 1.00) : 0;
-                                                statusText = isCorrect ? (language === 'ar' ? 'صحيح' : 'Correct') : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
+                                                statusText = isCorrect ? (language === 'ar' ? 'صحيح ✅' : 'Correct ✅') : (language === 'ar' ? 'غير صحيح ❌' : 'Incorrect ❌');
                                             }
                                         } else {
                                             isCorrect = isCorrectAnswer(q, userAnswer);

@@ -60,13 +60,19 @@ const LemonChat = () => {
         const normTarget = normalizeText(target);
 
         if (normTarget === normQuery) return 100;
-        if (normTarget.includes(normQuery)) return normQuery.length * 2;
+        if (normTarget.includes(normQuery)) return normQuery.length * 5;
 
         const queryWords = normQuery.split(' ');
         let score = 0;
         queryWords.forEach(word => {
             if (word.length < 3) return;
-            if (normTarget.includes(word)) score += 5;
+            // Ignore common query lead words when matching target title
+            if (['ملخص', 'دوسية', 'مادة', 'اسئلة', 'شرح', 'كتاب', 'سلايدات', 'بدي', 'اريد'].includes(word)) return;
+            if (normTarget.includes(word)) {
+                score += 20;
+            } else if (word.length >= 4 && normTarget.includes(word.substring(0, 4))) {
+                score += 12;
+            }
         });
         return score;
     };
@@ -106,6 +112,7 @@ const LemonChat = () => {
 
         // 1. Pages Navigation (Very High Confidence Actions)
         const pages = [
+            { id: 'request', keywords: ['اطلب ما تحتاجه', 'طلب خدمة', 'خدمات', 'اطلب ملخص', 'طلب مادة', 'انشاء اسئلة', 'اقتراح فكرة', 'طلب جديد'], path: '#request-services', titleAr: 'قسم اطلب ما تحتاجه', titleEn: 'Request Services', icon: '✨' },
             { id: 'grading', keywords: ['معدل', 'احسب', 'علامات', 'تخرج', 'grade', 'grading', 'marks'], path: '/grading', titleAr: 'نظام العلامات', titleEn: 'Grading System', icon: '📊' },
             { id: 'calendar', keywords: ['تقويم', 'موعد', 'متى', 'calendar', 'date', 'schedule'], path: '/calendar', titleAr: 'التقويم الجامعي', titleEn: 'Academic Calendar', icon: '📅' },
             { id: 'materials', keywords: ['مواد', 'دراسه', 'كتب', 'materials', 'study', 'courses'], path: '/materials', titleAr: 'المواد الدراسية', titleEn: 'Study Materials', icon: '📚' },
@@ -116,11 +123,12 @@ const LemonChat = () => {
 
         pages.forEach(page => {
             page.keywords.forEach(keyword => {
-                if (normQuery === normalizeText(keyword)) {
+                const normK = normalizeText(keyword);
+                if (normQuery === normK) {
                     maxScore = 150; // Exact match on navigation
                     bestMatch = { type: 'page_card', data: page };
-                } else if (normQuery.includes(normalizeText(keyword)) && normQuery.length < 20) {
-                    const score = 80 + keyword.length;
+                } else if (normQuery.includes(normK) && normQuery.length < 25) {
+                    const score = 80 + normK.length;
                     if (score > maxScore) {
                         maxScore = score;
                         bestMatch = { type: 'page_card', data: page };
@@ -136,19 +144,30 @@ const LemonChat = () => {
             bestMatch = materialResult;
         }
 
-        // 3. Nashmi Persona (Social/General) - ONLY FOR EXACT MATCHES OR VERY HIGH CONFIDENCE
-        nashmiData.forEach(item => {
-            item.keywords.forEach(k => {
-                const normK = normalizeText(k);
-                if (normQuery === normK) {
-                    maxScore = 100;
-                    bestMatch = { type: 'text_response', textAr: item.response, textEn: item.response };
-                }
-            });
-        });
+        // 3. Fallback for material / summary / quiz requests when not found in database
+        const isMaterialQuery = ['ملخص', 'دوسية', 'كتاب', 'سلايدات', 'شرح', 'مادة', 'امتحان', 'امتحانات'].some(w => normQuery.includes(w));
+        if (!materialResult && isMaterialQuery && maxScore < 90) {
+            maxScore = 95;
+            bestMatch = {
+                type: 'text_response',
+                textAr: `عذراً يا نشمي، المادة أو الملخص اللي بتدور عليه غير متوفر حالياً بالموقع 💔.\n\nبس ولا يهمك! بإمكانك طلب توفيرها فوراً من فريق مكانك عبر قسم **[اطلب ما تحتاجه](#request-services)** وسنقوم بإعدادها وإضافتها لك في أقرب وقت! 🚀`,
+                textEn: `Sorry! The requested material is not available yet 💔.\n\nYou can request it directly from our team via the **[Request Services](#request-services)** section!`
+            };
+        }
 
-        // Threshold: If score < 90, it's not a clear "Action" or "Exact Match"
-        // Let Groq AI handle anything conversational (score is low)
+        // 4. Nashmi Persona (Social/General) - ONLY FOR EXACT MATCHES OR VERY HIGH CONFIDENCE
+        if (!bestMatch) {
+            nashmiData.forEach(item => {
+                item.keywords.forEach(k => {
+                    const normK = normalizeText(k);
+                    if (normQuery === normK) {
+                        maxScore = 100;
+                        bestMatch = { type: 'text_response', textAr: item.response, textEn: item.response };
+                    }
+                });
+            });
+        }
+
         return { match: bestMatch, score: maxScore };
     };
 

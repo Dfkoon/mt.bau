@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCwEYy_wNXXmvq_jDHD-8xvD90ZEVUwHVA",
@@ -14,19 +14,22 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-5G25S6VXNR"
 };
 
-console.log('Firebase config loaded:', {
-    apiKey: firebaseConfig.apiKey,
-    authDomain: firebaseConfig.authDomain,
-    projectId: firebaseConfig.projectId,
-    storageBucket: firebaseConfig.storageBucket,
-    appId: firebaseConfig.appId,
-    measurementId: firebaseConfig.measurementId
-});
-
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
+
+let analytics = null;
+if (typeof window !== "undefined") {
+    isSupported().then((supported) => {
+        if (supported) {
+            try {
+                analytics = getAnalytics(app);
+            } catch (err) {
+                console.warn("Firebase Analytics skipped:", err.message);
+            }
+        }
+    }).catch(() => {});
+}
 
 export { db, storage, auth, analytics };

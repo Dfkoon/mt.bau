@@ -51,6 +51,7 @@ KNOWLEDGE BASE (Meticulous Details):
    - [Exchange](/exchange): Market for students to swap books and academic resources.
    - [News](/news): Latest university announcements and upcoming events.
    - [Calendar](/calendar): BAU Academic Calendar with exam dates and holidays.
+   - [Request Services](#request-services): Section on homepage where students can request custom course summaries, question creation, or project ideas from the team.
 
 3. IMPORTANT STUDENT LINKS:
    - Student Portal: https://app.bau.edu.jo/ (Registration, Marks).
@@ -63,6 +64,7 @@ CORE DIRECTIVES:
 - Dialect: Refined White Jordanian (لهجة بيضاء مهذبة).
 - Tone: Highly proactive, welcoming (أهلاً يا نشمي!), and deeply encouraging.
 - Precision: Always mention specific site pages using Markdown links.
+- Missing Material / Request Directive: If a student asks for a study material, summary, book, questions, or project help that is NOT available on the site, politely inform them and explicitly direct them to request it directly from the Makanak team via the [اطلب ما تحتاجه](#request-services) section on the homepage!
 - Context: If the user is on a specific page, prioritize information related to that page.
 - Credit: Always honor the vision of Hussien Koon and the "Makanak" team.
 `;
@@ -160,25 +162,123 @@ export const chatWithNashmi = async (userMessage, pageContext = "", history = []
  * Grade an essay/short-answer question using AI semantic similarity.
  * Returns { score: 0-1, feedback: string (Arabic), feedbackEn: string (English) }
  */
-export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText = '', maxMarks = 1) => {
-    if (!groq) return { score: 0, feedback: 'خدمة التصحيح الذكي غير متاحة حالياً.', feedbackEn: 'AI grading unavailable.' };
-    if (!studentAnswer || !studentAnswer.trim()) return { score: 0, feedback: 'لم تكتب إجابة.', feedbackEn: 'No answer provided.' };
-    if (!modelAnswer || !modelAnswer.trim()) return { score: 1, feedback: 'تم قبول الإجابة (لا توجد إجابة نموذجية محددة).', feedbackEn: 'Answer accepted (no model answer defined).' };
+// Smart Arabic & English text normalization helper
+const cleanText = (str) => {
+    if (!str) return '';
+    return str
+        .toLowerCase()
+        .replace(/[أإآٱ]/g, 'ا')
+        .replace(/ة/g, 'ه')
+        .replace(/ى/g, 'ي')
+        .replace(/[\u064B-\u0652]/g, '') // remove diacritics
+        .replace(/[.,/#!$%^&*;:{}=\-_`~()؟?،"']/g, ' ') // remove punctuation
+        .replace(/\s+/g, ' ')
+        .trim();
+};
 
-    const prompt = `You are an academic grader. Grade the student's answer against the model answer.
+export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText = '', maxMarks = 1) => {
+    if (!studentAnswer || !studentAnswer.trim()) {
+        return { score: 0, earnedMarks: 0, feedback: 'لم يتم كتابة إجابة.', feedbackEn: 'No answer provided.' };
+    }
+    if (!modelAnswer || !modelAnswer.trim()) {
+        return { score: 1, earnedMarks: maxMarks, feedback: 'إجابة مقبولة ✅', feedbackEn: 'Answer accepted ✅' };
+    }
+
+    const cleanStud = cleanText(studentAnswer);
+    const cleanMod = cleanText(modelAnswer);
+    const cleanQ = cleanText(questionText);
+
+    // Fast local concept evaluation (works offline and online)
+    const evaluateLocally = () => {
+        if (cleanStud === cleanMod) {
+            return { score: 1, earnedMarks: maxMarks, feedback: 'إجابة صحيحة ونموذجية ✅', feedbackEn: 'Perfect answer ✅' };
+        }
+
+        // Stopwords to ignore
+        const stopWords = new Set(['من', 'في', 'على', 'عن', 'مع', 'هو', 'هي', 'التي', 'الذي', 'ان', 'او', 'مثل', 'هذا', 'هذه', 'كان', 'يكون', 'انها', 'انه', 'تكون', 'is', 'are', 'the', 'a', 'an', 'and', 'or', 'in', 'of', 'to', 'for']);
+        const studWords = cleanStud.split(' ').filter(w => w.length >= 2 && !stopWords.has(w));
+        const modWords = cleanMod.split(' ').filter(w => w.length >= 2 && !stopWords.has(w));
+
+        if (studWords.length === 0) {
+            return { score: 0, earnedMarks: 0, feedback: 'إجابة غير مكتملة ❌', feedbackEn: 'Incomplete answer ❌' };
+        }
+
+        // Count keyword matches (stemmed prefix matching for Arabic words)
+        let matches = 0;
+        studWords.forEach(sWord => {
+            const hasMatch = modWords.some(mWord => {
+                if (sWord === mWord) return true;
+                // Substring prefix/suffix matching (e.g. محاضرات vs المحاضرات vs محاضرة)
+                if (sWord.length >= 4 && mWord.length >= 4) {
+                    if (sWord.includes(mWord) || mWord.includes(sWord)) return true;
+                    // Common prefix match (first 4 letters)
+                    if (sWord.slice(0, 4) === mWord.slice(0, 4)) return true;
+                }
+                return false;
+            });
+            if (hasMatch) matches++;
+        });
+
+        const overlapRatio = matches / Math.max(1, Math.min(studWords.length, 5));
+
+        // Generous concept grading thresholds
+        if (matches >= 2 || overlapRatio >= 0.4 || (studWords.length >= 2 && matches >= 1)) {
+            return {
+                score: 1,
+                earnedMarks: maxMarks,
+                feedback: 'إجابة صحيحة ومقبولة، تعبر عن الفكرة المطلوبة ✅',
+                feedbackEn: 'Correct and acceptable answer conveying the required concept ✅'
+            };
+        } else if (matches >= 1) {
+            const earned = +(maxMarks * 0.85).toFixed(2);
+            return {
+                score: 0.85,
+                earnedMarks: earned,
+                feedback: 'إجابة متقاربة وتحتوي على الفكرة الأساسية 👍',
+                feedbackEn: 'Close answer containing the main concept 👍'
+            };
+        }
+
+        // Fallback for short answers matching question context
+        const qWords = cleanQ.split(' ').filter(w => w.length >= 3 && !stopWords.has(w));
+        const qMatches = studWords.filter(w => qWords.some(qw => qw.includes(w) || w.includes(qw))).length;
+        if (qMatches >= 1 && studWords.length >= 2) {
+            const earned = +(maxMarks * 0.75).toFixed(2);
+            return {
+                score: 0.75,
+                earnedMarks: earned,
+                feedback: 'إجابة متصلة بموضوع السؤال ومقبولة 👍',
+                feedbackEn: 'Relevant and acceptable answer 👍'
+            };
+        }
+
+        return {
+            score: 0.4,
+            earnedMarks: +(maxMarks * 0.4).toFixed(2),
+            feedback: 'إجابة جزئية — يرجى مراجعة الإجابة النموذجية للفائدة.',
+            feedbackEn: 'Partial answer — check model answer for reference.'
+        };
+    };
+
+    if (!groq) {
+        return evaluateLocally();
+    }
+
+    const prompt = `You are a very encouraging and generous academic professor grading an Arabic/English student answer.
     
 Question: "${questionText}"
 Model Answer: "${modelAnswer}"
 Student Answer: "${studentAnswer}"
 
-Rules:
-- Give a score from 0 to 10 (integers only, 10 = perfect match in meaning, 0 = completely wrong/irrelevant)
-- Be lenient with wording differences but strict about factual correctness
-- Partial credit for partially correct answers
-- Ignore spelling mistakes if the meaning is correct
+GRADING DIRECTIVES:
+1. Be EXTREMELY generous and encouraging!
+2. If the student's answer expresses the same concept, core idea, purpose, or a valid real-world example (e.g. student mentions "محاضرات عن بعد" or "وسيلة تواصل" for a question about video conferencing), award 9/10 or 10/10 FULL MARKS!
+3. Do NOT penalize spelling errors, dialect variations, different phrasing, or brevity if the main idea is correct.
+4. Award at least 7/10 or 8/10 if the answer contains any correct relevant point or keyword.
+5. Only give 0 if the answer is completely blank, gibberish, or 100% wrong.
 
-Respond with ONLY this JSON format (nothing else):
-{"score": <0-10>, "feedback_ar": "<brief Arabic feedback 1 sentence>", "feedback_en": "<brief English feedback 1 sentence>"}`;
+Respond ONLY with this JSON format:
+{"score": <integer 0-10>, "feedback_ar": "<تشجيع وملاحظة إيجابية ملخصة بالعربية>", "feedback_en": "<positive brief feedback in English>"}`;
 
     try {
         const completion = await Promise.race([
@@ -188,32 +288,25 @@ Respond with ONLY this JSON format (nothing else):
                 temperature: 0.1,
                 max_tokens: 150,
             }),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), 12000))
+            new Promise((_, reject) => setTimeout(() => reject(new Error('TIMEOUT')), 10000))
         ]);
 
         const raw = completion.choices[0]?.message?.content || '';
-        // Extract JSON safely
         const jsonMatch = raw.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) throw new Error('Invalid JSON response');
+        if (!jsonMatch) throw new Error('Invalid JSON');
         const parsed = JSON.parse(jsonMatch[0]);
-        const normalized = Math.max(0, Math.min(10, Number(parsed.score) || 0)) / 10;
+        const numScore = Number(parsed.score);
+        const normalized = isNaN(numScore) ? 0.8 : Math.max(0, Math.min(10, numScore)) / 10;
+        
         return {
             score: normalized,
             earnedMarks: +(normalized * maxMarks).toFixed(2),
-            feedback: parsed.feedback_ar || 'تم التصحيح.',
-            feedbackEn: parsed.feedback_en || 'Graded.',
+            feedback: parsed.feedback_ar || 'إجابة صحيحة ومفصلة ✅',
+            feedbackEn: parsed.feedback_en || 'Correct answer ✅',
         };
     } catch (e) {
-        console.warn('AI grading failed, fallback to text match:', e.message);
-        // Fallback: simple keyword match
-        const normalize = s => s.toLowerCase().trim().replace(/\s+/g, ' ');
-        const studentN = normalize(studentAnswer);
-        const modelN = normalize(modelAnswer);
-        if (studentN === modelN) return { score: 1, earnedMarks: maxMarks, feedback: 'إجابة صحيحة تماماً ✅', feedbackEn: 'Perfect match ✅' };
-        if (modelN.split(' ').some(word => word.length > 3 && studentN.includes(word))) {
-            return { score: 0.5, earnedMarks: +(maxMarks * 0.5).toFixed(2), feedback: 'إجابة جزئية — تحتوي على بعض المعلومات الصحيحة.', feedbackEn: 'Partial answer — contains some correct information.' };
-        }
-        return { score: 0, earnedMarks: 0, feedback: 'إجابة غير كافية ❌', feedbackEn: 'Insufficient answer ❌' };
+        console.warn('AI API timeout or error, using local concept grader:', e.message);
+        return evaluateLocally();
     }
 };
 

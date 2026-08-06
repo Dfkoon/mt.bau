@@ -5,15 +5,15 @@ import { useLanguage } from '../contexts/LanguageContext';
 import './NoticeBoard.css';
 
 const TYPE_ICONS = {
-    info:    { icon: 'ℹ️', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
-    warning: { icon: '⚠️', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
-    success: { icon: '✅', color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
-    alert:   { icon: '🔔', color: '#e02b20', bg: 'rgba(224,43,32,0.08)'  },
+    info:    { icon: 'ℹ️', color: '#3b82f6', bg: 'linear-gradient(135deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04))' },
+    warning: { icon: '⚠️', color: '#f59e0b', bg: 'linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.04))' },
+    success: { icon: '✅', color: '#10b981', bg: 'linear-gradient(135deg,rgba(16,185,129,0.12),rgba(16,185,129,0.04))' },
+    alert:   { icon: '🔔', color: '#e02b20', bg: 'linear-gradient(135deg,rgba(224,43,32,0.12),rgba(224,43,32,0.04))' },
 };
 
 /**
- * NoticeBoard – reads from Firestore `notices` collection.
- * Only shows notices where active == true and (expiresAt is null OR expiresAt > now).
+ * NoticeBoard – popup modal triggered on first visit.
+ * Reads from Firestore `notices` collection (active == true).
  * Fields: { titleAr, titleEn, bodyAr, bodyEn, type, active, pinned, expiresAt, createdAt }
  */
 const NoticeBoard = () => {
@@ -24,6 +24,8 @@ const NoticeBoard = () => {
         try { return JSON.parse(localStorage.getItem('koon_dismissed_notices') || '[]'); }
         catch { return []; }
     });
+    const [open, setOpen] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -44,49 +46,102 @@ const NoticeBoard = () => {
         return () => unsub();
     }, []);
 
-    const dismiss = (id) => {
-        const next = [...dismissed, id];
+    // Open popup automatically after loading if there are un-dismissed notices
+    useEffect(() => {
+        if (!loading && notices.length > 0) {
+            const visible = notices.filter(n => !dismissed.includes(n.id));
+            if (visible.length > 0) {
+                // Small delay for smoother UX after page load
+                const timer = setTimeout(() => setOpen(true), 800);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [loading, notices]);
+
+    const dismissCurrent = () => {
+        const visible = notices.filter(n => !dismissed.includes(n.id));
+        if (visible[currentIndex]) {
+            const next = [...dismissed, visible[currentIndex].id];
+            setDismissed(next);
+            try { localStorage.setItem('koon_dismissed_notices', JSON.stringify(next)); } catch { /**/ }
+        }
+        // Move to next or close
+        const remaining = visible.length - 1;
+        if (remaining > currentIndex) {
+            setCurrentIndex(i => i);
+        } else if (remaining > 0) {
+            setCurrentIndex(0);
+        } else {
+            setOpen(false);
+        }
+    };
+
+    const dismissAll = () => {
+        const visible = notices.filter(n => !dismissed.includes(n.id));
+        const ids = visible.map(n => n.id);
+        const next = [...dismissed, ...ids];
         setDismissed(next);
         try { localStorage.setItem('koon_dismissed_notices', JSON.stringify(next)); } catch { /**/ }
+        setOpen(false);
     };
 
     const visible = notices.filter(n => !dismissed.includes(n.id));
 
-    if (loading || visible.length === 0) return null;
+    if (loading || !open || visible.length === 0) return null;
+
+    const notice = visible[currentIndex] || visible[0];
+    const t = TYPE_ICONS[notice.type] || TYPE_ICONS.info;
+    const hasMultiple = visible.length > 1;
 
     return (
-        <div className="notice-board" role="region" aria-label={isAr ? 'الإعلانات' : 'Notices'}>
-            {visible.map(n => {
-                const t = TYPE_ICONS[n.type] || TYPE_ICONS.info;
-                return (
-                    <div
-                        key={n.id}
-                        className={`notice-item ${n.pinned ? 'pinned' : ''}`}
-                        style={{ background: t.bg, borderColor: t.color }}
-                        role="alert"
-                    >
-                        <span className="notice-icon">{t.icon}</span>
-                        <div className="notice-body">
-                            {(isAr ? n.titleAr : n.titleEn) && (
-                                <strong className="notice-title">{isAr ? n.titleAr : n.titleEn}</strong>
-                            )}
-                            {(isAr ? n.bodyAr : n.bodyEn) && (
-                                <p className="notice-text">{isAr ? n.bodyAr : n.bodyEn}</p>
-                            )}
+        <div className="nb-overlay" role="dialog" aria-modal="true" onClick={(e) => { if (e.target === e.currentTarget) dismissAll(); }}>
+            <div className="nb-modal" style={{ '--nb-color': t.color, '--nb-bg': t.bg }}>
+
+                {/* Header strip */}
+                <div className="nb-header" style={{ background: t.color }}>
+                    <span className="nb-header-icon">{t.icon}</span>
+                    <span className="nb-header-label">{isAr ? 'إعلان من الفريق' : 'Team Announcement'}</span>
+                    {notice.pinned && <span className="nb-pin">📌</span>}
+                    <button className="nb-close" onClick={dismissAll} aria-label={isAr ? 'إغلاق' : 'Close'}>✕</button>
+                </div>
+
+                {/* Body */}
+                <div className="nb-body" style={{ background: t.bg }}>
+                    {(isAr ? notice.titleAr : notice.titleEn) && (
+                        <h3 className="nb-title" style={{ color: t.color }}>{isAr ? notice.titleAr : notice.titleEn}</h3>
+                    )}
+                    {(isAr ? notice.bodyAr : notice.bodyEn) && (
+                        <p className="nb-text">{isAr ? notice.bodyAr : notice.bodyEn}</p>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="nb-footer">
+                    {hasMultiple && (
+                        <div className="nb-pagination">
+                            {visible.map((_, i) => (
+                                <button
+                                    key={i}
+                                    className={`nb-dot ${i === currentIndex ? 'active' : ''}`}
+                                    onClick={() => setCurrentIndex(i)}
+                                    style={{ background: i === currentIndex ? t.color : undefined }}
+                                />
+                            ))}
                         </div>
-                        {n.pinned && (
-                            <span className="notice-pin" title={isAr ? 'مثبت' : 'Pinned'}>📌</span>
+                    )}
+                    <div className="nb-actions">
+                        {hasMultiple && currentIndex < visible.length - 1 ? (
+                            <button className="nb-btn-next" onClick={() => setCurrentIndex(i => i + 1)}>
+                                {isAr ? 'التالي ←' : 'Next →'}
+                            </button>
+                        ) : (
+                            <button className="nb-btn-dismiss" onClick={dismissAll} style={{ '--btn-color': t.color }}>
+                                {isAr ? 'تم الاطلاع ✓' : 'Got it ✓'}
+                            </button>
                         )}
-                        <button
-                            className="notice-close-btn"
-                            onClick={() => dismiss(n.id)}
-                            aria-label={isAr ? 'إغلاق الإعلان' : 'Dismiss notice'}
-                        >
-                            ×
-                        </button>
                     </div>
-                );
-            })}
+                </div>
+            </div>
         </div>
     );
 };

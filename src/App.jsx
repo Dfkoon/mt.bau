@@ -11,6 +11,7 @@ import UpcomingEvents from './sections/UpcomingEvents';
 import NewsSection from './sections/NewsSection';
 import ProjectsSection from './sections/ProjectsSection';
 import ServicesSection from './sections/ServicesSection';
+import RequestServicesSection from './sections/RequestServicesSection';
 import FeatureShowcase from './sections/FeatureShowcase';
 import UsefulSitesSection from './sections/UsefulSitesSection';
 import WeeklyTip from './sections/WeeklyTip';
@@ -87,6 +88,7 @@ const HomePage = () => {
       <WeeklyTip />
       <ProjectsSection />
       <ServicesSection />
+      <RequestServicesSection />
       <UsefulSitesSection />
       <div id="testimonials-section">
         <Testimonials />

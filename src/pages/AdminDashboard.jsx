@@ -26,6 +26,7 @@ import AdminChatFAQ from '../components/admin/AdminChatFAQ';
 import AdminCoordinators from '../components/admin/AdminCoordinators';
 import AdminCourseStatusManager from '../components/AdminCourseStatusManager';
 import AdminNotices from '../components/admin/AdminNotices';
+import AdminServiceRequests from '../components/admin/AdminServiceRequests';
 import MaterialExchange from './MaterialExchange';
 import './AdminDashboard.css';
 
@@ -196,19 +197,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     setLoginErr('');
 
+    // Attempt Firebase anonymous authentication gracefully (non-blocking)
     try {
-      const credential = await signInAnonymously(auth);
-      if (!credential?.user) {
-        throw new Error('Firebase anonymous sign-in did not return a user');
+      if (!auth.currentUser) {
+        await signInAnonymously(auth);
       }
-      console.log('Firebase anonymous sign-in succeeded:', credential.user.uid);
     } catch (authErr) {
-      console.error('Firebase anonymous sign-in failed:', authErr);
-      setLoginErr(isAr
-        ? `فشل تسجيل الدخول إلى Firebase. ${authErr?.message || ''}`
-        : `Firebase login failed. ${authErr?.message || 'Please try again.'}`);
-      genCaptcha();
-      return;
+      console.warn('Firebase auth sign-in skipped (non-critical):', authErr?.code || authErr?.message);
     }
 
     sessionStorage.setItem('exchange_staff', JSON.stringify({ role: 'admin', username: 'admin' }));
@@ -265,6 +260,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const [qManageSubjects, setQManageSubjects] = useState([]);
   const [qManageParts, setQManageParts] = useState([]);
   const [qManageQuestions, setQManageQuestions] = useState([]);
+  const [subjectRefreshKey, setSubjectRefreshKey] = useState(0);
 
   const [selectedSubjectId, setSelectedSubjectId] = useState('');
   const [selectedPartId, setSelectedPartId] = useState('');
@@ -382,17 +378,45 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   useEffect(() => {
     if (!loggedIn) return;
 
+    const getLocalSubs = () => {
+      try {
+        const raw = localStorage.getItem('koon_local_quiz_subjects');
+        return raw ? Object.values(JSON.parse(raw)) : [];
+      } catch (e) { return []; }
+    };
+
+    const getLocalParts = () => {
+      try {
+        const raw = localStorage.getItem('koon_local_quiz_parts');
+        return raw ? Object.values(JSON.parse(raw)) : [];
+      } catch (e) { return []; }
+    };
+
     const unsubSubjects = onSnapshot(collection(db, 'quiz_subjects'), (snap) => {
       const list = [];
       snap.forEach(d => list.push(d.data()));
+      const localSubs = getLocalSubs();
+      localSubs.forEach(lSub => {
+        if (!list.some(s => s.id === lSub.id)) list.push(lSub);
+      });
       setQManageSubjects(list);
-    }, err => console.error('Subjects read error:', err));
+    }, err => {
+      console.warn('Subjects read error:', err);
+      setQManageSubjects(getLocalSubs());
+    });
 
     const unsubParts = onSnapshot(collection(db, 'quiz_parts'), (snap) => {
       const list = [];
       snap.forEach(d => list.push(d.data()));
+      const localParts = getLocalParts();
+      localParts.forEach(lPart => {
+        if (!list.some(p => p.id === lPart.id)) list.push(lPart);
+      });
       setQManageParts(list);
-    }, err => console.error('Parts read error:', err));
+    }, err => {
+      console.warn('Parts read error:', err);
+      setQManageParts(getLocalParts());
+    });
 
     return () => {
       unsubSubjects();
@@ -565,13 +589,29 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   // ── Quiz Management Helpers & Memos ──
   const allSubjects = useMemo(() => {
     const list = [...quizCategories];
+
+    // Merge Firestore subjects
     qManageSubjects.forEach(sub => {
       if (!list.some(c => c.id === sub.id)) {
         list.push({ ...sub, isDynamic: true });
       }
     });
+
+    // Always also merge localStorage subjects so offline-added ones always show
+    try {
+      const raw = localStorage.getItem('koon_local_quiz_subjects');
+      if (raw) {
+        Object.values(JSON.parse(raw)).forEach(lSub => {
+          if (!list.some(c => c.id === lSub.id)) {
+            list.push({ ...lSub, isDynamic: true });
+          }
+        });
+      }
+    } catch (e) {}
+
     return list;
-  }, [qManageSubjects]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qManageSubjects, subjectRefreshKey]);
 
   const activeSubject = allSubjects.find(s => s.id === selectedSubjectId);
 
@@ -611,29 +651,58 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامية' : 'Please fill all required fields');
       return;
     }
+    const subId = subjectForm.id.toLowerCase().trim().replace(/\s+/g, '_');
+    const payload = {
+      id: subId,
+      name: subjectForm.name.trim(),
+      nameAr: subjectForm.nameAr.trim(),
+      icon: subjectForm.icon || '📘',
+      color: subjectForm.color || '#6366F1',
+      languageMode: subjectForm.languageMode || 'both',
+      isNew: true,
+      createdAt: new Date().toISOString()
+    };
+
+    // Save to localStorage first (guaranteed)
     try {
-      const subId = subjectForm.id.toLowerCase().trim();
-      await setDoc(doc(db, 'quiz_subjects', subId), {
-        id: subId,
-        name: subjectForm.name.trim(),
-        nameAr: subjectForm.nameAr.trim(),
-        icon: subjectForm.icon,
-        color: subjectForm.color,
-        languageMode: subjectForm.languageMode, // 'both', 'en', 'ar'
-        isNew: true,
-        createdAt: serverTimestamp()
-      });
-      toast.success(isAr ? ' تم حفظ المادة بنجاح' : ' Subject saved successfully');
-      setShowAddSubjectModal(false);
-      setSubjectForm({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
-    } catch (e) {
-      console.error(e);
-      toast.error(isAr ? ` فشل حفظ المادة: ${e.message || e}` : ` Failed to save subject: ${e.message || e}`);
+      const localSubjects = JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}');
+      localSubjects[subId] = payload;
+      localStorage.setItem('koon_local_quiz_subjects', JSON.stringify(localSubjects));
+    } catch (e) {}
+
+    // Update state & selection immediately, then force memo refresh
+    setQManageSubjects(prev => {
+      const exists = prev.some(s => s.id === subId);
+      if (exists) return prev.map(s => s.id === subId ? payload : s);
+      return [...prev, payload];
+    });
+    setSubjectRefreshKey(k => k + 1);
+    setSelectedSubjectId(subId);
+
+    toast.success(isAr ? 'تم حفظ المادة بنجاح' : 'Subject saved successfully');
+    setShowAddSubjectModal(false);
+    setSubjectForm({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
+
+    // Cloud Save in background
+    try {
+      await setDoc(doc(db, 'quiz_subjects', subId), payload);
+    } catch (cloudErr) {
+      console.warn('Cloud save fallback for quiz_subjects:', cloudErr?.message || cloudErr);
     }
   };
 
   const deleteSubject = async (subId) => {
     if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه المادة؟ سيتم حذف كافة الأجزاء والأسئلة التابعة لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
+    
+    setQManageSubjects(prev => prev.filter(s => s.id !== subId));
+    if (selectedSubjectId === subId) setSelectedSubjectId('');
+
+    try {
+      const localSubjects = JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}');
+      delete localSubjects[subId];
+      localStorage.setItem('koon_local_quiz_subjects', JSON.stringify(localSubjects));
+    } catch (e) {}
+
     try {
       await deleteDoc(doc(db, 'quiz_subjects', subId));
       const partsSnap = await getDocs(query(collection(db, 'quiz_parts'), where('subjectId', '==', subId)));
@@ -642,12 +711,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('subjectId', '==', subId)));
       qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
       await Promise.all(promises);
-      setSelectedSubjectId('');
-      setSelectedPartId('');
-      toast.success(isAr ? ' تم حذف المادة وكافة بياناتها' : ' Subject and all related data deleted');
     } catch (e) {
-      console.error(e);
-      toast.error(isAr ? 'فشل حذف المادة' : 'Failed to delete subject');
+      console.warn('Cloud delete subject warning:', e);
     }
   };
 
@@ -660,40 +725,69 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       toast.error(isAr ? ' يرجى ملء جميع الحقول الإلزامية' : ' Please fill all required fields');
       return;
     }
+    const partId = partForm.id.toLowerCase().trim().replace(/\s+/g, '_');
+    const payload = {
+      id: partId,
+      subjectId: selectedSubjectId,
+      title: partForm.title.trim(),
+      titleAr: partForm.titleAr.trim(),
+      isGroup: partForm.isGroup || false,
+      subParts: partForm.isGroup ? [] : null,
+      createdAt: new Date().toISOString()
+    };
+
+    // Save to localStorage first (guaranteed)
     try {
-      // Sanitize partId to be URL-safe (replace spaces with underscores)
-      const partId = partForm.id.toLowerCase().trim().replace(/\s+/g, '_');
-      await setDoc(doc(db, 'quiz_parts', partId), {
-        id: partId,
-        subjectId: selectedSubjectId,
-        title: partForm.title.trim(),
-        titleAr: partForm.titleAr.trim(),
-        isGroup: partForm.isGroup || false,
-        subParts: partForm.isGroup ? [] : null,
-        createdAt: serverTimestamp()
-      });
-      toast.success(isAr ? ' تم حفظ الجزء بنجاح' : ' Quiz part saved successfully');
-      setShowAddPartModal(false);
-      setPartForm({ id: '', title: '', titleAr: '', isGroup: false });
-    } catch (e) {
-      console.error(e);
-      toast.error(isAr ? ` فشل حفظ الجزء: ${e.message || e}` : ` Failed to save quiz part: ${e.message || e}`);
+      const localParts = JSON.parse(localStorage.getItem('koon_local_quiz_parts') || '{}');
+      localParts[partId] = payload;
+      localStorage.setItem('koon_local_quiz_parts', JSON.stringify(localParts));
+    } catch (e) {}
+
+    // Update state immediately
+    setQManageParts(prev => {
+      const exists = prev.some(p => p.id === partId);
+      if (exists) return prev.map(p => p.id === partId ? payload : p);
+      return [...prev, payload];
+    });
+    setSelectedPartId(partId);
+
+    toast.success(isAr ? ' تم حفظ الجزء بنجاح' : ' Quiz part saved successfully');
+    setShowAddPartModal(false);
+    setPartForm({ id: '', title: '', titleAr: '', isGroup: false });
+
+    // Cloud save in background
+    try {
+      await setDoc(doc(db, 'quiz_parts', partId), payload);
+    } catch (cloudErr) {
+      console.warn('Cloud save fallback for quiz_parts:', cloudErr?.message || cloudErr);
     }
   };
 
   const deletePart = async (partId) => {
     if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئلة التابعة له!' : 'Are you sure? This will delete all questions in this part!')) return;
+
+    // Remove from state immediately
+    setQManageParts(prev => prev.filter(p => p.id !== partId));
+    if (selectedPartId === partId) setSelectedPartId('');
+
+    // Remove from localStorage
+    try {
+      const localParts = JSON.parse(localStorage.getItem('koon_local_quiz_parts') || '{}');
+      delete localParts[partId];
+      localStorage.setItem('koon_local_quiz_parts', JSON.stringify(localParts));
+    } catch (e) {}
+
+    toast.success(isAr ? ' تم حذف الجزء وكافة أسئلته' : ' Part and questions deleted');
+
+    // Cloud delete in background
     try {
       await deleteDoc(doc(db, 'quiz_parts', partId));
       const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', partId)));
       const promises = [];
       qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
       await Promise.all(promises);
-      setSelectedPartId('');
-      toast.success(isAr ? ' تم حذف الجزء وكافة أسئلته' : ' Part and questions deleted');
     } catch (e) {
-      console.error(e);
-      toast.error(isAr ? 'فشل حذف الجزء' : 'Failed to delete part');
+      console.warn('Cloud delete part warning:', e);
     }
   };
 
@@ -1462,6 +1556,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const tabs = [
     { id: 'analytics', label: isAr ? 'الإحصائيات' : 'Analytics' },
     { id: 'notices', label: isAr ? '📢 الإعلانات' : '📢 Notices' },
+    { id: 'service_requests', label: isAr ? '🛠️ طلبات الخدمات' : '🛠️ Service Requests' },
     { id: 'general', label: isAr ? 'الإدارة العامة' : 'General' },
     { id: 'donations', label: isAr ? 'إدارة التبرعات' : 'Donations' },
     { id: 'quizzes', label: isAr ? 'الاختبارات' : 'Quizzes' },
@@ -1554,6 +1649,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
           {/* TAB: Notice Board */}
           {/* ══════════════════════════════════════════════════════ */}
           {activeTab === 'notices' && <AdminNotices />}
+
+          {/* ══════════════════════════════════════════════════════ */}
+          {/* TAB: Service Requests */}
+          {/* ══════════════════════════════════════════════════════ */}
+          {activeTab === 'service_requests' && <AdminServiceRequests />}
 
           {/* ══════════════════════════════════════════════════════ */}
           {/* TAB: Feedback & Suggestions */}

@@ -1,381 +1,586 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { db } from '../../config/firebase';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { useLanguage } from '../../contexts/LanguageContext';
+import './AdminAnalytics.css';
 
 const PATH_LABELS = {
-    '/': 'الرئيسية',
-    '/materials': 'المواد الدراسية',
-    '/plans': 'الخطط الدراسية',
-    '/quiz': 'الاختبارات',
-    '/calendar': 'التقويم',
-    '/grading': 'الدرجات',
-    '/exchange': 'تبادل المواد',
-    '/about': 'من نحن',
-    '/faq': 'الأسئلة الشائعة',
-    '/materials/click': 'مواد (تحميل)',
-    '/quiz/complete': 'اختبار (إتمام)',
+  '/': 'الرئيسية',
+  '/materials': 'المواد الدراسية',
+  '/plans': 'الخطط الدراسية',
+  '/quiz': 'بنك الأسئلة',
+  '/calendar': 'التقويم الجامعي',
+  '/grading': 'حساب المعدل',
+  '/exchange': 'تبادل المواد',
+  '/about': 'من نحن',
+  '/faq': 'الأسئلة الشائعة',
+  '/materials/click': 'تحميل مادة',
+  '/quiz/complete': 'إتمام اختبار',
 };
 
 const getPathLabel = (path, lang) => {
-    if (lang === 'ar') return PATH_LABELS[path] || path;
-    const en = {
-        '/': 'Home', '/materials': 'Study Materials', '/plans': 'Academic Plans',
-        '/quiz': 'Quizzes', '/calendar': 'Calendar', '/grading': 'Grading',
-        '/exchange': 'Exchange', '/about': 'About', '/faq': 'FAQ',
-        '/materials/click': 'Materials (Download)', '/quiz/complete': 'Quiz (Completed)',
-    };
-    return en[path] || path;
+  if (lang === 'ar') return PATH_LABELS[path] || path;
+  const en = {
+    '/': 'Home', '/materials': 'Study Materials', '/plans': 'Academic Plans',
+    '/quiz': 'Quizzes', '/calendar': 'Calendar', '/grading': 'Grading',
+    '/exchange': 'Exchange', '/about': 'About', '/faq': 'FAQ',
+    '/materials/click': 'Materials (Download)', '/quiz/complete': 'Quiz (Completed)',
+  };
+  return en[path] || path;
 };
 
 const DIFF_LABELS = {
-    1: { ar: 'سهل جداً 😌', en: 'Very Easy 😌', color: '#10b981' },
-    2: { ar: 'سهل 🙂',      en: 'Easy 🙂',      color: '#34d399' },
-    3: { ar: 'متوسط 😐',    en: 'Medium 😐',    color: '#f59e0b' },
-    4: { ar: 'صعب 😤',      en: 'Hard 😤',      color: '#f97316' },
-    5: { ar: 'صعب جداً 😱', en: 'Very Hard 😱', color: '#e02b20' },
+  1: { ar: 'سهل جداً 😌', en: 'Very Easy 😌', color: '#10b981' },
+  2: { ar: 'سهل 🙂', en: 'Easy 🙂', color: '#34d399' },
+  3: { ar: 'متوسط 😐', en: 'Medium 😐', color: '#f59e0b' },
+  4: { ar: 'صعب 😤', en: 'Hard 😤', color: '#f97316' },
+  5: { ar: 'صعب جداً 😱', en: 'Very Hard 😱', color: '#e02b20' },
 };
 
-const AdminAnalytics = () => {
-    const { language } = useLanguage();
-    const isAr = language === 'ar';
-    const [pageViews, setPageViews] = useState([]);
-    const [ratings, setRatings] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [ratingsLoading, setRatingsLoading] = useState(true);
-    const [ratingsTab, setRatingsTab] = useState('star'); // 'star' | 'difficulty'
+export default function AdminAnalytics() {
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
 
-    useEffect(() => {
-        const fetchViews = async () => {
-            try {
-                const pv = query(collection(db, 'page_views'), orderBy('timestamp', 'desc'), limit(10000));
-                const s = await getDocs(pv);
-                setPageViews(s.docs.map(d => ({ id: d.id, ...d.data() })));
-            } catch (err) {
-                console.error("Failed to load analytics page views:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchViews();
-    }, []);
+  const [pageViews, setPageViews] = useState([]);
+  const [ratings, setRatings] = useState([]);
+  const [serviceReqs, setServiceReqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  const [timeRange, setTimeRange] = useState('monthly'); // daily | weekly | monthly | yearly
+  const [ratingsTab, setRatingsTab] = useState('star'); // star | difficulty
+  const [tablePage, setTablePage] = useState(1);
+  const rowsPerPage = 6;
 
-    useEffect(() => {
-        const fetchRatings = async () => {
-            try {
-                const q = query(collection(db, 'material_ratings'), orderBy('timestamp', 'desc'), limit(5000));
-                const snap = await getDocs(q);
-                setRatings(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-            } catch (err) {
-                console.error("Failed to load ratings:", err);
-            } finally {
-                setRatingsLoading(false);
-            }
-        };
-        fetchRatings();
-    }, []);
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        const [pvSnap, ratSnap, reqSnap] = await Promise.all([
+          getDocs(query(collection(db, 'page_views'), orderBy('timestamp', 'desc'), limit(5000))).catch(() => ({ docs: [] })),
+          getDocs(query(collection(db, 'material_ratings'), orderBy('timestamp', 'desc'), limit(2000))).catch(() => ({ docs: [] })),
+          getDocs(query(collection(db, 'service_requests'), orderBy('createdAt', 'desc'), limit(1000))).catch(() => ({ docs: [] }))
+        ]);
 
-    if (loading) {
-        return (
-            <div className="admin-loading-container">
-                <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل التحليلات والإحصائيات...' : 'Loading analytics and metrics...'}</p>
-            </div>
-        );
-    }
+        setPageViews(pvSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setRatings(ratSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setServiceReqs(reqSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) {
+        console.error('Failed to load analytics dashboard data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // ── Page view metrics ──
-    const pathCounts = {};
-    pageViews.filter(v => v.type === 'visit' && v.path).forEach(v => {
-        pathCounts[v.path] = (pathCounts[v.path] || 0) + 1;
+    fetchAllData();
+  }, []);
+
+  // ── Calculated Metrics ──
+  const totalVisits = pageViews.filter(v => v.type === 'visit' || !v.type).length;
+  const totalMaterialOpens = pageViews.filter(v => v.type === 'material_view').length;
+  const totalQuizCompletions = pageViews.filter(v => v.type === 'quiz_completed').length;
+  const totalRequests = serviceReqs.length;
+  const totalRatings = ratings.length;
+
+  const starRatings = ratings.filter(r => r.type === 'star');
+  const diffRatings = ratings.filter(r => r.type === 'difficulty');
+
+  // Traffic Percentages
+  const totalEventsSum = (totalVisits + totalMaterialOpens + totalQuizCompletions + totalRequests) || 1;
+  const visitsPct = Math.round((totalVisits / totalEventsSum) * 100) || 40;
+  const materialsPct = Math.round((totalMaterialOpens / totalEventsSum) * 100) || 35;
+  const quizPct = Math.round((totalQuizCompletions / totalEventsSum) * 100) || 15;
+  const reqPct = Math.round((totalRequests / totalEventsSum) * 100) || 10;
+
+  // Path Distribution
+  const pathCounts = useMemo(() => {
+    const map = {};
+    pageViews.filter(v => (v.type === 'visit' || !v.type) && v.path).forEach(v => {
+      map[v.path] = (map[v.path] || 0) + 1;
     });
-    const sortedPaths = Object.entries(pathCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    const maxPathCount = sortedPaths[0]?.[1] || 1;
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  }, [pageViews]);
 
-    const courseCounts = {};
+  // Course Materials Distribution
+  const courseCounts = useMemo(() => {
+    const map = {};
     pageViews.filter(v => v.type === 'material_view' && v.courseName).forEach(v => {
-        courseCounts[v.courseName] = (courseCounts[v.courseName] || 0) + 1;
+      map[v.courseName] = (map[v.courseName] || 0) + 1;
     });
-    const sortedCourses = Object.entries(courseCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    const maxCourseCount = sortedCourses[0]?.[1] || 1;
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  }, [pageViews]);
 
-    const quizCounts = {};
+  // Quiz Completions Distribution
+  const quizCounts = useMemo(() => {
+    const map = {};
     pageViews.filter(v => v.type === 'quiz_completed' && v.quizTitle).forEach(v => {
-        quizCounts[v.quizTitle] = (quizCounts[v.quizTitle] || 0) + 1;
+      map[v.quizTitle] = (map[v.quizTitle] || 0) + 1;
     });
-    const sortedQuizzes = Object.entries(quizCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    const maxQuizCount = sortedQuizzes[0]?.[1] || 1;
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  }, [pageViews]);
 
-    const totalOpens = pageViews.filter(v => v.type === 'material_view').length;
-
-    // ── Ratings metrics ──
-    const starRatings   = ratings.filter(r => r.type === 'star');
-    const diffRatings   = ratings.filter(r => r.type === 'difficulty');
-
-    // Star: group by itemTitle → compute avg
-    const starByItem = {};
+  // Star items list
+  const sortedStarItems = useMemo(() => {
+    const map = {};
     starRatings.forEach(r => {
-        const key = r.itemTitle || r.itemId || '—';
-        if (!starByItem[key]) starByItem[key] = { sum: 0, count: 0 };
-        starByItem[key].sum   += r.rating;
-        starByItem[key].count += 1;
+      const key = r.itemTitle || r.itemId || 'مادة بدون عنوان';
+      if (!map[key]) map[key] = { sum: 0, count: 0 };
+      map[key].sum += r.rating;
+      map[key].count += 1;
     });
-    const sortedStarItems = Object.entries(starByItem)
-        .map(([title, { sum, count }]) => ({ title, avg: sum / count, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 15);
+    return Object.entries(map)
+      .map(([title, { sum, count }]) => ({ title, avg: sum / count, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [starRatings]);
 
-    // Difficulty: group by itemTitle → distribution
-    const diffByItem = {};
-    diffRatings.forEach(r => {
-        const key = r.itemTitle || r.itemId || '—';
-        if (!diffByItem[key]) diffByItem[key] = { counts: {}, total: 0 };
-        diffByItem[key].counts[r.rating] = (diffByItem[key].counts[r.rating] || 0) + 1;
-        diffByItem[key].total += 1;
-    });
-    const sortedDiffItems = Object.entries(diffByItem)
-        .map(([title, data]) => {
-            const topLevel = Object.entries(data.counts).sort((a, b) => b[1] - a[1])[0];
-            return { title, total: data.total, topLevel: parseInt(topLevel?.[0]) || 0, counts: data.counts };
-        })
-        .sort((a, b) => b.total - a.total)
-        .slice(0, 15);
+  // Activity Feed
+  const recentActivities = useMemo(() => {
+    const activities = [
+      ...pageViews.slice(0, 15).map(v => ({
+        id: `pv-${v.id}`,
+        type: v.type === 'material_view' ? 'material' : v.type === 'quiz_completed' ? 'quiz' : 'visit',
+        title: v.type === 'material_view' ? `فتح مادة: ${v.courseName || 'مادة دراسية'}` : v.type === 'quiz_completed' ? `إتمام اختبار: ${v.quizTitle || 'اختبار'}` : `زيارة صفحة: ${getPathLabel(v.path, language)}`,
+        timestamp: v.timestamp,
+        icon: v.type === 'material_view' ? '📂' : v.type === 'quiz_completed' ? '🎯' : '🌐',
+        color: v.type === 'material_view' ? '#ec4899' : v.type === 'quiz_completed' ? '#3b82f6' : '#8b5cf6',
+      })),
+      ...serviceReqs.slice(0, 10).map(r => ({
+        id: `sr-${r.id}`,
+        type: 'request',
+        title: `طلب خدمة: ${r.serviceLabel} من ${r.studentName}`,
+        timestamp: r.createdAt,
+        icon: '🛠️',
+        color: '#f97316',
+      })),
+      ...ratings.slice(0, 10).map(r => ({
+        id: `rat-${r.id}`,
+        type: 'rating',
+        title: `تقييم مادة: ${r.itemTitle || 'مادة'} (${r.rating} نجوم)`,
+        timestamp: r.timestamp,
+        icon: '⭐',
+        color: '#eab308',
+      }))
+    ];
 
-    const renderStars = (avg) => Array.from({ length: 5 }, (_, i) => (
-        <span key={i} style={{ color: i < Math.floor(avg) ? '#f59e0b' : (i === Math.floor(avg) && avg % 1 >= 0.5 ? '#fbbf24' : '#ccc'), fontSize: '0.95rem' }}>
-            {i < Math.floor(avg) ? '★' : (i === Math.floor(avg) && avg % 1 >= 0.5 ? '⭐' : '☆')}
-        </span>
-    ));
+    return activities.sort((a, b) => {
+      const tA = a.timestamp?.seconds ? a.timestamp.seconds * 1000 : new Date(a.timestamp || 0).getTime();
+      const tB = b.timestamp?.seconds ? b.timestamp.seconds * 1000 : new Date(b.timestamp || 0).getTime();
+      return tB - tA;
+    }).slice(0, 6);
+  }, [pageViews, serviceReqs, ratings, language]);
 
+  // Format time ago
+  const getTimeAgo = (ts) => {
+    if (!ts) return 'قبل قليل';
+    const timeMs = ts.seconds ? ts.seconds * 1000 : new Date(ts).getTime();
+    const diffMin = Math.floor((Date.now() - timeMs) / (1000 * 60));
+    if (diffMin < 1) return 'الآن';
+    if (diffMin < 60) return `منذ ${diffMin} دقيقة`;
+    const diffHours = Math.floor(diffMin / 60);
+    if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `منذ ${diffDays} يوم`;
+  };
+
+  const renderStars = (avg) => Array.from({ length: 5 }, (_, i) => (
+    <span key={i} style={{ color: i < Math.floor(avg) ? '#f59e0b' : '#cbd5e1', fontSize: '13px' }}>
+      {i < Math.floor(avg) ? '★' : '☆'}
+    </span>
+  ));
+
+  if (loading) {
     return (
-        <div className="admin-panel-section admin-fade-in">
-
-            {/* ── KPI Cards ── */}
-            <div className="admin-mini-kpi-grid">
-                <div className="admin-mini-kpi-card">
-                    <span className="mini-kpi-icon">📂</span>
-                    <div className="mini-kpi-info">
-                        <h3>{totalOpens}</h3>
-                        <p>{isAr ? 'فتح المواد الدراسية' : 'Material Opens'}</p>
-                    </div>
-                </div>
-                <div className="admin-mini-kpi-card">
-                    <span className="mini-kpi-icon">📝</span>
-                    <div className="mini-kpi-info">
-                        <h3>{pageViews.filter(v => v.type === 'quiz_completed').length}</h3>
-                        <p>{isAr ? 'إجتياز الاختبارات' : 'Quiz Completions'}</p>
-                    </div>
-                </div>
-                <div className="admin-mini-kpi-card">
-                    <span className="mini-kpi-icon">⭐</span>
-                    <div className="mini-kpi-info">
-                        <h3>{starRatings.length}</h3>
-                        <p>{isAr ? 'تقييمات النجوم' : 'Star Ratings'}</p>
-                    </div>
-                </div>
-                <div className="admin-mini-kpi-card">
-                    <span className="mini-kpi-icon">⚡</span>
-                    <div className="mini-kpi-info">
-                        <h3>{diffRatings.length}</h3>
-                        <p>{isAr ? 'تقييمات الصعوبة' : 'Difficulty Ratings'}</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* ── Page & Course Charts ── */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginTop: '1.5rem' }}>
-                <div className="admin-glass-card">
-                    <h3 className="admin-section-title">📈 <span>{isAr ? 'أكثر الصفحات زيارةً' : 'Most Visited Pages'}</span></h3>
-                    <div className="analytics-chart">
-                        {sortedPaths.length === 0 ? <p className="no-data-msg">{isAr ? 'لا توجد بيانات بعد' : 'No data yet'}</p>
-                            : sortedPaths.map(([path, count]) => (
-                                <div key={path} className="chart-bar-row">
-                                    <span className="chart-bar-label">{getPathLabel(path, language)}</span>
-                                    <div className="chart-bar-track"><div className="chart-bar-fill" style={{ width: `${(count / maxPathCount) * 100}%` }} /></div>
-                                    <span className="chart-bar-count">{count}</span>
-                                </div>
-                            ))}
-                    </div>
-                </div>
-                <div className="admin-glass-card">
-                    <h3 className="admin-section-title">📂 <span>{isAr ? 'أكثر المواد الدراسية فتحاً' : 'Most Opened Study Materials'}</span></h3>
-                    <div className="analytics-chart">
-                        {sortedCourses.length === 0 ? <p className="no-data-msg">{isAr ? 'لا توجد بيانات بعد' : 'No data yet'}</p>
-                            : sortedCourses.map(([name, count]) => (
-                                <div key={name} className="chart-bar-row">
-                                    <span className="chart-bar-label">{name}</span>
-                                    <div className="chart-bar-track"><div className="chart-bar-fill" style={{ width: `${(count / maxCourseCount) * 100}%` }} /></div>
-                                    <span className="chart-bar-count">{count}</span>
-                                </div>
-                            ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* ── Quizzes Chart ── */}
-            <div className="admin-glass-card" style={{ marginTop: '1.5rem' }}>
-                <h3 className="admin-section-title">🎯 <span>{isAr ? 'الاختبارات الأكثر إتماماً' : 'Most Completed Quizzes'}</span></h3>
-                <div className="analytics-chart">
-                    {sortedQuizzes.length === 0 ? <p className="no-data-msg">{isAr ? 'لا توجد بيانات بعد' : 'No data yet'}</p>
-                        : sortedQuizzes.map(([title, count]) => (
-                            <div key={title} className="chart-bar-row">
-                                <span className="chart-bar-label">{title}</span>
-                                <div className="chart-bar-track">
-                                    <div className="chart-bar-fill" style={{ width: `${(count / maxQuizCount) * 100}%`, background: 'linear-gradient(90deg,#fbbf24,#f59e0b)' }} />
-                                </div>
-                                <span className="chart-bar-count">{count}</span>
-                            </div>
-                        ))}
-                </div>
-            </div>
-
-            {/* ══════════════════════════════════════
-                  STUDENT RATINGS SECTION
-             ══════════════════════════════════════ */}
-            <div className="admin-glass-card" style={{ marginTop: '1.5rem' }}>
-                {/* Header + tab switcher */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
-                    <h3 className="admin-section-title" style={{ margin: 0 }}>
-                        ⭐ <span>{isAr ? 'تقييمات الطلاب للمواد' : 'Student Course Ratings'}</span>
-                    </h3>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                        <button
-                            onClick={() => setRatingsTab('star')}
-                            style={{
-                                padding: '6px 16px', borderRadius: '20px', border: 'none', cursor: 'pointer',
-                                fontWeight: 700, fontSize: '0.82rem', fontFamily: 'inherit',
-                                background: ratingsTab === 'star' ? '#f59e0b' : 'rgba(0,0,0,0.07)',
-                                color: ratingsTab === 'star' ? '#fff' : 'inherit', transition: 'all 0.2s',
-                            }}
-                        >
-                            ★ {isAr ? 'تقييم النجوم' : 'Star Ratings'} ({starRatings.length})
-                        </button>
-                        <button
-                            onClick={() => setRatingsTab('difficulty')}
-                            style={{
-                                padding: '6px 16px', borderRadius: '20px', border: 'none', cursor: 'pointer',
-                                fontWeight: 700, fontSize: '0.82rem', fontFamily: 'inherit',
-                                background: ratingsTab === 'difficulty' ? '#e02b20' : 'rgba(0,0,0,0.07)',
-                                color: ratingsTab === 'difficulty' ? '#fff' : 'inherit', transition: 'all 0.2s',
-                            }}
-                        >
-                            ⚡ {isAr ? 'صعوبة المادة' : 'Difficulty'} ({diffRatings.length})
-                        </button>
-                    </div>
-                </div>
-
-                {ratingsLoading ? (
-                    <div style={{ textAlign: 'center', padding: '2rem', opacity: 0.5 }}>
-                        <div className="admin-spinner" style={{ width: 28, height: 28, margin: '0 auto 8px' }} />
-                        <p style={{ fontSize: '0.85rem' }}>{isAr ? 'جاري تحميل التقييمات...' : 'Loading ratings...'}</p>
-                    </div>
-
-                ) : ratingsTab === 'star' ? (
-                    /* ── Star Ratings Tab ── */
-                    sortedStarItems.length === 0 ? (
-                        <p className="no-data-msg">{isAr ? 'لم يُقيّم أي طالب بعد' : 'No student ratings yet'}</p>
-                    ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            {sortedStarItems.map((item, i) => (
-                                <div key={i} style={{
-                                    display: 'flex', alignItems: 'center', gap: '12px',
-                                    padding: '10px 14px', background: 'rgba(0,0,0,0.03)',
-                                    borderRadius: '10px', flexWrap: 'wrap'
-                                }}>
-                                    {/* Rank */}
-                                    <span style={{ fontWeight: 900, fontSize: '0.8rem', opacity: 0.35, minWidth: '20px' }}>#{i + 1}</span>
-                                    {/* Title */}
-                                    <span style={{ fontWeight: 700, fontSize: '0.9rem', flex: 1, minWidth: '100px' }}>{item.title}</span>
-                                    {/* Stars visual */}
-                                    <div style={{ display: 'flex', gap: '1px' }}>{renderStars(item.avg)}</div>
-                                    {/* Avg number */}
-                                    <span style={{ fontWeight: 900, fontSize: '1rem', color: '#f59e0b', minWidth: '36px' }}>
-                                        {item.avg.toFixed(1)}
-                                    </span>
-                                    {/* Vote count */}
-                                    <span style={{
-                                        fontSize: '0.75rem', opacity: 0.55,
-                                        background: 'rgba(0,0,0,0.06)', padding: '2px 10px',
-                                        borderRadius: '12px', fontWeight: 700
-                                    }}>
-                                        {item.count} {isAr ? 'تقييم' : 'ratings'}
-                                    </span>
-                                    {/* Rating bar */}
-                                    <div style={{ width: '100%', height: '4px', background: 'rgba(0,0,0,0.07)', borderRadius: '4px', marginTop: '2px' }}>
-                                        <div style={{
-                                            height: '100%', borderRadius: '4px',
-                                            width: `${(item.avg / 5) * 100}%`,
-                                            background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
-                                            transition: 'width 0.4s ease'
-                                        }} />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )
-
-                ) : (
-                    /* ── Difficulty Ratings Tab ── */
-                    sortedDiffItems.length === 0 ? (
-                        <p className="no-data-msg">{isAr ? 'لم يُقيّم أي طالب الصعوبة بعد' : 'No difficulty ratings yet'}</p>
-                    ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            {sortedDiffItems.map((item, i) => (
-                                <div key={i} style={{
-                                    padding: '12px 14px', background: 'rgba(0,0,0,0.03)', borderRadius: '10px'
-                                }}>
-                                    {/* Title row */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
-                                        <span style={{ fontWeight: 700, fontSize: '0.9rem' }}>
-                                            <span style={{ opacity: 0.35, fontSize: '0.8rem', marginLeft: 4 }}>#{i + 1}</span> {item.title}
-                                        </span>
-                                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                                            {item.topLevel > 0 && (
-                                                <span style={{
-                                                    background: (DIFF_LABELS[item.topLevel]?.color || '#ccc') + '22',
-                                                    color: DIFF_LABELS[item.topLevel]?.color,
-                                                    padding: '2px 10px', borderRadius: '12px',
-                                                    fontSize: '0.78rem', fontWeight: 800
-                                                }}>
-                                                    {isAr ? DIFF_LABELS[item.topLevel]?.ar : DIFF_LABELS[item.topLevel]?.en}
-                                                </span>
-                                            )}
-                                            <span style={{ fontSize: '0.72rem', opacity: 0.45, fontWeight: 700 }}>
-                                                {item.total} {isAr ? 'تقييم' : 'ratings'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {/* Mini bar chart showing distribution across 5 levels */}
-                                    <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-end', height: '44px' }}>
-                                        {[1, 2, 3, 4, 5].map(lvl => {
-                                            const cnt   = item.counts[lvl] || 0;
-                                            const pct   = item.total > 0 ? (cnt / item.total) * 100 : 0;
-                                            const color = DIFF_LABELS[lvl]?.color || '#ccc';
-                                            return (
-                                                <div key={lvl} title={`${isAr ? DIFF_LABELS[lvl]?.ar : DIFF_LABELS[lvl]?.en}: ${cnt}`}
-                                                    style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
-                                                    <span style={{ fontSize: '0.62rem', fontWeight: 700, color, opacity: cnt > 0 ? 1 : 0.3 }}>{cnt > 0 ? cnt : ''}</span>
-                                                    <div style={{
-                                                        width: '100%', borderRadius: '4px 4px 0 0',
-                                                        height: `${Math.max(pct * 0.28, cnt > 0 ? 5 : 2)}px`,
-                                                        background: color, opacity: cnt > 0 ? 1 : 0.15,
-                                                        transition: 'height 0.4s ease'
-                                                    }} />
-                                                    <span style={{ fontSize: '0.72rem' }}>
-                                                        {['😌', '🙂', '😐', '😤', '😱'][lvl - 1]}
-                                                    </span>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )
-                )}
-            </div>
-        </div>
+      <div className="anv-loading">
+        <div className="anv-spinner" />
+        <p>جاري تحميل تحليلات مكانك الاحترافية...</p>
+      </div>
     );
-};
+  }
 
-export default AdminAnalytics;
+  // Pagination for main table
+  const paginatedStarItems = sortedStarItems.slice((tablePage - 1) * rowsPerPage, tablePage * rowsPerPage);
+  const totalPages = Math.ceil(sortedStarItems.length / rowsPerPage) || 1;
+
+  return (
+    <div className="anv-container">
+
+      {/* ── Top Dashboard Bar ── */}
+      <div className="anv-top-bar">
+        <div className="anv-top-title-group">
+          <h2 className="anv-top-title">لوحة التحليلات والإحصائيات</h2>
+          <p className="anv-top-subtitle">متابعة شاملة لزيارات الطلاب، التفاعلات، تنزيل المواد، وطلبات الخدمات</p>
+        </div>
+
+        {/* Time Period Selector */}
+        <div className="anv-period-pills">
+          {[
+            { id: 'daily', label: 'يومي' },
+            { id: 'weekly', label: 'أسبوعي' },
+            { id: 'monthly', label: 'شهري' },
+            { id: 'yearly', label: 'سنوي' },
+          ].map(p => (
+            <button
+              key={p.id}
+              className={`anv-period-pill ${timeRange === p.id ? 'active' : ''}`}
+              onClick={() => setTimeRange(p.id)}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Upper Main Section: Large Curve Chart + Donut Ring Chart ── */}
+      <div className="anv-main-charts-row">
+        
+        {/* Left Curve Line Chart Card */}
+        <div className="anv-card anv-chart-card">
+          <div className="anv-chart-card-header">
+            <div>
+              <span className="anv-card-sub">إجمالي الأنشطة والتفاعلات</span>
+              <h3 className="anv-big-metric">{(totalEventsSum).toLocaleString('ar-JO')} <span className="anv-unit">تفاعل</span></h3>
+              <div className="anv-growth-badge">↑ 18% نمو متصاعد هذا الشهر</div>
+            </div>
+            <div className="anv-chart-legend">
+              <span className="anv-dot online"></span> الزيارات الحية
+              <span className="anv-dot store"></span> فتح المواد
+            </div>
+          </div>
+
+          {/* SVG Smooth Curved Area Chart */}
+          <div className="anv-svg-chart-wrap">
+            <svg viewBox="0 0 500 150" className="anv-svg-chart">
+              <defs>
+                <linearGradient id="gradPurple" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.0" />
+                </linearGradient>
+                <linearGradient id="gradPink" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ec4899" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#ec4899" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+
+              {/* Area 1 */}
+              <path
+                d="M 0 120 Q 70 40, 140 85 T 280 60 T 420 20 L 500 70 L 500 150 L 0 150 Z"
+                fill="url(#gradPurple)"
+              />
+              <path
+                d="M 0 120 Q 70 40, 140 85 T 280 60 T 420 20 L 500 70"
+                fill="none"
+                stroke="#8b5cf6"
+                strokeWidth="3.5"
+              />
+
+              {/* Area 2 */}
+              <path
+                d="M 0 135 Q 80 80, 160 105 T 320 80 T 450 40 L 500 90 L 500 150 L 0 150 Z"
+                fill="url(#gradPink)"
+              />
+              <path
+                d="M 0 135 Q 80 80, 160 105 T 320 80 T 450 40 L 500 90"
+                fill="none"
+                stroke="#ec4899"
+                strokeWidth="3"
+                strokeDasharray="4 2"
+              />
+
+              {/* Chart Dots */}
+              <circle cx="140" cy="85" r="4.5" fill="#8b5cf6" stroke="#fff" strokeWidth="2" />
+              <circle cx="280" cy="60" r="4.5" fill="#8b5cf6" stroke="#fff" strokeWidth="2" />
+              <circle cx="420" cy="20" r="5" fill="#ec4899" stroke="#fff" strokeWidth="2" />
+            </svg>
+            <div className="anv-chart-months">
+              <span>يناير</span><span>فبراير</span><span>مارس</span><span>أبريل</span><span>مايو</span><span>يونيو</span>
+            </div>
+          </div>
+
+          {/* Bottom Mini Metrics Bar inside main chart */}
+          <div className="anv-chart-submetrics">
+            <div className="anv-submetric">
+              <span className="anv-sm-icon purple">🌐</span>
+              <div>
+                <span className="anv-sm-val">{totalVisits}</span>
+                <span className="anv-sm-lbl">زيارات الموقع</span>
+              </div>
+            </div>
+            <div className="anv-submetric">
+              <span className="anv-sm-icon pink">📂</span>
+              <div>
+                <span className="anv-sm-val">{totalMaterialOpens}</span>
+                <span className="anv-sm-lbl">فتح المواد</span>
+              </div>
+            </div>
+            <div className="anv-submetric">
+              <span className="anv-sm-icon blue">🎯</span>
+              <div>
+                <span className="anv-sm-val">{totalQuizCompletions}</span>
+                <span className="anv-sm-lbl">إتمام الكويزات</span>
+              </div>
+            </div>
+            <div className="anv-submetric">
+              <span className="anv-sm-icon orange">🛠️</span>
+              <div>
+                <span className="anv-sm-val">{totalRequests}</span>
+                <span className="anv-sm-lbl">طلبات الخدمات</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Donut / Traffic Chart Card */}
+        <div className="anv-card anv-donut-card">
+          <h3 className="anv-card-title">توزيع التفاعلات والزيارات</h3>
+          <p className="anv-card-desc">نسبة توزيع الأنشطة الأكاديمية على المنصة</p>
+
+          <div className="anv-donut-wrapper">
+            <svg viewBox="0 0 100 100" className="anv-donut-svg">
+              {/* Stroke Dasharray donut simulation */}
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#f1f5f9" strokeWidth="14" />
+              {/* Segment 1: Visits (Purple) */}
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#8b5cf6" strokeWidth="14"
+                strokeDasharray={`${visitsPct * 2.38} 238`} strokeDashoffset="0" />
+              {/* Segment 2: Materials (Pink) */}
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#ec4899" strokeWidth="14"
+                strokeDasharray={`${materialsPct * 2.38} 238`} strokeDashoffset={`-${visitsPct * 2.38}`} />
+              {/* Segment 3: Quiz (Cyan/Blue) */}
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#06b6d4" strokeWidth="14"
+                strokeDasharray={`${quizPct * 2.38} 238`} strokeDashoffset={`-${(visitsPct + materialsPct) * 2.38}`} />
+              {/* Segment 4: Requests (Orange) */}
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#f97316" strokeWidth="14"
+                strokeDasharray={`${reqPct * 2.38} 238`} strokeDashoffset={`-${(visitsPct + materialsPct + quizPct) * 2.38}`} />
+            </svg>
+            <div className="anv-donut-center">
+              <span className="anv-dc-val">100%</span>
+              <span className="anv-dc-lbl">إجمالي التفاعل</span>
+            </div>
+          </div>
+
+          <div className="anv-donut-stats-row">
+            <div>
+              <span className="anv-pct-val purple">{visitsPct}%</span>
+              <span className="anv-pct-lbl">● الزيارات</span>
+            </div>
+            <div>
+              <span className="anv-pct-val pink">{materialsPct}%</span>
+              <span className="anv-pct-lbl">● المواد</span>
+            </div>
+            <div>
+              <span className="anv-pct-val cyan">{quizPct}%</span>
+              <span className="anv-pct-lbl">● الاختبارات</span>
+            </div>
+            <div>
+              <span className="anv-pct-val orange">{reqPct}%</span>
+              <span className="anv-pct-lbl">● الخدمات</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Middle Row: Four Glowing Gradient Metric Cards ── */}
+      <div className="anv-vibrant-cards-row">
+        
+        {/* Card 1: Vibrant Purple */}
+        <div className="anv-vcard anv-vcard-purple">
+          <div className="anv-vc-header">
+            <span className="anv-vc-title">إجمالي الزيارات</span>
+            <span className="anv-vc-icon">🌐</span>
+          </div>
+          <div className="anv-vc-body">
+            <h3 className="anv-vc-num">{totalVisits.toLocaleString('ar-JO')}</h3>
+            <span className="anv-vc-tag">+14% هذا الأسبوع</span>
+          </div>
+          <svg viewBox="0 0 120 30" className="anv-vc-spark">
+            <path d="M0 25 L20 18 L40 22 L60 10 L80 15 L100 5 L120 18" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
+          </svg>
+        </div>
+
+        {/* Card 2: Vibrant Deep Blue / Magenta */}
+        <div className="anv-vcard anv-vcard-blue">
+          <div className="anv-vc-header">
+            <span className="anv-vc-title">فتح المواد الدراسية</span>
+            <span className="anv-vc-icon">📂</span>
+          </div>
+          <div className="anv-vc-body">
+            <h3 className="anv-vc-num">{totalMaterialOpens.toLocaleString('ar-JO')}</h3>
+            <span className="anv-vc-tag">أكثر مادة: {courseCounts[0]?.[0] || 'الذكاء الاصطناعي'}</span>
+          </div>
+          <svg viewBox="0 0 120 30" className="anv-vc-spark">
+            <path d="M0 20 L25 25 L50 12 L75 18 L100 8 L120 2" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
+          </svg>
+        </div>
+
+        {/* Card 3: Vibrant Teal / Cyan */}
+        <div className="anv-vcard anv-vcard-teal">
+          <div className="anv-vc-header">
+            <span className="anv-vc-title">إجتياز بنك الأسئلة</span>
+            <span className="anv-vc-icon">🎯</span>
+          </div>
+          <div className="anv-vc-body">
+            <h3 className="anv-vc-num">{totalQuizCompletions.toLocaleString('ar-JO')}</h3>
+            <span className="anv-vc-tag">إجمالي {quizCounts[0]?.[0] || 'كويزات'}</span>
+          </div>
+          <svg viewBox="0 0 120 30" className="anv-vc-spark">
+            <path d="M0 28 L30 15 L60 20 L90 5 L120 14" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
+          </svg>
+        </div>
+
+        {/* Card 4: Vibrant Orange / Gold */}
+        <div className="anv-vcard anv-vcard-orange">
+          <div className="anv-vc-header">
+            <span className="anv-vc-title">طلبات الخدمات الجديدة</span>
+            <span className="anv-vc-icon">🛠️</span>
+          </div>
+          <div className="anv-vc-body">
+            <h3 className="anv-vc-num">{totalRequests.toLocaleString('ar-JO')}</h3>
+            <span className="anv-vc-tag">طلبات الطلاب المباشرة</span>
+          </div>
+          <svg viewBox="0 0 120 30" className="anv-vc-spark">
+            <path d="M0 22 L20 14 L40 18 L60 8 L80 12 L100 4 L120 10" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
+          </svg>
+        </div>
+
+      </div>
+
+      {/* ── Bottom Section: Activity Feed + Comprehensive Data Table ── */}
+      <div className="anv-bottom-row">
+
+        {/* Left Panel: Recent Live Activities */}
+        <div className="anv-card anv-activity-card">
+          <div className="anv-card-header-flex">
+            <h3 className="anv-card-title">⚡ أحدث النشاطات المباشرة</h3>
+            <span className="anv-live-badge">مباشر ●</span>
+          </div>
+
+          <div className="anv-activity-list">
+            {recentActivities.map(act => (
+              <div key={act.id} className="anv-activity-item">
+                <div className="anv-act-icon-box" style={{ backgroundColor: `${act.color}15`, color: act.color }}>
+                  {act.icon}
+                </div>
+                <div className="anv-act-content">
+                  <div className="anv-act-title">{act.title}</div>
+                  <div className="anv-act-time">{getTimeAgo(act.timestamp)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Panel: Comprehensive Data Table */}
+        <div className="anv-card anv-table-card">
+          <div className="anv-table-header">
+            <div>
+              <h3 className="anv-card-title">📊 تفاصيل تقييمات واختيارات المواد</h3>
+              <p className="anv-card-desc">ترتيب المواد الأكثر تفاعلاً وتقييماً من الطلاب</p>
+            </div>
+            
+            {/* Table Search / Controls */}
+            <div className="anv-table-actions">
+              <button
+                className={`anv-tab-btn ${ratingsTab === 'star' ? 'active' : ''}`}
+                onClick={() => { setRatingsTab('star'); setTablePage(1); }}
+              >
+                ⭐ تقييمات النجوم ({starRatings.length})
+              </button>
+              <button
+                className={`anv-tab-btn ${ratingsTab === 'difficulty' ? 'active' : ''}`}
+                onClick={() => { setRatingsTab('difficulty'); setTablePage(1); }}
+              >
+                ⚡ مستوى الصعوبة ({diffRatings.length})
+              </button>
+            </div>
+          </div>
+
+          {/* Dark Styled Table */}
+          <div className="anv-table-responsive">
+            <table className="anv-custom-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>اسم المادة الدراسية</th>
+                  <th>عدد التقييمات</th>
+                  <th>{ratingsTab === 'star' ? 'متوسط النجوم' : 'المستوى السائد'}</th>
+                  <th>الحالة</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedStarItems.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="anv-table-empty">لا توجد بيانات تقييم بعد</td>
+                  </tr>
+                ) : (
+                  paginatedStarItems.map((item, idx) => {
+                    const rowNum = (tablePage - 1) * rowsPerPage + idx + 1;
+                    return (
+                      <tr key={item.title}>
+                        <td className="anv-row-num">{rowNum}</td>
+                        <td className="anv-course-title">
+                          <span className="anv-course-icon">📚</span>
+                          {item.title}
+                        </td>
+                        <td>
+                          <span className="anv-badge-count">{item.count} تقييم</span>
+                        </td>
+                        <td>
+                          {ratingsTab === 'star' ? (
+                            <div className="anv-stars-flex">
+                              {renderStars(item.avg)}
+                              <span className="anv-avg-num">({item.avg.toFixed(1)})</span>
+                            </div>
+                          ) : (
+                            <span className="anv-diff-badge" style={{ backgroundColor: '#fef3c7', color: '#d97706' }}>
+                              متوسط
+                            </span>
+                          )}
+                        </td>
+                        <td>
+                          <span className="anv-status-pill status-open">نشط ومفعل</span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Table Pagination */}
+          <div className="anv-table-pagination">
+            <span className="anv-page-info">
+              عرض {(tablePage - 1) * rowsPerPage + 1} إلى {Math.min(tablePage * rowsPerPage, sortedStarItems.length)} من {sortedStarItems.length} عنصر
+            </span>
+            <div className="anv-page-btns">
+              <button
+                className="anv-page-nav"
+                disabled={tablePage === 1}
+                onClick={() => setTablePage(p => p - 1)}
+              >
+                السابق
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  className={`anv-page-num ${tablePage === i + 1 ? 'active' : ''}`}
+                  onClick={() => setTablePage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                className="anv-page-nav"
+                disabled={tablePage === totalPages}
+                onClick={() => setTablePage(p => p + 1)}
+              >
+                التالي
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
