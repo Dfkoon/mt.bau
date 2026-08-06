@@ -354,7 +354,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       }
 
       // Sign in to Firebase Auth with email/password so Firestore rules pass
-      const adminEmail = 'hussienaldayyat@gmail.com';
+      const adminEmail = 'hussienaldayyat2002@gmail.com';
       try {
         if (!auth.currentUser) {
           await signInWithEmailAndPassword(auth, adminEmail, expectedPass);
