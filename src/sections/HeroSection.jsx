@@ -11,7 +11,8 @@ const HeroSection = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
     const [ballCount, setBallCount] = useState(75);
-    const [heroVisitorsCount, setHeroVisitorsCount] = useState(Number(import.meta.env.VITE_HERO_VISITORS_COUNT ?? 730));
+    const BASE_VISITORS = 4350;
+    const [heroVisitorsCount, setHeroVisitorsCount] = useState(Number(import.meta.env.VITE_HERO_VISITORS_COUNT ?? BASE_VISITORS));
     const heroMaterialsCount = Number(import.meta.env.VITE_HERO_MATERIALS_COUNT ?? 100);
 
     useEffect(() => {
@@ -21,9 +22,7 @@ const HeroSection = () => {
 
         const loadVisitorCount = async () => {
             const count = await getTotalStudentVisits();
-            if (count > 0) {
-                setHeroVisitorsCount(count);
-            }
+            setHeroVisitorsCount(BASE_VISITORS + (count || 0));
         };
 
         loadVisitorCount();
