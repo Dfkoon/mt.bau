@@ -197,13 +197,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
  const isAr = language === 'ar';
 
  // ── Auth state ──
- const [loggedIn, setLoggedIn] = useState(() => {
-   try {
-     const s = sessionStorage.getItem('exchange_staff');
-     if (s) { const u = JSON.parse(s); if (u?.role === 'admin') return true; }
-   } catch { /* ignore */ }
-   return false;
- });
+ // Always start as false — Firebase Auth must be established each session
+ const [loggedIn, setLoggedIn] = useState(false);
  const [feedbackPopupEnabled, setFeedbackPopupEnabled] = useState(true);
 
   useEffect(() => {
@@ -357,7 +352,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       const adminEmail = 'hussienaldayyat2002@gmail.com';
       try {
         if (!auth.currentUser) {
-          await signInWithEmailAndPassword(auth, adminEmail, expectedPass);
+          await signInWithEmailAndPassword(auth, adminEmail, adminPwd);
         }
       } catch (authErr) {
         console.error('Firebase Auth sign-in failed:', authErr.code, authErr.message);
