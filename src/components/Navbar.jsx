@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import { useBookmarks } from '../contexts/BookmarksContext';
 import ThemeLanguageToggle from './ThemeLanguageToggle';
-import GlobalSearchModal from './GlobalSearchModal';
-import BookmarksModal from './BookmarksModal';
 import AnimatedLogo from './AnimatedLogo';
 import './Navbar.css';
 
@@ -12,11 +9,8 @@ const Navbar = ({ toggleSidebar }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isStaffLogged, setIsStaffLogged] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isBookmarksOpen, setIsBookmarksOpen] = useState(false);
 
   const { t, language } = useLanguage();
-  const { bookmarks } = useBookmarks();
   const location = useLocation();
   const isAr = language === 'ar';
 
@@ -97,27 +91,6 @@ const Navbar = ({ toggleSidebar }) => {
           </ul>
 
           <div className="nav-controls">
-            {/* Search Trigger Button */}
-            <button
-              className="nav-action-btn search-trigger-btn"
-              onClick={() => setIsSearchOpen(true)}
-              title={isAr ? 'البحث الشامل (Ctrl+K)' : 'Global Search (Ctrl+K)'}
-            >
-              🔍 <span className="kbd-shortcut">Ctrl+K</span>
-            </button>
-
-            {/* Saved Locker Trigger Button */}
-            <button
-              className="nav-action-btn locker-trigger-btn"
-              onClick={() => setIsBookmarksOpen(true)}
-              title={isAr ? 'خزانتي الأكاديمية' : 'Saved Locker'}
-            >
-              📌
-              {bookmarks.length > 0 && (
-                <span className="locker-count-badge">{bookmarks.length}</span>
-              )}
-            </button>
-
             <div className="nav-cta">
               <ThemeLanguageToggle />
             </div>
@@ -131,8 +104,6 @@ const Navbar = ({ toggleSidebar }) => {
       </nav>
 
       {/* Global Modals */}
-      <GlobalSearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <BookmarksModal isOpen={isBookmarksOpen} onClose={() => setIsBookmarksOpen(false)} />
     </>
   );
 };

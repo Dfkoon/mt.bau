@@ -7,7 +7,6 @@ const ACTIONS = [
     { icon: '📚', labelAr: 'المواد', labelEn: 'Materials', path: '/materials' },
     { icon: '🎯', labelAr: 'كويز', labelEn: 'Quiz', path: '/quiz' },
     { icon: '📊', labelAr: 'المعدل', labelEn: 'GPA', path: '/grading' },
-    { icon: '🗓️', labelAr: 'الجدول', labelEn: 'Timetable', path: '/timetable' },
 ];
 
 const FloatingActionMenu = () => {

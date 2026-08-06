@@ -40,20 +40,13 @@ import FeedbackPopup from './components/FeedbackPopup';
 import CookieConsent from './components/CookieConsent';
 import SplashScreen from './components/SplashScreen';
 
-import NashmiGuide from './components/NashmiGuide';
 import ReportModal from './components/ReportModal';
 import InstallPWAButton from './components/InstallPWAButton';
-
-import AcademicCountdown from './components/AcademicCountdown';
-import TimetablePage from './pages/TimetablePage';
-import GlobalSearchModal from './components/GlobalSearchModal';
 import StudyProgressTracker from './components/StudyProgressTracker';
-import SmartNotification from './components/SmartNotification';
 import ReadingProgressBar from './components/ReadingProgressBar';
 import DailyMotivation from './components/DailyMotivation';
 import BackToTopBtn from './components/BackToTopBtn';
 import KeyboardShortcutsHelp from './components/KeyboardShortcutsHelp';
-import FloatingActionMenu from './components/FloatingActionMenu';
 import NoticeBoard from './components/NoticeBoard';
 
 const HomePage = () => {
@@ -85,7 +78,6 @@ const HomePage = () => {
     <>
       <HeroSection />
       <AnnouncementMarquee />
-      <AcademicCountdown />
 
       <LemonChat />
       <UpcomingEvents />
@@ -93,17 +85,6 @@ const HomePage = () => {
       {/* <NewsSection /> */}
       <WeeklyTip />
       <ProjectsSection />
-
-      {/* Daily Motivation Quote */}
-      <div style={{ padding: '0 16px', maxWidth: '1200px', margin: '0 auto' }}>
-        <DailyMotivation />
-      </div>
-
-      {/* Study Progress Tracker */}
-      <div style={{ padding: '0 16px', maxWidth: '1200px', margin: '0 auto' }}>
-        <StudyProgressTracker />
-      </div>
-
       <ServicesSection />
       <UsefulSitesSection />
       <div id="testimonials-section">
@@ -127,27 +108,14 @@ function App() {
   const [showFeedbackPopup, setShowFeedbackPopup] = React.useState(false);
   const [feedbackPopupEnabled, setFeedbackPopupEnabled] = React.useState(false);
   const [feedbackPopupLoaded, setFeedbackPopupLoaded] = React.useState(false);
-  const [searchOpen, setSearchOpen] = React.useState(false);
 
   // Splash screen disabled
   const [showSplash] = React.useState(false);
-  const handleSplashFinish = React.useCallback(() => {}, []);
+  const handleSplashFinish = React.useCallback(() => { }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
-  // Global Ctrl+K / Cmd+K shortcut for search
-  React.useEffect(() => {
-    const handler = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        setSearchOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, []);
 
   React.useEffect(() => {
     const loadSettings = async () => {
@@ -191,85 +159,76 @@ function App() {
     <>
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       <Router>
-      <InstallPWAButton isAr={true} />
-      <ScrollToTop />
-      <PageTitleUpdater />
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        containerStyle={{
-          zIndex: 99999, // Ensure it's above everything including navbar
-        }}
-        toastOptions={{
-          style: {
-            zIndex: 99999,
-          },
-        }}
-      />
-      <Routes>
-        {/* Standalone report page - no navbar/footer */}
-        <Route path="/report" element={<ReportModal />} />
+        <InstallPWAButton isAr={true} />
+        <ScrollToTop />
+        <PageTitleUpdater />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          containerStyle={{
+            zIndex: 99999, // Ensure it's above everything including navbar
+          }}
+          toastOptions={{
+            style: {
+              zIndex: 99999,
+            },
+          }}
+        />
+        <Routes>
+          {/* Standalone report page - no navbar/footer */}
+          <Route path="/report" element={<ReportModal />} />
 
-        {/* 🔒 Isolated coordinator gateway - completely hidden from site, no navbar/footer/sidebar */}
-        <Route path="/portal" element={<SecureGateway />} />
+          {/* 🔒 Isolated coordinator gateway - completely hidden from site, no navbar/footer/sidebar */}
+          <Route path="/portal" element={<SecureGateway />} />
 
-        {/* 🔒 Isolated admin dashboard - no public navbar/footer/sidebar */}
-        <Route path="/admin" element={<AdminDashboard />} />
+          {/* 🔒 Isolated admin dashboard - no public navbar/footer/sidebar */}
+          <Route path="/admin" element={<AdminDashboard />} />
 
-        {/* All other pages wrapped in site layout */}
-        <Route path="*" element={
-          <div className="app-container">
-            <Navbar toggleSidebar={toggleSidebar} />
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+          {/* All other pages wrapped in site layout */}
+          <Route path="*" element={
+            <div className="app-container">
+              <Navbar toggleSidebar={toggleSidebar} />
+              <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-            <FeedbackPopup
-              isOpen={showFeedbackPopup}
-              onClose={handleClosePopup}
-            />
+              <FeedbackPopup
+                isOpen={showFeedbackPopup}
+                onClose={handleClosePopup}
+              />
 
-            <CookieConsent />
+              <CookieConsent />
 
-            <main>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/materials" element={<StudyMaterials />} />
-                <Route path="/plans" element={<AcademicPlans />} />
-                <Route path="/quiz" element={<Quiz />} />
-                <Route path="/quiz/:quizId" element={<Quiz />} />
-                <Route path="/calendar" element={<AcademicCalendar />} />
-                <Route path="/timetable" element={<TimetablePage />} />
-                <Route path="/grading" element={<GradingSystem />} />
-                <Route path="/exchange" element={<MaterialExchange />} />
+              <main>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/materials" element={<StudyMaterials />} />
+                  <Route path="/plans" element={<AcademicPlans />} />
+                  <Route path="/quiz" element={<Quiz />} />
+                  <Route path="/quiz/:quizId" element={<Quiz />} />
+                  <Route path="/calendar" element={<AcademicCalendar />} />
+                  <Route path="/grading" element={<GradingSystem />} />
+                  <Route path="/exchange" element={<MaterialExchange />} />
 
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/about" element={<AboutUs />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/about" element={<AboutUs />} />
 
-                <Route path="/legal" element={<Legal />} />
-              </Routes>
-            </main>
+                  <Route path="/legal" element={<Legal />} />
+                </Routes>
+              </main>
 
-            {/* NashmiGuide AI chat assistant */}
-            <NashmiGuide />
-            {/* Smart contextual notifications */}
-            <SmartNotification />
-            {/* Quick floating action menu */}
-            <FloatingActionMenu />
-            {/* Back to top button */}
-            <BackToTopBtn />
-            {/* Keyboard shortcuts help modal (press ?) */}
-            <KeyboardShortcutsHelp />
-            {/* Global Search Modal */}
-            <GlobalSearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
-            {/* Reading scroll progress bar */}
-            <ReadingProgressBar />
-            {/* Admin notice board (Firebase-driven) */}
-            <NoticeBoard />
-            <Footer />
-          </div>
-        } />
-      </Routes>
+              {/* Back to top button */}
+              <BackToTopBtn />
+              {/* Keyboard shortcuts help modal (press ?) */}
+              <KeyboardShortcutsHelp />
+              {/* Reading scroll progress bar */}
+              <ReadingProgressBar />
+              {/* Admin notice board (Firebase-driven) */}
+              <NoticeBoard />
+              <Footer />
+            </div>
+          } />
+        </Routes>
 
-    </Router>
+      </Router>
     </>
   );
 }

@@ -160,7 +160,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         coordinatorFemaleTasksV2: [],
         sharedCoordinatorTasksV2: [],
         taskAutoDeleteHours: 24,
-        materialTrackerEnabled: false,
         donationEndTime: '',   // ISO datetime string — end of collection/donation period
         bookingStartTime: ''    // ISO datetime string — start of booking/exchange period
 
@@ -176,11 +175,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [bookingData, setBookingData] = useState({ name: '', phone: '', gender: '' });
-
-    // ── TRACKER & ANALYTICS ──────────────────────────────────────
-    const [trackerSearchQuery, setTrackerSearchQuery] = useState('');
-    const [trackerResults, setTrackerResults] = useState(null);
-    const [publicActiveTab, setPublicActiveTab] = useState('donate'); // 'donate' | 'track'
 
     // ── ADMIN / COORDINATOR FILTERS ──────────────────────────────
     const [adminSubFilter, setAdminSubFilter] = useState('all'); // 'all' | 'ahmad' | 'sara'
@@ -509,7 +503,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                         coordinatorFemaleTasksV2: data.coordinatorFemaleTasksV2 || [],
                         sharedCoordinatorTasksV2: data.sharedCoordinatorTasksV2 || [],
                         taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
-                        materialTrackerEnabled: data.materialTrackerEnabled !== undefined ? data.materialTrackerEnabled : false,
                         donationFormFrozen: data.donationFormFrozen !== undefined ? data.donationFormFrozen : false,
                         donationEndTime: data.donationEndTime || '',
                         bookingStartTime: data.bookingStartTime || '',
@@ -585,7 +578,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                         coordinatorFemaleTasksV2: data.coordinatorFemaleTasksV2 || [],
                         sharedCoordinatorTasksV2: data.sharedCoordinatorTasksV2 || [],
                         taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
-                        materialTrackerEnabled: data.materialTrackerEnabled !== undefined ? data.materialTrackerEnabled : false,
                         exchangeSuspendedMessageAr: data.exchangeSuspendedMessageAr || '',
                         exchangeSuspendedMessageEn: data.exchangeSuspendedMessageEn || '',
                         donationEndTime: data.donationEndTime || '',
@@ -696,18 +688,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     }, [captchaText, showLoginModal, loginStep]);
 
     // Student Captcha Hooks
-    useEffect(() => {
-        if (publicActiveTab === 'donate' && settingsLoaded && systemSettings.isExchangeActive) {
-            generateDonationCaptcha();
-        }
-    }, [publicActiveTab, settingsLoaded, systemSettings.isExchangeActive]);
-
-    useEffect(() => {
-        if (publicActiveTab === 'donate' && donationCaptchaText && donationCanvasRef.current) {
-            drawDonationCaptcha();
-        }
-    }, [donationCaptchaText, publicActiveTab, settingsLoaded, systemSettings.isExchangeActive]);
-
     useEffect(() => {
         if (showBookingModal) {
             generateBookingCaptcha();
@@ -903,94 +883,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         ar.forEach((a, i) => { result = result.replace(new RegExp(a, 'g'), en[i]); });
         return result;
     };
-
-    const getFriendlyStatusName = (status, role) => {
-        if (role === 'donor') {
-            switch (status) {
-                case 'pending': return isAr ? 'بانتظار موافقة الإدارة' : 'Pending Admin Approval';
-                case 'approved': return isAr ? 'معتمد ومتاح للحجز' : 'Approved & Available';
-                case 'reserved': return isAr ? 'تم حجزه من قبل طالب' : 'Reserved by student';
-                case 'completed': return isAr ? 'تم تسليم المادة للطالب' : 'Delivered to student';
-                default: return status;
-            }
-        } else {
-            switch (status) {
-                case 'reserved': return isAr ? 'محجوز - بانتظار تسليمه لك' : 'Booked - Awaiting delivery';
-                case 'completed': return isAr ? 'تم الاستلام بنجاح 🎉' : 'Successfully Delivered 🎉';
-                default: return status;
-            }
-        }
-    };
-
-    const handleTrackRequest = () => {
-        if (!systemSettings.materialTrackerEnabled) {
-            toast.error(isAr ? 'خدمة تتبع حالة المواد غير متاحة حالياً.' : 'Material tracking service is currently unavailable.');
-            return;
-        }
-        if (!trackerSearchQuery.trim()) {
-            toast.error(isAr ? 'يرجى إدخال رقم الهاتف أو البريد الإلكتروني' : 'Please enter phone number or email');
-            return;
-        }
-        const queryStr = toEnglishNumerals(trackerSearchQuery.trim().toLowerCase());
-
-        // Find donor matches or taker matches in allMaterials
-        const results = [];
-        allMaterials.forEach(m => {
-            const donorPhone = (m.phoneNumber || '').trim().toLowerCase();
-            const donorEmail = (m.email || '').trim().toLowerCase();
-            const takerPhone = (m.materialItem?.takerInfo?.phone || '').trim().toLowerCase();
-            const takerEmail = (m.materialItem?.takerInfo?.email || '').trim().toLowerCase();
-
-            const isDonor = donorPhone === queryStr || donorEmail === queryStr;
-            const isTaker = takerPhone === queryStr || takerEmail === queryStr;
-
-            const coordName = m.studentGender === 'male'
-                ? (systemSettings.ahmadNameAr || 'أحمد')
-                : (systemSettings.saraNameAr || 'سارة');
-
-            if (isDonor) {
-                const takerInfo = m.materialItem?.takerInfo;
-                const bookedAt = takerInfo?.bookedAt
-                    ? (takerInfo.bookedAt.seconds ? takerInfo.bookedAt.seconds * 1000 : new Date(takerInfo.bookedAt).getTime())
-                    : null;
-                results.push({
-                    userRole: 'donor',
-                    materialName: m.materialItem.name,
-                    materialDescription: m.materialItem.description || '',
-                    itemStatus: m.materialItem.status || m.status,
-                    createdAt: m.createdAt ? (m.createdAt.seconds ? m.createdAt.seconds * 1000 : new Date(m.createdAt).getTime()) : Date.now(),
-                    coordinatorName: coordName,
-                    // Booking / delivery details for the donor
-                    takerName: takerInfo?.name || null,
-                    bookedAt: bookedAt,
-                    donationStatus: m.status  // overall donation status
-                });
-            }
-            if (isTaker) {
-                results.push({
-                    userRole: 'booker',
-                    materialName: m.materialItem.name,
-                    materialDescription: m.materialItem.description || '',
-                    itemStatus: m.materialItem.status || m.status,
-                    createdAt: m.materialItem.takerInfo?.bookedAt ? (m.materialItem.takerInfo.bookedAt.seconds ? m.materialItem.takerInfo.bookedAt.seconds * 1000 : new Date(m.materialItem.takerInfo.bookedAt).getTime()) : Date.now(),
-                    coordinatorName: coordName
-                });
-            }
-        });
-
-        // Sort by date descending
-        results.sort((a, b) => b.createdAt - a.createdAt);
-        setTrackerResults(results);
-    };
-
-    const trackerSummary = (trackerResults && trackerResults.length > 0) ? {
-        total: trackerResults.length,
-        reserved: trackerResults.filter(item => item.itemStatus === 'reserved').length,
-        delivered: trackerResults.filter(item => item.itemStatus === 'completed').length,
-        available: trackerResults.filter(item => ['approved', 'pending'].includes(item.itemStatus)).length,
-        booked: trackerResults.filter(item => item.userRole === 'booker').length,
-        donorItems: trackerResults.filter(item => item.userRole === 'donor').length
-    } : null;
 
     const fetchDonations = async () => {
         setLoading(true);
@@ -1969,8 +1861,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
 
 تقرير مُحدّث لحالة المواد المتبرع بها من قبلكم عبر موقع "مكانك":${deliveredText}${remainingText}
 
-لمتابعة حالة المواد وتفاصيل التسليم:
-https://makanak.netlify.app/exchange#track-status
+للمزيد من التفاصيل، يرجى زيارة صفحة تبادل المواد.
 
 جزاكم الله خيراً على مساهمتكم الكريمة لدعم الطلاب.`;
                 } else {
@@ -1978,14 +1869,8 @@ https://makanak.netlify.app/exchange#track-status
 
 Here is an updated report on your donated materials on Makanak:${deliveredText}${remainingText}
 
-To track your materials anytime:
-https://makanak.netlify.app/exchange#track-status
-
-Thank you for your generous contribution to support your fellow students.`;
+For more details, please visit the material exchange page.`;
                 }
-
-                materials = delivered.concat(remaining);
-
             } else if (type === 'booker') {
                 name = data.takerInfo?.name || '';
                 phone = String(data.takerInfo?.phone || '').replace(/\D/g, '');
@@ -2023,34 +1908,32 @@ Thank you for your generous contribution to support your fellow students.`;
 
                 const bookerDeliveredText = bookerDelivered.length > 0
                     ? (isAr
-                        ? `\n\n*المواد التي تم استلامها بنجاح*:\n\n${bookerDelivered.join('\n')}`
-                        : `\n\n*Successfully Received Materials*:\n\n${bookerDelivered.join('\n')}`)
+                        ? `\n\n * المواد التي تم استلامها بنجاح *: \n\n${bookerDelivered.join('\n')} `
+                        : `\n\n * Successfully Received Materials *: \n\n${bookerDelivered.join('\n')} `)
                     : '';
                 const bookerRemainingText = bookerRemaining.length > 0
                     ? (isAr
-                        ? `\n\n*المواد المحجوزة وبانتظار الاستلام*:\n\n${bookerRemaining.join('\n')}`
-                        : `\n\n*Booked Materials – Pending Pickup*:\n\n${bookerRemaining.join('\n')}`)
+                        ? `\n\n * المواد المحجوزة وبانتظار الاستلام *: \n\n${bookerRemaining.join('\n')} `
+                        : `\n\n * Booked Materials – Pending Pickup *: \n\n${bookerRemaining.join('\n')} `)
                     : '';
 
                 if (isAr) {
                     messageText = `السلام عليكم ورحمة الله وبركاته،
-الأخ/الأخت الفاضل/ة ${name}،
+                    الأخ / الأخت الفاضل / ة ${name}،
 
 تقرير مُحدّث لحالة المواد المحجوزة من قبلكم عبر موقع "مكانك":${bookerDeliveredText}${bookerRemainingText}
 
-لمتابعة حالة الحجوزات وتفاصيل الاستلام:
-https://makanak.netlify.app/exchange#track-status
+للمزيد من التفاصيل، يرجى زيارة صفحة تبادل المواد.
 
-يرجى التواصل معنا لتنسيق موعد الاستلام. شكراً لتعاونكم.`;
+يرجى التواصل معنا لتنسيق موعد الاستلام.شكراً لتعاونكم.`;
                 } else {
                     messageText = `Dear ${name},
 
 Here is an updated report on your booked materials on Makanak:${bookerDeliveredText}${bookerRemainingText}
 
-To track your bookings anytime:
-https://makanak.netlify.app/exchange#track-status
+For more details, please visit the material exchange page.
 
-Please contact us to coordinate the pickup. Thank you.`;
+Please contact us to coordinate the pickup.Thank you.`;
                 }
 
                 materials = bookerDelivered.concat(bookerRemaining);
@@ -3687,17 +3570,17 @@ Please contact us to coordinate the pickup. Thank you.`;
         const tableRows = daySchedules.map((s, idx) => {
             const coordinator = s.assignedCoordinator === 'ahmad' ? (isAr ? (systemSettings.ahmadNameAr || 'علي') : 'Ali')
                 : s.assignedCoordinator === 'sara' ? (isAr ? (systemSettings.saraNameAr || 'سندس') : 'Sondos')
-                : s.assignedCoordinator || '—';
+                    : s.assignedCoordinator || '—';
 
             const deliverer = s.finalDeliveryBy === 'ahmad' ? (isAr ? (systemSettings.ahmadNameAr || 'علي') : 'Ali')
                 : s.finalDeliveryBy === 'sara' ? (isAr ? (systemSettings.saraNameAr || 'سندس') : 'Sondos')
-                : s.finalDeliveryBy === 'admin' ? (isAr ? 'الأدمن حسين' : 'Admin Hussein')
-                : s.finalDeliveryBy || '—';
+                    : s.finalDeliveryBy === 'admin' ? (isAr ? 'الأدمن حسين' : 'Admin Hussein')
+                        : s.finalDeliveryBy || '—';
 
             const statusLabel = s.status === 'completed' ? (isAr ? 'تم التسليم' : 'Delivered')
                 : s.status === 'scheduled' ? (isAr ? 'مؤكد' : 'Confirmed')
-                : s.status === 'contacted' ? (isAr ? 'تم التواصل' : 'Contacted')
-                : (isAr ? 'لم يُتواصل بعد' : 'Not Contacted');
+                    : s.status === 'contacted' ? (isAr ? 'تم التواصل' : 'Contacted')
+                        : (isAr ? 'لم يُتواصل بعد' : 'Not Contacted');
 
             const statusClass = s.status;
 
@@ -4023,32 +3906,32 @@ Please contact us to coordinate the pickup. Thank you.`;
 
                     {/* ─── Gradient Header (hidden when embedded in AdminDashboard) ── */}
                     {!isEmbedded && (
-                    <div className="dashboard-header-card">
-                        <div className="dashboard-header-left">
-                            <div className="dashboard-title-group">
-                                <h1 className="dashboard-main-title">
-                                    🏛️ {isAr ? 'لوحة إدارة حملة التبادل' : 'Exchange Campaign Dashboard'}
-                                </h1>
-                                <p className="dashboard-subtitle">
-                                    {isAr ? 'مرحباً،' : 'Welcome,'}{' '}
-                                    <strong>{isAr ? (staffUsersDynamic[loggedInUser.username]?.nameAr || loggedInUser.nameAr) : (staffUsersDynamic[loggedInUser.username]?.nameEn || loggedInUser.nameEn)}</strong>
-                                    <span className={`user-role-badge role-${loggedInUser.role}`}>
-                                        {isAr
-                                            ? (isAdminUser ? '👑 أدمن' : '🎯 منسق')
-                                            : (isAdminUser ? '👑 Admin' : '🎯 Coordinator')}
-                                    </span>
-                                </p>
+                        <div className="dashboard-header-card">
+                            <div className="dashboard-header-left">
+                                <div className="dashboard-title-group">
+                                    <h1 className="dashboard-main-title">
+                                        🏛️ {isAr ? 'لوحة إدارة حملة التبادل' : 'Exchange Campaign Dashboard'}
+                                    </h1>
+                                    <p className="dashboard-subtitle">
+                                        {isAr ? 'مرحباً،' : 'Welcome,'}{' '}
+                                        <strong>{isAr ? (staffUsersDynamic[loggedInUser.username]?.nameAr || loggedInUser.nameAr) : (staffUsersDynamic[loggedInUser.username]?.nameEn || loggedInUser.nameEn)}</strong>
+                                        <span className={`user-role-badge role-${loggedInUser.role}`}>
+                                            {isAr
+                                                ? (isAdminUser ? '👑 أدمن' : '🎯 منسق')
+                                                : (isAdminUser ? '👑 Admin' : '🎯 Coordinator')}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="dashboard-header-right">
+                                <button className="dashboard-refresh-btn" onClick={fetchAllDonations} title={isAr ? 'تحديث' : 'Refresh'}>
+                                    🔄
+                                </button>
+                                <button className="dashboard-logout-btn" onClick={handleLogout}>
+                                    🚪 {isAr ? 'خروج' : 'Logout'}
+                                </button>
                             </div>
                         </div>
-                        <div className="dashboard-header-right">
-                            <button className="dashboard-refresh-btn" onClick={fetchAllDonations} title={isAr ? 'تحديث' : 'Refresh'}>
-                                🔄
-                            </button>
-                            <button className="dashboard-logout-btn" onClick={handleLogout}>
-                                🚪 {isAr ? 'خروج' : 'Logout'}
-                            </button>
-                        </div>
-                    </div>
                     )} {/* end !isEmbedded header */}
 
                     {/* ─── Stats Row ────────────────────────────── */}
@@ -4966,112 +4849,112 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                     }));
                                                 const allDelivered = [...filteredDelivered, ...completedScheduleRows];
                                                 return (
-                                                <div className="formal-table-wrapper">
-                                                    <div className="formal-table-header">
-                                                        <span className="formal-table-title">🤝 {isAr ? 'جدول المواد التي تم تسليمها' : 'Delivered Materials Table'}</span>
-                                                        <span className="formal-table-count">{isAr ? `إجمالي: ${allDelivered.length} مادة` : `Total: ${allDelivered.length} materials`}</span>
-                                                    </div>
-                                                    {allDelivered.length === 0 ? (
-                                                        <div className="empty-state">📭 {isAr ? 'لا توجد مواد مسلمة بعد' : 'No delivered materials yet'}</div>
-                                                    ) : (
-                                                        <div className="formal-table-scroll">
-                                                            <table className="formal-table bookings-formal-table">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>#</th>
-                                                                        <th>{isAr ? 'اسم المستلم' : 'Recipient Name'}</th>
-                                                                        <th>{isAr ? 'هاتف المستلم' : 'Recipient Phone'}</th>
-                                                                        <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
-                                                                        <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                        <th>{isAr ? 'المادة المسلمة' : 'Delivered Material'}</th>
-                                                                        <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
-                                                                        <th>{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</th>
-                                                                        <th>{isAr ? 'حالة التسليم' : 'Delivery Status'}</th>
-                                                                        <th>{isAr ? 'توقيت التسليم (بالثانية)' : 'Delivered At (with seconds)'}</th>
-                                                                        <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {allDelivered.map((booking, idx) => (
-                                                                        <tr key={booking.id} className="formal-row status-row-completed">
-                                                                            <td className="row-num">{idx + 1}</td>
-                                                                            <td className="donor-name-cell"><strong>{booking.takerInfo?.name || '—'}</strong></td>
-                                                                            <td dir="ltr" className="phone-cell">{booking.takerInfo?.phone || '—'}</td>
-                                                                            <td dir="ltr" className="email-cell">{booking.takerInfo?.email || '—'}</td>
-                                                                            <td>
-                                                                                {booking.takerInfo?.gender || booking.donorGender ? (
-                                                                                    <span className={`gender-badge gender-${booking.takerInfo?.gender || booking.donorGender}`}>
-                                                                                        {(booking.takerInfo?.gender || booking.donorGender) === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                    <div className="formal-table-wrapper">
+                                                        <div className="formal-table-header">
+                                                            <span className="formal-table-title">🤝 {isAr ? 'جدول المواد التي تم تسليمها' : 'Delivered Materials Table'}</span>
+                                                            <span className="formal-table-count">{isAr ? `إجمالي: ${allDelivered.length} مادة` : `Total: ${allDelivered.length} materials`}</span>
+                                                        </div>
+                                                        {allDelivered.length === 0 ? (
+                                                            <div className="empty-state">📭 {isAr ? 'لا توجد مواد مسلمة بعد' : 'No delivered materials yet'}</div>
+                                                        ) : (
+                                                            <div className="formal-table-scroll">
+                                                                <table className="formal-table bookings-formal-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#</th>
+                                                                            <th>{isAr ? 'اسم المستلم' : 'Recipient Name'}</th>
+                                                                            <th>{isAr ? 'هاتف المستلم' : 'Recipient Phone'}</th>
+                                                                            <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
+                                                                            <th>{isAr ? 'الجنس' : 'Gender'}</th>
+                                                                            <th>{isAr ? 'المادة المسلمة' : 'Delivered Material'}</th>
+                                                                            <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                                            <th>{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</th>
+                                                                            <th>{isAr ? 'حالة التسليم' : 'Delivery Status'}</th>
+                                                                            <th>{isAr ? 'توقيت التسليم (بالثانية)' : 'Delivered At (with seconds)'}</th>
+                                                                            <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {allDelivered.map((booking, idx) => (
+                                                                            <tr key={booking.id} className="formal-row status-row-completed">
+                                                                                <td className="row-num">{idx + 1}</td>
+                                                                                <td className="donor-name-cell"><strong>{booking.takerInfo?.name || '—'}</strong></td>
+                                                                                <td dir="ltr" className="phone-cell">{booking.takerInfo?.phone || '—'}</td>
+                                                                                <td dir="ltr" className="email-cell">{booking.takerInfo?.email || '—'}</td>
+                                                                                <td>
+                                                                                    {booking.takerInfo?.gender || booking.donorGender ? (
+                                                                                        <span className={`gender-badge gender-${booking.takerInfo?.gender || booking.donorGender}`}>
+                                                                                            {(booking.takerInfo?.gender || booking.donorGender) === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                                                        </span>
+                                                                                    ) : <span style={{ opacity: 0.5 }}>—</span>}
+                                                                                </td>
+                                                                                <td className="materials-cell">
+                                                                                    <strong>{booking.materialName}</strong>
+                                                                                    {booking.materialDescription && <p className="material-note">{booking.materialDescription}</p>}
+                                                                                </td>
+                                                                                <td>{booking.donorName}</td>
+                                                                                <td dir="ltr" className="phone-cell">{booking.donorPhone || booking.donorEmail || '—'}</td>
+                                                                                <td>
+                                                                                    <span className="status-badge status-completed">
+                                                                                        {isAr ? '✅ تم التسليم' : '✅ Delivered'}
                                                                                     </span>
-                                                                                ) : <span style={{ opacity: 0.5 }}>—</span>}
-                                                                            </td>
-                                                                            <td className="materials-cell">
-                                                                                <strong>{booking.materialName}</strong>
-                                                                                {booking.materialDescription && <p className="material-note">{booking.materialDescription}</p>}
-                                                                            </td>
-                                                                            <td>{booking.donorName}</td>
-                                                                            <td dir="ltr" className="phone-cell">{booking.donorPhone || booking.donorEmail || '—'}</td>
-                                                                            <td>
-                                                                                <span className="status-badge status-completed">
-                                                                                    {isAr ? '✅ تم التسليم' : '✅ Delivered'}
-                                                                                </span>
-                                                                            </td>
-                                                                            <td style={{ whiteSpace: 'nowrap', fontWeight: 'bold', color: '#22c55e' }}>
-                                                                                {formatDateTimeWithSeconds(booking.takerInfo?.deliveredAt || booking.deliveryTimestamp)}
-                                                                            </td>
-                                                                            <td className="actions-cell">
-                                                                                <div className="view-only-actions-row" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                                                                    {!booking.isScheduleItem && (
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="action-btn print-report-btn"
-                                                                                            onClick={() => openMaterialReport(booking, 'booker')}
-                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                                                                                        >
-                                                                                            🖨️ {isAr ? 'كشف/طباعة' : 'Report/Print'}
-                                                                                        </button>
-                                                                                    )}
-                                                                                    {!booking.isScheduleItem && isAdminUser ? (
-                                                                                        <button
-                                                                                            type="button"
-                                                                                            className="action-btn delete-btn"
-                                                                                            onClick={() => handleCancelBooking(booking.donationId, booking.materialIndex)}
-                                                                                            style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
-                                                                                        >
-                                                                                            🔓 {isAr ? 'إلغاء التسليم' : 'Cancel Delivery'}
-                                                                                        </button>
-                                                                                    ) : !booking.isScheduleItem && (
-                                                                                        (isAdminUser || isCoordinatorApprovedToEdit({ id: booking.donationId }) || (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking)) ? (
+                                                                                </td>
+                                                                                <td style={{ whiteSpace: 'nowrap', fontWeight: 'bold', color: '#22c55e' }}>
+                                                                                    {formatDateTimeWithSeconds(booking.takerInfo?.deliveredAt || booking.deliveryTimestamp)}
+                                                                                </td>
+                                                                                <td className="actions-cell">
+                                                                                    <div className="view-only-actions-row" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                                                        {!booking.isScheduleItem && (
+                                                                                            <button
+                                                                                                type="button"
+                                                                                                className="action-btn print-report-btn"
+                                                                                                onClick={() => openMaterialReport(booking, 'booker')}
+                                                                                                style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                                                            >
+                                                                                                🖨️ {isAr ? 'كشف/طباعة' : 'Report/Print'}
+                                                                                            </button>
+                                                                                        )}
+                                                                                        {!booking.isScheduleItem && isAdminUser ? (
                                                                                             <button
                                                                                                 type="button"
                                                                                                 className="action-btn delete-btn"
-                                                                                                onClick={() => {
-                                                                                                    if (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking) {
-                                                                                                        handleCancelBooking(booking.donationId, booking.materialIndex);
-                                                                                                    } else {
-                                                                                                        openActionRequestModal(booking.donationId, 'cancelBooking', booking.materialIndex, booking);
-                                                                                                    }
-                                                                                                }}
+                                                                                                onClick={() => handleCancelBooking(booking.donationId, booking.materialIndex)}
                                                                                                 style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
                                                                                             >
                                                                                                 🔓 {isAr ? 'إلغاء التسليم' : 'Cancel Delivery'}
                                                                                             </button>
-                                                                                        ) : (
-                                                                                            <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
-                                                                                        )
-                                                                                    )}
-                                                                                    {booking.isScheduleItem && (
-                                                                                        <span className="status-badge status-completed" style={{ fontSize: '0.72rem' }}>📅 {isAr ? 'من جدول التسليم' : 'From Schedule'}</span>
-                                                                                    )}
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                    ))}
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                                                        ) : !booking.isScheduleItem && (
+                                                                                            (isAdminUser || isCoordinatorApprovedToEdit({ id: booking.donationId }) || (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking)) ? (
+                                                                                                <button
+                                                                                                    type="button"
+                                                                                                    className="action-btn delete-btn"
+                                                                                                    onClick={() => {
+                                                                                                        if (systemSettings.allowCoordinatorEditDelete && currentCoordinatorPerms.cancelBooking) {
+                                                                                                            handleCancelBooking(booking.donationId, booking.materialIndex);
+                                                                                                        } else {
+                                                                                                            openActionRequestModal(booking.donationId, 'cancelBooking', booking.materialIndex, booking);
+                                                                                                        }
+                                                                                                    }}
+                                                                                                    style={{ zIndex: 100, cursor: 'pointer', pointerEvents: 'auto' }}
+                                                                                                >
+                                                                                                    🔓 {isAr ? 'إلغاء التسليم' : 'Cancel Delivery'}
+                                                                                                </button>
+                                                                                            ) : (
+                                                                                                <span className="view-only-tag">👁️ {isAr ? 'للاطلاع فقط' : 'View Only'}</span>
+                                                                                            )
+                                                                                        )}
+                                                                                        {booking.isScheduleItem && (
+                                                                                            <span className="status-badge status-completed" style={{ fontSize: '0.72rem' }}>📅 {isAr ? 'من جدول التسليم' : 'From Schedule'}</span>
+                                                                                        )}
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        ))}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 );
                                             })()}
 
@@ -6029,46 +5912,6 @@ Please contact us to coordinate the pickup. Thank you.`;
                                                         onChange={() => handleUpdateCampaignPhase(bookingOpen ? 'collection' : 'exchange')}
                                                     />
                                                     <label htmlFor="toggleBookingOpen" className="toggle-label-switch"></label>
-                                                </div>
-                                            </label>
-                                        </div>
-                                        <div className="settings-field live-control-field">
-                                            <label className="permission-toggle-label">
-                                                <span className="permission-icon">🔎</span>
-                                                <div className="permission-text-block">
-                                                    <strong>{isAr ? 'تتبع المواد' : 'Material Tracker'}</strong>
-                                                    <small>{isAr ? 'يمكنك تفعيل نموذج تتبع حالة المواد من قبل الأدمن.' : 'Enable the material tracker form from the exchange control panel.'}</small>
-                                                </div>
-                                                <div className="toggle-switch-wrapper">
-                                                    <input
-                                                        type="checkbox"
-                                                        id="toggleMaterialTracker"
-                                                        className="toggle-checkbox"
-                                                        checked={systemSettings.materialTrackerEnabled}
-                                                        onChange={async () => {
-                                                            const enabled = !systemSettings.materialTrackerEnabled;
-                                                            setSystemSettings(prev => ({ ...prev, materialTrackerEnabled: enabled }));
-                                                            setEditSettings(prev => ({ ...prev, materialTrackerEnabled: enabled }));
-                                                            try {
-                                                                const settingsRef = doc(db, 'system_configs', 'global_settings');
-                                                                await setDoc(settingsRef, { materialTrackerEnabled: enabled }, { merge: true });
-                                                                toast.success(isAr ? 'تم تحديث حالة التتبع بنجاح ✅' : 'Material tracker status updated successfully ✅');
-                                                                addAuditLog(
-                                                                    enabled
-                                                                        ? (isAr ? 'قام بتفعيل تتبع المواد' : 'Enabled material tracker')
-                                                                        : (isAr ? 'قام بإيقاف تتبع المواد' : 'Disabled material tracker'),
-                                                                    enabled
-                                                                        ? 'Enabled material tracker'
-                                                                        : 'Disabled material tracker',
-                                                                    { materialTrackerEnabled: enabled }
-                                                                );
-                                                            } catch (error) {
-                                                                console.error('Error updating tracker status:', error);
-                                                                toast.error(isAr ? 'فشل تحديث حالة التتبع' : 'Failed to update tracker status');
-                                                            }
-                                                        }}
-                                                    />
-                                                    <label htmlFor="toggleMaterialTracker" className="toggle-label-switch"></label>
                                                 </div>
                                             </label>
                                         </div>
@@ -8193,147 +8036,6 @@ Please contact us to coordinate the pickup. Thank you.`;
                 </section>
             </div>
 
-            {/* Track Material Status Section */}
-            <div id="track-status" className="material-tracker-section glass-card">
-                <div className="section-header">
-                    <h2>{isAr ? 'تتبع حالة المواد' : 'Track Material Status'}</h2>
-                    <p>
-                        {isAr
-                            ? 'أدخل رقم الهاتف المسجل سابقاً لمعرفة المواد التي تم حجزها، المتاحة، والمسلّمة.'
-                            : 'Enter the previously registered phone number to see reserved, available, and delivered materials.'}
-                    </p>
-                </div>
-                <div className="tracker-form">
-                    <input
-                        type="tel"
-                        className="form-input"
-                        placeholder={isAr ? 'رقم الهاتف المسجل سابقاً' : 'Previously registered phone number'}
-                        value={trackerSearchQuery}
-                        onChange={(e) => setTrackerSearchQuery(toEnglishNumerals(e.target.value))}
-                        dir="ltr"
-                    />
-                    <button
-                        type="button"
-                        className="tracker-search-btn"
-                        disabled={!systemSettings.materialTrackerEnabled}
-                        onClick={handleTrackRequest}
-                        title={systemSettings.materialTrackerEnabled
-                            ? isAr ? 'اضغط للبحث' : 'Click to search'
-                            : isAr ? 'خدمة التتبع غير متاحة حالياً' : 'Tracking service is currently unavailable'}
-                    >
-                        {systemSettings.materialTrackerEnabled
-                            ? (isAr ? 'بحث' : 'Search')
-                            : (isAr ? 'غير متاح' : 'Unavailable')}
-                    </button>
-                </div>
-                <div className="tracker-note">
-                    {systemSettings.materialTrackerEnabled
-                        ? (isAr ? 'تم تفعيل خدمة تتبع حالة المواد رسميًا، والنتائج المعروضة أدناه تمثل الحالة الحالية للمواد.' : 'The material tracking service is active. The results shown below reflect the current material status.')
-                        : (isAr ? 'خدمة تتبع حالة المواد غير متاحة حالياً وفقاً لإعدادات النظام.' : 'Material tracking service is currently unavailable according to system settings.')}
-                </div>
-                {trackerSummary && (
-                    <div className="tracker-summary-panel">
-                        <div className="summary-header">
-                            <h3>{isAr ? 'تقرير حالة المواد' : 'Material Status Report'}</h3>
-                            <p>{isAr ? 'عرض ملخّص وواضح لحالة المواد المرتبطة برقم الهاتف المدخل.' : 'A clear summary of material status linked to the entered phone number.'}</p>
-                        </div>
-                        <div className="summary-row">
-                            <div className="summary-item">
-                                <span>{isAr ? 'إجمالي المواد' : 'Total materials'}</span>
-                                <strong>{trackerSummary.total}</strong>
-                            </div>
-                            <div className="summary-item">
-                                <span>{isAr ? 'المحجوزة' : 'Reserved'}</span>
-                                <strong>{trackerSummary.reserved}</strong>
-                            </div>
-                            <div className="summary-item">
-                                <span>{isAr ? 'المسلَّمة' : 'Delivered'}</span>
-                                <strong>{trackerSummary.delivered}</strong>
-                            </div>
-                            <div className="summary-item">
-                                <span>{isAr ? 'المتاحة/قيد الانتظار' : 'Available / Pending'}</span>
-                                <strong>{trackerSummary.available}</strong>
-                            </div>
-                        </div>
-                        <div className="summary-detail">
-                            <p>{isAr ? 'استناداً إلى البيانات الحالية، يوضّح هذا التقرير حالة المادة سواء كانت محجوزة، متاحة، أو مُسلَّمة.' : 'Based on current data, this report shows whether materials are reserved, available, or delivered.'}</p>
-                            {trackerSummary.booked > 0 && (
-                                <p>{isAr ? `عدد المواد المحجوزة من قبل الطلاب: ${trackerSummary.booked}` : `Number of materials reserved by students: ${trackerSummary.booked}`}</p>
-                            )}
-                        </div>
-                    </div>
-                )}
-                {trackerResults && (
-                    <div className="tracker-results">
-                        {trackerResults.length === 0 ? (
-                            <div className="empty-state">
-                                {isAr ? 'لم يتم العثور على مواد لهذا الرقم' : 'No materials found for this number'}
-                            </div>
-                        ) : (
-                            <div className="tracker-cards-grid">
-                                {trackerResults.map((item, idx) => (
-                                    <div key={`${item.materialName}-${idx}`} className={`tracker-card tracker-card-${item.userRole}`}>
-                                        {/* Role ribbon */}
-                                        <div className={`tracker-role-ribbon ribbon-${item.userRole}`}>
-                                            <span>{item.userRole === 'donor' ? '🎁' : '📦'}</span>
-                                            <span>
-                                                {item.userRole === 'donor'
-                                                    ? (isAr ? 'تبرعتَ بهذه المادة' : 'You donated this')
-                                                    : (isAr ? 'حجزتَ هذه المادة' : 'You booked this')}
-                                            </span>
-                                        </div>
-
-                                        <div className="tracker-card-header">
-                                            <div>
-                                                <h3>{item.materialName}</h3>
-                                                {item.materialDescription && (
-                                                    <p className="tracker-description">{item.materialDescription}</p>
-                                                )}
-                                            </div>
-                                            <span className={`tracker-status-badge status-${item.itemStatus}`}>
-                                                {getFriendlyStatusName(item.itemStatus, item.userRole)}
-                                            </span>
-                                        </div>
-
-                                        {/* Donor-specific journey panel */}
-                                        {item.userRole === 'donor' && (
-                                            <div className="tracker-donor-journey">
-                                                <div className={`journey-step ${['pending'].includes(item.donationStatus || item.itemStatus) ? 'step-active' : 'step-done'}`}>
-                                                    <span className="step-dot"></span>
-                                                    <span>{isAr ? 'استلمنا تبرعك' : 'Donation received'}</span>
-                                                </div>
-                                                <div className={`journey-step ${item.itemStatus === 'approved' || item.itemStatus === 'reserved' || item.itemStatus === 'completed'
-                                                    ? 'step-done' : 'step-pending'
-                                                    }`}>
-                                                    <span className="step-dot"></span>
-                                                    <span>{isAr ? 'تمت الموافقة' : 'Approved'}</span>
-                                                </div>
-                                                <div className={`journey-step ${item.itemStatus === 'reserved' || item.itemStatus === 'completed' ? 'step-done' : 'step-pending'}`}>
-                                                    <span className="step-dot"></span>
-                                                    <span>
-                                                        {item.itemStatus === 'reserved' || item.itemStatus === 'completed'
-                                                            ? (isAr ? `محجوز ${item.bookedAt ? `— ${new Date(item.bookedAt).toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}` : ''}` : `Reserved ${item.bookedAt ? `— ${new Date(item.bookedAt).toLocaleDateString('en-US')}` : ''}`)
-                                                            : (isAr ? 'في انتظار الحجز...' : 'Waiting for a student...')}
-                                                    </span>
-                                                </div>
-                                                <div className={`journey-step ${item.itemStatus === 'completed' ? 'step-done' : 'step-pending'}`}>
-                                                    <span className="step-dot"></span>
-                                                    <span>{item.itemStatus === 'completed' ? (isAr ? '✅ تم التسليم للطالب' : '✅ Delivered') : (isAr ? 'تسليم للطالب' : 'Delivery to student')}</span>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        <div className="tracker-meta">
-                                            <span>📋 {isAr ? 'المنسق:' : 'Coordinator:'} {item.coordinatorName}</span>
-                                            <span>📅 {isAr ? 'تاريخ التبرع:' : 'Donated:'} {new Date(item.createdAt).toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
 
             {/* Booking Modal */}
             {showBookingModal && (

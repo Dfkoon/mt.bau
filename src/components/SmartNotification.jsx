@@ -16,16 +16,6 @@ const NOTIFICATIONS = {
             msgEn: 'Do you know your exact cumulative GPA? Try our new GPA calculator with the upgrade planner.',
             link: '/grading',
             type: 'info',
-        },
-        {
-            id: 'home-timetable',
-            emoji: '🗓️',
-            titleAr: 'نظّم جدولك الدراسي!',
-            titleEn: 'Organize your timetable!',
-            msgAr: 'أنشئ جدولك الأسبوعي بدقيقة واحدة وتحقق من تعارض المحاضرات.',
-            msgEn: 'Build your weekly schedule in one minute and check for lecture conflicts.',
-            link: '/timetable',
-            type: 'tip',
         }
     ],
     '/materials': [

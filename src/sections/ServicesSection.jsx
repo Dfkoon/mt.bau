@@ -15,14 +15,6 @@ const ServicesSection = () => {
             link: '/materials'
         },
         {
-            id: 7,
-            title: language === 'ar' ? 'منظّم ومولد الجداول الأسبوعية' : 'Weekly Timetable Builder',
-            desc: language === 'ar' ? 'قم بتنظيم محاصراتك والتأكد من عدم وجود تعارض في مواعيد المحاضرات والقاعات.' : 'Organize your lectures and check for time conflicts easily.',
-            icon: '🗓️',
-            status: 'active',
-            link: '/timetable'
-        },
-        {
             id: 2,
             title: t('service.2.title'),
             desc: t('service.2.desc'),

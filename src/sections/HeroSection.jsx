@@ -84,16 +84,6 @@ const HeroSection = () => {
                     <button className="btn-secondary btn-lg" onClick={() => navigate('/calendar')}>
                         {t('hero.btn.calendar')}
                     </button>
-                    <button
-                        className="btn-search-hero btn-lg"
-                        onClick={() => {
-                            // Trigger global search via keyboard event
-                            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
-                        }}
-                        title="Ctrl+K"
-                    >
-                        🔍 {t('nav.search') || (navigator.language?.startsWith('ar') ? 'بحث سريع' : 'Quick Search')}
-                    </button>
                 </div>
 
                 <div className="hero-stats">

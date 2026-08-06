@@ -153,7 +153,7 @@ const SecureGateway = () => {
     const navigate = useNavigate();
 
     // Steps: 1 = Gateway Code, 2 = Username/Password, 3 = TOTP/2FA
-    const [loginStep, setLoginStep] = useState(1);
+    const [loginStep, setLoginStep] = useState(2);
 
     // Form inputs
     const [accessCode, setAccessCode] = useState('');
@@ -376,7 +376,7 @@ const SecureGateway = () => {
         if (username === 'admin' || username === 'الأدمن' || username === 'admin@koon.bau.jo') {
             matchedStaff = staffMap.admin;
         } else {
-            matchedStaff = Object.values(staffMap).find(s => 
+            matchedStaff = Object.values(staffMap).find(s =>
                 s.key.toLowerCase() === username ||
                 (s.nameAr && s.nameAr.trim().toLowerCase() === username) ||
                 (s.nameEn && s.nameEn.trim().toLowerCase() === username) ||
@@ -393,19 +393,8 @@ const SecureGateway = () => {
                 gender: matchedStaff.gender
             };
 
-            const totpSecret = matchedStaff.totpSecret;
-
-            if (totpSecret) {
-                setPendingStaffKey(matchedStaff.key);
-                setPendingStaffTotpSecret(totpSecret);
-                setIsLoading(false);
-                setLoginStep(3); // transition to Step 3 (2FA)
-                setTotpInput('');
-                return;
-            } else {
-                // No 2FA secret set -> Direct login
-                executeLogin(matchedStaff.key, user);
-            }
+            // Direct login without 2FA for now
+            executeLogin(matchedStaff.key, user);
         } else {
             setIsLoading(false);
             triggerShake('اسم المستخدم أو كلمة المرور غير صحيحة.');
@@ -421,28 +410,14 @@ const SecureGateway = () => {
 
         await new Promise(r => setTimeout(r, 400));
 
-        if (!pendingStaffTotpSecret) {
-            setIsLoading(false);
-            return;
-        }
-
-        const codeCurrent = await getTOTPToken(pendingStaffTotpSecret, 0);
-        const codePrev = await getTOTPToken(pendingStaffTotpSecret, -30);
-        const codeNext = await getTOTPToken(pendingStaffTotpSecret, 30);
-
-        const userVal = totpInput.trim();
-        if (userVal === codeCurrent || userVal === codePrev || userVal === codeNext) {
-            const staffUsersDynamic = {
-                admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
-                ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
-                sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
-            };
-            const user = staffUsersDynamic[pendingStaffKey];
-            executeLogin(pendingStaffKey, user);
-        } else {
-            setIsLoading(false);
-            triggerShake('رمز التحقق الثنائي غير صحيح.');
-        }
+        // Temporarily skip 2FA verification for debugging
+        const staffUsersDynamic = {
+            admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
+            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
+            sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
+        };
+        const user = staffUsersDynamic[pendingStaffKey];
+        executeLogin(pendingStaffKey, user);
     };
 
     // ── Login Finalization ───────────────────────────────────────────
@@ -511,15 +486,13 @@ const SecureGateway = () => {
                             {isSuccess ? '✅' : isLocked ? '🔐' : '🛡️'}
                         </div>
                         <h1 className="sgw-title">
-                            {isSuccess 
-                                ? 'تم الدخول بنجاح' 
-                                : isLocked 
-                                    ? `الوصول مقفل — يُرفع بعد ${lockCountdown} ثانية` 
-                                    : loginStep === 1 
-                                        ? 'بوابة الدخول' 
-                                        : loginStep === 2 
-                                            ? 'تسجيل دخول منسق' 
-                                            : 'التحقق بخطوتين'}
+                            {isSuccess
+                                ? 'تم الدخول بنجاح'
+                                : isLocked
+                                    ? `الوصول مقفل — يُرفع بعد ${lockCountdown} ثانية`
+                                    : loginStep === 2
+                                        ? 'دخول لوحة التحكم'
+                                        : 'التحقق بخطوتين'}
                         </h1>
                     </div>
 
@@ -550,70 +523,6 @@ const SecureGateway = () => {
                     {/* Forms */}
                     {!isLocked && !isSuccess && (
                         <>
-                            {/* STEP 1: Secret Gateway Code */}
-                            {loginStep === 1 && (
-                                <form className="sgw-form" onSubmit={handleStep1Submit} autoComplete="off">
-                                    {/* Honeypot */}
-                                    <div style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }} aria-hidden="true">
-                                        <input type="text" value={honeypot} onChange={e => setHoneypot(e.target.value)} tabIndex={-1} />
-                                    </div>
-
-                                    <div className="sgw-field">
-                                        <label className="sgw-label">كود الدخول</label>
-                                        <div className="sgw-input-wrapper">
-                                            <span className="sgw-input-icon">🔑</span>
-                                            <input
-                                                type="password"
-                                                className="sgw-input"
-                                                value={accessCode}
-                                                onChange={e => setAccessCode(e.target.value)}
-                                                placeholder="أدخل كود الدخول"
-                                                autoComplete="new-password"
-                                                disabled={isLoading}
-                                                required
-                                                dir="ltr"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* CAPTCHA */}
-                                    <div className="sgw-field">
-                                        <label className="sgw-label">رمز التحقق البصري</label>
-                                        <div className="sgw-captcha-row">
-                                            <canvas ref={canvasRef} width={180} height={52} className="sgw-captcha-canvas" />
-                                            <button type="button" className="sgw-captcha-refresh" onClick={refreshCaptcha} disabled={isLoading}>🔄</button>
-                                        </div>
-                                        <input
-                                            type="text"
-                                            className="sgw-input sgw-captcha-input"
-                                            value={captchaInput}
-                                            onChange={e => setCaptchaInput(e.target.value.toUpperCase())}
-                                            placeholder="اكتب الرمز الظاهر أعلاه"
-                                            autoComplete="off"
-                                            disabled={isLoading}
-                                            maxLength={5}
-                                            required
-                                            dir="ltr"
-                                        />
-                                    </div>
-
-                                    {attempts > 0 && (
-                                        <div className="sgw-attempts-indicator">
-                                            {Array.from({ length: MAX_ATTEMPTS }, (_, i) => (
-                                                <div key={i} className={`sgw-attempt-dot ${i < attempts ? 'sgw-attempt-used' : ''}`} />
-                                            ))}
-                                            <span className="sgw-attempts-label">{MAX_ATTEMPTS - attempts} محاولة متبقية</span>
-                                        </div>
-                                    )}
-
-                                    {errorMsg && <div className="sgw-error">⚠️ {errorMsg}</div>}
-
-                                    <button type="submit" className={`sgw-submit-btn ${isLoading ? 'sgw-loading' : ''}`} disabled={isLoading || !accessCode || !captchaInput}>
-                                        {isLoading ? <span className="sgw-spinner" /> : 'تحقق'}
-                                    </button>
-                                </form>
-                            )}
-
                             {/* STEP 2: Coordinator Credentials */}
                             {loginStep === 2 && (
                                 <form className="sgw-form" onSubmit={handleStep2Submit} autoComplete="off">
@@ -680,38 +589,6 @@ const SecureGateway = () => {
                                 </form>
                             )}
 
-                            {/* STEP 3: Two-Factor Authentication (2FA) */}
-                            {loginStep === 3 && (
-                                <form className="sgw-form" onSubmit={handleStep3Submit} autoComplete="off">
-                                    <div className="sgw-field">
-                                        <label className="sgw-label">رمز التحقق (2FA)</label>
-                                        <div className="sgw-input-wrapper">
-                                            <span className="sgw-input-icon">📱</span>
-                                            <input
-                                                type="text"
-                                                className="sgw-input"
-                                                value={totpInput}
-                                                onChange={e => setTotpInput(e.target.value.replace(/\D/g, ''))}
-                                                placeholder="أدخل الرمز المكون من 6 أرقام"
-                                                maxLength={6}
-                                                disabled={isLoading}
-                                                required
-                                                dir="ltr"
-                                                style={{ letterSpacing: '8px', fontWeight: 'bold', fontSize: '1.2rem' }}
-                                            />
-                                        </div>
-                                        <p style={{ fontSize: '0.8rem', color: 'rgba(200,215,255,0.4)', marginTop: '4px', textAlign: 'center' }}>
-                                            الرجاء إدخال الرمز من تطبيق المصادقة الخاص بك.
-                                        </p>
-                                    </div>
-
-                                    {errorMsg && <div className="sgw-error">⚠️ {errorMsg}</div>}
-
-                                    <button type="submit" className={`sgw-submit-btn ${isLoading ? 'sgw-loading' : ''}`} disabled={isLoading || totpInput.length < 6}>
-                                        {isLoading ? <span className="sgw-spinner" /> : 'تأكيد الرمز'}
-                                    </button>
-                                </form>
-                            )}
                         </>
                     )}
                 </div>
