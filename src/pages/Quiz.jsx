@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import './Quiz.css';
+import ExamTimer from '../components/ExamTimer';
 
 // Pure HTML5 Canvas Confetti for celebration upon passing the quiz
 const Confetti = () => {
@@ -1161,6 +1162,57 @@ const Quiz = () => {
                             </div>
                         </div>
 
+                        {/* ── Smart Performance Analysis Card ── */}
+                        {(() => {
+                            const correct = score;
+                            const wrong   = Object.keys(userAnswers).filter(qid => {
+                                const q = currentQuiz.questions.find(x => x.id === qid);
+                                return q && userAnswers[qid] !== undefined && userAnswers[qid] !== q.correctAnswer;
+                            }).length;
+                            const skipped = totalQuestions - Object.keys(userAnswers).length;
+                            const pct     = Math.round(percentage);
+                            const msgAr   = pct >= 90 ? '🏆 ممتاز! أداء رائع جداً — استمر بهذا المستوى!'
+                                          : pct >= 75 ? '🌟 جيد جداً! أنت على المسار الصحيح.'
+                                          : pct >= 50 ? '💪 جيد! قليل من المراجعة ورح توصل للقمة.'
+                                          : '📚 لا تستسلم! راجع الأسئلة الخاطئة وحاول مجدداً.';
+                            const msgEn   = pct >= 90 ? '🏆 Excellent! Outstanding performance — keep it up!'
+                                          : pct >= 75 ? '🌟 Very Good! You are on the right track.'
+                                          : pct >= 50 ? "💪 Good! A bit more review and you'll reach the top."
+                                          : '📚 Keep going! Review the wrong answers and try again.';
+                            const barColor = pct >= 75 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#e02b20';
+                            return (
+                                <div className="no-print" style={{ margin:'1.5rem 0', padding:'20px 24px', borderRadius:'14px', background:'linear-gradient(135deg,rgba(156,39,176,0.06),rgba(233,30,99,0.04))', border:'1px solid rgba(156,39,176,0.15)' }}>
+                                    <h4 style={{ fontWeight:800, fontSize:'1rem', marginBottom:'16px' }}>
+                                        📊 {language === 'ar' ? 'تحليل أدائك' : 'Performance Analysis'}
+                                    </h4>
+                                    <div style={{ marginBottom:'16px' }}>
+                                        <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.8rem', fontWeight:700, marginBottom:'6px', opacity:0.7 }}>
+                                            <span>{language === 'ar' ? 'النتيجة الإجمالية' : 'Overall Score'}</span>
+                                            <span style={{ color:barColor, fontWeight:900 }}>{pct}%</span>
+                                        </div>
+                                        <div style={{ height:'10px', borderRadius:'50px', background:'rgba(0,0,0,0.08)', overflow:'hidden' }}>
+                                            <div style={{ height:'100%', width:`${pct}%`, borderRadius:'50px', background:`linear-gradient(90deg,${barColor},${barColor}cc)`, transition:'width 0.8s ease', boxShadow:`0 0 10px ${barColor}66` }} />
+                                        </div>
+                                    </div>
+                                    <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'16px' }}>
+                                        {[
+                                            { label: language==='ar'?'✅ صحيح':'✅ Correct',  val:correct, color:'#10b981', bg:'rgba(16,185,129,0.08)'   },
+                                            { label: language==='ar'?'❌ خاطئ':'❌ Wrong',    val:wrong,   color:'#e02b20', bg:'rgba(224,43,32,0.08)'    },
+                                            { label: language==='ar'?'⏭️ متروك':'⏭️ Skipped',val:skipped, color:'#9ca3af', bg:'rgba(156,163,175,0.08)'  },
+                                        ].map((s,i) => (
+                                            <div key={i} style={{ textAlign:'center', padding:'10px 6px', borderRadius:'10px', background:s.bg, border:`1px solid ${s.color}22` }}>
+                                                <div style={{ fontSize:'1.5rem', fontWeight:900, color:s.color }}>{s.val}</div>
+                                                <div style={{ fontSize:'0.72rem', fontWeight:700, opacity:0.7, marginTop:'2px' }}>{s.label}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div style={{ padding:'10px 14px', borderRadius:'10px', background:`${barColor}11`, border:`1px solid ${barColor}33`, fontSize:'0.88rem', fontWeight:700, color:barColor }}>
+                                        {language === 'ar' ? msgAr : msgEn}
+                                    </div>
+                                </div>
+                            );
+                        })()}
+
                         {/* Moodle Review Layout */}
                         <div id="quiz-review-section" className="moodle-review-section">
                             <div className="moodle-review-layout">
@@ -1750,6 +1802,36 @@ const Quiz = () => {
                                 </div>
                             </div>
                         )}
+
+                        {/* ── Quiz Progress Bar ── */}
+                        {(() => {
+                            const total     = currentQuiz.questions.length;
+                            const answered  = Object.keys(userAnswers).length;
+                            const pct       = total > 0 ? Math.round((answered / total) * 100) : 0;
+                            return (
+                                <div className="quiz-top-progress-wrap no-print">
+                                    <div className="quiz-top-progress-meta">
+                                        <span>
+                                            {language === 'ar'
+                                                ? `${answered} من ${total} سؤال`
+                                                : `${answered} of ${total} answered`}
+                                        </span>
+                                        <span className="quiz-top-progress-pct">{pct}%</span>
+                                    </div>
+                                    <div className="quiz-top-progress-track">
+                                        <div
+                                            className="quiz-top-progress-fill"
+                                            style={{ width: `${pct}%` }}
+                                        />
+                                        {/* Current question marker */}
+                                        <div
+                                            className="quiz-top-progress-cursor"
+                                            style={{ left: `${total > 1 ? (currentQuestionIndex / (total - 1)) * 100 : 0}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                         {/* Instructional Notice Banner */}
                         <div className="quiz-instructional-banner fade-in no-print">
@@ -2529,6 +2611,12 @@ const Quiz = () => {
                             </div>
                         )}
                     </>
+                )}
+
+                {!selectedCategory && (
+                    <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+                        <ExamTimer />
+                    </div>
                 )}
 
                 {!selectedCategory && (

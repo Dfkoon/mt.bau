@@ -319,4 +319,131 @@
         width: 100%;
         justify-content: center;
     }
+
+    .about-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ── Stats Grid ── */
+.about-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.about-stat-card {
+    border-radius: 18px;
+    padding: 24px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(224, 43, 32, 0.12);
+    background: linear-gradient(135deg, rgba(224, 43, 32, 0.04) 0%, var(--card-bg, #fff) 100%);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.about-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(224, 43, 32, 0.12);
+}
+
+.stat-big-num {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #e02b20;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    opacity: 0.7;
+}
+
+/* ── Roadmap ── */
+.about-roadmap {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 0;
+    position: relative;
+}
+
+.about-roadmap::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #e02b20, rgba(224, 43, 32, 0.1));
+    border-radius: 2px;
+}
+
+[dir="rtl"] .about-roadmap::before {
+    left: auto;
+    right: 18px;
+}
+
+.roadmap-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px 14px 48px;
+    border-radius: 12px;
+    margin: 4px 0;
+    transition: background 0.2s;
+    position: relative;
+}
+
+[dir="rtl"] .roadmap-item {
+    padding: 14px 48px 14px 16px;
+}
+
+.roadmap-item:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme='dark'] .roadmap-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.roadmap-dot {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    position: absolute;
+    left: 12px;
+}
+
+[dir="rtl"] .roadmap-dot {
+    left: auto;
+    right: 12px;
+}
+
+.roadmap-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.roadmap-item.done .roadmap-text {
+    color: inherit;
+}
+
+.roadmap-item.planned .roadmap-text {
+    opacity: 0.55;
+}
+
+@media (max-width: 768px) {
+    .about-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-big-num {
+        font-size: 2rem;
+    }
 }

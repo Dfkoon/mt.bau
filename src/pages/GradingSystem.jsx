@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import GPACalculator from '../components/GPACalculator';
+import TargetGPAPlanner from '../components/TargetGPAPlanner';
 import gradingHero from '../assets/heros/grading_system_hero.png';
 import './GradingSystem.css';
 
@@ -49,6 +50,11 @@ const GradingSystem = () => {
                 {/* GPA Calculator Section */}
                 <section data-aos="fade-up">
                     <GPACalculator />
+                </section>
+
+                {/* Target GPA Planner */}
+                <section data-aos="fade-up">
+                    <TargetGPAPlanner />
                 </section>
 
                 {/* New Grading System Table */}
@@ -174,6 +180,35 @@ const GradingSystem = () => {
                             </tbody>
                         </table>
                     </div>
+                </section>
+
+                {/* GPA Status Quick Checker */}
+                <section className="grading-section glass-card gpa-status-card" data-aos="fade-up">
+                    <h3>{isAr ? '🎯 هل أنت في الوضع الآمن؟' : '🎯 Are You in the Safe Zone?'}</h3>
+                    <p className="section-desc">
+                        {isAr
+                            ? 'تحقق سريعاً من وضعك الأكاديمي بناءً على معدلك التراكمي'
+                            : 'Quickly check your academic standing based on your cumulative GPA'}
+                    </p>
+                    <div className="gpa-status-grid">
+                        {[
+                            { range: '≥ 3.65', labelAr: 'ممتاز 🏆', labelEn: 'Excellent 🏆', color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
+                            { range: '3.0 – 3.64', labelAr: 'جيد جداً ✨', labelEn: 'Very Good ✨', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
+                            { range: '2.5 – 2.99', labelAr: 'جيد 👍', labelEn: 'Good 👍', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
+                            { range: '2.0 – 2.49', labelAr: 'مقبول ⚠️', labelEn: 'Satisfactory ⚠️', color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
+                            { range: '< 2.0', labelAr: 'خطر أكاديمي ❗', labelEn: 'Academic Warning ❗', color: '#e02b20', bg: 'rgba(224,43,32,0.08)' },
+                        ].map((s, i) => (
+                            <div key={i} className="gpa-status-item" style={{ background: s.bg, borderColor: s.color }}>
+                                <span className="gpa-status-range" style={{ color: s.color }}>{s.range}</span>
+                                <span className="gpa-status-label">{isAr ? s.labelAr : s.labelEn}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <p className="gpa-status-tip">
+                        💡 {isAr
+                            ? 'طالب يحتاج معدل ≥ 2.0 للتسجيل الطبيعي. استخدم مخطط المعدل الهدف أعلاه لمعرفة ما تحتاجه.'
+                            : 'Students need GPA ≥ 2.0 for normal enrollment. Use the Target GPA Planner above to know what you need.'}
+                    </p>
                 </section>
             </div>
         </div>

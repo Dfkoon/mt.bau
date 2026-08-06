@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import './ServicesSection.css';
 
 const ServicesSection = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const services = [
         {
             id: 1,
@@ -13,6 +13,14 @@ const ServicesSection = () => {
             icon: '📚',
             status: 'active',
             link: '/materials'
+        },
+        {
+            id: 7,
+            title: language === 'ar' ? 'منظّم ومولد الجداول الأسبوعية' : 'Weekly Timetable Builder',
+            desc: language === 'ar' ? 'قم بتنظيم محاصراتك والتأكد من عدم وجود تعارض في مواعيد المحاضرات والقاعات.' : 'Organize your lectures and check for time conflicts easily.',
+            icon: '🗓️',
+            status: 'active',
+            link: '/timetable'
         },
         {
             id: 2,
@@ -34,13 +42,6 @@ const ServicesSection = () => {
             desc: t('service.4.desc'),
             icon: '📈',
             status: 'active'
-        },
-        {
-            id: 5,
-            title: t('service.5.title'),
-            desc: t('service.5.desc'),
-            icon: '🏢',
-            status: 'pending'
         },
         {
             id: 6,

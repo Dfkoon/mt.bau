@@ -6,7 +6,8 @@ import {
  doc, getDoc, updateDoc, deleteDoc, where, onSnapshot,
  setDoc, serverTimestamp
 } from 'firebase/firestore';
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { useLanguage } from '../contexts/LanguageContext';
 import toast from 'react-hot-toast';
 import FileUploader from '../components/FileUploader';
@@ -23,6 +24,7 @@ import AdminContributions from '../components/admin/AdminContributions';
 import AdminActivityLog from '../components/admin/AdminActivityLog';
 import AdminCoordinators from '../components/admin/AdminCoordinators';
 import AdminCourseStatusManager from '../components/AdminCourseStatusManager';
+import AdminNotices from '../components/admin/AdminNotices';
 import MaterialExchange from './MaterialExchange';
 import './AdminDashboard.css';
 
@@ -351,13 +353,22 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }
       }
 
-      sessionStorage.setItem('exchange_staff', JSON.stringify({ role: 'admin', username: 'admin' }));
+      // Sign in to Firebase Auth with email/password so Firestore rules pass
+      const adminEmail = 'hussienaldayyat@gmail.com';
       try {
-        const auth = getAuth();
-        if (!auth.currentUser) await signInAnonymously(auth);
+        if (!auth.currentUser) {
+          await signInWithEmailAndPassword(auth, adminEmail, expectedPass);
+        }
       } catch (authErr) {
-        console.warn('Anonymous Firebase auth failed (non-critical):', authErr.code);
+        console.error('Firebase Auth sign-in failed:', authErr.code, authErr.message);
+        setTotpErr(
+          isAr
+            ? `فشل تسجيل الدخول في Firebase: ${authErr.message}`
+            : `Firebase sign-in failed: ${authErr.message}`
+        );
+        return;
       }
+      sessionStorage.setItem('exchange_staff', JSON.stringify({ role: 'admin', username: 'admin' }));
       setLoggedIn(true);
       toast.success(isAr ? 'مرحباً بك في لوحة التحكم' : 'Welcome to the dashboard');
     } else {
@@ -478,24 +489,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
  // ── Listen to Firebase Auth state changes ──
  useEffect(() => {
- const auth = getAuth();
  const unsub = onAuthStateChanged(auth, (user) => {
  if (user) setIsAuthed(true);
  else setIsAuthed(false);
  });
  return () => unsub();
  }, []);
-
- // ── Ensure Firebase Auth is set whenever admin is logged in (even from sessionStorage) ──
- useEffect(() => {
- if (!loggedIn) return;
- const auth = getAuth();
- if (!auth.currentUser) {
- signInAnonymously(auth).catch(err =>
- console.warn('Anonymous Firebase auth failed (non-critical):', err.code)
- );
- }
- }, [loggedIn]);
 
  // ── Load general data on login ──
  useEffect(() => {
@@ -1707,16 +1706,17 @@ const selectedGeneralPageData = generalAdminPages.find(p => p.id === selectedGen
  // DASHBOARD
  // ────────────────────────────────────────────────────────────────────
  const tabs = [
- { id: 'analytics', label: isAr ? 'الإحصائيات' : 'Analytics' },
- { id: 'general', label: isAr ? 'الإدارة العامة' : 'General' },
- { id: 'donations', label: isAr ? 'إدارة التبرعات' : 'Donations' },
- { id: 'quizzes', label: isAr ? 'الاختبارات' : 'Quizzes' },
- { id: 'feedback', label: isAr ? 'الآراء والتقييمات' : 'Feedback & Testimonials' },
- { id: 'courses', label: isAr ? 'إدارة المواد الدراسية' : 'Manage Courses' },
- { id: 'reports', label: isAr ? 'البلاغات' : 'Reports' },
- { id: 'contributions', label: isAr ? 'المساهمات' : 'Contributions' },
- { id: 'activity', label: isAr ? 'سجل النشاط' : 'Activity' },
- { id: 'coordinators', label: isAr ? 'المنسقون' : 'Coordinators' },
+ { id: 'analytics',    label: isAr ? 'الإحصائيات'          : 'Analytics' },
+ { id: 'notices',      label: isAr ? '📢 الإعلانات'         : '📢 Notices' },
+ { id: 'general',      label: isAr ? 'الإدارة العامة'       : 'General' },
+ { id: 'donations',    label: isAr ? 'إدارة التبرعات'       : 'Donations' },
+ { id: 'quizzes',      label: isAr ? 'الاختبارات'           : 'Quizzes' },
+ { id: 'feedback',     label: isAr ? 'الآراء والتقييمات'    : 'Feedback & Testimonials' },
+ { id: 'courses',      label: isAr ? 'إدارة المواد الدراسية' : 'Manage Courses' },
+ { id: 'reports',      label: isAr ? 'البلاغات'             : 'Reports' },
+ { id: 'contributions',label: isAr ? 'المساهمات'            : 'Contributions' },
+ { id: 'activity',     label: isAr ? 'سجل النشاط'           : 'Activity' },
+ { id: 'coordinators', label: isAr ? 'المنسقون'             : 'Coordinators' },
  ];
 
  return (
@@ -1798,6 +1798,11 @@ const selectedGeneralPageData = generalAdminPages.find(p => p.id === selectedGen
  {/* TAB: Analytics */}
  {/* ══════════════════════════════════════════════════════ */}
  {activeTab === 'analytics' && <AdminAnalytics />}
+
+ {/* ══════════════════════════════════════════════════════ */}
+ {/* TAB: Notice Board */}
+ {/* ══════════════════════════════════════════════════════ */}
+ {activeTab === 'notices' && <AdminNotices />}
 
  {/* ══════════════════════════════════════════════════════ */}
  {/* TAB: Feedback & Suggestions */}

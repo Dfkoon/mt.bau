@@ -9,8 +9,10 @@ import { collection, onSnapshot } from 'firebase/firestore';
 
 import { getQuizForCourse } from '../data/quizMapping';
 import { logMaterialDownload } from '../services/analyticsService';
+import StarRating from '../components/StarRating';
+import CourseDifficultyRater from '../components/CourseDifficultyRater';
 import './StudyMaterials.css';
-import '../pages/AcademicPlans.css'; // Importing for CTA styles if needed, though they should be in index.css
+import '../pages/AcademicPlans.css';
 
 const StudyMaterials = () => {
     const { language, t } = useLanguage();
@@ -377,6 +379,18 @@ const StudyMaterials = () => {
                                                             <span>{t('resource.interactive_quiz')}</span>
                                                         </button>
                                                     )}
+
+                                                    {/* Star Rating for this material */}
+                                                    <div onClick={e => e.stopPropagation()} style={{ padding: '12px 4px 0' }}>
+                                                        <StarRating
+                                                            itemId={`material-${courseUniqueId}`}
+                                                            itemTitle={language === 'ar' ? course.name : (course.nameEn || course.name)}
+                                                        />
+                                                        <CourseDifficultyRater
+                                                            courseId={courseUniqueId}
+                                                            courseName={language === 'ar' ? course.name : (course.nameEn || course.name)}
+                                                        />
+                                                    </div>
                                                 </div>
                                             );
                                         }
@@ -386,6 +400,12 @@ const StudyMaterials = () => {
                                                 <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem' }}>
                                                     {t('materials.no_sources')}
                                                 </p>
+                                                <div onClick={e => e.stopPropagation()} style={{ padding: '0 4px 8px' }}>
+                                                    <StarRating
+                                                        itemId={`material-${courseUniqueId}`}
+                                                        itemTitle={language === 'ar' ? course.name : (course.nameEn || course.name)}
+                                                    />
+                                                </div>
                                             </div>
                                         );
                                     })()}

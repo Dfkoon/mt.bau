@@ -17,7 +17,12 @@ const NashmiGuide = () => {
     const messagesEndRef = useRef(null);
 
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(() => {
+        try {
+            const saved = localStorage.getItem('nashmi_chat_history_v1');
+            return saved ? JSON.parse(saved) : [];
+        } catch { return []; }
+    });
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [hasUnread, setHasUnread] = useState(false);
@@ -106,6 +111,22 @@ const NashmiGuide = () => {
             setHasUnread(true);
         }
     }, [location, language]);
+
+    // Persist chat history
+    useEffect(() => {
+        try {
+            // Only save last 30 messages to keep it lean
+            const toSave = messages.slice(-30);
+            localStorage.setItem('nashmi_chat_history_v1', JSON.stringify(toSave));
+        } catch { /* ignore */ }
+    }, [messages]);
+
+    const handleClearChat = () => {
+        localStorage.removeItem('nashmi_chat_history_v1');
+        const currentPath = location.pathname;
+        const guide = pageGuides[currentPath] || pageGuides['/'];
+        setMessages([{ id: 'intro-' + Date.now(), text: isAr ? guide.ar : guide.en, sender: 'bot', timestamp: new Date() }]);
+    };
 
     const normalizeText = (text) => {
         if (!text) return '';
@@ -282,7 +303,16 @@ const NashmiGuide = () => {
                                 <span>{isAr ? 'متصل الآن' : 'Online'}</span>
                             </div>
                         </div>
-                        <button className="close-chat" onClick={() => setIsOpen(false)}>×</button>
+                        <div className="chat-header-actions">
+                            <button
+                                className="clear-chat-btn"
+                                onClick={handleClearChat}
+                                title={isAr ? 'مسح المحادثة' : 'Clear chat'}
+                            >
+                                🗑️
+                            </button>
+                            <button className="close-chat" onClick={() => setIsOpen(false)}>×</button>
+                        </div>
                     </div>
 
                     <div className="chat-messages">
@@ -299,6 +329,26 @@ const NashmiGuide = () => {
                         <div ref={messagesEndRef} />
                     </div>
 
+                    <div className="quick-chips">
+                        {(isAr
+                            ? ['احسب معدلي', 'وين ملخصات؟', 'التقويم الأكاديمي', 'خطتي الدراسية']
+                            : ['Calculate GPA', 'Where are materials?', 'Academic Calendar', 'My study plan']
+                        ).map(chip => (
+                            <button
+                                key={chip}
+                                className="quick-chip-btn"
+                                onClick={() => {
+                                    setInputValue(chip);
+                                    setTimeout(() => {
+                                        document.querySelector('.chat-input-row')?.requestSubmit?.() ||
+                                        document.querySelector('.chat-input-row button[type="submit"]')?.click();
+                                    }, 100);
+                                }}
+                            >
+                                {chip}
+                            </button>
+                        ))}
+                    </div>
                     <form className="chat-input-row" onSubmit={handleSendMessage}>
                         <input
                             type="text"

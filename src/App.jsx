@@ -44,6 +44,18 @@ import NashmiGuide from './components/NashmiGuide';
 import ReportModal from './components/ReportModal';
 import InstallPWAButton from './components/InstallPWAButton';
 
+import AcademicCountdown from './components/AcademicCountdown';
+import TimetablePage from './pages/TimetablePage';
+import GlobalSearchModal from './components/GlobalSearchModal';
+import StudyProgressTracker from './components/StudyProgressTracker';
+import SmartNotification from './components/SmartNotification';
+import ReadingProgressBar from './components/ReadingProgressBar';
+import DailyMotivation from './components/DailyMotivation';
+import BackToTopBtn from './components/BackToTopBtn';
+import KeyboardShortcutsHelp from './components/KeyboardShortcutsHelp';
+import FloatingActionMenu from './components/FloatingActionMenu';
+import NoticeBoard from './components/NoticeBoard';
+
 const HomePage = () => {
   const location = useLocation();
   React.useEffect(() => {
@@ -73,6 +85,7 @@ const HomePage = () => {
     <>
       <HeroSection />
       <AnnouncementMarquee />
+      <AcademicCountdown />
 
       <LemonChat />
       <UpcomingEvents />
@@ -80,6 +93,16 @@ const HomePage = () => {
       {/* <NewsSection /> */}
       <WeeklyTip />
       <ProjectsSection />
+
+      {/* Daily Motivation Quote */}
+      <div style={{ padding: '0 16px', maxWidth: '1200px', margin: '0 auto' }}>
+        <DailyMotivation />
+      </div>
+
+      {/* Study Progress Tracker */}
+      <div style={{ padding: '0 16px', maxWidth: '1200px', margin: '0 auto' }}>
+        <StudyProgressTracker />
+      </div>
 
       <ServicesSection />
       <UsefulSitesSection />
@@ -92,11 +115,19 @@ const HomePage = () => {
 };
 
 
+const StudyProgressSection = () => (
+  <div style={{ padding: '0 16px' }}>
+    <StudyProgressTracker />
+  </div>
+);
+
+
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   const [showFeedbackPopup, setShowFeedbackPopup] = React.useState(false);
   const [feedbackPopupEnabled, setFeedbackPopupEnabled] = React.useState(false);
   const [feedbackPopupLoaded, setFeedbackPopupLoaded] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   // Splash screen disabled
   const [showSplash] = React.useState(false);
@@ -105,6 +136,18 @@ function App() {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  // Global Ctrl+K / Cmd+K shortcut for search
+  React.useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   React.useEffect(() => {
     const loadSettings = async () => {
@@ -194,6 +237,7 @@ function App() {
                 <Route path="/quiz" element={<Quiz />} />
                 <Route path="/quiz/:quizId" element={<Quiz />} />
                 <Route path="/calendar" element={<AcademicCalendar />} />
+                <Route path="/timetable" element={<TimetablePage />} />
                 <Route path="/grading" element={<GradingSystem />} />
                 <Route path="/exchange" element={<MaterialExchange />} />
 
@@ -204,7 +248,22 @@ function App() {
               </Routes>
             </main>
 
-            {/* <NashmiGuide /> */}
+            {/* NashmiGuide AI chat assistant */}
+            <NashmiGuide />
+            {/* Smart contextual notifications */}
+            <SmartNotification />
+            {/* Quick floating action menu */}
+            <FloatingActionMenu />
+            {/* Back to top button */}
+            <BackToTopBtn />
+            {/* Keyboard shortcuts help modal (press ?) */}
+            <KeyboardShortcutsHelp />
+            {/* Global Search Modal */}
+            <GlobalSearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+            {/* Reading scroll progress bar */}
+            <ReadingProgressBar />
+            {/* Admin notice board (Firebase-driven) */}
+            <NoticeBoard />
             <Footer />
           </div>
         } />

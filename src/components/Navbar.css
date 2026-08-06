@@ -102,7 +102,66 @@
 .nav-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
+}
+
+.nav-action-btn {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .nav-action-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-action-btn:hover {
+    background: rgba(224, 43, 32, 0.1);
+    border-color: rgba(224, 43, 32, 0.3);
+    color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.kbd-shortcut {
+    font-size: 0.7rem;
+    background: rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 2px 5px;
+    border-radius: 4px;
+    opacity: 0.7;
+}
+
+[data-theme="dark"] .kbd-shortcut {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.locker-count-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary, #e02b20);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(224, 43, 32, 0.4);
 }
 
 .menu-icon {

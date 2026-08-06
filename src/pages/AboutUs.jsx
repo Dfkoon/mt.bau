@@ -143,6 +143,57 @@ const AboutUs = () => {
                 </section>
 
 
+                {/* Platform Stats */}
+                <section className="about-section">
+                    <div className="section-header">
+                        <h2 className="section-title">
+                            {isAr ? '📈 أرقام مكانك' : '📈 Makanak in Numbers'}
+                        </h2>
+                    </div>
+                    <div className="about-stats-grid">
+                        {[
+                            { num: '500+', labelAr: 'ملف دراسي', labelEn: 'Study Files' },
+                            { num: '1200+', labelAr: 'سؤال تفاعلي', labelEn: 'Interactive Questions' },
+                            { num: '10+', labelAr: 'تخصص وقسم', labelEn: 'Majors & Departments' },
+                            { num: '24/7', labelAr: 'مساعد نشمي', labelEn: 'Nashmi AI Support' },
+                        ].map((s, i) => (
+                            <div key={i} className="about-stat-card glass-card">
+                                <span className="stat-big-num">{s.num}</span>
+                                <span className="stat-label">{isAr ? s.labelAr : s.labelEn}</span>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Roadmap */}
+                <section className="about-section">
+                    <div className="section-header">
+                        <h2 className="section-title">
+                            {isAr ? '🗺️ خارطة الطريق' : '🗺️ Roadmap'}
+                        </h2>
+                        <p className="section-subtitle">
+                            {isAr ? 'ما أنجزناه وما ننوي إضافته' : 'What we accomplished and what we plan to add'}
+                        </p>
+                    </div>
+                    <div className="about-roadmap">
+                        {[
+                            { done: true, labelAr: 'إطلاق المنصة وتوفير المواد الدراسية', labelEn: 'Platform launch with study materials' },
+                            { done: true, labelAr: 'الكويز التفاعلي مع تصحيح فوري', labelEn: 'Interactive quiz with instant grading' },
+                            { done: true, labelAr: 'مساعد نشمي الذكي + محادثة محفوظة', labelEn: 'Nashmi AI assistant with chat memory' },
+                            { done: true, labelAr: 'حاسبة المعدل ومخطط المعدل الهدف', labelEn: 'GPA calculator & Target GPA planner' },
+                            { done: true, labelAr: 'مؤقت الدراسة (بومودورو) بداخل صفحة الكويز', labelEn: 'Study timer (Pomodoro) inside quiz page' },
+                            { done: false, labelAr: 'إشعارات المهام والامتحانات القادمة', labelEn: 'Task & exam reminders notifications' },
+                            { done: false, labelAr: 'نسخة الهاتف المتكاملة (PWA كاملة)', labelEn: 'Full mobile app (complete PWA)' },
+                            { done: false, labelAr: 'لوحة تحليلات متقدمة للطلاب', labelEn: 'Advanced student analytics dashboard' },
+                        ].map((item, i) => (
+                            <div key={i} className={`roadmap-item ${item.done ? 'done' : 'planned'}`}>
+                                <span className="roadmap-dot">{item.done ? '✅' : '🔜'}</span>
+                                <span className="roadmap-text">{isAr ? item.labelAr : item.labelEn}</span>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
                 {/* Contact/Contribute */}
                 <section className="about-section">
                     <div className="cta-card glass-card">

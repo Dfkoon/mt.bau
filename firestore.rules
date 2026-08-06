@@ -122,22 +122,39 @@ service cloud.firestore {
       allow write: if isAuthenticated();
     }
 
-    // Dynamic Quiz Management (Protected writes against deletion/tampering)
+    // Dynamic Quiz Management (admin-only writes)
     match /quiz_subjects/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isAdmin();
     }
     match /quiz_parts/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isAdmin();
     }
     match /quiz_questions/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isAdmin();
     }
     
     // Academic Courses Management
     match /academic_courses/{doc} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Material & Difficulty Ratings (written by any visitor, readable by admin)
+    match /material_ratings/{doc} {
+      allow read: if true;
+      allow create: if request.resource.data.itemId is string
+                    && request.resource.data.type in ['star', 'difficulty']
+                    && request.resource.data.rating is number
+                    && request.resource.data.rating >= 1
+                    && request.resource.data.rating <= 5;
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Notice Board (admin creates notices, all users can read)
+    match /notices/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }

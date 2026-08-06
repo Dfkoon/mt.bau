@@ -284,3 +284,69 @@
     background: rgba(46, 204, 113, 0.15) !important;
     color: #2ecc71 !important;
 }
+
+/* ── GPA Status Quick Checker ── */
+.gpa-status-card {
+    margin-top: 2rem;
+}
+
+.gpa-status-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 18px 0 14px;
+}
+
+.gpa-status-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1.5px solid transparent;
+    transition: transform 0.2s ease;
+}
+
+.gpa-status-item:hover {
+    transform: translateX(-4px);
+}
+
+[dir="ltr"] .gpa-status-item:hover {
+    transform: translateX(4px);
+}
+
+.gpa-status-range {
+    font-size: 1.05rem;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    display: inline-block;
+}
+
+.gpa-status-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.gpa-status-tip {
+    font-size: 0.85rem;
+    opacity: 0.65;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 10px;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+[data-theme='dark'] .gpa-status-tip {
+    background: rgba(255,255,255,0.04);
+}
+
+@media (max-width: 600px) {
+    .gpa-status-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 10px 14px;
+    }
+}

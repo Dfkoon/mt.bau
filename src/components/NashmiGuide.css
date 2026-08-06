@@ -418,3 +418,62 @@
         max-width: 200px;
     }
 }
+
+/* === NEW ENHANCEMENTS === */
+
+.chat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clear-chat-btn {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+    padding: 4px 6px;
+    border-radius: 8px;
+}
+
+.clear-chat-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* Quick Suggestion Chips */
+.quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme='dark'] .quick-chips {
+    background: rgba(255, 255, 255, 0.03);
+    border-top-color: rgba(255, 255, 255, 0.05);
+}
+
+.quick-chip-btn {
+    background: rgba(224, 43, 32, 0.08);
+    border: 1px solid rgba(224, 43, 32, 0.2);
+    color: inherit;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.quick-chip-btn:hover {
+    background: rgba(224, 43, 32, 0.18);
+    border-color: rgba(224, 43, 32, 0.4);
+    transform: translateY(-1px);
+}

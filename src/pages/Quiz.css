@@ -4510,3 +4510,67 @@ body:has(.moodle-theme-wrapper) {
 [data-theme='light'] .moodle-option-image-wrapper img {
     border-color: #e2e8f0;
 }
+
+/* ── Quiz Top Progress Bar ── */
+.quiz-top-progress-wrap {
+    margin: 0 0 16px;
+    padding: 0 2px;
+}
+
+.quiz-top-progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    opacity: 0.65;
+    margin-bottom: 6px;
+}
+
+.quiz-top-progress-pct {
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: #9c27b0;
+}
+
+.quiz-top-progress-track {
+    position: relative;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 50px;
+    overflow: visible;
+}
+
+[data-theme='dark'] .quiz-top-progress-track {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.quiz-top-progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #9c27b0, #e91e63);
+    box-shadow: 0 0 10px rgba(156, 39, 176, 0.4);
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    min-width: 4px;
+}
+
+.quiz-top-progress-cursor {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #9c27b0;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px #9c27b0, 0 2px 8px rgba(156, 39, 176, 0.5);
+    transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 2;
+}
+
+[data-theme='light'] .quiz-top-progress-cursor {
+    border-color: #f0f0f0;
+}
