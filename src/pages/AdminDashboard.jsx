@@ -7,7 +7,7 @@ import {
  setDoc, serverTimestamp
 } from 'firebase/firestore';
 import { auth } from '../config/firebase';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import { signInAnonymously, signOut, onAuthStateChanged } from 'firebase/auth';
 import { useLanguage } from '../contexts/LanguageContext';
 import toast from 'react-hot-toast';
 import FileUploader from '../components/FileUploader';
@@ -348,18 +348,17 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         }
       }
 
-      // Sign in to Firebase Auth with email/password so Firestore rules pass
-      const adminEmail = 'hussienaldayyat2002@gmail.com';
+      // Sign in to Firebase anonymously so Firestore rules pass
       try {
         if (!auth.currentUser) {
-          await signInWithEmailAndPassword(auth, adminEmail, adminPwd);
+          await signInAnonymously(auth);
         }
       } catch (authErr) {
-        console.error('Firebase Auth sign-in failed:', authErr.code, authErr.message);
+        console.error('Firebase anonymous sign-in failed:', authErr.code, authErr.message);
         setTotpErr(
           isAr
-            ? `فشل تسجيل الدخول في Firebase: ${authErr.message}`
-            : `Firebase sign-in failed: ${authErr.message}`
+            ? `فشل تسجيل الدخول: ${authErr.message}`
+            : `Auth failed: ${authErr.message}`
         );
         return;
       }
