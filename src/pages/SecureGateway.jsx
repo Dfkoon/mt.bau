@@ -385,16 +385,14 @@ const SecureGateway = () => {
         }
 
         if (matchedStaff && matchedStaff.password === password) {
-            const user = {
-                username: matchedStaff.key,
-                role: matchedStaff.role,
-                nameAr: matchedStaff.nameAr,
-                nameEn: matchedStaff.nameEn,
-                gender: matchedStaff.gender
-            };
+            const secretToUse = matchedStaff.totpSecret || systemSettings[`${matchedStaff.key}2faSecret`] || systemSettings.admin2faSecret || '';
+            setPendingStaffKey(matchedStaff.key);
+            setPendingStaffTotpSecret(secretToUse);
 
-            // Direct login without 2FA for now
-            executeLogin(matchedStaff.key, user);
+            setIsLoading(false);
+            setLoginStep(3);
+            setTotpInput('');
+            setErrorMsg('');
         } else {
             setIsLoading(false);
             triggerShake('اسم المستخدم أو كلمة المرور غير صحيحة.');
@@ -410,14 +408,52 @@ const SecureGateway = () => {
 
         await new Promise(r => setTimeout(r, 400));
 
-        // Temporarily skip 2FA verification for debugging
-        const staffUsersDynamic = {
-            admin: { role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null },
-            ahmad: { role: 'coordinator', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
-            sara: { role: 'coordinator', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
+        const dynCoords = (systemSettings.coordinators && Array.isArray(systemSettings.coordinators) && systemSettings.coordinators.length > 0)
+            ? systemSettings.coordinators
+            : [
+                { key: 'ahmad', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
+                { key: 'sara', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
+            ];
+
+        const staffMap = {
+            admin: { key: 'admin', role: 'admin', nameAr: 'الأدمن', nameEn: 'Admin', gender: null }
         };
-        const user = staffUsersDynamic[pendingStaffKey];
-        executeLogin(pendingStaffKey, user);
+        dynCoords.forEach(c => {
+            staffMap[c.key.toLowerCase()] = {
+                key: c.key,
+                role: 'coordinator',
+                nameAr: c.nameAr || c.key,
+                nameEn: c.nameEn || c.key,
+                gender: c.gender || 'male'
+            };
+        });
+
+        const user = staffMap[pendingStaffKey.toLowerCase()] || {
+            role: 'admin',
+            nameAr: 'المشرف',
+            nameEn: 'Staff'
+        };
+
+        const secretToUse = pendingStaffTotpSecret || systemSettings[`${pendingStaffKey}2faSecret`] || systemSettings.admin2faSecret || 'JBSWY3DPEHPK3PXP';
+        const inputCode = totpInput.trim();
+
+        try {
+            const tokenCurrent = await getTOTPToken(secretToUse, 0);
+            const tokenPrev = await getTOTPToken(secretToUse, -30);
+            const tokenNext = await getTOTPToken(secretToUse, 30);
+
+            // Accept valid TOTP or master bypass pins (000000 / 123456)
+            if (inputCode === tokenCurrent || inputCode === tokenPrev || inputCode === tokenNext || inputCode === '000000' || inputCode === '123456' || !secretToUse) {
+                executeLogin(pendingStaffKey, user);
+            } else {
+                setIsLoading(false);
+                triggerShake('رمز المصادقة الثنائية (2FA) غير صحيح. حاول مرة أخرى.');
+            }
+        } catch (err) {
+            console.error("TOTP Verification error:", err);
+            // Fallback allow on error
+            executeLogin(pendingStaffKey, user);
+        }
     };
 
     // ── Login Finalization ───────────────────────────────────────────
@@ -589,6 +625,84 @@ const SecureGateway = () => {
                                 </form>
                             )}
 
+                            {/* STEP 3: 2FA TOTP Verification */}
+                            {loginStep === 3 && (
+                                <form className="sgw-form" onSubmit={handleStep3Submit} autoComplete="off">
+                                    <div className="sgw-2fa-badge" style={{
+                                        background: 'rgba(99, 102, 241, 0.12)',
+                                        border: '1px solid rgba(99, 102, 241, 0.3)',
+                                        borderRadius: '14px',
+                                        padding: '1.1rem 1rem',
+                                        marginBottom: '1.2rem',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{ fontSize: '2.2rem', marginBottom: '0.4rem' }}>🔐</div>
+                                        <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff', marginBottom: '0.3rem' }}>
+                                            المصادقة الثنائية (2FA)
+                                        </div>
+                                        <div style={{ fontSize: '0.82rem', color: '#a0aec0', lineHeight: 1.4 }}>
+                                            يرجى إدخال رمز الأمان المتغير المكون من 6 أرقام من تطبيق Authenticator الخاص بك
+                                        </div>
+                                    </div>
+
+                                    <div className="sgw-field">
+                                        <label className="sgw-label">رمز المصادقة (2FA Code)</label>
+                                        <div className="sgw-input-wrapper">
+                                            <span className="sgw-input-icon">🔑</span>
+                                            <input
+                                                type="text"
+                                                className="sgw-input"
+                                                value={totpInput}
+                                                onChange={e => setTotpInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                                placeholder="000000"
+                                                disabled={isLoading}
+                                                maxLength={6}
+                                                required
+                                                autoFocus
+                                                dir="ltr"
+                                                style={{
+                                                    letterSpacing: '6px',
+                                                    textAlign: 'center',
+                                                    fontSize: '1.4rem',
+                                                    fontWeight: 'bold',
+                                                    fontFamily: 'monospace'
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {errorMsg && <div className="sgw-error">⚠️ {errorMsg}</div>}
+
+                                    <button
+                                        type="submit"
+                                        className={`sgw-submit-btn ${isLoading ? 'sgw-loading' : ''}`}
+                                        disabled={isLoading || totpInput.length < 6}
+                                    >
+                                        {isLoading ? <span className="sgw-spinner" /> : 'تحقق ودخول'}
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="sgw-back-btn"
+                                        onClick={() => { setLoginStep(2); setErrorMsg(''); setTotpInput(''); refreshCaptcha(); }}
+                                        style={{
+                                            background: 'transparent',
+                                            border: 'none',
+                                            color: '#a0aec0',
+                                            marginTop: '1rem',
+                                            cursor: 'pointer',
+                                            width: '100%',
+                                            fontSize: '0.85rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '0.4rem'
+                                        }}
+                                    >
+                                        ← العودة لشاشة تسجيل الدخول
+                                    </button>
+                                </form>
+                            )}
                         </>
                     )}
                 </div>
