@@ -107,20 +107,25 @@ const AdminCourses = () => {
                 custom: editingCourse ? (editingCourse.custom || false) : true
             };
 
+            // Keep local storage updated
             try {
-                await setDoc(courseRef, payload, { merge: true });
-            } catch (cloudErr) {
-                console.warn('Cloud save fallback for academic_courses:', cloudErr);
                 const localCourses = JSON.parse(localStorage.getItem('koon_local_academic_courses') || '{}');
                 localCourses[courseId] = payload;
                 localStorage.setItem('koon_local_academic_courses', JSON.stringify(localCourses));
+            } catch (e) {}
+
+            try {
+                await setDoc(courseRef, payload, { merge: true });
+                toast.success(isAr ? 'تم حفظ المادة ونشرها في السحابة بنجاح!' : 'Course saved and published to cloud successfully!');
+            } catch (cloudErr) {
+                console.error('Cloud save fallback for academic_courses:', cloudErr);
+                toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! فشل حفظ السحابة: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud save failed: ${cloudErr?.message || cloudErr}`);
             }
 
-            toast.success(isAr ? 'تم حفظ المادة بنجاح' : 'Course saved successfully');
             setShowModal(false);
         } catch (err) {
             console.error("Error saving course:", err);
-            toast.success(isAr ? 'تم حفظ المادة بنجاح' : 'Course saved successfully');
+            toast.error(isAr ? `خطأ أثناء الحفظ: ${err.message || err}` : `Save error: ${err.message || err}`);
             setShowModal(false);
         }
     };

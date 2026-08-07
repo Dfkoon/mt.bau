@@ -663,7 +663,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       createdAt: new Date().toISOString()
     };
 
-    // Save to localStorage first (guaranteed)
+    // Local cache save as fallback
     try {
       const localSubjects = JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}');
       localSubjects[subId] = payload;
@@ -679,15 +679,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     setSubjectRefreshKey(k => k + 1);
     setSelectedSubjectId(subId);
 
-    toast.success(isAr ? 'تم حفظ المادة بنجاح' : 'Subject saved successfully');
     setShowAddSubjectModal(false);
     setSubjectForm({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
 
-    // Cloud Save in background
+    // Cloud Save to Firestore (awaited)
     try {
       await setDoc(doc(db, 'quiz_subjects', subId), payload);
+      toast.success(isAr ? 'تم حفظ المادة ونشرها في السحابة بنجاح!' : 'Subject saved and published to cloud successfully!');
     } catch (cloudErr) {
-      console.warn('Cloud save fallback for quiz_subjects:', cloudErr?.message || cloudErr);
+      console.error('Cloud save failed for quiz_subjects:', cloudErr);
+      toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم تحفظ بالسحابة بسبب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
     }
   };
 
@@ -736,7 +737,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       createdAt: new Date().toISOString()
     };
 
-    // Save to localStorage first (guaranteed)
+    // Save to localStorage
     try {
       const localParts = JSON.parse(localStorage.getItem('koon_local_quiz_parts') || '{}');
       localParts[partId] = payload;
@@ -751,15 +752,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     });
     setSelectedPartId(partId);
 
-    toast.success(isAr ? ' تم حفظ الجزء بنجاح' : ' Quiz part saved successfully');
     setShowAddPartModal(false);
     setPartForm({ id: '', title: '', titleAr: '', isGroup: false });
 
-    // Cloud save in background
+    // Cloud save to Firestore (awaited)
     try {
       await setDoc(doc(db, 'quiz_parts', partId), payload);
+      toast.success(isAr ? 'تم حفظ الجزء ونشره في السحابة بنجاح!' : 'Quiz part saved and published to cloud successfully!');
     } catch (cloudErr) {
-      console.warn('Cloud save fallback for quiz_parts:', cloudErr?.message || cloudErr);
+      console.error('Cloud save failed for quiz_parts:', cloudErr);
+      toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم يحفظ بالسحابة: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
     }
   };
 
