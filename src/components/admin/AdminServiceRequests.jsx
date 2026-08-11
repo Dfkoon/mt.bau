@@ -14,11 +14,11 @@ const STATUSES = [
 ];
 
 const SERVICE_TYPES = [
-  { id: 'all', label: 'جميع الخدمات' },
-  { id: 'summary', label: '📝 ملخص مادة' },
-  { id: 'quiz', label: '❓ إنشاء أسئلة' },
-  { id: 'idea', label: '💡 اقتراح فكرة' },
-  { id: 'other', label: '🚀 طلب آخر' },
+  { id: 'all', label: 'جميع الدمات' },
+  { id: 'summary', label: '📝 ملص ماد' },
+  { id: 'quiz', label: '❓ إنشاء أسئل' },
+  { id: 'idea', label: '💡 اقتراح فكر' },
+  { id: 'other', label: '🚀 طلب آر' },
 ];
 
 export default function AdminServiceRequests() {
@@ -75,19 +75,19 @@ export default function AdminServiceRequests() {
         const local = JSON.parse(localStorage.getItem('koon_local_service_requests') || '[]');
         const updated = local.map(r => r.id === reqId ? { ...r, status: newStatus } : r);
         localStorage.setItem('koon_local_service_requests', JSON.stringify(updated));
-        toast.success('تم تحديث حالة الطلب');
+        toast.success('تم تحديث حال الطلب');
       } catch (e) {
-        toast.error('فشل تحديث الحالة');
+        toast.error('فشل تحديث الحال');
       }
       return;
     }
 
     try {
       await updateDoc(doc(db, 'service_requests', reqId), { status: newStatus });
-      toast.success('تم تحديث حالة الطلب');
+      toast.success('تم تحديث حال الطلب');
     } catch (err) {
       console.error('Error updating status:', err);
-      toast.success('تم تحديث حالة الطلب محلياً');
+      toast.success('تم تحديث حال الطلب محلياً');
     }
   };
 
@@ -177,7 +177,7 @@ export default function AdminServiceRequests() {
           <div className="asr-stat-icon">🔥</div>
           <div className="asr-stat-info">
             <span className="asr-stat-val">{stats.newCount}</span>
-            <span className="asr-stat-lbl">طلبات جديدة</span>
+            <span className="asr-stat-lbl">طلبات جديد</span>
           </div>
         </div>
 
@@ -193,7 +193,7 @@ export default function AdminServiceRequests() {
           <div className="asr-stat-icon">✅</div>
           <div className="asr-stat-info">
             <span className="asr-stat-val">{stats.completed}</span>
-            <span className="asr-stat-lbl">طلبات مكتملة</span>
+            <span className="asr-stat-lbl">طلبات مكتمل</span>
           </div>
         </div>
       </div>
@@ -205,7 +205,7 @@ export default function AdminServiceRequests() {
           <input
             type="text"
             className="asr-search-input"
-            placeholder="ابحث بالاسم، رقم الهاتـف، المادة، أو العنوان..."
+            placeholder="ابحث بالاسم، رقم الهاتـف، الماد، أو العنوان..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -245,13 +245,13 @@ export default function AdminServiceRequests() {
       {loading ? (
         <div className="asr-loading">
           <div className="asr-spinner"></div>
-          <p>جاري تحميل طلبات الخدمات...</p>
+          <p>جاري تحميل طلبات الدمات...</p>
         </div>
       ) : filteredRequests.length === 0 ? (
         <div className="asr-empty">
           <div className="asr-empty-icon">📭</div>
-          <h3>لا توجد طلبات تطابق الفلترة الحالية</h3>
-          <p>جرّب اختيار فلتر آخر أو البحث باسم أو رقم هاتف آخر.</p>
+          <h3>لا توجد طلبات تطابق الفلتر الحالي</h3>
+          <p>جرّب اتيار فلتر آر أو البحث باسم أو رقم هاتف آر.</p>
         </div>
       ) : (
         <div className="asr-list">
@@ -289,7 +289,7 @@ export default function AdminServiceRequests() {
                 {/* Student Info Bar */}
                 <div className="asr-student-info">
                   <div className="asr-student-detail">
-                    <span className="asr-detail-label">👤 الطالب/ة:</span>
+                    <span className="asr-detail-label">👤 الطالب/:</span>
                     <strong className="asr-detail-val">{req.studentName}</strong>
                   </div>
                   <div className="asr-student-detail">
@@ -314,12 +314,12 @@ export default function AdminServiceRequests() {
                   {req.serviceId === 'summary' && (
                     <>
                       <div className="asr-info-row">
-                        <span className="asr-info-lbl">📚 المادة:</span>
+                        <span className="asr-info-lbl">📚 الماد:</span>
                         <span className="asr-info-txt highlight">{req.subject}</span>
                       </div>
                       {req.materialLink && (
                         <div className="asr-info-row">
-                          <span className="asr-info-lbl">🔗 رابط المادة:</span>
+                          <span className="asr-info-lbl">🔗 رابط الماد:</span>
                           <a href={req.materialLink} target="_blank" rel="noopener noreferrer" className="asr-link" dir="ltr">
                             {req.materialLink}
                           </a>
@@ -332,7 +332,7 @@ export default function AdminServiceRequests() {
                   {req.serviceId === 'quiz' && (
                     <>
                       <div className="asr-info-row">
-                        <span className="asr-info-lbl">📚 المادة:</span>
+                        <span className="asr-info-lbl">📚 الماد:</span>
                         <span className="asr-info-txt highlight">{req.subject}</span>
                       </div>
                       <div className="asr-tags-row">
@@ -350,7 +350,7 @@ export default function AdminServiceRequests() {
                   {req.serviceId === 'idea' && (
                     <>
                       <div className="asr-info-row">
-                        <span className="asr-info-lbl">💡 عنوان الفكرة:</span>
+                        <span className="asr-info-lbl">💡 عنوان الفكر:</span>
                         <strong className="asr-info-txt">{req.ideaTitle}</strong>
                       </div>
                       <div className="asr-info-box">
@@ -359,7 +359,7 @@ export default function AdminServiceRequests() {
                       </div>
                       {req.techStack && (
                         <div className="asr-info-row">
-                          <span className="asr-info-lbl">💻 التقنيات المفضلة:</span>
+                          <span className="asr-info-lbl">💻 التقنيات المفضل:</span>
                           <span className="asr-info-txt">{req.techStack}</span>
                         </div>
                       )}
@@ -383,7 +383,7 @@ export default function AdminServiceRequests() {
                   {/* Additional Notes */}
                   {req.notes && (
                     <div className="asr-notes-box">
-                      <span className="asr-notes-lbl">📌 ملاحظات إضافية من الطالب:</span>
+                      <span className="asr-notes-lbl">📌 ملاحظات إضافي من الطالب:</span>
                       <p className="asr-notes-txt">{req.notes}</p>
                     </div>
                   )}

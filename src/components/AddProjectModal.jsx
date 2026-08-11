@@ -24,7 +24,7 @@ const AddProjectModal = ({ onClose }) => {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                toast.error(language === 'ar' ? 'حجم الصورة كبير جداً' : 'Image size is too large');
+                toast.error(language === 'ar' ? 'حجم الصور كبير جداً' : 'Image size is too large');
                 return;
             }
             setFormData(prev => ({ ...prev, imageFile: file }));
@@ -39,7 +39,7 @@ const AddProjectModal = ({ onClose }) => {
         e.preventDefault();
 
         if (!formData.name || !formData.description) {
-            toast.error(language === 'ar' ? 'يرجى تعبئة الحقول المطلوبة' : 'Please fill required fields');
+            toast.error(language === 'ar' ? 'يرجى تعبئ الحقول المطلوب' : 'Please fill required fields');
             return;
         }
 
@@ -50,7 +50,7 @@ const AddProjectModal = ({ onClose }) => {
             toast.success(t('student.projects.success'));
             setTimeout(onClose, 2000);
         } else {
-            toast.error(language === 'ar' ? 'حدث خطأ أثناء الإرسال' : 'Error submitting project');
+            toast.error(language === 'ar' ? 'حدث طأ أثناء الإرسال' : 'Error submitting project');
             setIsSubmitting(false);
         }
     };
@@ -106,7 +106,7 @@ const AddProjectModal = ({ onClose }) => {
                             ) : (
                                 <>
                                     <span className="file-upload-icon">📷</span>
-                                    <span>{language === 'ar' ? 'اضغط لرفع صورة' : 'Click to upload image'}</span>
+                                    <span>{language === 'ar' ? 'اضغط لرفع صور' : 'Click to upload image'}</span>
                                 </>
                             )}
                             <input

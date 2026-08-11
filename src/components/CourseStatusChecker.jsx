@@ -60,7 +60,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
         e.preventDefault();
 
         if (!phoneNumber.trim()) {
-            toast.error(isAr ? 'الرجاء إدخال رقم الهاتف' : 'Please enter your phone number');
+            toast.error(isAr ? 'الرجاء إدال رقم الهاتف' : 'Please enter your phone number');
             return;
         }
 
@@ -78,11 +78,11 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
             setDonationResults(donationsRes.success ? donationsRes.data : []);
 
             if (!bookingsRes.success && !donationsRes.success) {
-                toast.error(isAr ? 'خطأ في البحث' : 'Error searching');
+                toast.error(isAr ? 'طأ في البحث' : 'Error searching');
             }
         } catch (error) {
             console.error('Search error:', error);
-            toast.error(isAr ? 'حدث خطأ أثناء البحث' : 'An error occurred during search');
+            toast.error(isAr ? 'حدث طأ أثناء البحث' : 'An error occurred during search');
         } finally {
             setLoading(false);
         }
@@ -124,13 +124,13 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                 {booking.faculty && (
                     <div className="detail-item">
-                        <span className="label">🏛️ {isAr ? 'الكلية' : 'Faculty'}</span>
+                        <span className="label">🏛️ {isAr ? 'الكلي' : 'Faculty'}</span>
                         <span className="value">{booking.faculty}</span>
                     </div>
                 )}
 
                 <div className="detail-item">
-                    <span className="label">📅 {isAr ? 'تاريخ الطلب' : 'Submitted Date'}</span>
+                    <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted Date'}</span>
                     <span className="value">
                         {booking.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                     </span>
@@ -138,7 +138,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                 {booking.approvedAt && (
                     <div className="detail-item">
-                        <span className="label">✔️ {isAr ? 'تاريخ الموافقة' : 'Approval Date'}</span>
+                        <span className="label">✔️ {isAr ? 'تاري الموافق' : 'Approval Date'}</span>
                         <span className="value">
                             {booking.approvedAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                         </span>
@@ -168,7 +168,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
         return (
             <div className="status-card">
                 <div className="status-header">
-                    <h3>{courseNamesText ? courseNamesText : isAr ? 'مواد متعددة' : 'Multiple Courses'}</h3>
+                    <h3>{courseNamesText ? courseNamesText : isAr ? 'مواد متعدد' : 'Multiple Courses'}</h3>
                     <span
                         className="status-badge"
                         style={{ backgroundColor: getStatusColor(donation.status) }}
@@ -187,13 +187,13 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                     {donation.faculty && (
                         <div className="detail-item">
-                            <span className="label">🏛️ {isAr ? 'الكلية' : 'Faculty'}</span>
+                            <span className="label">🏛️ {isAr ? 'الكلي' : 'Faculty'}</span>
                             <span className="value">{donation.faculty}</span>
                         </div>
                     )}
 
                     <div className="detail-item">
-                        <span className="label">📅 {isAr ? 'تاريخ الطلب' : 'Submitted Date'}</span>
+                        <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted Date'}</span>
                         <span className="value">
                             {donation.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                         </span>
@@ -201,7 +201,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                     {donation.resourcesOffered && donation.resourcesOffered.length > 0 && (
                         <div className="detail-item">
-                            <span className="label">📦 {isAr ? 'الموارد المقدمة' : 'Resources Offered'}</span>
+                            <span className="label">📦 {isAr ? 'الموارد المقدم' : 'Resources Offered'}</span>
                             <span className="value">
                                 {donation.resourcesOffered.join(', ')}
                             </span>
@@ -210,7 +210,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                     {donation.approvedAt && (
                         <div className="detail-item">
-                            <span className="label">✔️ {isAr ? 'تاريخ الموافقة' : 'Approval Date'}</span>
+                            <span className="label">✔️ {isAr ? 'تاري الموافق' : 'Approval Date'}</span>
                             <span className="value">
                                 {donation.approvedAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                             </span>
@@ -246,10 +246,10 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
                 <button className="close-modal" onClick={onClose}>×</button>
 
                 <div className="modal-header">
-                    <h2>📊 {isAr ? 'فحص حالة المقررات' : 'Course Status Checker'}</h2>
+                    <h2>📊 {isAr ? 'فحص حال المقررات' : 'Course Status Checker'}</h2>
                     <p>
                         {isAr
-                            ? 'تحقق من حالة الموافقة على مقرراتك المحجوزة والمتبرع بها'
+                            ? 'تحقق من حال الموافق على مقرراتك المحجوز والمتبرع بها'
                             : 'Check the approval status of your booked and donated courses'}
                     </p>
                 </div>
@@ -269,7 +269,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
                         </div>
 
                         <div className="form-group">
-                            <label>👤 {isAr ? 'اسمك الكامل (اختياري)' : 'Full Name (Optional)'}</label>
+                            <label>👤 {isAr ? 'اسمك الكامل (اتياري)' : 'Full Name (Optional)'}</label>
                             <input
                                 type="text"
                                 placeholder={isAr ? 'أحمد محمد' : 'Ahmed Mohammed'}

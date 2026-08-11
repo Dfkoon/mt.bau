@@ -31,7 +31,7 @@ const StudyMaterials = () => {
     useEffect(() => {
         const unsub = onSnapshot(collection(db, 'academic_courses'), (snap) => {
             const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            
+
             const newData = {};
             Object.keys(coursesData).forEach(catId => {
                 newData[catId] = [...coursesData[catId]];
@@ -193,7 +193,10 @@ const StudyMaterials = () => {
 
     return (
         <div className="study-materials-page">
-            <section className="materials-hero" style={{ backgroundImage: `url(${import.meta.env.BASE_URL}${faculty.bg})` }}>
+            <section
+                className="materials-hero"
+                style={{ backgroundImage: `url(${import.meta.env.BASE_URL}${faculty.bg.replace(/^\//, '')})` }}
+            >
                 <div className="hero-overlay"></div>
                 <div className="hero-content">
                     <h1 className="hero-title">{language === 'ar' ? faculty.name : faculty.nameEn}</h1>
@@ -213,7 +216,7 @@ const StudyMaterials = () => {
                 <div className="specialization-switcher fade-in">
                     <div className="major-selection-alert fade-in">
                         <div className="alert-icon">💡</div>
-                        <div className="alert-text">{language === 'ar' ? 'يرجى اختيار تخصصك أولاً' : 'Please select your major first'}</div>
+                        <div className="alert-text">{language === 'ar' ? 'يرجى اتيار تصصك أولاً' : 'Please select your major first'}</div>
                     </div>
                     <div className="spec-options-grid">
                         {faculty.specializations.map(spec => (
@@ -427,7 +430,7 @@ const StudyMaterials = () => {
                                     <h3>{language === 'ar' ? 'ساهم في إثراء محتوى مكانك ✨' : 'Share & Enrich Makanak Content ✨'}</h3>
                                     <p>
                                         {language === 'ar'
-                                            ? 'نرحب بمساهماتكم سواء كانت أسئلة سنوات، كويزات، ملخصات، أو روابط مفيدة. ساعد زملائك وكن جزءاً من مسيرة الخير.'
+                                            ? 'نرحب بمساهماتكم سواء كانت أسئل سنوات، كويزات، ملصات، أو روابط مفيد. ساعد زملائك وكن جزءاً من مسير الير.'
                                             : 'We welcome your contributions! Share past papers, quizzes, summaries, or helpful links to benefit all students.'}
                                     </p>
                                 </div>
@@ -446,7 +449,7 @@ const StudyMaterials = () => {
                                         <span className="pill-text">WhatsApp</span>
                                     </a>
                                     <Link to="/#suggestions" className="cta-pill suggestions-lite">
-                                        <span className="pill-icon">📩</span>
+                                        <span className="pill-icon"></span>
                                         <span className="pill-text">{language === 'ar' ? 'الاقتراحات' : 'Suggestions'}</span>
                                     </Link>
                                 </div>
@@ -457,14 +460,14 @@ const StudyMaterials = () => {
 
                 {/* Link to Academic Plans */}
                 <div className="info-banner glass-card" style={{ marginTop: '2rem' }}>
-                    <h3>{language === 'ar' ? 'ملاحظة هامة' : 'Important Note'}</h3>
+                    <h3>{language === 'ar' ? 'ملاحظ هام' : 'Important Note'}</h3>
                     <p>
                         {language === 'ar'
-                            ? 'إذا كنت تبحث عن الخطط الدراسية الشجرية المعتمدة (2025)، يمكنك العثور عليها في صفحة الخطط الدراسية.'
+                            ? 'إذا كنت تبحث عن الطط الدراسي الشجري المعتمد (2025)، يمكنك العثور عليها في صفح الطط الدراسي.'
                             : 'If you are looking for the approved academic tree plans (2025), you can find them in the Academic Plans page.'}
                     </p>
                     <Link to="/plans" className="btn-primary" style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none' }}>
-                        {language === 'ar' ? 'انتقل إلى الخطط الدراسية' : 'Go to Academic Plans'}
+                        {language === 'ar' ? 'انتقل إلى الطط الدراسي' : 'Go to Academic Plans'}
                     </Link>
                 </div>
 

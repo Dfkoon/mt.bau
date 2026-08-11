@@ -151,6 +151,11 @@
 /* Action buttons */
 .nb-actions {
     margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .nb-btn-dismiss {
@@ -164,6 +169,22 @@
     cursor: pointer;
     transition: opacity 0.2s, transform 0.15s;
     white-space: nowrap;
+}
+
+.nb-btn-skip {
+    background: transparent;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    padding: 9px 18px;
+    border-radius: 50px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.nb-btn-skip:hover {
+    background: #f1f5f9;
 }
 
 .nb-btn-dismiss:hover {

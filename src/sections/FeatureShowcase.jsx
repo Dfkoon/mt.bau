@@ -94,7 +94,7 @@ const FeatureShowcase = () => {
             id: 'faq',
             title: t('nav.faq'), // "FAQ"
             desc: t('services.subtitle'), // Generic or add specific? Re-using generic for now or custom text
-            customDesc: isAr ? 'إجابات على جميع الأسئلة الشائعة التي قد تخطر ببالك حول الجامعة والدراسة.' : 'Answers to all common questions you might have about university and studies.',
+            customDesc: isAr ? 'إجابات على جميع الأسئل الشائع التي قد تطر ببالك حول الجامع والدراس.' : 'Answers to all common questions you might have about university and studies.',
             link: '/faq',
             image: newsHero, // Using News Hero as generic "Info" graphic
             icon: '❓',
@@ -133,7 +133,7 @@ const FeatureShowcase = () => {
                         </Link>
                     </div>
 
-                    {/* feature-visual مخفي مؤقتاً */}
+                    {/* feature-visual مفي مؤقتاً */}
 
                 </div>
             ))}

@@ -65,7 +65,7 @@ const CourseDifficultyRater = ({ courseId, courseName }) => {
     return (
         <div className="difficulty-rater-wrapper">
             <div className="difficulty-rater-label">
-                {isAr ? '⚡ صعوبة المادة:' : '⚡ Course Difficulty:'}
+                {isAr ? '⚡ صعوب الماد:' : '⚡ Course Difficulty:'}
             </div>
             <div className="difficulty-emojis">
                 {LEVELS.map(level => (

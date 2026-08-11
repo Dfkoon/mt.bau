@@ -4,24 +4,24 @@ import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const PATH_LABELS = {
-    '/': 'الرئيسية',
-    '/materials': 'المواد الدراسية',
-    '/plans': 'الخطط الدراسية',
-    '/quiz': 'الاختبارات',
+    '/': 'الرئيسي',
+    '/materials': 'المواد الدراسي',
+    '/plans': 'الطط الدراسي',
+    '/quiz': 'الاتبارات',
     '/calendar': 'التقويم الأكاديمي',
     '/grading': 'حساب المعدل والدرجات',
     '/exchange': 'سوق تبادل المواد',
     '/about': 'من نحن',
-    '/faq': 'الأسئلة الشائعة',
-    '/materials/click': 'مواد دراسية (تحميل)',
-    '/quiz/complete': 'اختبار (إتمام)',
+    '/faq': 'الأسئل الشائع',
+    '/materials/click': 'مواد دراسي (تحميل)',
+    '/quiz/complete': 'اتبار (إتمام)',
 };
 
 const getPathLabel = (path, lang) => {
     if (!path) return '—';
     if (lang === 'ar') {
         if (PATH_LABELS[path]) return PATH_LABELS[path];
-        if (path.startsWith('/quiz/')) return `اختبار: ${path.replace('/quiz/', '')}`;
+        if (path.startsWith('/quiz/')) return `اتبار: ${path.replace('/quiz/', '')}`;
         return path;
     }
     const en = {
@@ -62,9 +62,9 @@ const getRelativeTime = (d, lang) => {
 const TypeBadge = ({ type, lang }) => {
     const isAr = lang === 'ar';
     const map = {
-        visit: { label: isAr ? 'زيارة صفحة' : 'Page Visit', icon: '🌐', cls: 'log-badge-visit' },
-        material_view: { label: isAr ? 'مادة دراسية' : 'Study Material', icon: '📂', cls: 'log-badge-material' },
-        quiz_completed: { label: isAr ? 'إتمام اختبار' : 'Quiz Result', icon: '🎯', cls: 'log-badge-quiz' },
+        visit: { label: isAr ? 'زيار صفح' : 'Page Visit', icon: '🌐', cls: 'log-badge-visit' },
+        material_view: { label: isAr ? 'ماد دراسي' : 'Study Material', icon: '📂', cls: 'log-badge-material' },
+        quiz_completed: { label: isAr ? 'إتمام اتبار' : 'Quiz Result', icon: '🎯', cls: 'log-badge-quiz' },
         download: { label: isAr ? 'تنزيل ملف' : 'Download', icon: '📥', cls: 'log-badge-download' },
     };
     const b = map[type] || { label: type, icon: '⚡', cls: 'log-badge-visit' };
@@ -170,7 +170,7 @@ const AdminActivityLog = () => {
             <div className="admin-loading-container" style={{ padding: '4rem 1rem', textAlign: 'center' }}>
                 <div className="admin-spinner" style={{ margin: '0 auto 1rem' }} />
                 <p style={{ color: 'var(--adm-muted)', fontWeight: 600 }}>
-                    {isAr ? 'جارٍ تحميل سجل التفاعلات والأنشطة...' : 'Loading activity log...'}
+                    {isAr ? 'جارٍ تحميل سجل التفاعلات والأنشط...' : 'Loading activity log...'}
                 </p>
             </div>
         );
@@ -183,11 +183,11 @@ const AdminActivityLog = () => {
             <div className="log-header-title-bar">
                 <div>
                     <h3 className="admin-section-title" style={{ margin: 0 }}>
-                        📋 <span>{isAr ? 'سجل الطلاب والأنشطة' : 'Student Activity Log'}</span>
+                        📋 <span>{isAr ? 'سجل الطلاب والأنشط' : 'Student Activity Log'}</span>
                     </h3>
                     <p className="log-subtitle">
                         {isAr
-                            ? 'متابعة تفاعلات الطلاب، زيارات الصفحات، ونتائج الاختبارات مباشرة'
+                            ? 'متابع تفاعلات الطلاب، زيارات الصفحات، ونتائج الاتبارات مباشر'
                             : 'Real-time overview of student page visits, quizzes, and downloads'}
                     </p>
                 </div>
@@ -199,7 +199,7 @@ const AdminActivityLog = () => {
                     <div className="stat-card-icon" style={{ background: 'rgba(139,92,246,0.15)', color: '#c4b5fd' }}>📊</div>
                     <div className="stat-card-data">
                         <span className="stat-card-value">{stats.total}</span>
-                        <span className="stat-card-label">{isAr ? 'إجمالي الأنشطة' : 'Total Activities'}</span>
+                        <span className="stat-card-label">{isAr ? 'إجمالي الأنشط' : 'Total Activities'}</span>
                     </div>
                 </div>
                 <div className="log-stat-card">
@@ -213,7 +213,7 @@ const AdminActivityLog = () => {
                     <div className="stat-card-icon" style={{ background: 'rgba(16,185,129,0.15)', color: '#6ee7b7' }}>🎯</div>
                     <div className="stat-card-data">
                         <span className="stat-card-value">{stats.quizzes}</span>
-                        <span className="stat-card-label">{isAr ? 'اختبارات مكتملة' : 'Quizzes Completed'}</span>
+                        <span className="stat-card-label">{isAr ? 'اتبارات مكتمل' : 'Quizzes Completed'}</span>
                     </div>
                 </div>
                 <div className="log-stat-card">
@@ -231,7 +231,7 @@ const AdminActivityLog = () => {
                     <span className="search-icon">🔍</span>
                     <input
                         type="text"
-                        placeholder={isAr ? 'ابحث باسم الطالب، رقم الهاتف، اسم المادة...' : 'Search student, phone, or course...'}
+                        placeholder={isAr ? 'ابحث باسم الطالب، رقم الهاتف، اسم الماد...' : 'Search student, phone, or course...'}
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         className="log-search-input"
@@ -241,10 +241,10 @@ const AdminActivityLog = () => {
                 <div className="log-filter-box">
                     <label className="filter-label">{isAr ? 'نوع النشاط:' : 'Type:'}</label>
                     <select className="log-select-input" value={filterType} onChange={e => setFilterType(e.target.value)}>
-                        <option value="all">{isAr ? '⚡ كل الأنشطة' : 'All Activities'}</option>
+                        <option value="all">{isAr ? '⚡ كل الأنشط' : 'All Activities'}</option>
                         <option value="visit">{isAr ? '🌐 زيارات الصفحات' : 'Page Visits'}</option>
-                        <option value="quiz_completed">{isAr ? '🎯 نتائج الاختبارات' : 'Quiz Completions'}</option>
-                        <option value="material_view">{isAr ? '📂 فتح المواد الدراسية' : 'Study Materials'}</option>
+                        <option value="quiz_completed">{isAr ? '🎯 نتائج الاتبارات' : 'Quiz Completions'}</option>
+                        <option value="material_view">{isAr ? '📂 فتح المواد الدراسي' : 'Study Materials'}</option>
                     </select>
                 </div>
             </div>
@@ -255,9 +255,9 @@ const AdminActivityLog = () => {
                     <thead>
                         <tr>
                             <th style={{ width: '130px' }}>{isAr ? 'النوع' : 'Type'}</th>
-                            <th style={{ minWidth: '180px' }}>{isAr ? 'المستخدم/الطالب' : 'Student'}</th>
+                            <th style={{ minWidth: '180px' }}>{isAr ? 'المستدم/الطالب' : 'Student'}</th>
                             <th>{isAr ? 'تفاصيل النشاط' : 'Activity Details'}</th>
-                            <th style={{ width: '190px' }}>{isAr ? 'التاريخ والتوقيت' : 'Date & Time'}</th>
+                            <th style={{ width: '190px' }}>{isAr ? 'التاري والتوقيت' : 'Date & Time'}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -265,7 +265,7 @@ const AdminActivityLog = () => {
                             <tr>
                                 <td colSpan={4} className="log-empty-state">
                                     <div className="empty-icon">🔍</div>
-                                    <p>{isAr ? 'لا توجد سجلات مطابقة للبحث' : 'No matching logs found'}</p>
+                                    <p>{isAr ? 'لا توجد سجلات مطابق للبحث' : 'No matching logs found'}</p>
                                 </td>
                             </tr>
                         ) : paginatedLogs.map(v => {
@@ -304,7 +304,7 @@ const AdminActivityLog = () => {
                                         {/* PAGE VISIT */}
                                         {v.type === 'visit' && (
                                             <div className="detail-item visit-detail">
-                                                <span className="detail-label">{isAr ? 'زار صفحة:' : 'Visited:'}</span>
+                                                <span className="detail-label">{isAr ? 'زار صفح:' : 'Visited:'}</span>
                                                 <span className="detail-tag">{getPathLabel(v.path, language)}</span>
                                             </div>
                                         )}
@@ -320,7 +320,7 @@ const AdminActivityLog = () => {
                                                             fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.04em',
                                                             color: 'var(--adm-muted)', textTransform: 'uppercase',
                                                         }}>
-                                                            {isAr ? 'المادة:' : 'Course:'}
+                                                            {isAr ? 'الماد:' : 'Course:'}
                                                         </span>
                                                         <span style={{
                                                             background: 'rgba(99,102,241,0.14)', color: '#a5b4fc',
@@ -352,7 +352,7 @@ const AdminActivityLog = () => {
                                                         fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.04em',
                                                         color: 'var(--adm-muted)', textTransform: 'uppercase',
                                                     }}>
-                                                        {isAr ? 'النتيجة:' : 'Score:'}
+                                                        {isAr ? 'النتيج:' : 'Score:'}
                                                     </span>
                                                     <ScorePill scoreStr={v.score} />
                                                 </div>
@@ -372,7 +372,7 @@ const AdminActivityLog = () => {
                                                                 transition: 'background 0.18s',
                                                             }}
                                                         >
-                                                            ❌ {wrongQs.length} {isAr ? 'إجابة خاطئة' : 'wrong answers'}
+                                                            ❌ {wrongQs.length} {isAr ? 'إجاب اطئ' : 'wrong answers'}
                                                             <span style={{ fontSize: '0.65rem' }}>{isWrongExpanded ? '▲' : '▼'}</span>
                                                         </button>
 
@@ -417,7 +417,7 @@ const AdminActivityLog = () => {
                                                         border: '1px solid rgba(16,185,129,0.25)',
                                                         borderRadius: '7px', padding: '0.15rem 0.55rem',
                                                     }}>
-                                                        ✅ {isAr ? 'جميع الإجابات صحيحة' : 'All answers correct'}
+                                                        ✅ {isAr ? 'جميع الإجابات صحيح' : 'All answers correct'}
                                                     </span>
                                                 )}
                                             </div>

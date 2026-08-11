@@ -67,7 +67,7 @@ const AcademicPlans = () => {
         },
         {
             id: 'old-5',
-            name: 'تحقيقات جنائية رقمية',
+            name: 'تحقيقات جنائي رقمي',
             nameEn: 'Digital Forensics',
             icon: '🔍',
             image: forensicsTree,
@@ -98,7 +98,7 @@ const AcademicPlans = () => {
         },
         {
             id: 'new-3',
-            name: 'التحقيقات الجنائية الرقمية',
+            name: 'التحقيقات الجنائي الرقمي',
             nameEn: 'Digital Forensics',
             icon: '🔍',
             image: digitalForensicsNew,
@@ -129,7 +129,7 @@ const AcademicPlans = () => {
 
     const openModal = (plan) => {
         if (plan.status === 'construction') {
-            toast(language === 'ar' ? 'نعمل حالياً على تحديث هذه الخطة 🛠️' : 'We are currently updating this plan 🛠️', {
+            toast(language === 'ar' ? 'نعمل حالياً على تحديث هذه الط 🛠️' : 'We are currently updating this plan 🛠️', {
                 icon: '🚧',
                 style: {
                     borderRadius: '10px',
@@ -164,14 +164,14 @@ const AcademicPlans = () => {
                     onClick={() => setPlanType('new')}
                 >
                     <span className="toggle-icon">✨</span>
-                    {language === 'ar' ? 'الخطط الجديدة (2025)' : 'New Plans (2025)'}
+                    {language === 'ar' ? 'الطط الجديد (2025)' : 'New Plans (2025)'}
                 </button>
                 <button
                     className={`toggle-btn ${planType === 'old' ? 'active' : ''}`}
                     onClick={() => setPlanType('old')}
                 >
                     <span className="toggle-icon">📜</span>
-                    {language === 'ar' ? 'الخطط القديمة' : 'Old Plans'}
+                    {language === 'ar' ? 'الطط القديم' : 'Old Plans'}
                 </button>
             </div>
 
@@ -179,12 +179,12 @@ const AcademicPlans = () => {
             <div className="plans-container">
                 <div className="section-header">
                     <h2>
-                        {planType === 'new' ? (language === 'ar' ? 'الخطط الشجرية الحديثة' : 'Modern Tree Plans') : (language === 'ar' ? 'الخطط الدراسية السابقة' : 'Previous Academic Plans')}
+                        {planType === 'new' ? (language === 'ar' ? 'الطط الشجري الحديث' : 'Modern Tree Plans') : (language === 'ar' ? 'الطط الدراسي السابق' : 'Previous Academic Plans')}
                     </h2>
                     <p>
                         {planType === 'new'
-                            ? (language === 'ar' ? 'هذه هي الخطط المعتمدة للعام الدراسي 2025/2026' : 'These are the approved plans for the 2025/2026 academic year')
-                            : (language === 'ar' ? 'هذه الخطط للطلاب المقبولين في الأعوام السابقة' : 'These plans are for students admitted in previous years')}
+                            ? (language === 'ar' ? 'هذه هي الطط المعتمد للعام الدراسي 2025/2026' : 'These are the approved plans for the 2025/2026 academic year')
+                            : (language === 'ar' ? 'هذه الطط للطلاب المقبولين في الأعوام السابق' : 'These plans are for students admitted in previous years')}
                     </p>
                 </div>
 
@@ -277,7 +277,7 @@ const AcademicPlans = () => {
                                         className="pdf-btn"
                                         onClick={(e) => e.stopPropagation()}
                                     >
-                                        📄 {language === 'ar' ? 'الخطة التفصيلية (PDF)' : 'Detailed Plan (PDF)'}
+                                        📄 {language === 'ar' ? 'الط التفصيلي (PDF)' : 'Detailed Plan (PDF)'}
                                     </a>
                                 )}
                             </div>

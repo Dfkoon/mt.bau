@@ -28,7 +28,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
 
     const handleSearch = () => {
         if (!phoneInput.trim()) {
-            alert(isAr ? 'الرجاء إدخال رقم الهاتف' : 'Please enter your phone number');
+            alert(isAr ? 'الرجاء إدال رقم الهاتف' : 'Please enter your phone number');
             return;
         }
 
@@ -68,10 +68,10 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                 <button className="close-modal" onClick={onClose}>×</button>
 
                 <div className="modal-header">
-                    <h2>📊 {isAr ? 'متابعة طلباتك' : 'Track Your Requests'}</h2>
+                    <h2>📊 {isAr ? 'متابع طلباتك' : 'Track Your Requests'}</h2>
                     <p>
                         {isAr
-                            ? 'تتبع حالة تبرعاتك والمواد المحجوزة'
+                            ? 'تتبع حال تبرعاتك والمواد المحجوز'
                             : 'Monitor your donations and booked materials'}
                     </p>
                 </div>
@@ -94,7 +94,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                             />
                             <small style={{ opacity: 0.7, marginTop: '4px', display: 'block' }}>
                                 {isAr
-                                    ? 'الرقم المستخدم عند التبرع أو الحجز'
+                                    ? 'الرقم المستدم عند التبرع أو الحجز'
                                     : 'The phone number used during donation or booking'}
                             </small>
                         </div>
@@ -116,7 +116,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                 marginTop: '12px'
                             }}>
                                 <p style={{ margin: '0 0 8px 0', fontSize: '0.9em', opacity: 0.8 }}>
-                                    {isAr ? '📌 البيانات المحفوظة:' : '📌 Saved Profile:'}
+                                    {isAr ? '📌 البيانات المحفوظ:' : '📌 Saved Profile:'}
                                 </p>
                                 <p style={{ margin: '0', fontWeight: '600' }}>
                                     {savedProfile.name} - {savedProfile.phone}
@@ -131,7 +131,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                     <>
                         <div className="tracker-results-header">
                             <p style={{ marginBottom: '12px' }}>
-                                {isAr ? 'البيانات المتعلقة برقم:' : 'Data for:'} <strong>{searchResults.phone}</strong>
+                                {isAr ? 'البيانات المتعلق برقم:' : 'Data for:'} <strong>{searchResults.phone}</strong>
                             </p>
                             <button
                                 className="link-button"
@@ -199,7 +199,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                                         ))}
                                                     </p>
                                                     <p style={{ fontSize: '0.85em', opacity: 0.7 }}>
-                                                        <strong>{isAr ? 'التاريخ:' : 'Date:'}</strong>{' '}
+                                                        <strong>{isAr ? 'التاري:' : 'Date:'}</strong>{' '}
                                                         {new Date(donation.submittedAt).toLocaleDateString(
                                                             isAr ? 'ar-JO' : 'en-US'
                                                         )}
@@ -207,7 +207,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                                 </div>
                                                 <div className="tracker-item-note">
                                                     {isAr
-                                                        ? '💡 ستتم مراجعة تبرعك من قبل المنسقين. سيصلك إشعار عند تفعيل طلبك.'
+                                                        ? '💡 ستتم مراجع تبرعك من قبل المنسقين. سيصلك إشعار عند تفعيل طلبك.'
                                                         : '💡 Your donation will be reviewed by coordinators. You will receive a notification when approved.'}
                                                 </div>
                                             </div>
@@ -246,13 +246,13 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                                         <strong>{isAr ? 'الهاتف:' : 'Phone:'}</strong> {booking.phoneNumber}
                                                     </p>
                                                     <p>
-                                                        <strong>{isAr ? 'المادة المحجوزة:' : 'Booked Material:'}</strong> {booking.materialName}
+                                                        <strong>{isAr ? 'الماد المحجوز:' : 'Booked Material:'}</strong> {booking.materialName}
                                                     </p>
                                                     <p>
                                                         <strong>{isAr ? 'المتبرع:' : 'Donor:'}</strong> {booking.donorName} ({booking.donorPhone})
                                                     </p>
                                                     <p style={{ fontSize: '0.85em', opacity: 0.7 }}>
-                                                        <strong>{isAr ? 'التاريخ:' : 'Date:'}</strong>{' '}
+                                                        <strong>{isAr ? 'التاري:' : 'Date:'}</strong>{' '}
                                                         {new Date(booking.bookedAt).toLocaleDateString(
                                                             isAr ? 'ar-JO' : 'en-US'
                                                         )}

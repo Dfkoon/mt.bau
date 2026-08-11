@@ -19,7 +19,7 @@ const PrintableDatabaseTable = ({
 
         <div className="print-actions no-print">
           <button type="button" className="btn-primary print-button" onClick={() => window.print()}>
-            طباعة
+            طباع
           </button>
         </div>
       </div>
@@ -47,7 +47,7 @@ const PrintableDatabaseTable = ({
             ) : (
               <tr>
                 <td className="empty-row" colSpan={columns.length || 1}>
-                  لا توجد بيانات للطباعة
+                  لا توجد بيانات للطباع
                 </td>
               </tr>
             )}

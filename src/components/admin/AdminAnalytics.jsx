@@ -5,17 +5,17 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import './AdminAnalytics.css';
 
 const PATH_LABELS = {
-  '/': 'الرئيسية',
-  '/materials': 'المواد الدراسية',
-  '/plans': 'الخطط الدراسية',
-  '/quiz': 'بنك الأسئلة',
+  '/': 'الرئيسي',
+  '/materials': 'المواد الدراسي',
+  '/plans': 'الطط الدراسي',
+  '/quiz': 'بنك الأسئل',
   '/calendar': 'التقويم الجامعي',
   '/grading': 'حساب المعدل',
   '/exchange': 'تبادل المواد',
   '/about': 'من نحن',
-  '/faq': 'الأسئلة الشائعة',
-  '/materials/click': 'تحميل مادة',
-  '/quiz/complete': 'إتمام اختبار',
+  '/faq': 'الأسئل الشائع',
+  '/materials/click': 'تحميل ماد',
+  '/quiz/complete': 'إتمام اتبار',
 };
 
 const getPathLabel = (path, lang) => {
@@ -121,7 +121,7 @@ export default function AdminAnalytics() {
   const sortedStarItems = useMemo(() => {
     const map = {};
     starRatings.forEach(r => {
-      const key = r.itemTitle || r.itemId || 'مادة بدون عنوان';
+      const key = r.itemTitle || r.itemId || 'ماد بدون عنوان';
       if (!map[key]) map[key] = { sum: 0, count: 0 };
       map[key].sum += r.rating;
       map[key].count += 1;
@@ -137,7 +137,7 @@ export default function AdminAnalytics() {
       ...pageViews.slice(0, 15).map(v => ({
         id: `pv-${v.id}`,
         type: v.type === 'material_view' ? 'material' : v.type === 'quiz_completed' ? 'quiz' : 'visit',
-        title: v.type === 'material_view' ? `فتح مادة: ${v.courseName || 'مادة دراسية'}` : v.type === 'quiz_completed' ? `إتمام اختبار: ${v.quizTitle || 'اختبار'}` : `زيارة صفحة: ${getPathLabel(v.path, language)}`,
+        title: v.type === 'material_view' ? `فتح ماد: ${v.courseName || 'ماد دراسي'}` : v.type === 'quiz_completed' ? `إتمام اتبار: ${v.quizTitle || 'اتبار'}` : `زيار صفح: ${getPathLabel(v.path, language)}`,
         timestamp: v.timestamp,
         icon: v.type === 'material_view' ? '📂' : v.type === 'quiz_completed' ? '🎯' : '🌐',
         color: v.type === 'material_view' ? '#ec4899' : v.type === 'quiz_completed' ? '#3b82f6' : '#8b5cf6',
@@ -145,7 +145,7 @@ export default function AdminAnalytics() {
       ...serviceReqs.slice(0, 10).map(r => ({
         id: `sr-${r.id}`,
         type: 'request',
-        title: `طلب خدمة: ${r.serviceLabel} من ${r.studentName}`,
+        title: `طلب دم: ${r.serviceLabel} من ${r.studentName}`,
         timestamp: r.createdAt,
         icon: '🛠️',
         color: '#f97316',
@@ -153,7 +153,7 @@ export default function AdminAnalytics() {
       ...ratings.slice(0, 10).map(r => ({
         id: `rat-${r.id}`,
         type: 'rating',
-        title: `تقييم مادة: ${r.itemTitle || 'مادة'} (${r.rating} نجوم)`,
+        title: `تقييم ماد: ${r.itemTitle || 'ماد'} (${r.rating} نجوم)`,
         timestamp: r.timestamp,
         icon: '⭐',
         color: '#eab308',
@@ -173,9 +173,9 @@ export default function AdminAnalytics() {
     const timeMs = ts.seconds ? ts.seconds * 1000 : new Date(ts).getTime();
     const diffMin = Math.floor((Date.now() - timeMs) / (1000 * 60));
     if (diffMin < 1) return 'الآن';
-    if (diffMin < 60) return `منذ ${diffMin} دقيقة`;
+    if (diffMin < 60) return `منذ ${diffMin} دقيق`;
     const diffHours = Math.floor(diffMin / 60);
-    if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+    if (diffHours < 24) return `منذ ${diffHours} ساع`;
     const diffDays = Math.floor(diffHours / 24);
     return `منذ ${diffDays} يوم`;
   };
@@ -190,7 +190,7 @@ export default function AdminAnalytics() {
     return (
       <div className="anv-loading">
         <div className="anv-spinner" />
-        <p>جاري تحميل تحليلات مكانك الاحترافية...</p>
+        <p>جاري تحميل تحليلات مكانك الاحترافي...</p>
       </div>
     );
   }
@@ -205,8 +205,8 @@ export default function AdminAnalytics() {
       {/* ── Top Dashboard Bar ── */}
       <div className="anv-top-bar">
         <div className="anv-top-title-group">
-          <h2 className="anv-top-title">لوحة التحليلات والإحصائيات</h2>
-          <p className="anv-top-subtitle">متابعة شاملة لزيارات الطلاب، التفاعلات، تنزيل المواد، وطلبات الخدمات</p>
+          <h2 className="anv-top-title">لوح التحليلات والإحصائيات</h2>
+          <p className="anv-top-subtitle">متابع شامل لزيارات الطلاب، التفاعلات، تنزيل المواد، وطلبات الدمات</p>
         </div>
 
         {/* Time Period Selector */}
@@ -235,12 +235,12 @@ export default function AdminAnalytics() {
         <div className="anv-card anv-chart-card">
           <div className="anv-chart-card-header">
             <div>
-              <span className="anv-card-sub">إجمالي الأنشطة والتفاعلات</span>
+              <span className="anv-card-sub">إجمالي الأنشط والتفاعلات</span>
               <h3 className="anv-big-metric">{(totalEventsSum).toLocaleString('ar-JO')} <span className="anv-unit">تفاعل</span></h3>
               <div className="anv-growth-badge">↑ 18% نمو متصاعد هذا الشهر</div>
             </div>
             <div className="anv-chart-legend">
-              <span className="anv-dot online"></span> الزيارات الحية
+              <span className="anv-dot online"></span> الزيارات الحي
               <span className="anv-dot store"></span> فتح المواد
             </div>
           </div>
@@ -321,7 +321,7 @@ export default function AdminAnalytics() {
               <span className="anv-sm-icon orange">🛠️</span>
               <div>
                 <span className="anv-sm-val">{totalRequests}</span>
-                <span className="anv-sm-lbl">طلبات الخدمات</span>
+                <span className="anv-sm-lbl">طلبات الدمات</span>
               </div>
             </div>
           </div>
@@ -330,7 +330,7 @@ export default function AdminAnalytics() {
         {/* Right Donut / Traffic Chart Card */}
         <div className="anv-card anv-donut-card">
           <h3 className="anv-card-title">توزيع التفاعلات والزيارات</h3>
-          <p className="anv-card-desc">نسبة توزيع الأنشطة الأكاديمية على المنصة</p>
+          <p className="anv-card-desc">نسب توزيع الأنشط الأكاديمي على المنص</p>
 
           <div className="anv-donut-wrapper">
             <svg viewBox="0 0 100 100" className="anv-donut-svg">
@@ -366,11 +366,11 @@ export default function AdminAnalytics() {
             </div>
             <div>
               <span className="anv-pct-val cyan">{quizPct}%</span>
-              <span className="anv-pct-lbl">● الاختبارات</span>
+              <span className="anv-pct-lbl">● الاتبارات</span>
             </div>
             <div>
               <span className="anv-pct-val orange">{reqPct}%</span>
-              <span className="anv-pct-lbl">● الخدمات</span>
+              <span className="anv-pct-lbl">● الدمات</span>
             </div>
           </div>
         </div>
@@ -398,12 +398,12 @@ export default function AdminAnalytics() {
         {/* Card 2: Vibrant Deep Blue / Magenta */}
         <div className="anv-vcard anv-vcard-blue">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">فتح المواد الدراسية</span>
+            <span className="anv-vc-title">فتح المواد الدراسي</span>
             <span className="anv-vc-icon">📂</span>
           </div>
           <div className="anv-vc-body">
             <h3 className="anv-vc-num">{totalMaterialOpens.toLocaleString('ar-JO')}</h3>
-            <span className="anv-vc-tag">أكثر مادة: {courseCounts[0]?.[0] || 'الذكاء الاصطناعي'}</span>
+            <span className="anv-vc-tag">أكثر ماد: {courseCounts[0]?.[0] || 'الذكاء الاصطناعي'}</span>
           </div>
           <svg viewBox="0 0 120 30" className="anv-vc-spark">
             <path d="M0 20 L25 25 L50 12 L75 18 L100 8 L120 2" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
@@ -413,7 +413,7 @@ export default function AdminAnalytics() {
         {/* Card 3: Vibrant Teal / Cyan */}
         <div className="anv-vcard anv-vcard-teal">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">إجتياز بنك الأسئلة</span>
+            <span className="anv-vc-title">إجتياز بنك الأسئل</span>
             <span className="anv-vc-icon">🎯</span>
           </div>
           <div className="anv-vc-body">
@@ -428,12 +428,12 @@ export default function AdminAnalytics() {
         {/* Card 4: Vibrant Orange / Gold */}
         <div className="anv-vcard anv-vcard-orange">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">طلبات الخدمات الجديدة</span>
+            <span className="anv-vc-title">طلبات الدمات الجديد</span>
             <span className="anv-vc-icon">🛠️</span>
           </div>
           <div className="anv-vc-body">
             <h3 className="anv-vc-num">{totalRequests.toLocaleString('ar-JO')}</h3>
-            <span className="anv-vc-tag">طلبات الطلاب المباشرة</span>
+            <span className="anv-vc-tag">طلبات الطلاب المباشر</span>
           </div>
           <svg viewBox="0 0 120 30" className="anv-vc-spark">
             <path d="M0 22 L20 14 L40 18 L60 8 L80 12 L100 4 L120 10" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
@@ -448,7 +448,7 @@ export default function AdminAnalytics() {
         {/* Left Panel: Recent Live Activities */}
         <div className="anv-card anv-activity-card">
           <div className="anv-card-header-flex">
-            <h3 className="anv-card-title">⚡ أحدث النشاطات المباشرة</h3>
+            <h3 className="anv-card-title">⚡ أحدث النشاطات المباشر</h3>
             <span className="anv-live-badge">مباشر ●</span>
           </div>
 
@@ -471,7 +471,7 @@ export default function AdminAnalytics() {
         <div className="anv-card anv-table-card">
           <div className="anv-table-header">
             <div>
-              <h3 className="anv-card-title">📊 تفاصيل تقييمات واختيارات المواد</h3>
+              <h3 className="anv-card-title">📊 تفاصيل تقييمات واتيارات المواد</h3>
               <p className="anv-card-desc">ترتيب المواد الأكثر تفاعلاً وتقييماً من الطلاب</p>
             </div>
             
@@ -487,7 +487,7 @@ export default function AdminAnalytics() {
                 className={`anv-tab-btn ${ratingsTab === 'difficulty' ? 'active' : ''}`}
                 onClick={() => { setRatingsTab('difficulty'); setTablePage(1); }}
               >
-                ⚡ مستوى الصعوبة ({diffRatings.length})
+                ⚡ مستوى الصعوب ({diffRatings.length})
               </button>
             </div>
           </div>
@@ -498,10 +498,10 @@ export default function AdminAnalytics() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>اسم المادة الدراسية</th>
+                  <th>اسم الماد الدراسي</th>
                   <th>عدد التقييمات</th>
                   <th>{ratingsTab === 'star' ? 'متوسط النجوم' : 'المستوى السائد'}</th>
-                  <th>الحالة</th>
+                  <th>الحال</th>
                 </tr>
               </thead>
               <tbody>

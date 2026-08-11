@@ -16,17 +16,17 @@ const IconReset    = () => <span className="ast-icon">🔄</span>;
 
 // ─── Output Type Cards ────────────────────────────────────────────────────
 const OUTPUT_TYPES = [
-  { id: 'quiz',    icon: '📝', labelAr: 'اختبار',        labelEn: 'Quiz',       descAr: 'أسئلة تفاعلية',   descEn: 'Interactive questions' },
-  { id: 'summary', icon: '📋', labelAr: 'ملخص ذكي',      labelEn: 'Summary',    descAr: 'نقاط ومفاهيم',    descEn: 'Key points & concepts' },
-  { id: 'mindmap', icon: '🗺️', labelAr: 'مخطط ذهني',    labelEn: 'Mind Map',   descAr: 'هيكل بصري',        descEn: 'Visual structure' },
-  { id: 'plan',    icon: '📚', labelAr: 'خطة الدراسة',  labelEn: 'Study Plan', descAr: 'جدول يومي',        descEn: 'Daily schedule' },
+  { id: 'quiz',    icon: '📝', labelAr: 'اتبار',        labelEn: 'Quiz',       descAr: 'أسئل تفاعلي',   descEn: 'Interactive questions' },
+  { id: 'summary', icon: '📋', labelAr: 'ملص ذكي',      labelEn: 'Summary',    descAr: 'نقاط ومفاهيم',    descEn: 'Key points & concepts' },
+  { id: 'mindmap', icon: '🗺️', labelAr: 'مطط ذهني',    labelEn: 'Mind Map',   descAr: 'هيكل بصري',        descEn: 'Visual structure' },
+  { id: 'plan',    icon: '📚', labelAr: 'ط الدراس',  labelEn: 'Study Plan', descAr: 'جدول يومي',        descEn: 'Daily schedule' },
 ];
 
 const QUESTION_TYPES = [
-  { id: 'mcq',   labelAr: 'اختيار متعدد', labelEn: 'MCQ' },
-  { id: 'tf',    labelAr: 'صح / خطأ',     labelEn: 'True / False' },
+  { id: 'mcq',   labelAr: 'اتيار متعدد', labelEn: 'MCQ' },
+  { id: 'tf',    labelAr: 'صح / طأ',     labelEn: 'True / False' },
   { id: 'essay', labelAr: 'مقالي',         labelEn: 'Essay' },
-  { id: 'mixed', labelAr: 'مختلط',         labelEn: 'Mixed' },
+  { id: 'mixed', labelAr: 'متلط',         labelEn: 'Mixed' },
 ];
 
 // ─── Result Renderers ─────────────────────────────────────────────────────
@@ -92,7 +92,7 @@ const QuizResult = ({ data, lang }) => {
 
           {q.type === 'tf' && (
             <div className="ast-tf-btns">
-              {(isRtl ? ['صح', 'خطأ'] : ['True', 'False']).map(val => (
+              {(isRtl ? ['صح', 'طأ'] : ['True', 'False']).map(val => (
                 <button
                   key={val}
                   className={`ast-tf-btn ${answers[q.id] === val ? 'selected' : ''} ${submitted && (q.answer?.toLowerCase().includes(val.toLowerCase()) || q.answer === val) ? 'correct-opt' : ''}`}
@@ -115,12 +115,12 @@ const QuizResult = ({ data, lang }) => {
           )}
           {submitted && (q.type === 'mcq' || q.type === 'tf') && (
             <div className="ast-correct-ans">
-              <strong>{isRtl ? '✅ الإجابة الصحيحة:' : '✅ Correct Answer:'}</strong> {q.answer}
+              <strong>{isRtl ? '✅ الإجاب الصحيح:' : '✅ Correct Answer:'}</strong> {q.answer}
             </div>
           )}
           {q.type === 'essay' && submitted && (
             <div className="ast-model-answer">
-              <strong>{isRtl ? '📖 نموذج الإجابة:' : '📖 Model Answer:'}</strong> {q.answer}
+              <strong>{isRtl ? '📖 نموذج الإجاب:' : '📖 Model Answer:'}</strong> {q.answer}
             </div>
           )}
         </div>
@@ -145,7 +145,7 @@ const SummaryResult = ({ data, lang }) => {
       </div>
       {data.keyPoints?.length > 0 && (
         <div className="ast-section">
-          <h3>✨ {isRtl ? 'النقاط الرئيسية' : 'Key Points'}</h3>
+          <h3>✨ {isRtl ? 'النقاط الرئيسي' : 'Key Points'}</h3>
           <ul className="ast-key-points">
             {data.keyPoints.map((pt, i) => <li key={i}>{pt}</li>)}
           </ul>
@@ -153,7 +153,7 @@ const SummaryResult = ({ data, lang }) => {
       )}
       {data.definitions?.length > 0 && (
         <div className="ast-section">
-          <h3>📖 {isRtl ? 'المصطلحات المهمة' : 'Key Definitions'}</h3>
+          <h3>📖 {isRtl ? 'المصطلحات المهم' : 'Key Definitions'}</h3>
           <div className="ast-definitions">
             {data.definitions.map((d, i) => (
               <div key={i} className="ast-def-card">
@@ -167,7 +167,7 @@ const SummaryResult = ({ data, lang }) => {
       )}
       {data.conclusion && (
         <div className="ast-conclusion">
-          <h3>🎯 {isRtl ? 'الخلاصة' : 'Conclusion'}</h3>
+          <h3>🎯 {isRtl ? 'اللاص' : 'Conclusion'}</h3>
           <p>{data.conclusion}</p>
         </div>
       )}
@@ -209,7 +209,7 @@ const MindMapResult = ({ data, lang }) => {
         ))}
       </div>
       {data.branches?.length === 0 && (
-        <p className="ast-empty">{isRtl ? 'لم يتم إنشاء مخطط.' : 'No mind map generated.'}</p>
+        <p className="ast-empty">{isRtl ? 'لم يتم إنشاء مطط.' : 'No mind map generated.'}</p>
       )}
     </div>
   );
@@ -258,7 +258,7 @@ const StudyPlanResult = ({ data, lang }) => {
 
       {data.generalTips?.length > 0 && (
         <div className="ast-tips-section">
-          <h4>🌟 {isRtl ? 'نصائح عامة' : 'General Tips'}</h4>
+          <h4>🌟 {isRtl ? 'نصائح عام' : 'General Tips'}</h4>
           <ul className="ast-tips-list">
             {data.generalTips.map((tip, i) => <li key={i}>{tip}</li>)}
           </ul>
@@ -273,7 +273,7 @@ const LoadingState = ({ lang }) => (
   <div className="ast-loading">
     <div className="ast-loading-brain">🤖</div>
     <div className="ast-loading-text">
-      {lang === 'ar' ? 'نشمي يحلل المادة...' : 'AI is analyzing your text...'}
+      {lang === 'ar' ? 'نشمي يحلل الماد...' : 'AI is analyzing your text...'}
     </div>
     <div className="ast-loading-dots"><span /><span /><span /></div>
     <div className="ast-loading-bars">
@@ -301,7 +301,7 @@ const AIStudyTools = () => {
 
   const handleGenerate = async () => {
     if (!text.trim() || text.trim().length < 50) {
-      toast.error(isRtl ? 'الرجاء إدخال نص كافٍ (50 حرف على الأقل)' : 'Please enter sufficient text (at least 50 chars)');
+      toast.error(isRtl ? 'الرجاء إدال نص كافٍ (50 حرف على الأقل)' : 'Please enter sufficient text (at least 50 chars)');
       return;
     }
     setLoading(true);
@@ -316,8 +316,8 @@ const AIStudyTools = () => {
       const msgs = {
         API_KEY_MISSING:   isRtl ? 'مفتاح الذكاء الاصطناعي غير مضبوط. تواصل مع المسؤول.' : 'AI API key is not configured.',
         TEXT_TOO_SHORT:    isRtl ? 'النص قصير جداً.' : 'Text is too short.',
-        TIMEOUT:           isRtl ? 'انتهت مهلة الاتصال. حاول مجدداً.' : 'Request timed out. Please try again.',
-        GENERATION_FAILED: isRtl ? 'حدث خطأ أثناء التوليد. حاول مجدداً.' : 'Generation failed. Please try again.',
+        TIMEOUT:           isRtl ? 'انتهت مهل الاتصال. حاول مجدداً.' : 'Request timed out. Please try again.',
+        GENERATION_FAILED: isRtl ? 'حدث طأ أثناء التوليد. حاول مجدداً.' : 'Generation failed. Please try again.',
       };
       setError(msgs[res.error] || res.error);
       toast.error(msgs[res.error] || res.error);
@@ -332,7 +332,7 @@ const AIStudyTools = () => {
   const handleCopy = () => {
     if (!result) return;
     navigator.clipboard.writeText(JSON.stringify(result.data, null, 2));
-    toast.success(isRtl ? 'تم النسخ!' : 'Copied!');
+    toast.success(isRtl ? 'تم النس!' : 'Copied!');
   };
 
   const handlePrint = () => window.print();
@@ -350,21 +350,21 @@ const AIStudyTools = () => {
             <span>{isRtl ? 'مدعوم بالذكاء الاصطناعي' : 'AI-Powered'}</span>
           </div>
           <h1 className="ast-hero-title">
-            {isRtl ? 'أدوات الدراسة الذكية' : 'AI Study Tools'}
+            {isRtl ? 'أدوات الدراس الذكي' : 'AI Study Tools'}
           </h1>
           <p className="ast-hero-sub">
             {isRtl
-              ? 'الصق نص المادة وسيقوم الذكاء الاصطناعي بتحويله إلى اختبار، ملخص، مخطط ذهني أو خطة دراسة!'
+              ? 'الصق نص الماد وسيقوم الذكاء الاصطناعي بتحويله إلى اتبار، ملص، مطط ذهني أو ط دراس!'
               : 'Paste your study material and AI will transform it into a quiz, summary, mind map, or study plan!'}
           </p>
           <div className="ast-hero-stats">
-            <div className="ast-stat"><span>📝</span><span>{isRtl ? 'اختبارات' : 'Quizzes'}</span></div>
+            <div className="ast-stat"><span>📝</span><span>{isRtl ? 'اتبارات' : 'Quizzes'}</span></div>
             <div className="ast-stat-divider" />
-            <div className="ast-stat"><span>📋</span><span>{isRtl ? 'ملخصات' : 'Summaries'}</span></div>
+            <div className="ast-stat"><span>📋</span><span>{isRtl ? 'ملصات' : 'Summaries'}</span></div>
             <div className="ast-stat-divider" />
-            <div className="ast-stat"><span>🗺️</span><span>{isRtl ? 'مخططات' : 'Mind Maps'}</span></div>
+            <div className="ast-stat"><span>🗺️</span><span>{isRtl ? 'مططات' : 'Mind Maps'}</span></div>
             <div className="ast-stat-divider" />
-            <div className="ast-stat"><span>📚</span><span>{isRtl ? 'خطط' : 'Plans'}</span></div>
+            <div className="ast-stat"><span>📚</span><span>{isRtl ? 'طط' : 'Plans'}</span></div>
           </div>
         </div>
       </div>
@@ -377,7 +377,7 @@ const AIStudyTools = () => {
           <div className="ast-step">
             <div className="ast-step-header">
               <div className="ast-step-num">1</div>
-              <h2>{isRtl ? 'أدخل نص المادة' : 'Enter Study Material'}</h2>
+              <h2>{isRtl ? 'أدل نص الماد' : 'Enter Study Material'}</h2>
             </div>
             <div className="ast-textarea-wrapper">
               <textarea
@@ -385,13 +385,13 @@ const AIStudyTools = () => {
                 value={text}
                 onChange={e => setText(e.target.value)}
                 placeholder={isRtl
-                  ? 'الصق نص المحاضرة أو الكتاب أو الملاحظات هنا...\n\nمثال: "الشبكات العصبية هي نماذج حسابية مستوحاة من الدماغ البشري..."'
+                  ? 'الصق نص المحاضر أو الكتاب أو الملاحظات هنا...\n\nمثال: "الشبكات العصبي هي نماذج حسابي مستوحا من الدماغ البشري..."'
                   : 'Paste your lecture, book, or notes here...\n\nExample: "Neural networks are computational models inspired by the human brain..."'}
                 rows={10}
               />
               <div className="ast-textarea-footer">
                 <span className={`ast-word-count ${wordCount < 30 ? 'low' : wordCount < 100 ? 'mid' : 'good'}`}>
-                  {wordCount} {isRtl ? 'كلمة' : 'words'}
+                  {wordCount} {isRtl ? 'كلم' : 'words'}
                   {wordCount < 30 && ` — ${isRtl ? 'أضف المزيد للحصول على نتائج أفضل' : 'Add more for better results'}`}
                   {wordCount >= 30 && wordCount < 100 && ` — ${isRtl ? 'جيد' : 'Good'}`}
                   {wordCount >= 100 && ` — ${isRtl ? 'ممتاز!' : 'Excellent!'}`}
@@ -404,7 +404,7 @@ const AIStudyTools = () => {
           <div className="ast-step">
             <div className="ast-step-header">
               <div className="ast-step-num">2</div>
-              <h2>{isRtl ? 'لغة المخرج' : 'Output Language'}</h2>
+              <h2>{isRtl ? 'لغ المرج' : 'Output Language'}</h2>
             </div>
             <div className="ast-lang-btns">
               <button className={`ast-lang-btn ${lang === 'ar' ? 'active' : ''}`} onClick={() => setLang('ar')}>
@@ -420,7 +420,7 @@ const AIStudyTools = () => {
           <div className="ast-step">
             <div className="ast-step-header">
               <div className="ast-step-num">3</div>
-              <h2>{isRtl ? 'نوع المخرج' : 'Output Type'}</h2>
+              <h2>{isRtl ? 'نوع المرج' : 'Output Type'}</h2>
             </div>
             <div className="ast-type-grid">
               {OUTPUT_TYPES.map(type => (
@@ -442,11 +442,11 @@ const AIStudyTools = () => {
             <div className="ast-step ast-step-quiz-opts">
               <div className="ast-step-header">
                 <div className="ast-step-num">4</div>
-                <h2>{isRtl ? 'خيارات الاختبار' : 'Quiz Options'}</h2>
+                <h2>{isRtl ? 'يارات الاتبار' : 'Quiz Options'}</h2>
               </div>
               <div className="ast-quiz-opts">
                 <div className="ast-opt-group">
-                  <label>{isRtl ? 'عدد الأسئلة' : 'Number of Questions'}</label>
+                  <label>{isRtl ? 'عدد الأسئل' : 'Number of Questions'}</label>
                   <div className="ast-count-btns">
                     {[5, 10, 15, 20].map(n => (
                       <button key={n} className={`ast-count-btn ${questionCount === n ? 'active' : ''}`} onClick={() => setQuestionCount(n)}>
@@ -456,7 +456,7 @@ const AIStudyTools = () => {
                   </div>
                 </div>
                 <div className="ast-opt-group">
-                  <label>{isRtl ? 'نوع الأسئلة' : 'Question Type'}</label>
+                  <label>{isRtl ? 'نوع الأسئل' : 'Question Type'}</label>
                   <div className="ast-qtype-btns">
                     {QUESTION_TYPES.map(qt => (
                       <button key={qt.id} className={`ast-qtype-btn ${questionType === qt.id ? 'active' : ''}`} onClick={() => setQuestionType(qt.id)}>
@@ -503,14 +503,14 @@ const AIStudyTools = () => {
                   : OUTPUT_TYPES.find(t => t.id === result.type)?.labelEn}
               </h2>
               <div className="ast-toolbar-btns">
-                <button className="ast-toolbar-btn" onClick={handleCopy} title={isRtl ? 'نسخ' : 'Copy'}>
-                  <IconCopy />{isRtl ? 'نسخ' : 'Copy'}
+                <button className="ast-toolbar-btn" onClick={handleCopy} title={isRtl ? 'نس' : 'Copy'}>
+                  <IconCopy />{isRtl ? 'نس' : 'Copy'}
                 </button>
-                <button className="ast-toolbar-btn" onClick={handlePrint} title={isRtl ? 'طباعة' : 'Print'}>
-                  <IconPrint />{isRtl ? 'طباعة' : 'Print'}
+                <button className="ast-toolbar-btn" onClick={handlePrint} title={isRtl ? 'طباع' : 'Print'}>
+                  <IconPrint />{isRtl ? 'طباع' : 'Print'}
                 </button>
-                <button className="ast-toolbar-btn reset" onClick={handleReset} title={isRtl ? 'إعادة' : 'Reset'}>
-                  <IconReset />{isRtl ? 'إعادة' : 'Reset'}
+                <button className="ast-toolbar-btn reset" onClick={handleReset} title={isRtl ? 'إعاد' : 'Reset'}>
+                  <IconReset />{isRtl ? 'إعاد' : 'Reset'}
                 </button>
               </div>
             </div>

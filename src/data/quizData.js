@@ -6,7 +6,7 @@ export const quizData = {
     oop_midterm: {
         id: 'oop_midterm',
         title: 'Midterm Past Papers',
-        titleAr: 'أسئلة سنوات ميد',
+        titleAr: 'أسئل سنوات ميد',
         icon: '💻',
         color: '#2196F3',
         forceEnglish: true,
@@ -282,7 +282,7 @@ export const quizData = {
     oop_final: {
         id: 'oop_final',
         title: 'Final Past Papers',
-        titleAr: 'أسئلة فاينل',
+        titleAr: 'أسئل فاينل',
         icon: '💻',
         color: '#2196F3',
         forceEnglish: true,
@@ -700,10 +700,10 @@ export const quizData = {
                 questionEn: 'Which of the following is considered the heart of a computer?',
                 questionAr: 'أي مما يلي يعتبر قلب جهاز الحاسوب؟',
                 options: [
-                    { id: 'a', textEn: 'Mouse', textAr: 'فأرة' },
-                    { id: 'b', textEn: 'Monitor', textAr: 'شاشة' },
+                    { id: 'a', textEn: 'Mouse', textAr: 'فأر' },
+                    { id: 'b', textEn: 'Monitor', textAr: 'شاش' },
                     { id: 'c', textEn: 'Processor (CPU)', textAr: 'المعالج' },
-                    { id: 'd', textEn: 'Keyboard', textAr: 'لوحة المفاتيح' }
+                    { id: 'd', textEn: 'Keyboard', textAr: 'لوح المفاتيح' }
                 ],
                 correctAnswer: 'c',
                 marks: 2.0
@@ -712,10 +712,10 @@ export const quizData = {
                 id: 2,
                 type: 'mcq',
                 questionEn: 'What is the main function of the operating system?',
-                questionAr: 'ما هي الوظيفة الرئيسية لنظام التشغيل؟',
+                questionAr: 'ما هي الوظيف الرئيسي لنظام التشغيل؟',
                 options: [
-                    { id: 'a', textEn: 'Word processing', textAr: 'معالجة النصوص' },
-                    { id: 'b', textEn: 'Manage hardware and software resources', textAr: 'إدارة موارد الأجهزة والبرامج' },
+                    { id: 'a', textEn: 'Word processing', textAr: 'معالج النصوص' },
+                    { id: 'b', textEn: 'Manage hardware and software resources', textAr: 'إدار موارد الأجهز والبرامج' },
                     { id: 'c', textEn: 'Create graphics', textAr: 'إنشاء الرسومات' },
                     { id: 'd', textEn: 'Send emails', textAr: 'إرسال البريد الإلكتروني' }
                 ],
@@ -726,11 +726,11 @@ export const quizData = {
                 id: 3,
                 type: 'mcq',
                 questionEn: 'Which memory is used for temporary storage while the computer is running?',
-                questionAr: 'أي ذاكرة تستخدم للتخزين المؤقت أثناء تشغيل الكمبيوتر؟',
+                questionAr: 'أي ذاكر تستدم للتزين المؤقت أثناء تشغيل الكمبيوتر؟',
                 options: [
-                    { id: 'a', textEn: 'ROM', textAr: 'ذاكرة القراءة فقط' },
+                    { id: 'a', textEn: 'ROM', textAr: 'ذاكر القراء فقط' },
                     { id: 'b', textEn: 'Hard Disk', textAr: 'القرص الصلب' },
-                    { id: 'c', textEn: 'RAM', textAr: 'ذاكرة الوصول العشوائي' },
+                    { id: 'c', textEn: 'RAM', textAr: 'ذاكر الوصول العشوائي' },
                     { id: 'd', textEn: 'Flash Drive', textAr: 'محرك أقراص فلاش' }
                 ],
                 correctAnswer: 'c',
@@ -740,12 +740,12 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 questionEn: 'A set of instructions that tells the computer what to do is called:',
-                questionAr: 'مجموعة من التعليمات التي تخبر الكمبيوتر بما يجب فعله تسمى:',
+                questionAr: 'مجموع من التعليمات التي تبر الكمبيوتر بما يجب فعله تسمى:',
                 options: [
-                    { id: 'a', textEn: 'Hardware', textAr: 'الأجهزة' },
+                    { id: 'a', textEn: 'Hardware', textAr: 'الأجهز' },
                     { id: 'b', textEn: 'Software', textAr: 'البرمجيات' },
-                    { id: 'c', textEn: 'Input device', textAr: 'جهاز إدخال' },
-                    { id: 'd', textEn: 'Output device', textAr: 'جهاز إخراج' }
+                    { id: 'c', textEn: 'Input device', textAr: 'جهاز إدال' },
+                    { id: 'd', textEn: 'Output device', textAr: 'جهاز إراج' }
                 ],
                 correctAnswer: 'b',
                 marks: 2.0
@@ -754,12 +754,12 @@ export const quizData = {
                 id: 5,
                 type: 'mcq',
                 questionEn: 'Which of the following is an input device?',
-                questionAr: 'أي مما يلي يعتبر جهاز إدخال؟',
+                questionAr: 'أي مما يلي يعتبر جهاز إدال؟',
                 options: [
-                    { id: 'a', textEn: 'Printer', textAr: 'طابعة' },
+                    { id: 'a', textEn: 'Printer', textAr: 'طابع' },
                     { id: 'b', textEn: 'Speakers', textAr: 'سماعات' },
                     { id: 'c', textEn: 'Scanner', textAr: 'ماسح ضوئي' },
-                    { id: 'd', textEn: 'Monitor', textAr: 'شاشة' }
+                    { id: 'd', textEn: 'Monitor', textAr: 'شاش' }
                 ],
                 correctAnswer: 'c',
                 marks: 2.0
@@ -768,12 +768,12 @@ export const quizData = {
                 id: 6,
                 type: 'mcq',
                 questionEn: 'What does URL stand for?',
-                questionAr: 'إلام يرمز اختصار URL؟',
+                questionAr: 'إلام يرمز اتصار URL؟',
                 options: [
                     { id: 'a', textEn: 'Uniform Resource Locator', textAr: 'محدد موقع الموارد الموحد' },
                     { id: 'b', textEn: 'Universal Radio Level', textAr: 'مستوى الراديو العالمي' },
-                    { id: 'c', textEn: 'User Response Link', textAr: 'رابط استجابة المستخدم' },
-                    { id: 'd', textEn: 'United Resource Line', textAr: 'خط الموارد المتحدة' }
+                    { id: 'c', textEn: 'User Response Link', textAr: 'رابط استجاب المستدم' },
+                    { id: 'd', textEn: 'United Resource Line', textAr: 'ط الموارد المتحد' }
                 ],
                 correctAnswer: 'a',
                 marks: 2.0
@@ -796,10 +796,10 @@ export const quizData = {
                 id: 8,
                 type: 'mcq',
                 questionEn: 'Small text files stored on your computer by websites to remember your preferences are called:',
-                questionAr: 'ملفات نصية صغيرة يتم تخزينها على جهاز الكمبيوتر الخاص بك بواسطة مواقع الويب لتذكر تفضيلاتك تسمى:',
+                questionAr: 'ملفات نصي صغير يتم تزينها على جهاز الكمبيوتر الاص بك بواسط مواقع الويب لتذكر تفضيلاتك تسمى:',
                 options: [
                     { id: 'a', textEn: 'Links', textAr: 'روابط' },
-                    { id: 'b', textEn: 'Bookmarks', textAr: 'إشارات مرجعية' },
+                    { id: 'b', textEn: 'Bookmarks', textAr: 'إشارات مرجعي' },
                     { id: 'c', textEn: 'Cookies', textAr: 'ملفات تعريف الارتباط' },
                     { id: 'd', textEn: 'Downloads', textAr: 'تنزيلات' }
                 ],
@@ -810,12 +810,12 @@ export const quizData = {
                 id: 9,
                 type: 'mcq',
                 questionEn: 'What is the most secure way to protect your computer from unauthorized access?',
-                questionAr: 'ما هي الطريقة الأكثر أماناً لحماية جهاز الكمبيوتر الخاص بك من الوصول غير المصرح به؟',
+                questionAr: 'ما هي الطريق الأكثر أماناً لحماي جهاز الكمبيوتر الاص بك من الوصول غير المصرح به؟',
                 options: [
-                    { id: 'a', textEn: 'Turn off the monitor', textAr: 'إيقاف تشغيل الشاشة' },
-                    { id: 'b', textEn: 'Use a strong password', textAr: 'استخدم كلمة مرور قوية' },
+                    { id: 'a', textEn: 'Turn off the monitor', textAr: 'إيقاف تشغيل الشاش' },
+                    { id: 'b', textEn: 'Use a strong password', textAr: 'استدم كلم مرور قوي' },
                     { id: 'c', textEn: 'Delete all emails', textAr: 'حذف جميع رسائل البريد الإلكتروني' },
-                    { id: 'd', textEn: 'Install more RAM', textAr: 'تثبيت المزيد من ذاكرة الوصول العشوائي' }
+                    { id: 'd', textEn: 'Install more RAM', textAr: 'تثبيت المزيد من ذاكر الوصول العشوائي' }
                 ],
                 correctAnswer: 'b',
                 marks: 2.0
@@ -824,7 +824,7 @@ export const quizData = {
                 id: 10,
                 type: 'mcq',
                 questionEn: 'Which protocol is used to send emails?',
-                questionAr: 'أي بروتوكول يستخدم لإرسال رسائل البريد الإلكتروني؟',
+                questionAr: 'أي بروتوكول يستدم لإرسال رسائل البريد الإلكتروني؟',
                 options: [
                     { id: 'a', textEn: 'HTTP', textAr: 'HTTP' },
                     { id: 'b', textEn: 'FTP', textAr: 'FTP' },
@@ -838,12 +838,12 @@ export const quizData = {
                 id: 11,
                 type: 'mcq',
                 questionEn: 'The physical parts of a computer are known as:',
-                questionAr: 'الأجزاء المادية للكمبيوتر تسمى:',
+                questionAr: 'الأجزاء المادي للكمبيوتر تسمى:',
                 options: [
                     { id: 'a', textEn: 'Software', textAr: 'البرمجيات' },
                     { id: 'b', textEn: 'Data', textAr: 'البيانات' },
-                    { id: 'c', textEn: 'Hardware', textAr: 'الأجهزة' },
-                    { id: 'd', textEn: 'Firmware', textAr: 'البرامج الثابتة' }
+                    { id: 'c', textEn: 'Hardware', textAr: 'الأجهز' },
+                    { id: 'd', textEn: 'Firmware', textAr: 'البرامج الثابت' }
                 ],
                 correctAnswer: 'c',
                 marks: 2.0
@@ -857,7 +857,7 @@ export const quizData = {
                     { id: 'a', textEn: 'Encryption', textAr: 'التشفير' },
                     { id: 'b', textEn: 'Decryption', textAr: 'فك التشفير' },
                     { id: 'c', textEn: 'Cracking', textAr: 'الكسر' },
-                    { id: 'd', textEn: 'Ethical Hacking', textAr: 'القرصنة الأخلاقية' }
+                    { id: 'd', textEn: 'Ethical Hacking', textAr: 'القرصن الألاقي' }
                 ],
                 correctAnswer: 'b',
                 marks: 2.0
@@ -866,12 +866,12 @@ export const quizData = {
                 id: 13,
                 type: 'mcq',
                 questionEn: 'A program that secretly installs itself on computers and collects information about users without their knowledge:',
-                questionAr: 'برنامج يثبت نفسه سراً على أجهزة الكمبيوتر ويجمع معلومات عن المستخدمين دون علمهم:',
+                questionAr: 'برنامج يثبت نفسه سراً على أجهز الكمبيوتر ويجمع معلومات عن المستدمين دون علمهم:',
                 options: [
                     { id: 'a', textEn: 'Virus', textAr: 'فيروس' },
                     { id: 'b', textEn: 'Keystroke logging', textAr: 'تسجيل ضغطات المفاتيح' },
                     { id: 'c', textEn: 'Spyware', textAr: 'برامج التجسس' },
-                    { id: 'd', textEn: 'Adware', textAr: 'برامج إعلانية' }
+                    { id: 'd', textEn: 'Adware', textAr: 'برامج إعلاني' }
                 ],
                 correctAnswer: 'c',
                 marks: 2.0
@@ -888,13 +888,13 @@ export const quizData = {
             {
                 id: 1,
                 type: 'mcq',
-                questionAr: 'الذاكرة التي تخزن التعليمات والبيانات والتي يتم الوصول لها بشكل فعال من قبل المعالج هي ...؟',
+                questionAr: 'الذاكر التي تزن التعليمات والبيانات والتي يتم الوصول لها بشكل فعال من قبل المعالج هي ...؟',
                 questionEn: '',
                 options: [
-                    { id: 'a', textAr: 'ذاكرة القراءة فقط' },
-                    { id: 'b', textAr: 'ذاكرة التخزين الموقتة' },
-                    { id: 'c', textAr: 'الرقاقات الاكترونية' },
-                    { id: 'd', textAr: 'ذاكرة الوصول العشوائي' }
+                    { id: 'a', textAr: 'ذاكر القراء فقط' },
+                    { id: 'b', textAr: 'ذاكر التزين الموقت' },
+                    { id: 'c', textAr: 'الرقاقات الاكتروني' },
+                    { id: 'd', textAr: 'ذاكر الوصول العشوائي' }
                 ],
                 correctAnswer: 'd',
                 marks: 2.0
@@ -902,13 +902,13 @@ export const quizData = {
             {
                 id: 2,
                 type: 'mcq',
-                questionAr: '........... تعتبر من وسائل الادخال والاخراج معنا ؟',
+                questionAr: '........... تعتبر من وسائل الادال والاراج معنا ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'الماوس' },
                     { id: 'b', textAr: 'السماعات' },
-                    { id: 'c', textAr: 'لوحة المفاتيح' },
-                    { id: 'd', textAr: 'شاشة اللمس' }
+                    { id: 'c', textAr: 'لوح المفاتيح' },
+                    { id: 'd', textAr: 'شاش اللمس' }
                 ],
                 correctAnswer: 'd',
                 marks: 2.0
@@ -916,7 +916,7 @@ export const quizData = {
             {
                 id: 3,
                 type: 'mcq',
-                questionAr: 'إحدى التالي لا تعتبر من أنظمة التشغيل ؟',
+                questionAr: 'إحدى التالي لا تعتبر من أنظم التشغيل ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'Mac OS' },
@@ -930,7 +930,7 @@ export const quizData = {
             {
                 id: 4,
                 type: 'mcq',
-                questionAr: 'وحدة المعالجات الرسومية هي ........؟',
+                questionAr: 'وحد المعالجات الرسومي هي ........؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'RAM' },
@@ -944,12 +944,12 @@ export const quizData = {
             {
                 id: 5,
                 type: 'mcq',
-                questionAr: 'تصل المعالج بالعديد من الاجزاء الداخلية لجهاز الحاسوب .........؟',
+                questionAr: 'تصل المعالج بالعديد من الاجزاء الدالي لجهاز الحاسوب .........؟',
                 questionEn: '',
                 options: [
-                    { id: 'a', textAr: 'وحدة المعالجة المركزية' },
+                    { id: 'a', textAr: 'وحد المعالج المركزي' },
                     { id: 'b', textAr: 'الناقلات' },
-                    { id: 'c', textAr: 'ذاكرة الوصول العشوائي' },
+                    { id: 'c', textAr: 'ذاكر الوصول العشوائي' },
                     { id: 'd', textAr: 'برمجيات النظام' }
                 ],
                 correctAnswer: 'b',
@@ -961,10 +961,10 @@ export const quizData = {
                 questionAr: 'من وظائف نظام التشغيل ؟',
                 questionEn: '',
                 options: [
-                    { id: 'a', textAr: 'طباعة المستندات والتقارير' },
-                    { id: 'b', textAr: 'تصميم العروض التقديمية' },
-                    { id: 'c', textAr: 'إدارة وتخصيص مصادر الحاسوب' },
-                    { id: 'd', textAr: 'تصميم الجداول الاكترونية' }
+                    { id: 'a', textAr: 'طباع المستندات والتقارير' },
+                    { id: 'b', textAr: 'تصميم العروض التقديمي' },
+                    { id: 'c', textAr: 'إدار وتصيص مصادر الحاسوب' },
+                    { id: 'd', textAr: 'تصميم الجداول الاكتروني' }
                 ],
                 correctAnswer: 'c',
                 marks: 2.0
@@ -995,7 +995,7 @@ export const quizData = {
             {
                 id: 8,
                 type: 'mcq',
-                questionAr: 'لقد كنا نعيش في نهاية قرن .......... ، في ما يسمى بالمجتمع الصناعي ؟',
+                questionAr: 'لقد كنا نعيش في نهاي قرن .......... ، في ما يسمى بالمجتمع الصناعي ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'التسعينات' },
@@ -1009,14 +1009,14 @@ export const quizData = {
             {
                 id: 9,
                 type: 'mcq',
-                questionAr: 'مجموعه من مسميات للمجتمع المعلومات الرقمية جميع ما ذكر صحيح ما عاد ..؟',
+                questionAr: 'مجموعه من مسميات للمجتمع المعلومات الرقمي جميع ما ذكر صحيح ما عاد ..؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'المجتمع ما بعد الصناعي' },
                     { id: 'b', textAr: 'المجتمع التكنوقراطي' },
                     { id: 'c', textAr: 'المجتمع البرمج' },
-                    { id: 'd', textAr: 'الحضارة الاكترونية ما بعد الابجدية' },
-                    { id: 'e', textAr: 'الموجة الحديث' }
+                    { id: 'd', textAr: 'الحضار الاكتروني ما بعد الابجدي' },
+                    { id: 'e', textAr: 'الموج الحديث' }
                 ],
                 correctAnswer: 'e',
                 marks: 2.0
@@ -1024,7 +1024,7 @@ export const quizData = {
             {
                 id: 10,
                 type: 'mcq',
-                questionAr: 'المجتمع الصناعي الحالي هوا انتاج الثروة الصناعية التي ظهرت في قرن ........؟',
+                questionAr: 'المجتمع الصناعي الحالي هوا انتاج الثرو الصناعي التي ظهرت في قرن ........؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'الثامن عشر' },
@@ -1038,7 +1038,7 @@ export const quizData = {
             {
                 id: 11,
                 type: 'tf',
-                questionAr: 'مجتمع الحداثة هوا التعبير الفكري والثقافي عن روح هذا المجتمع والقوى الفاعلة فيه ؟',
+                questionAr: 'مجتمع الحداث هوا التعبير الفكري والثقافي عن روح هذا المجتمع والقوى الفاعل فيه ؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1046,13 +1046,13 @@ export const quizData = {
             {
                 id: 12,
                 type: 'mcq',
-                questionAr: 'المجتمع الحداثة مجتمع يقوم على ..........؟',
+                questionAr: 'المجتمع الحداث مجتمع يقوم على ..........؟',
                 questionEn: '',
                 options: [
-                    { id: 'a', textAr: 'الابتكار والمعرفة' },
-                    { id: 'b', textAr: 'الصناعة والفن' },
-                    { id: 'c', textAr: 'الابداع والبراعة' },
-                    { id: 'd', textAr: 'العلم والمعرفة والعقلانية' }
+                    { id: 'a', textAr: 'الابتكار والمعرف' },
+                    { id: 'b', textAr: 'الصناع والفن' },
+                    { id: 'c', textAr: 'الابداع والبراع' },
+                    { id: 'd', textAr: 'العلم والمعرف والعقلاني' }
                 ],
                 correctAnswer: 'd',
                 marks: 2.0
@@ -1068,7 +1068,7 @@ export const quizData = {
             {
                 id: 14,
                 type: 'tf',
-                questionAr: 'بظهور مجتمع المعلومات ظهرات عدة مفاهيم مرافقة ومنها المجتمع المعرفة ؟',
+                questionAr: 'بظهور مجتمع المعلومات ظهرات عد مفاهيم مرافق ومنها المجتمع المعرف ؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1076,7 +1076,7 @@ export const quizData = {
             {
                 id: 15,
                 type: 'mcq',
-                questionAr: 'بظهور مجتمع المعلومات ظهرات عدة مفاهيم مرافقة ومنها',
+                questionAr: 'بظهور مجتمع المعلومات ظهرات عد مفاهيم مرافق ومنها',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'الاكتروني' },
@@ -1090,7 +1090,7 @@ export const quizData = {
             {
                 id: 16,
                 type: 'mcq',
-                questionAr: 'من هوا العالم الذي قسم الحضارات الانسانية الى ثلاث مراحل وكما يسميها بالموجات ؟',
+                questionAr: 'من هوا العالم الذي قسم الحضارات الانساني الى ثلاث مراحل وكما يسميها بالموجات ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'الان تورين' },
@@ -1104,7 +1104,7 @@ export const quizData = {
             {
                 id: 17,
                 type: 'tf',
-                questionAr: 'الحضارات الانسانية انقسمت الى ثلاث حضارات حضاره الاولى كانت الثروة الصناعية ؟',
+                questionAr: 'الحضارات الانساني انقسمت الى ثلاث حضارات حضاره الاولى كانت الثرو الصناعي ؟',
                 questionEn: '',
                 correctAnswer: false,
                 marks: 2.0
@@ -1112,12 +1112,12 @@ export const quizData = {
             {
                 id: 18,
                 type: 'mcq',
-                questionAr: 'المرحلة الثانية من الحضارة الانسانية وقعت بي قرن ..........؟',
+                questionAr: 'المرحل الثاني من الحضار الانساني وقعت بي قرن ..........؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'القرن الاول' },
                     { id: 'b', textAr: 'قبل قرنين' },
-                    { id: 'c', textAr: 'قبل ثلاثة قرون' },
+                    { id: 'c', textAr: 'قبل ثلاث قرون' },
                     { id: 'd', textAr: 'قبل ثلاثين قرن' }
                 ],
                 correctAnswer: 'c',
@@ -1126,7 +1126,7 @@ export const quizData = {
             {
                 id: 19,
                 type: 'tf',
-                questionAr: 'الموجة الثانية من الحضارة الانسانية كانت بداية الثورة الصناعية ؟',
+                questionAr: 'الموج الثاني من الحضار الانساني كانت بداي الثور الصناعي ؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1134,7 +1134,7 @@ export const quizData = {
             {
                 id: 20,
                 type: 'tf',
-                questionAr: 'من اهم ما يمز مرحلة العصر الزراعي على انها الاعتماد على الارض والخيرات الطبيعية كمورد اساسي؟',
+                questionAr: 'من اهم ما يمز مرحل العصر الزراعي على انها الاعتماد على الارض واليرات الطبيعي كمورد اساسي؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1142,13 +1142,13 @@ export const quizData = {
             {
                 id: 21,
                 type: 'mcq',
-                questionAr: 'الهدف من الثروة الصناعية هوا ........؟',
+                questionAr: 'الهدف من الثرو الصناعي هوا ........؟',
                 questionEn: '',
                 options: [
-                    { id: 'a', textAr: 'حصول على كفاءة العمل' },
-                    { id: 'b', textAr: 'حصول على كفاءة في مستقبل' },
-                    { id: 'c', textAr: 'الوصول الى كفاءة الآلة' },
-                    { id: 'd', textAr: 'الوصول الى ثروة حديثة' }
+                    { id: 'a', textAr: 'حصول على كفاء العمل' },
+                    { id: 'b', textAr: 'حصول على كفاء في مستقبل' },
+                    { id: 'c', textAr: 'الوصول الى كفاء الآل' },
+                    { id: 'd', textAr: 'الوصول الى ثرو حديث' }
                 ],
                 correctAnswer: 'c',
                 marks: 2.0
@@ -1156,7 +1156,7 @@ export const quizData = {
             {
                 id: 22,
                 type: 'mcq',
-                questionAr: 'من هوا اول من طبق المعرفة في دراسة وتحليل هندسة العمل ؟',
+                questionAr: 'من هوا اول من طبق المعرف في دراس وتحليل هندس العمل ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'مانويل كاستلز' },
@@ -1170,7 +1170,7 @@ export const quizData = {
             {
                 id: 23,
                 type: 'mcq',
-                questionAr: 'تعتبر مرحلة العصر المعلومات احدث ما عاشة الإنسان من تطور وكانت بداياته ؟',
+                questionAr: 'تعتبر مرحل العصر المعلومات احدث ما عاش الإنسان من تطور وكانت بداياته ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'القرن العشرين' },
@@ -1184,13 +1184,13 @@ export const quizData = {
             {
                 id: 24,
                 type: 'mcq',
-                questionAr: 'في المرحلة لمن تنشأ فجأة ، بل كانت موجودة طول تاريخ البشرية ؟',
+                questionAr: 'في المرحل لمن تنشأ فجأ ، بل كانت موجود طول تاري البشري ؟',
                 questionEn: '',
                 options: [
-                    { id: 'a', textAr: 'مرحلة الاولى' },
-                    { id: 'b', textAr: 'مرحلة الثانية' },
-                    { id: 'c', textAr: 'مرحلة الثالثة' },
-                    { id: 'd', textAr: 'مرحلة الرابعة' }
+                    { id: 'a', textAr: 'مرحل الاولى' },
+                    { id: 'b', textAr: 'مرحل الثاني' },
+                    { id: 'c', textAr: 'مرحل الثالث' },
+                    { id: 'd', textAr: 'مرحل الرابع' }
                 ],
                 correctAnswer: 'c',
                 marks: 2.0
@@ -1198,7 +1198,7 @@ export const quizData = {
             {
                 id: 25,
                 type: 'tf',
-                questionAr: 'العمل الذهني من موارد الاساسية لمجتمع المعلوماتي ؟',
+                questionAr: 'العمل الذهني من موارد الاساسي لمجتمع المعلوماتي ؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1215,12 +1215,12 @@ export const quizData = {
             {
                 id: 26,
                 type: 'mcq',
-                questionAr: 'في الثروة الثانية من مراحل تطور التكنولوجيا معلومات التي تميزت باختراع أقدم طريقة للكتابة في العالم وهيا طريقة:',
+                questionAr: 'في الثرو الثاني من مراحل تطور التكنولوجيا معلومات التي تميزت باتراع أقدم طريق للكتاب في العالم وهيا طريق:',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'العضويه' },
-                    { id: 'b', textAr: 'العصرية' },
-                    { id: 'c', textAr: 'السومرية' },
+                    { id: 'b', textAr: 'العصري' },
+                    { id: 'c', textAr: 'السومري' },
                     { id: 'd', textAr: 'الاحديثه' }
                 ],
                 correctAnswer: 'c',
@@ -1229,13 +1229,13 @@ export const quizData = {
             {
                 id: 27,
                 type: 'mcq',
-                questionAr: 'الثروة الثالث من مراحل تطور التكنولوجيا معلومات كانت بظهور الطباعة في منتصف القرن .....؟',
+                questionAr: 'الثرو الثالث من مراحل تطور التكنولوجيا معلومات كانت بظهور الطباع في منتصف القرن .....؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'الحادي والعشرين' },
                     { id: 'b', textAr: 'الحادي عشر' },
                     { id: 'c', textAr: 'الرابعه عشر' },
-                    { id: 'd', textAr: 'الخامسه عشر' }
+                    { id: 'd', textAr: 'الامسه عشر' }
                 ],
                 correctAnswer: 'd',
                 marks: 2.0
@@ -1243,7 +1243,7 @@ export const quizData = {
             {
                 id: 28,
                 type: 'tf',
-                questionAr: 'يقال اتفق معظم المؤرخين على أن " يوحنا جوتنبرج " هوا اول من فكر في اختراع الطباعة بالحروف المعدنية المنفصلة ؟',
+                questionAr: 'يقال اتفق معظم المؤرين على أن " يوحنا جوتنبرج " هوا اول من فكر في اتراع الطباع بالحروف المعدني المنفصل ؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1251,7 +1251,7 @@ export const quizData = {
             {
                 id: 29,
                 type: 'tf',
-                questionAr: 'في عام 1876 اخترع الهاتف لنقل الاصوات إلى مسافات بعيدة المدى ؟',
+                questionAr: 'في عام 1876 اترع الهاتف لنقل الاصوات إلى مسافات بعيد المدى ؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1259,14 +1259,14 @@ export const quizData = {
             {
                 id: 30,
                 type: 'mcq',
-                questionAr: 'في اي ثروة من مراحل تطور التكنولوجيا معلومات تمثلت في استخدام الاقمار الصناعية لنقل المعلومات والبيانات والصور عبر الدول والقارات',
+                questionAr: 'في اي ثرو من مراحل تطور التكنولوجيا معلومات تمثلت في استدام الاقمار الصناعي لنقل المعلومات والبيانات والصور عبر الدول والقارات',
                 questionEn: '',
                 options: [
-                    { id: 'a', textAr: 'الثروة الاولى' },
-                    { id: 'b', textAr: 'الثروة الثانية' },
-                    { id: 'c', textAr: 'الثروة الثالثة' },
-                    { id: 'd', textAr: 'الثروة الرابعه' },
-                    { id: 'e', textAr: 'الثروة الخامسه' }
+                    { id: 'a', textAr: 'الثرو الاولى' },
+                    { id: 'b', textAr: 'الثرو الثاني' },
+                    { id: 'c', textAr: 'الثرو الثالث' },
+                    { id: 'd', textAr: 'الثرو الرابعه' },
+                    { id: 'e', textAr: 'الثرو الامسه' }
                 ],
                 correctAnswer: 'd',
                 marks: 2.0
@@ -1288,7 +1288,7 @@ export const quizData = {
             {
                 id: 32,
                 type: 'tf',
-                questionAr: 'تبين في نطاق الخصائص الانترنت نطاقه محلي وعالمي ومن محلي Local',
+                questionAr: 'تبين في نطاق الصائص الانترنت نطاقه محلي وعالمي ومن محلي Local',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1318,7 +1318,7 @@ export const quizData = {
             {
                 id: 35,
                 type: 'mcq',
-                questionAr: 'مزود خدمة الانترنت او موفر خدمة الاتصال بالانترنت ؟',
+                questionAr: 'مزود دم الانترنت او موفر دم الاتصال بالانترنت ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'ISP' },
@@ -1454,7 +1454,7 @@ export const quizData = {
     applied_english_102: {
         id: 'applied_english_102',
         title: 'Applied English 102',
-        titleAr: 'اللغة الإنجليزية التطبيقية 102',
+        titleAr: 'اللغ الإنجليزي التطبيقي 102',
         icon: '🇬🇧',
         color: '#3F51B5',
         forceEnglish: true,
@@ -1645,11 +1645,11 @@ export const quizData = {
     df_operating_systems: {
         id: 'df_operating_systems',
         title: 'Operating Systems for Digital Forensics - Midterm',
-        titleAr: 'نظم تشغيل للتحقيقات الجنائية - ميد',
+        titleAr: 'نظم تشغيل للتحقيقات الجنائي - ميد',
         icon: '🕵️‍♂️',
         color: '#FF7043',
         forceEnglish: true,
-        noteAr: 'أسئلة من المقرر الماده للدكتورة نسرين ثلجي لعام الدراسي 2026 الفصل الدراسي الاول',
+        noteAr: 'أسئل من المقرر الماده للدكتور نسرين ثلجي لعام الدراسي 2026 الفصل الدراسي الاول',
         questions: [
             {
                 id: 1,
@@ -1916,7 +1916,7 @@ export const quizData = {
     os_mid: {
         id: 'os_mid',
         title: 'Operating Systems - Mid Exam',
-        titleAr: 'نظم تشغيل للهندسة - مادة الميد',
+        titleAr: 'نظم تشغيل للهندس - ماد الميد',
         icon: '⚙️',
         color: '#FF5722',
         forceEnglish: true,
@@ -2017,7 +2017,7 @@ export const quizData = {
     os_final: {
         id: 'os_final',
         title: 'Operating Systems - Final Exam',
-        titleAr: 'نظم تشغيل للهندسة - مادة الفاينل',
+        titleAr: 'نظم تشغيل للهندس - ماد الفاينل',
         icon: '⚙️',
         color: '#FF5722',
         forceEnglish: true,
@@ -2286,7 +2286,7 @@ export const quizData = {
     military_science_mid: {
         id: 'military_science_mid',
         title: 'Mid Exam',
-        titleAr: 'مادة الميد',
+        titleAr: 'ماد الميد',
         icon: '🎖️',
         color: '#5D4037',
         parts: [
@@ -2294,13 +2294,13 @@ export const quizData = {
             { id: 'military_science_mid_p2', title: 'Part 2', titleAr: 'الجزء الثاني (20 سؤال)' },
             { id: 'military_science_mid_p3', title: 'Part 3', titleAr: 'الجزء الثالث (20 سؤال)' },
             { id: 'military_science_mid_p4', title: 'Part 4', titleAr: 'الجزء الرابع (20 سؤال)' },
-            { id: 'military_science_mid_p5', title: 'Part 5', titleAr: 'الجزء الخامس (الأسئلة المتبقية)' }
+            { id: 'military_science_mid_p5', title: 'Part 5', titleAr: 'الجزء الامس (الأسئل المتبقي)' }
         ]
     },
     military_science_final: {
         id: 'military_science_final',
         title: 'Final Exam',
-        titleAr: 'مادة الفاينل',
+        titleAr: 'ماد الفاينل',
         icon: '🎖️',
         color: '#5D4037',
         questions: []
@@ -2308,142 +2308,142 @@ export const quizData = {
     military_science_mid_p1: {
         id: 'military_science_mid_p1',
         title: 'Mid Exam - Part 1',
-        titleAr: 'مادة الميد - الجزء الأول',
+        titleAr: 'ماد الميد - الجزء الأول',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 1, type: 'mcq', questionAr: 'رتبة جندي أول من الرتب الأخرى الأفراد وتتمثل بـ:', options: [{ id: 'a', textAr: 'شريطة على الذراع' }, { id: 'b', textAr: 'التاج الهاشمي على الذراع' }, { id: 'c', textAr: 'شريطتان على الذراع' }, { id: 'd', textAr: 'ثلاث شرائط على الذراع' }], correctAnswer: 'a', marks: 1 },
-            { id: 2, type: 'mcq', questionAr: 'تأسست قيادة القوة البحرية والزوارق الملكية عام:', options: [{ id: 'a', textAr: '1951' }, { id: 'b', textAr: '1950' }, { id: 'c', textAr: '1946' }, { id: 'd', textAr: '1977' }], correctAnswer: 'a', marks: 1 },
-            { id: 3, type: 'mcq', questionAr: 'سيد المعركة الذي يمسك الأرض ويطهرها ويحتفظ بها هو جندي:', options: [{ id: 'a', textAr: 'اللاسلكي' }, { id: 'b', textAr: 'المدفعية' }, { id: 'c', textAr: 'الدروع' }, { id: 'd', textAr: 'المشاة' }], correctAnswer: 'd', marks: 1 },
-            { id: 4, type: 'mcq', questionAr: 'تم تشكيل نواة سلاح الجو الملكي في عهد جلالة:', options: [{ id: 'a', textAr: 'الملك المؤسس' }, { id: 'b', textAr: 'الملك طلال' }, { id: 'c', textAr: 'الملك حسين' }, { id: 'd', textAr: 'الملك عبدالله الثاني' }], correctAnswer: 'a', marks: 1 },
-            { id: 5, type: 'mcq', questionAr: 'من أنواع الدفاع الجوي:', options: [{ id: 'a', textAr: 'الدفاع الجوي المركزي (سلاح الجو)' }, { id: 'b', textAr: 'راجمات الصواريخ' }, { id: 'c', textAr: 'قوات المظليين' }, { id: 'd', textAr: 'الذخائر' }], correctAnswer: 'a', marks: 1 },
-            { id: 6, type: 'mcq', questionAr: 'يرأس دائرة المخابرات العامة مدير عام يتم تعيينه وعزله من قبل:', options: [{ id: 'a', textAr: 'جلالة الملك المعظم' }, { id: 'b', textAr: 'رئيس الوزراء بأوامر خطية' }, { id: 'c', textAr: 'مجلس الأعيان' }, { id: 'd', textAr: 'رئيس الوزراء ورئيس مجلس النواب' }], correctAnswer: 'a', marks: 1 },
-            { id: 7, type: 'mcq', questionAr: 'من مصادر تجنيد الأفراد (الرتب الأخرى) في القوات المسلحة الأردنية:', options: [{ id: 'a', textAr: 'المتطوعون عن طريق مديرية شؤون الضباط' }, { id: 'b', textAr: 'المتطوعون عن طريق مديرية شؤون الأفراد' }, { id: 'c', textAr: 'جامعة مؤتة' }, { id: 'd', textAr: 'كلية الأمير حسن للعلوم الإسلامية' }], correctAnswer: 'b', marks: 1 },
-            { id: 8, type: 'mcq', questionAr: 'من أبرز ملامح مرحلة التميز الوطني والدور الإقليمي في مسيرة الخدمات الطبية الملكية:', options: [{ id: 'a', textAr: 'إنشاء مركز الملكة علياء لأمراض وجراحة القلب' }, { id: 'b', textAr: 'إقرار مشروع معالجة العائلات' }, { id: 'c', textAr: 'افتتاح مدينة الحسين الطبية' }, { id: 'd', textAr: 'افتتاح مستشفى اللطرون العسكري' }], correctAnswer: 'a', marks: 1 },
-            { id: 9, type: 'mcq', questionAr: 'ترمز الكرة الأرضية في شعار المملكة الأردنية الهاشمية إلى:', options: [{ id: 'a', textAr: 'النظام الملكي' }, { id: 'b', textAr: 'راية الثورة العربية الكبرى' }, { id: 'c', textAr: 'انتشار الإسلام وحضارته في العالم' }, { id: 'd', textAr: 'الفداء والتضحية' }], correctAnswer: 'c', marks: 1 },
-            { id: 10, type: 'mcq', questionAr: 'بدأ استخدام العلم الأردني بصورته الحالية منذ:', options: [{ id: 'a', textAr: 'استقلال المملكة عام 1946' }, { id: 'b', textAr: 'تأسيس إمارة شرق الأردن عام 1921' }, { id: 'c', textAr: 'تشكيل أول حكومة أردنية' }, { id: 'd', textAr: 'إعلان الثورة العربية الكبرى' }], correctAnswer: 'b', marks: 1 },
-            { id: 11, type: 'mcq', questionAr: 'من أدوار المواطن في الحفاظ على أمن الوطن:', options: [{ id: 'a', textAr: 'التعاون مع التنظيمات المحظورة' }, { id: 'b', textAr: 'إذاعة الشائعة' }, { id: 'c', textAr: 'رفض التطرف مهما كان مصدره' }, { id: 'd', textAr: 'البوح بأسرار البلد' }], correctAnswer: 'c', marks: 1 },
-            { id: 12, type: 'mcq', questionAr: 'أصدر جلالة الملك الحسين بن طلال بعد حرب الخليج الثانية كتاب بعنوان:', options: [{ id: 'a', textAr: 'مهنتي كملك' }, { id: 'b', textAr: 'أحاديث ملكية' }, { id: 'c', textAr: 'الكتاب الأبيض' }, { id: 'd', textAr: 'الحرب العراقية الإيرانية' }], correctAnswer: 'c', marks: 1 },
-            { id: 13, type: 'mcq', questionAr: 'إدامة الاتصالات اللازمة لنقل الصوت والصورة والمعلومات من واجبات:', options: [{ id: 'a', textAr: 'أسلحة المناورة' }, { id: 'b', textAr: 'أسلحة الإسناد' }, { id: 'c', textAr: 'سلاح اللاسلكي الملكي' }, { id: 'd', textAr: 'سلاح الهندسة الملكي' }], correctAnswer: 'c', marks: 1 },
-            { id: 14, type: 'mcq', questionAr: 'أطلق الشريف الحسين بن علي رصاصة الثورة العربية الكبرى من:', options: [{ id: 'a', textAr: 'مكة المكرمة 1916' }, { id: 'b', textAr: 'مكة المكرمة 1917' }, { id: 'c', textAr: 'المدينة المنورة 1917' }, { id: 'd', textAr: 'عمان 1916' }], correctAnswer: 'a', marks: 1 },
-            { id: 15, type: 'mcq', questionAr: 'السيطرة على المزارعين والصيادين والرعاة ضمن مناطق المسؤولية من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندسة الملكي' }, { id: 'c', textAr: 'مؤسسة الإسكان والأشغال العسكرية' }, { id: 'd', textAr: 'المركز العسكري لمكافحة الإرهاب' }], correctAnswer: 'a', marks: 1 },
-            { id: 16, type: 'mcq', questionAr: 'من واجبات سلاح الهندسة الملكي:', options: [{ id: 'a', textAr: 'المساعدة في أعمال التخفية والتمويه' }, { id: 'b', textAr: 'تأمين البريد العسكري' }, { id: 'c', textAr: 'تقديم الإسناد الفني' }, { id: 'd', textAr: 'السيطرة على اللجوء غير الشرعي' }], correctAnswer: 'a', marks: 1 },
-            { id: 17, type: 'mcq', questionAr: 'إدامة القوات المسلحة بجميع ما تحتاجه من أرزاق ووقود ونقل من واجبات:', options: [{ id: 'a', textAr: 'المركز الوطني لإدارة الأزمات' }, { id: 'b', textAr: 'وزارة النقل' }, { id: 'c', textAr: 'التموين والنقل الملكي' }, { id: 'd', textAr: 'المركز الأردني للتصميم' }], correctAnswer: 'c', marks: 1 },
-            { id: 18, type: 'mcq', questionAr: 'تسمى الاتفاقية التي وقعتها فرنسا وبريطانيا عام 1916:', options: [{ id: 'a', textAr: 'سايكس بيكو' }, { id: 'b', textAr: 'وعد بلفور' }, { id: 'c', textAr: 'الحسين مكماهون' }, { id: 'd', textAr: 'فرساي' }], correctAnswer: 'a', marks: 1 },
-            { id: 19, type: 'mcq', questionAr: 'ضمن إدارات الأمن العام، تعمل الشرطة النسائية في:', options: [{ id: 'a', textAr: 'إدارة السير والمختبرات الجنائية' }, { id: 'b', textAr: 'مدارس الثقافة العسكرية' }, { id: 'c', textAr: 'التصوير الجوي' }, { id: 'd', textAr: 'الإنزال الجوي' }], correctAnswer: 'a', marks: 1 },
-            { id: 20, type: 'mcq', questionAr: 'مواجهة الحملات الإعلامية غير التقليدية من إمكانيات:', options: [{ id: 'a', textAr: 'المركز الوطني للأمن وإدارة الأزمات' }, { id: 'b', textAr: 'مديرية الإفتاء العسكري' }, { id: 'c', textAr: 'الهيئة الهاشمية للمصابين' }, { id: 'd', textAr: 'المركز العسكري لمكافحة الإرهاب' }], correctAnswer: 'd', marks: 1 }
+            { id: 1, type: 'mcq', questionAr: 'رتب جندي أول من الرتب الأرى الأفراد وتتمثل بـ:', options: [{ id: 'a', textAr: 'شريط على الذراع' }, { id: 'b', textAr: 'التاج الهاشمي على الذراع' }, { id: 'c', textAr: 'شريطتان على الذراع' }, { id: 'd', textAr: 'ثلاث شرائط على الذراع' }], correctAnswer: 'a', marks: 1 },
+            { id: 2, type: 'mcq', questionAr: 'تأسست قياد القو البحري والزوارق الملكي عام:', options: [{ id: 'a', textAr: '1951' }, { id: 'b', textAr: '1950' }, { id: 'c', textAr: '1946' }, { id: 'd', textAr: '1977' }], correctAnswer: 'a', marks: 1 },
+            { id: 3, type: 'mcq', questionAr: 'سيد المعرك الذي يمسك الأرض ويطهرها ويحتفظ بها هو جندي:', options: [{ id: 'a', textAr: 'اللاسلكي' }, { id: 'b', textAr: 'المدفعي' }, { id: 'c', textAr: 'الدروع' }, { id: 'd', textAr: 'المشا' }], correctAnswer: 'd', marks: 1 },
+            { id: 4, type: 'mcq', questionAr: 'تم تشكيل نوا سلاح الجو الملكي في عهد جلال:', options: [{ id: 'a', textAr: 'الملك المؤسس' }, { id: 'b', textAr: 'الملك طلال' }, { id: 'c', textAr: 'الملك حسين' }, { id: 'd', textAr: 'الملك عبدالله الثاني' }], correctAnswer: 'a', marks: 1 },
+            { id: 5, type: 'mcq', questionAr: 'من أنواع الدفاع الجوي:', options: [{ id: 'a', textAr: 'الدفاع الجوي المركزي (سلاح الجو)' }, { id: 'b', textAr: 'راجمات الصواري' }, { id: 'c', textAr: 'قوات المظليين' }, { id: 'd', textAr: 'الذائر' }], correctAnswer: 'a', marks: 1 },
+            { id: 6, type: 'mcq', questionAr: 'يرأس دائر المابرات العام مدير عام يتم تعيينه وعزله من قبل:', options: [{ id: 'a', textAr: 'جلال الملك المعظم' }, { id: 'b', textAr: 'رئيس الوزراء بأوامر طي' }, { id: 'c', textAr: 'مجلس الأعيان' }, { id: 'd', textAr: 'رئيس الوزراء ورئيس مجلس النواب' }], correctAnswer: 'a', marks: 1 },
+            { id: 7, type: 'mcq', questionAr: 'من مصادر تجنيد الأفراد (الرتب الأرى) في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'المتطوعون عن طريق مديري شؤون الضباط' }, { id: 'b', textAr: 'المتطوعون عن طريق مديري شؤون الأفراد' }, { id: 'c', textAr: 'جامع مؤت' }, { id: 'd', textAr: 'كلي الأمير حسن للعلوم الإسلامي' }], correctAnswer: 'b', marks: 1 },
+            { id: 8, type: 'mcq', questionAr: 'من أبرز ملامح مرحل التميز الوطني والدور الإقليمي في مسير الدمات الطبي الملكي:', options: [{ id: 'a', textAr: 'إنشاء مركز الملك علياء لأمراض وجراح القلب' }, { id: 'b', textAr: 'إقرار مشروع معالج العائلات' }, { id: 'c', textAr: 'افتتاح مدين الحسين الطبي' }, { id: 'd', textAr: 'افتتاح مستشفى اللطرون العسكري' }], correctAnswer: 'a', marks: 1 },
+            { id: 9, type: 'mcq', questionAr: 'ترمز الكر الأرضي في شعار المملك الأردني الهاشمي إلى:', options: [{ id: 'a', textAr: 'النظام الملكي' }, { id: 'b', textAr: 'راي الثور العربي الكبرى' }, { id: 'c', textAr: 'انتشار الإسلام وحضارته في العالم' }, { id: 'd', textAr: 'الفداء والتضحي' }], correctAnswer: 'c', marks: 1 },
+            { id: 10, type: 'mcq', questionAr: 'بدأ استدام العلم الأردني بصورته الحالي منذ:', options: [{ id: 'a', textAr: 'استقلال المملك عام 1946' }, { id: 'b', textAr: 'تأسيس إمار شرق الأردن عام 1921' }, { id: 'c', textAr: 'تشكيل أول حكوم أردني' }, { id: 'd', textAr: 'إعلان الثور العربي الكبرى' }], correctAnswer: 'b', marks: 1 },
+            { id: 11, type: 'mcq', questionAr: 'من أدوار المواطن في الحفاظ على أمن الوطن:', options: [{ id: 'a', textAr: 'التعاون مع التنظيمات المحظور' }, { id: 'b', textAr: 'إذاع الشائع' }, { id: 'c', textAr: 'رفض التطرف مهما كان مصدره' }, { id: 'd', textAr: 'البوح بأسرار البلد' }], correctAnswer: 'c', marks: 1 },
+            { id: 12, type: 'mcq', questionAr: 'أصدر جلال الملك الحسين بن طلال بعد حرب الليج الثاني كتاب بعنوان:', options: [{ id: 'a', textAr: 'مهنتي كملك' }, { id: 'b', textAr: 'أحاديث ملكي' }, { id: 'c', textAr: 'الكتاب الأبيض' }, { id: 'd', textAr: 'الحرب العراقي الإيراني' }], correctAnswer: 'c', marks: 1 },
+            { id: 13, type: 'mcq', questionAr: 'إدام الاتصالات اللازم لنقل الصوت والصور والمعلومات من واجبات:', options: [{ id: 'a', textAr: 'أسلح المناور' }, { id: 'b', textAr: 'أسلح الإسناد' }, { id: 'c', textAr: 'سلاح اللاسلكي الملكي' }, { id: 'd', textAr: 'سلاح الهندس الملكي' }], correctAnswer: 'c', marks: 1 },
+            { id: 14, type: 'mcq', questionAr: 'أطلق الشريف الحسين بن علي رصاص الثور العربي الكبرى من:', options: [{ id: 'a', textAr: 'مك المكرم 1916' }, { id: 'b', textAr: 'مك المكرم 1917' }, { id: 'c', textAr: 'المدين المنور 1917' }, { id: 'd', textAr: 'عمان 1916' }], correctAnswer: 'a', marks: 1 },
+            { id: 15, type: 'mcq', questionAr: 'السيطر على المزارعين والصيادين والرعا ضمن مناطق المسؤولي من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندس الملكي' }, { id: 'c', textAr: 'مؤسس الإسكان والأشغال العسكري' }, { id: 'd', textAr: 'المركز العسكري لمكافح الإرهاب' }], correctAnswer: 'a', marks: 1 },
+            { id: 16, type: 'mcq', questionAr: 'من واجبات سلاح الهندس الملكي:', options: [{ id: 'a', textAr: 'المساعد في أعمال التفي والتمويه' }, { id: 'b', textAr: 'تأمين البريد العسكري' }, { id: 'c', textAr: 'تقديم الإسناد الفني' }, { id: 'd', textAr: 'السيطر على اللجوء غير الشرعي' }], correctAnswer: 'a', marks: 1 },
+            { id: 17, type: 'mcq', questionAr: 'إدام القوات المسلح بجميع ما تحتاجه من أرزاق ووقود ونقل من واجبات:', options: [{ id: 'a', textAr: 'المركز الوطني لإدار الأزمات' }, { id: 'b', textAr: 'وزار النقل' }, { id: 'c', textAr: 'التموين والنقل الملكي' }, { id: 'd', textAr: 'المركز الأردني للتصميم' }], correctAnswer: 'c', marks: 1 },
+            { id: 18, type: 'mcq', questionAr: 'تسمى الاتفاقي التي وقعتها فرنسا وبريطانيا عام 1916:', options: [{ id: 'a', textAr: 'سايكس بيكو' }, { id: 'b', textAr: 'وعد بلفور' }, { id: 'c', textAr: 'الحسين مكماهون' }, { id: 'd', textAr: 'فرساي' }], correctAnswer: 'a', marks: 1 },
+            { id: 19, type: 'mcq', questionAr: 'ضمن إدارات الأمن العام، تعمل الشرط النسائي في:', options: [{ id: 'a', textAr: 'إدار السير والمتبرات الجنائي' }, { id: 'b', textAr: 'مدارس الثقاف العسكري' }, { id: 'c', textAr: 'التصوير الجوي' }, { id: 'd', textAr: 'الإنزال الجوي' }], correctAnswer: 'a', marks: 1 },
+            { id: 20, type: 'mcq', questionAr: 'مواجه الحملات الإعلامي غير التقليدي من إمكانيات:', options: [{ id: 'a', textAr: 'المركز الوطني للأمن وإدار الأزمات' }, { id: 'b', textAr: 'مديري الإفتاء العسكري' }, { id: 'c', textAr: 'الهيئ الهاشمي للمصابين' }, { id: 'd', textAr: 'المركز العسكري لمكافح الإرهاب' }], correctAnswer: 'd', marks: 1 }
         ]
     },
     military_science_mid_p2: {
         id: 'military_science_mid_p2',
         title: 'Mid Exam - Part 2',
-        titleAr: 'مادة الميد - الجزء الثاني',
+        titleAr: 'ماد الميد - الجزء الثاني',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 21, type: 'mcq', questionAr: 'الوحدة المعنية بتأمين المواد والحاجات اليومية للوحدات هي:', options: [{ id: 'a', textAr: 'سلاح الهندسة' }, { id: 'b', textAr: 'وحدات الخدمات' }, { id: 'c', textAr: 'سلاح اللاسلكي' }, { id: 'd', textAr: 'المشاة والدروع' }], correctAnswer: 'b', marks: 1 },
-            { id: 22, type: 'mcq', questionAr: 'أهمية مشاركة الأردن في حرب 1973 تمثلت بـ:', options: [{ id: 'a', textAr: 'إشغال جزء من القوات الإسرائيلية' }, { id: 'b', textAr: 'اختراق دفاعات العدو في العراق' }, { id: 'c', textAr: 'حرمان العدو من الالتفاف على القوات المصرية' }, { id: 'd', textAr: 'استخدام الأراضي المصرية' }], correctAnswer: 'a', marks: 1 },
-            { id: 23, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثورة العربية الكبرى عام:', options: [{ id: 'a', textAr: '1948' }, { id: 'b', textAr: '1916' }, { id: 'c', textAr: '1918' }, { id: 'd', textAr: '1999' }], correctAnswer: 'b', marks: 1 },
-            { id: 24, type: 'mcq', questionAr: 'بناء قوات مسلحة نظامية حديثة هدف من أهداف الثورة العربية الكبرى:', options: [{ id: 'a', textAr: 'العسكرية' }, { id: 'b', textAr: 'السياسية' }, { id: 'c', textAr: 'النفسية والمعنوية' }, { id: 'd', textAr: 'الاقتصادية' }], correctAnswer: 'a', marks: 1 },
-            { id: 25, type: 'mcq', questionAr: 'السيطرة على اللجوء غير الشرعي من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندسة الملكي' }, { id: 'c', textAr: 'سلاح المشاة' }, { id: 'd', textAr: 'سلاح الجو' }], correctAnswer: 'a', marks: 1 },
-            { id: 26, type: 'mcq', questionAr: 'تضطلع دائرة المخابرات العامة بمهماتها من خلال:', options: [{ id: 'a', textAr: 'الالتزام بقوانين الدول الأخرى' }, { id: 'b', textAr: 'جمع وتحليل المعلومات' }, { id: 'c', textAr: 'العمل التشاركي الدولي' }, { id: 'd', textAr: 'احترام حقوق الدول' }], correctAnswer: 'b', marks: 1 },
-            { id: 27, type: 'mcq', questionAr: 'المكتب السياسي للتحقيقات مهمته الأساسية:', options: [{ id: 'a', textAr: 'الإشراف على التجمعات' }, { id: 'b', textAr: 'منع الجرائم وتعقبها' }, { id: 'c', textAr: 'حفظ أمن القوات المسلحة' }, { id: 'd', textAr: 'مكافحة التهريب' }], correctAnswer: 'b', marks: 1 },
-            { id: 28, type: 'mcq', questionAr: 'تم افتتاح مدينة الحسين الطبية واستقبال أول مريض عام:', options: [{ id: 'a', textAr: '1973' }, { id: 'b', textAr: '1975' }, { id: 'c', textAr: '1946' }, { id: 'd', textAr: '1977' }], correctAnswer: 'a', marks: 1 },
-            { id: 29, type: 'mcq', questionAr: 'في عام 1955 تم تزويد سلاح الجو بطائرات الفامبير وسمي بـ:', options: [{ id: 'a', textAr: 'طيران المملكة الأردنية' }, { id: 'b', textAr: 'سلاح الجو الملكي الأردني' }, { id: 'c', textAr: 'القوات الجوية القتالية' }, { id: 'd', textAr: 'القوات الجوية الميدانية' }], correctAnswer: 'b', marks: 1 },
-            { id: 30, type: 'mcq', questionAr: 'السلاح الذي واكب تطور القوات المسلحة منذ 1921 هو:', options: [{ id: 'a', textAr: 'سلاح الهندسة' }, { id: 'b', textAr: 'سلاح المفارز الفنية' }, { id: 'c', textAr: 'الكلية الفنية العسكرية' }, { id: 'd', textAr: 'سلاح الصيانة الملكي' }], correctAnswer: 'a', marks: 1 },
-            { id: 31, type: 'mcq', questionAr: 'رقعة نسيج متعددة الألوان تمثل الشخصية الاعتبارية للدولة هي:', options: [{ id: 'a', textAr: 'العلم الوطني' }, { id: 'b', textAr: 'شعار الدولة' }, { id: 'c', textAr: 'الراية الهاشمية' }, { id: 'd', textAr: 'شعار الجيش' }], correctAnswer: 'a', marks: 1 },
-            { id: 32, type: 'mcq', questionAr: 'بويع جلالة الملك عبدالله الثاني ملكًا عام:', options: [{ id: 'a', textAr: '1999' }, { id: 'b', textAr: '1992' }, { id: 'c', textAr: '1996' }, { id: 'd', textAr: '1955' }], correctAnswer: 'a', marks: 1 },
-            { id: 33, type: 'mcq', questionAr: 'استمر تطوير الدبابات من حيث:', options: [{ id: 'a', textAr: 'العمق للقتال' }, { id: 'b', textAr: 'العمليات التعبوية' }, { id: 'c', textAr: 'إسناد الخدمات الطبية' }, { id: 'd', textAr: 'قوة النار والحركة والتدريع' }], correctAnswer: 'd', marks: 1 },
-            { id: 34, type: 'mcq', questionAr: 'تأسست جامعة مؤتة / الجناح العسكري بهدف:', options: [{ id: 'a', textAr: 'رفد السوق بكوادر مهنية' }, { id: 'b', textAr: 'إعداد ضباط مؤهلين' }, { id: 'c', textAr: 'تحسين الاقتصاد' }, { id: 'd', textAr: 'رفع تدريب أبناء العاملين' }], correctAnswer: 'b', marks: 1 },
-            { id: 35, type: 'mcq', questionAr: 'سيفان متقاطعان ونجمة سباعية وياقتان حمراوان هي رتبة:', options: [{ id: 'a', textAr: 'فريق' }, { id: 'b', textAr: 'عقيد' }, { id: 'c', textAr: 'لواء' }, { id: 'd', textAr: 'مشير' }], correctAnswer: 'a', marks: 1 },
-            { id: 36, type: 'mcq', questionAr: 'المشاة المنقولة جوًا نوع من أنواع سلاح:', options: [{ id: 'a', textAr: 'الهندسة' }, { id: 'b', textAr: 'الدروع' }, { id: 'c', textAr: 'المشاة' }, { id: 'd', textAr: 'الدفاع الجوي' }], correctAnswer: 'c', marks: 1 },
-            { id: 37, type: 'mcq', questionAr: 'تعلو الحرية رأس التاج في شعار المملكة وترمز إلى:', options: [{ id: 'a', textAr: 'قوة الجيش' }, { id: 'b', textAr: 'حرية راية الهاشميين' }, { id: 'c', textAr: 'تاريخ الهاشميين' }, { id: 'd', textAr: 'عزة النفس العربية' }], correctAnswer: 'b', marks: 1 },
-            { id: 38, type: 'mcq', questionAr: 'مفهوم الدفاع الجوي يعني:', options: [{ id: 'a', textAr: 'حماية الأرض من سلاح الجو المعادي' }, { id: 'b', textAr: 'سلاح المدفعية' }, { id: 'c', textAr: 'سلاح الهندسة' }, { id: 'd', textAr: 'سلاح اللاسلكي' }], correctAnswer: 'a', marks: 1 },
-            { id: 39, type: 'mcq', questionAr: 'من واجبات الدفاع الجوي:', options: [{ id: 'a', textAr: 'التجريد والاستطلاع الجوي' }, { id: 'b', textAr: 'الإنزال الجوي' }, { id: 'c', textAr: 'الدفاع عن المناطق الحيوية' }, { id: 'd', textAr: 'الاستطلاع البحري' }], correctAnswer: 'c', marks: 1 },
-            { id: 40, type: 'mcq', questionAr: 'حماية حدود المملكة ومنع التسلل من مهام:', options: [{ id: 'a', textAr: 'سلاح الهندسة' }, { id: 'b', textAr: 'وحدات حرس الحدود' }, { id: 'c', textAr: 'سلاح الصيانة' }, { id: 'd', textAr: 'القوة البحرية' }], correctAnswer: 'b', marks: 1 }
+            { id: 21, type: 'mcq', questionAr: 'الوحد المعني بتأمين المواد والحاجات اليومي للوحدات هي:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'وحدات الدمات' }, { id: 'c', textAr: 'سلاح اللاسلكي' }, { id: 'd', textAr: 'المشا والدروع' }], correctAnswer: 'b', marks: 1 },
+            { id: 22, type: 'mcq', questionAr: 'أهمي مشارك الأردن في حرب 1973 تمثلت بـ:', options: [{ id: 'a', textAr: 'إشغال جزء من القوات الإسرائيلي' }, { id: 'b', textAr: 'اتراق دفاعات العدو في العراق' }, { id: 'c', textAr: 'حرمان العدو من الالتفاف على القوات المصري' }, { id: 'd', textAr: 'استدام الأراضي المصري' }], correctAnswer: 'a', marks: 1 },
+            { id: 23, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثور العربي الكبرى عام:', options: [{ id: 'a', textAr: '1948' }, { id: 'b', textAr: '1916' }, { id: 'c', textAr: '1918' }, { id: 'd', textAr: '1999' }], correctAnswer: 'b', marks: 1 },
+            { id: 24, type: 'mcq', questionAr: 'بناء قوات مسلح نظامي حديث هدف من أهداف الثور العربي الكبرى:', options: [{ id: 'a', textAr: 'العسكري' }, { id: 'b', textAr: 'السياسي' }, { id: 'c', textAr: 'النفسي والمعنوي' }, { id: 'd', textAr: 'الاقتصادي' }], correctAnswer: 'a', marks: 1 },
+            { id: 25, type: 'mcq', questionAr: 'السيطر على اللجوء غير الشرعي من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندس الملكي' }, { id: 'c', textAr: 'سلاح المشا' }, { id: 'd', textAr: 'سلاح الجو' }], correctAnswer: 'a', marks: 1 },
+            { id: 26, type: 'mcq', questionAr: 'تضطلع دائر المابرات العام بمهماتها من لال:', options: [{ id: 'a', textAr: 'الالتزام بقوانين الدول الأرى' }, { id: 'b', textAr: 'جمع وتحليل المعلومات' }, { id: 'c', textAr: 'العمل التشاركي الدولي' }, { id: 'd', textAr: 'احترام حقوق الدول' }], correctAnswer: 'b', marks: 1 },
+            { id: 27, type: 'mcq', questionAr: 'المكتب السياسي للتحقيقات مهمته الأساسي:', options: [{ id: 'a', textAr: 'الإشراف على التجمعات' }, { id: 'b', textAr: 'منع الجرائم وتعقبها' }, { id: 'c', textAr: 'حفظ أمن القوات المسلح' }, { id: 'd', textAr: 'مكافح التهريب' }], correctAnswer: 'b', marks: 1 },
+            { id: 28, type: 'mcq', questionAr: 'تم افتتاح مدين الحسين الطبي واستقبال أول مريض عام:', options: [{ id: 'a', textAr: '1973' }, { id: 'b', textAr: '1975' }, { id: 'c', textAr: '1946' }, { id: 'd', textAr: '1977' }], correctAnswer: 'a', marks: 1 },
+            { id: 29, type: 'mcq', questionAr: 'في عام 1955 تم تزويد سلاح الجو بطائرات الفامبير وسمي بـ:', options: [{ id: 'a', textAr: 'طيران المملك الأردني' }, { id: 'b', textAr: 'سلاح الجو الملكي الأردني' }, { id: 'c', textAr: 'القوات الجوي القتالي' }, { id: 'd', textAr: 'القوات الجوي الميداني' }], correctAnswer: 'b', marks: 1 },
+            { id: 30, type: 'mcq', questionAr: 'السلاح الذي واكب تطور القوات المسلح منذ 1921 هو:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'سلاح المفارز الفني' }, { id: 'c', textAr: 'الكلي الفني العسكري' }, { id: 'd', textAr: 'سلاح الصيان الملكي' }], correctAnswer: 'a', marks: 1 },
+            { id: 31, type: 'mcq', questionAr: 'رقع نسيج متعدد الألوان تمثل الشصي الاعتباري للدول هي:', options: [{ id: 'a', textAr: 'العلم الوطني' }, { id: 'b', textAr: 'شعار الدول' }, { id: 'c', textAr: 'الراي الهاشمي' }, { id: 'd', textAr: 'شعار الجيش' }], correctAnswer: 'a', marks: 1 },
+            { id: 32, type: 'mcq', questionAr: 'بويع جلال الملك عبدالله الثاني ملكًا عام:', options: [{ id: 'a', textAr: '1999' }, { id: 'b', textAr: '1992' }, { id: 'c', textAr: '1996' }, { id: 'd', textAr: '1955' }], correctAnswer: 'a', marks: 1 },
+            { id: 33, type: 'mcq', questionAr: 'استمر تطوير الدبابات من حيث:', options: [{ id: 'a', textAr: 'العمق للقتال' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'إسناد الدمات الطبي' }, { id: 'd', textAr: 'قو النار والحرك والتدريع' }], correctAnswer: 'd', marks: 1 },
+            { id: 34, type: 'mcq', questionAr: 'تأسست جامع مؤت / الجناح العسكري بهدف:', options: [{ id: 'a', textAr: 'رفد السوق بكوادر مهني' }, { id: 'b', textAr: 'إعداد ضباط مؤهلين' }, { id: 'c', textAr: 'تحسين الاقتصاد' }, { id: 'd', textAr: 'رفع تدريب أبناء العاملين' }], correctAnswer: 'b', marks: 1 },
+            { id: 35, type: 'mcq', questionAr: 'سيفان متقاطعان ونجم سباعي وياقتان حمراوان هي رتب:', options: [{ id: 'a', textAr: 'فريق' }, { id: 'b', textAr: 'عقيد' }, { id: 'c', textAr: 'لواء' }, { id: 'd', textAr: 'مشير' }], correctAnswer: 'a', marks: 1 },
+            { id: 36, type: 'mcq', questionAr: 'المشا المنقول جوًا نوع من أنواع سلاح:', options: [{ id: 'a', textAr: 'الهندس' }, { id: 'b', textAr: 'الدروع' }, { id: 'c', textAr: 'المشا' }, { id: 'd', textAr: 'الدفاع الجوي' }], correctAnswer: 'c', marks: 1 },
+            { id: 37, type: 'mcq', questionAr: 'تعلو الحري رأس التاج في شعار المملك وترمز إلى:', options: [{ id: 'a', textAr: 'قو الجيش' }, { id: 'b', textAr: 'حري راي الهاشميين' }, { id: 'c', textAr: 'تاري الهاشميين' }, { id: 'd', textAr: 'عز النفس العربي' }], correctAnswer: 'b', marks: 1 },
+            { id: 38, type: 'mcq', questionAr: 'مفهوم الدفاع الجوي يعني:', options: [{ id: 'a', textAr: 'حماي الأرض من سلاح الجو المعادي' }, { id: 'b', textAr: 'سلاح المدفعي' }, { id: 'c', textAr: 'سلاح الهندس' }, { id: 'd', textAr: 'سلاح اللاسلكي' }], correctAnswer: 'a', marks: 1 },
+            { id: 39, type: 'mcq', questionAr: 'من واجبات الدفاع الجوي:', options: [{ id: 'a', textAr: 'التجريد والاستطلاع الجوي' }, { id: 'b', textAr: 'الإنزال الجوي' }, { id: 'c', textAr: 'الدفاع عن المناطق الحيوي' }, { id: 'd', textAr: 'الاستطلاع البحري' }], correctAnswer: 'c', marks: 1 },
+            { id: 40, type: 'mcq', questionAr: 'حماي حدود المملك ومنع التسلل من مهام:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'وحدات حرس الحدود' }, { id: 'c', textAr: 'سلاح الصيان' }, { id: 'd', textAr: 'القو البحري' }], correctAnswer: 'b', marks: 1 }
         ]
     },
     military_science_mid_p3: {
         id: 'military_science_mid_p3',
         title: 'Mid Exam - Part 3',
-        titleAr: 'مادة الميد - الجزء الثالث',
+        titleAr: 'ماد الميد - الجزء الثالث',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 41, type: 'mcq', questionAr: 'رؤية الخدمات الطبية الملكية هي:', options: [{ id: 'a', textAr: 'الصدارة في تقديم خدمة طبية للقطاع الخاص فقط' }, { id: 'b', textAr: 'تقديم خدمة لأبناء العاملين فقط' }, { id: 'c', textAr: 'معالجة القطاع الخاص' }, { id: 'd', textAr: 'الصدارة في تقديم خدمة طبية متكاملة متميزة تواكب التقدم الطبي العالمي' }], correctAnswer: 'd', marks: 1 },
-            { id: 42, type: 'mcq', questionAr: 'من أكثر الصنوف سرعة في التطور والتحديث:', options: [{ id: 'a', textAr: 'العمليات التعبوية' }, { id: 'b', textAr: 'وحدات الخدمات' }, { id: 'c', textAr: 'قوات الصاعقة' }, { id: 'd', textAr: 'الوحدات المدرعة' }], correctAnswer: 'a', marks: 1 },
-            { id: 43, type: 'mcq', questionAr: 'ظهرت الحاجة إلى وجود مستشفى للجيش العربي عام 1948 حيث تم تخصيص:', options: [{ id: 'a', textAr: 'مراكز صحية في المدن' }, { id: 'b', textAr: 'تكنات قوة حدود شرق الأردن' }, { id: 'c', textAr: 'مديرية الإعاشة والنقليات' }, { id: 'd', textAr: 'الخدمات الصحية' }], correctAnswer: 'b', marks: 1 },
-            { id: 44, type: 'mcq', questionAr: 'أول وزارة شُكّلت في عهد إمارة شرق الأردن عام 1921 حملت اسم:', options: [{ id: 'a', textAr: 'مجلس الإمارة' }, { id: 'b', textAr: 'مجلس الشورى' }, { id: 'c', textAr: 'مجلس الأمة' }, { id: 'd', textAr: 'مجلس المشاورين' }], correctAnswer: 'd', marks: 1 },
-            { id: 45, type: 'mcq', questionAr: 'تعتبر الوحدات المدرعة سلاح الهجوم الرئيس في الجيوش الحديثة وتعرف بـ:', options: [{ id: 'a', textAr: 'السلاح الحاسم في المعركة' }, { id: 'b', textAr: 'سلاح المفاجأة' }, { id: 'c', textAr: 'سلاح الإسناد' }, { id: 'd', textAr: 'إحراز التفوق في المعركة' }], correctAnswer: 'a', marks: 1 },
-            { id: 46, type: 'mcq', questionAr: 'نجمتان سباعيتان يعلوهما التاج الهاشمي وباقتان حمراوان هي رتبة:', options: [{ id: 'a', textAr: 'مقدم' }, { id: 'b', textAr: 'عميد' }, { id: 'c', textAr: 'عقيد' }, { id: 'd', textAr: 'رائد' }], correctAnswer: 'b', marks: 1 },
-            { id: 47, type: 'mcq', questionAr: 'خاض الجيش العربي الأردني عدة معارك مع القوات اليهودية منها:', options: [{ id: 'a', textAr: 'معركة القدس' }, { id: 'b', textAr: 'معركة نهاوند' }, { id: 'c', textAr: 'معركة حطين' }, { id: 'd', textAr: 'معركة اليرموك' }], correctAnswer: 'a', marks: 1 },
-            { id: 48, type: 'mcq', questionAr: 'القدرة العلمية والاقتصادية وعدد السكان من العوامل المؤثرة على:', options: [{ id: 'a', textAr: 'نسبة نجاح أو فشل المعركة' }, { id: 'b', textAr: 'متطلبات العمل اليومية' }, { id: 'c', textAr: 'تنظيم القوات المسلحة' }, { id: 'd', textAr: 'رفد القوات المسلحة بالعدة والعتاد' }], correctAnswer: 'd', marks: 1 },
-            { id: 49, type: 'mcq', questionAr: 'من أهم أدوار سلاح الجو الملكي في تنمية المجتمع المحلي:', options: [{ id: 'a', textAr: 'الاتصال مع المؤسسات التعليمية' }, { id: 'b', textAr: 'السيطرة على المرور الجوي خارج المملكة' }, { id: 'c', textAr: 'تأمين الاتصالات السلكية واللاسلكية للمناطق النائية' }, { id: 'd', textAr: 'النقل الجوي الداخلي والخارجي' }], correctAnswer: 'd', marks: 1 },
-            { id: 50, type: 'mcq', questionAr: 'السلاح الذي يعمل على المحافظة على أمن وسلامة الاتصالات هو:', options: [{ id: 'a', textAr: 'سلاح اللاسلكي الملكي' }, { id: 'b', textAr: 'سلاح الجو الملكي' }, { id: 'c', textAr: 'سلاح الصيانة الملكي' }, { id: 'd', textAr: 'سلاح الهندسة الملكي' }], correctAnswer: 'a', marks: 1 },
-            { id: 51, type: 'mcq', questionAr: 'من واجبات سلاح الصيانة الملكي:', options: [{ id: 'a', textAr: 'تقديم المشورة الفنية لجميع وحدات القوات المسلحة' }, { id: 'b', textAr: 'زراعة حقول الألغام' }, { id: 'c', textAr: 'إدامة الاتصالات' }, { id: 'd', textAr: 'التخطيط لكافة الوحدات' }], correctAnswer: 'a', marks: 1 },
-            { id: 52, type: 'mcq', questionAr: 'من الأهداف المرتبطة بعمليات التسلل:', options: [{ id: 'a', textAr: 'إنشاء الجسور' }, { id: 'b', textAr: 'مراقبة الخطوط الخلوية' }, { id: 'c', textAr: 'التهريب والتجسس والبحث عن العمل' }, { id: 'd', textAr: 'نشر الطمأنينة' }], correctAnswer: 'c', marks: 1 },
-            { id: 53, type: 'mcq', questionAr: 'تأسست قيادة القوة البحرية سنة 1951 في مدينة العقبة وأطلق عليها اسم:', options: [{ id: 'a', textAr: 'قيادة الهندسة الملكية' }, { id: 'b', textAr: 'أسطول الجيش العربي' }, { id: 'c', textAr: 'قاعدة الأمير هاشم بن عبدالله البحرية' }, { id: 'd', textAr: 'السفن البحرية' }], correctAnswer: 'b', marks: 1 },
-            { id: 54, type: 'mcq', questionAr: 'الإخلاء الجوي للحالات الصعبة من أدوار:', options: [{ id: 'a', textAr: 'سلاح الدروع' }, { id: 'b', textAr: 'سلاح المشاة' }, { id: 'c', textAr: 'سلاح الجو الملكي' }, { id: 'd', textAr: 'سلاح الهندسة' }], correctAnswer: 'c', marks: 1 },
-            { id: 55, type: 'mcq', questionAr: 'من واجبات المخابرات العامة في مقاومة التخريب الفكري:', options: [{ id: 'a', textAr: 'القتل والاغتيال' }, { id: 'b', textAr: 'مكافحة التسلل' }, { id: 'c', textAr: 'عمليات التفجير' }, { id: 'd', textAr: 'مقاومة إثارة الفتن والصراعات' }], correctAnswer: 'd', marks: 1 },
-            { id: 56, type: 'mcq', questionAr: 'القانون الساري على كافة موظفي وأعضاء دائرة المخابرات العامة هو:', options: [{ id: 'a', textAr: 'القانون الجزائي' }, { id: 'b', textAr: 'قانون العقوبات العسكري' }, { id: 'c', textAr: 'القانون القضائي' }, { id: 'd', textAr: 'القانون المدني' }], correctAnswer: 'b', marks: 1 },
-            { id: 57, type: 'mcq', questionAr: 'يرمز لون طائر العقاب في شعار المملكة إلى:', options: [{ id: 'a', textAr: 'العزة والقوة والشجاعة' }, { id: 'b', textAr: 'راية الثورة العربية الكبرى' }, { id: 'c', textAr: 'شموخ شعار المملكة' }, { id: 'd', textAr: 'راية الرسول ﷺ' }], correctAnswer: 'd', marks: 1 },
-            { id: 58, type: 'mcq', questionAr: 'من واجبات دائرة المخابرات العامة على المستوى القومي:', options: [{ id: 'a', textAr: 'حماية الأمن القومي العربي' }, { id: 'b', textAr: 'وزارة الخارجية' }, { id: 'c', textAr: 'تحدي الفقر' }, { id: 'd', textAr: 'خفض القيمة النقدية' }], correctAnswer: 'a', marks: 1 },
-            { id: 59, type: 'mcq', questionAr: 'عند التخطيط لوحدات حرس الحدود يراعى التهديد من خلال:', options: [{ id: 'a', textAr: 'صيانة الأرض' }, { id: 'b', textAr: 'رفض قياس التهديد' }, { id: 'c', textAr: 'اللجوء الاقتصادي' }, { id: 'd', textAr: 'فهم وتقدير طبيعة وحجم التهديد' }], correctAnswer: 'd', marks: 1 },
-            { id: 60, type: 'mcq', questionAr: 'تم تعريب قيادة الجيش العربي في عهد جلالة الملك الحسين بن طلال عام:', options: [{ id: 'a', textAr: '1 آذار 1956' }, { id: 'b', textAr: '2 أيار 1954' }, { id: 'c', textAr: '31 آذار 1956' }, { id: 'd', textAr: '25 أيار 1957' }], correctAnswer: 'a', marks: 1 }
+            { id: 41, type: 'mcq', questionAr: 'رؤي الدمات الطبي الملكي هي:', options: [{ id: 'a', textAr: 'الصدار في تقديم دم طبي للقطاع الاص فقط' }, { id: 'b', textAr: 'تقديم دم لأبناء العاملين فقط' }, { id: 'c', textAr: 'معالج القطاع الاص' }, { id: 'd', textAr: 'الصدار في تقديم دم طبي متكامل متميز تواكب التقدم الطبي العالمي' }], correctAnswer: 'd', marks: 1 },
+            { id: 42, type: 'mcq', questionAr: 'من أكثر الصنوف سرع في التطور والتحديث:', options: [{ id: 'a', textAr: 'العمليات التعبوي' }, { id: 'b', textAr: 'وحدات الدمات' }, { id: 'c', textAr: 'قوات الصاعق' }, { id: 'd', textAr: 'الوحدات المدرع' }], correctAnswer: 'a', marks: 1 },
+            { id: 43, type: 'mcq', questionAr: 'ظهرت الحاج إلى وجود مستشفى للجيش العربي عام 1948 حيث تم تصيص:', options: [{ id: 'a', textAr: 'مراكز صحي في المدن' }, { id: 'b', textAr: 'تكنات قو حدود شرق الأردن' }, { id: 'c', textAr: 'مديري الإعاش والنقليات' }, { id: 'd', textAr: 'الدمات الصحي' }], correctAnswer: 'b', marks: 1 },
+            { id: 44, type: 'mcq', questionAr: 'أول وزار شُكّلت في عهد إمار شرق الأردن عام 1921 حملت اسم:', options: [{ id: 'a', textAr: 'مجلس الإمار' }, { id: 'b', textAr: 'مجلس الشورى' }, { id: 'c', textAr: 'مجلس الأم' }, { id: 'd', textAr: 'مجلس المشاورين' }], correctAnswer: 'd', marks: 1 },
+            { id: 45, type: 'mcq', questionAr: 'تعتبر الوحدات المدرع سلاح الهجوم الرئيس في الجيوش الحديث وتعرف بـ:', options: [{ id: 'a', textAr: 'السلاح الحاسم في المعرك' }, { id: 'b', textAr: 'سلاح المفاجأ' }, { id: 'c', textAr: 'سلاح الإسناد' }, { id: 'd', textAr: 'إحراز التفوق في المعرك' }], correctAnswer: 'a', marks: 1 },
+            { id: 46, type: 'mcq', questionAr: 'نجمتان سباعيتان يعلوهما التاج الهاشمي وباقتان حمراوان هي رتب:', options: [{ id: 'a', textAr: 'مقدم' }, { id: 'b', textAr: 'عميد' }, { id: 'c', textAr: 'عقيد' }, { id: 'd', textAr: 'رائد' }], correctAnswer: 'b', marks: 1 },
+            { id: 47, type: 'mcq', questionAr: 'اض الجيش العربي الأردني عد معارك مع القوات اليهودي منها:', options: [{ id: 'a', textAr: 'معرك القدس' }, { id: 'b', textAr: 'معرك نهاوند' }, { id: 'c', textAr: 'معرك حطين' }, { id: 'd', textAr: 'معرك اليرموك' }], correctAnswer: 'a', marks: 1 },
+            { id: 48, type: 'mcq', questionAr: 'القدر العلمي والاقتصادي وعدد السكان من العوامل المؤثر على:', options: [{ id: 'a', textAr: 'نسب نجاح أو فشل المعرك' }, { id: 'b', textAr: 'متطلبات العمل اليومي' }, { id: 'c', textAr: 'تنظيم القوات المسلح' }, { id: 'd', textAr: 'رفد القوات المسلح بالعد والعتاد' }], correctAnswer: 'd', marks: 1 },
+            { id: 49, type: 'mcq', questionAr: 'من أهم أدوار سلاح الجو الملكي في تنمي المجتمع المحلي:', options: [{ id: 'a', textAr: 'الاتصال مع المؤسسات التعليمي' }, { id: 'b', textAr: 'السيطر على المرور الجوي ارج المملك' }, { id: 'c', textAr: 'تأمين الاتصالات السلكي واللاسلكي للمناطق النائي' }, { id: 'd', textAr: 'النقل الجوي الدالي والارجي' }], correctAnswer: 'd', marks: 1 },
+            { id: 50, type: 'mcq', questionAr: 'السلاح الذي يعمل على المحافظ على أمن وسلام الاتصالات هو:', options: [{ id: 'a', textAr: 'سلاح اللاسلكي الملكي' }, { id: 'b', textAr: 'سلاح الجو الملكي' }, { id: 'c', textAr: 'سلاح الصيان الملكي' }, { id: 'd', textAr: 'سلاح الهندس الملكي' }], correctAnswer: 'a', marks: 1 },
+            { id: 51, type: 'mcq', questionAr: 'من واجبات سلاح الصيان الملكي:', options: [{ id: 'a', textAr: 'تقديم المشور الفني لجميع وحدات القوات المسلح' }, { id: 'b', textAr: 'زراع حقول الألغام' }, { id: 'c', textAr: 'إدام الاتصالات' }, { id: 'd', textAr: 'التطيط لكاف الوحدات' }], correctAnswer: 'a', marks: 1 },
+            { id: 52, type: 'mcq', questionAr: 'من الأهداف المرتبط بعمليات التسلل:', options: [{ id: 'a', textAr: 'إنشاء الجسور' }, { id: 'b', textAr: 'مراقب الطوط اللوي' }, { id: 'c', textAr: 'التهريب والتجسس والبحث عن العمل' }, { id: 'd', textAr: 'نشر الطمأنين' }], correctAnswer: 'c', marks: 1 },
+            { id: 53, type: 'mcq', questionAr: 'تأسست قياد القو البحري سن 1951 في مدين العقب وأطلق عليها اسم:', options: [{ id: 'a', textAr: 'قياد الهندس الملكي' }, { id: 'b', textAr: 'أسطول الجيش العربي' }, { id: 'c', textAr: 'قاعد الأمير هاشم بن عبدالله البحري' }, { id: 'd', textAr: 'السفن البحري' }], correctAnswer: 'b', marks: 1 },
+            { id: 54, type: 'mcq', questionAr: 'الإلاء الجوي للحالات الصعب من أدوار:', options: [{ id: 'a', textAr: 'سلاح الدروع' }, { id: 'b', textAr: 'سلاح المشا' }, { id: 'c', textAr: 'سلاح الجو الملكي' }, { id: 'd', textAr: 'سلاح الهندس' }], correctAnswer: 'c', marks: 1 },
+            { id: 55, type: 'mcq', questionAr: 'من واجبات المابرات العام في مقاوم التريب الفكري:', options: [{ id: 'a', textAr: 'القتل والاغتيال' }, { id: 'b', textAr: 'مكافح التسلل' }, { id: 'c', textAr: 'عمليات التفجير' }, { id: 'd', textAr: 'مقاوم إثار الفتن والصراعات' }], correctAnswer: 'd', marks: 1 },
+            { id: 56, type: 'mcq', questionAr: 'القانون الساري على كاف موظفي وأعضاء دائر المابرات العام هو:', options: [{ id: 'a', textAr: 'القانون الجزائي' }, { id: 'b', textAr: 'قانون العقوبات العسكري' }, { id: 'c', textAr: 'القانون القضائي' }, { id: 'd', textAr: 'القانون المدني' }], correctAnswer: 'b', marks: 1 },
+            { id: 57, type: 'mcq', questionAr: 'يرمز لون طائر العقاب في شعار المملك إلى:', options: [{ id: 'a', textAr: 'العز والقو والشجاع' }, { id: 'b', textAr: 'راي الثور العربي الكبرى' }, { id: 'c', textAr: 'شمو شعار المملك' }, { id: 'd', textAr: 'راي الرسول ﷺ' }], correctAnswer: 'd', marks: 1 },
+            { id: 58, type: 'mcq', questionAr: 'من واجبات دائر المابرات العام على المستوى القومي:', options: [{ id: 'a', textAr: 'حماي الأمن القومي العربي' }, { id: 'b', textAr: 'وزار الارجي' }, { id: 'c', textAr: 'تحدي الفقر' }, { id: 'd', textAr: 'فض القيم النقدي' }], correctAnswer: 'a', marks: 1 },
+            { id: 59, type: 'mcq', questionAr: 'عند التطيط لوحدات حرس الحدود يراعى التهديد من لال:', options: [{ id: 'a', textAr: 'صيان الأرض' }, { id: 'b', textAr: 'رفض قياس التهديد' }, { id: 'c', textAr: 'اللجوء الاقتصادي' }, { id: 'd', textAr: 'فهم وتقدير طبيع وحجم التهديد' }], correctAnswer: 'd', marks: 1 },
+            { id: 60, type: 'mcq', questionAr: 'تم تعريب قياد الجيش العربي في عهد جلال الملك الحسين بن طلال عام:', options: [{ id: 'a', textAr: '1 آذار 1956' }, { id: 'b', textAr: '2 أيار 1954' }, { id: 'c', textAr: '31 آذار 1956' }, { id: 'd', textAr: '25 أيار 1957' }], correctAnswer: 'a', marks: 1 }
         ]
     },
     military_science_mid_p4: {
         id: 'military_science_mid_p4',
         title: 'Mid Exam - Part 4',
-        titleAr: 'مادة الميد - الجزء الرابع',
+        titleAr: 'ماد الميد - الجزء الرابع',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 61, type: 'mcq', questionAr: 'إعادة وحدة العرب الروحية وإحياء التاريخ القومي العربي تُعد من:', options: [{ id: 'a', textAr: 'نتائج الثورة العربية الكبرى' }, { id: 'b', textAr: 'الصعوبات التي واجهت الثورة' }, { id: 'c', textAr: 'مرتكزات الثورة' }, { id: 'd', textAr: 'أسباب الثورة' }], correctAnswer: 'a', marks: 1 },
-            { id: 62, type: 'mcq', questionAr: 'إعطاء العمق للقتال (قصف أهداف بعمق العدو) من أدوار سلاح:', options: [{ id: 'a', textAr: 'المدفعية' }, { id: 'b', textAr: 'اللاسلكي' }, { id: 'c', textAr: 'الهندسة' }, { id: 'd', textAr: 'الصيانة' }], correctAnswer: 'a', marks: 1 },
-            { id: 63, type: 'mcq', questionAr: 'من أكثر الصنوف سرعة في التطور والتحديث:', options: [{ id: 'a', textAr: 'الوحدات المدرعة' }, { id: 'b', textAr: 'العمليات التعبوية' }, { id: 'c', textAr: 'وحدات الخدمات' }, { id: 'd', textAr: 'قوات الصاعقة' }], correctAnswer: 'a', marks: 1 },
-            { id: 64, type: 'mcq', questionAr: 'من مصادر التجنيد في القوات المسلحة الأردنية:', options: [{ id: 'a', textAr: 'طلاب معاهد التدريب المهني' }, { id: 'b', textAr: 'خريجو كليات المجتمع فقط' }, { id: 'c', textAr: 'الضباط والرتب الأخرى' }, { id: 'd', textAr: 'خريجو الجامعات الخاصة' }], correctAnswer: 'c', marks: 1 },
-            { id: 65, type: 'mcq', questionAr: 'من أهداف إسرائيل في معركة الكرامة:', options: [{ id: 'a', textAr: 'كسب تعاطف الدول الكبرى' }, { id: 'b', textAr: 'تحطيم الروح المعنوية للطيارين المصريين' }, { id: 'c', textAr: 'الاستحواذ على مناطق الأغوار' }, { id: 'd', textAr: 'تخريب مدارج الطائرات' }], correctAnswer: 'c', marks: 1 },
-            { id: 66, type: 'mcq', questionAr: 'فقدان الروح المعنوية بعد سقوط سلاح الجو المصري كان سببًا لهزيمة العرب في حرب:', options: [{ id: 'a', textAr: '1967' }, { id: 'b', textAr: 'معركة الكرامة' }, { id: 'c', textAr: 'حرب 1948' }, { id: 'd', textAr: 'حرب 1973' }], correctAnswer: 'a', marks: 1 },
-            { id: 67, type: 'mcq', questionAr: 'كانت مهمة الجيش العربي الأردني في حرب 1948:', options: [{ id: 'a', textAr: 'التقدم شمال الحولة واحتلال صفد' }, { id: 'b', textAr: 'التقدم وسط بيسان والعفولة' }, { id: 'c', textAr: 'احتلال شمال فلسطين من حيفا حتى الناصرة' }, { id: 'd', textAr: 'التقدم باتجاه القدس والسهل الساحلي' }], correctAnswer: 'd', marks: 1 },
-            { id: 68, type: 'mcq', questionAr: 'حرمان العدو من الالتفاف حول الجناح الأيسر للقوات السورية كان من أهمية مشاركة القوات الأردنية في:', options: [{ id: 'a', textAr: 'حرب 1973' }, { id: 'b', textAr: 'حرب 1948' }, { id: 'c', textAr: 'حرب 1967' }, { id: 'd', textAr: 'معركة الكرامة' }], correctAnswer: 'a', marks: 1 },
-            { id: 69, type: 'mcq', questionAr: 'من نتائج الثورة العربية الكبرى:', options: [{ id: 'a', textAr: 'بناء قوات مسلحة نظامية حديثة' }, { id: 'b', textAr: 'إعلان الجهاد المقدس' }, { id: 'c', textAr: 'قيام أول دولة عربية في سوريا' }, { id: 'd', textAr: 'تفوق الجيش الإسرائيلي' }], correctAnswer: 'a', marks: 1 },
-            { id: 70, type: 'mcq', questionAr: 'الواجب الرئيسي للقوة البحرية الملكية:', options: [{ id: 'a', textAr: 'مراقبة الطرق الخارجية' }, { id: 'b', textAr: 'احتلال وتعزيز الأرض' }, { id: 'c', textAr: 'تدمير تشكيلات العدو المدرعة' }, { id: 'd', textAr: 'الدفاع عن المياه الإقليمية للمملكة' }], correctAnswer: 'd', marks: 1 },
-            { id: 71, type: 'mcq', questionAr: 'يمتلك سلاح الجو الملكي الأردني حاليًا:', options: [{ id: 'a', textAr: 'أحدث معدات النقل' }, { id: 'b', textAr: 'أحدث أجهزة التصاريح' }, { id: 'c', textAr: 'أحدث الطائرات التدريبية والعملياتية' }, { id: 'd', textAr: 'أحدث الوحدات الميدانية' }], correctAnswer: 'c', marks: 1 },
-            { id: 72, type: 'mcq', questionAr: 'من واجبات سلاح التموين والنقل الملكي:', options: [{ id: 'a', textAr: 'تنفيذ سياسة القيادة العامة لإدامة القوات المسلحة' }, { id: 'b', textAr: 'زراعة الأراضي حول المناطق العسكرية' }, { id: 'c', textAr: 'تدريب القطاع العام على التزويد' }, { id: 'd', textAr: 'السيطرة على نقليات النقل الخاص' }], correctAnswer: 'a', marks: 1 },
-            { id: 73, type: 'mcq', questionAr: 'مشاريع الحصاد المائي تتمثل في:', options: [{ id: 'a', textAr: 'إدارة الأزمات' }, { id: 'b', textAr: 'التنقيب عن الثروات' }, { id: 'c', textAr: 'الجهد الوطني للأزمات' }, { id: 'd', textAr: 'إنشاء السدود والحفائر والبرك وحفر الآبار' }], correctAnswer: 'd', marks: 1 },
-            { id: 74, type: 'mcq', questionAr: 'من واجبات حرس الحدود المرتبطة بالتخطيط:', options: [{ id: 'a', textAr: 'صيانة الأرض' }, { id: 'b', textAr: 'رؤية قياس مستوى التهديد' }, { id: 'c', textAr: 'اللجوء الاقتصادي' }, { id: 'd', textAr: 'فهم وتقدير طبيعة وحجم التهديد' }], correctAnswer: 'd', marks: 1 },
-            { id: 75, type: 'mcq', questionAr: 'تم تعريب قيادة الجيش العربي في عام:', options: [{ id: 'a', textAr: '1 آذار 1956' }, { id: 'b', textAr: '2 أيار 1954' }, { id: 'c', textAr: '31 آذار 1956' }, { id: 'd', textAr: '25 أيار 1957' }], correctAnswer: 'a', marks: 1 },
-            { id: 76, type: 'mcq', questionAr: 'إعادة وحدة العرب الروحية وإحياء التاريخ القومي العربي والاعتراف بدولة عربية مستقلة من:', options: [{ id: 'a', textAr: 'نتائج الثورة العربية الكبرى' }, { id: 'b', textAr: 'الصعوبات' }, { id: 'c', textAr: 'المرتكزات' }, { id: 'd', textAr: 'الأسباب' }], correctAnswer: 'a', marks: 1 },
-            { id: 77, type: 'mcq', questionAr: 'ضمت ولاية الديكابولس في العهد الروماني مناطق:', options: [{ id: 'a', textAr: 'بيريا والأنباط' }, { id: 'b', textAr: 'عجلون وشرق البلقاء وفيلادلفيا' }, { id: 'c', textAr: 'فيلادلفيا وجدارا' }, { id: 'd', textAr: 'فيلادلفيا وبيلا' }], correctAnswer: 'd', marks: 1 },
-            { id: 78, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثورة العربية الكبرى في:', options: [{ id: 'a', textAr: '10 حزيران 1916' }, { id: 'b', textAr: '10 تموز 1917' }, { id: 'c', textAr: '5 أيلول 1916' }, { id: 'd', textAr: '10 آذار 1921' }], correctAnswer: 'a', marks: 1 },
-            { id: 79, type: 'mcq', questionAr: 'أول وزارة تشكلت في إمارة شرق الأردن عام 1921 حملت اسم:', options: [{ id: 'a', textAr: 'المجلس التشريعي' }, { id: 'b', textAr: 'رئاسة الأركان' }, { id: 'c', textAr: 'مجلس المشاورين' }, { id: 'd', textAr: 'مجلس الأمة' }], correctAnswer: 'c', marks: 1 },
-            { id: 80, type: 'mcq', questionAr: 'طرد القوات التركية من الأراضي العربية هدف من أهداف الثورة العربية:', options: [{ id: 'a', textAr: 'السياسية' }, { id: 'b', textAr: 'العسكرية' }, { id: 'c', textAr: 'النفسية والمعنوية' }, { id: 'd', textAr: 'الاقتصادية' }], correctAnswer: 'b', marks: 1 }
+            { id: 61, type: 'mcq', questionAr: 'إعاد وحد العرب الروحي وإحياء التاري القومي العربي تُعد من:', options: [{ id: 'a', textAr: 'نتائج الثور العربي الكبرى' }, { id: 'b', textAr: 'الصعوبات التي واجهت الثور' }, { id: 'c', textAr: 'مرتكزات الثور' }, { id: 'd', textAr: 'أسباب الثور' }], correctAnswer: 'a', marks: 1 },
+            { id: 62, type: 'mcq', questionAr: 'إعطاء العمق للقتال (قصف أهداف بعمق العدو) من أدوار سلاح:', options: [{ id: 'a', textAr: 'المدفعي' }, { id: 'b', textAr: 'اللاسلكي' }, { id: 'c', textAr: 'الهندس' }, { id: 'd', textAr: 'الصيان' }], correctAnswer: 'a', marks: 1 },
+            { id: 63, type: 'mcq', questionAr: 'من أكثر الصنوف سرع في التطور والتحديث:', options: [{ id: 'a', textAr: 'الوحدات المدرع' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'وحدات الدمات' }, { id: 'd', textAr: 'قوات الصاعق' }], correctAnswer: 'a', marks: 1 },
+            { id: 64, type: 'mcq', questionAr: 'من مصادر التجنيد في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'طلاب معاهد التدريب المهني' }, { id: 'b', textAr: 'ريجو كليات المجتمع فقط' }, { id: 'c', textAr: 'الضباط والرتب الأرى' }, { id: 'd', textAr: 'ريجو الجامعات الاص' }], correctAnswer: 'c', marks: 1 },
+            { id: 65, type: 'mcq', questionAr: 'من أهداف إسرائيل في معرك الكرام:', options: [{ id: 'a', textAr: 'كسب تعاطف الدول الكبرى' }, { id: 'b', textAr: 'تحطيم الروح المعنوي للطيارين المصريين' }, { id: 'c', textAr: 'الاستحواذ على مناطق الأغوار' }, { id: 'd', textAr: 'تريب مدارج الطائرات' }], correctAnswer: 'c', marks: 1 },
+            { id: 66, type: 'mcq', questionAr: 'فقدان الروح المعنوي بعد سقوط سلاح الجو المصري كان سببًا لهزيم العرب في حرب:', options: [{ id: 'a', textAr: '1967' }, { id: 'b', textAr: 'معرك الكرام' }, { id: 'c', textAr: 'حرب 1948' }, { id: 'd', textAr: 'حرب 1973' }], correctAnswer: 'a', marks: 1 },
+            { id: 67, type: 'mcq', questionAr: 'كانت مهم الجيش العربي الأردني في حرب 1948:', options: [{ id: 'a', textAr: 'التقدم شمال الحول واحتلال صفد' }, { id: 'b', textAr: 'التقدم وسط بيسان والعفول' }, { id: 'c', textAr: 'احتلال شمال فلسطين من حيفا حتى الناصر' }, { id: 'd', textAr: 'التقدم باتجاه القدس والسهل الساحلي' }], correctAnswer: 'd', marks: 1 },
+            { id: 68, type: 'mcq', questionAr: 'حرمان العدو من الالتفاف حول الجناح الأيسر للقوات السوري كان من أهمي مشارك القوات الأردني في:', options: [{ id: 'a', textAr: 'حرب 1973' }, { id: 'b', textAr: 'حرب 1948' }, { id: 'c', textAr: 'حرب 1967' }, { id: 'd', textAr: 'معرك الكرام' }], correctAnswer: 'a', marks: 1 },
+            { id: 69, type: 'mcq', questionAr: 'من نتائج الثور العربي الكبرى:', options: [{ id: 'a', textAr: 'بناء قوات مسلح نظامي حديث' }, { id: 'b', textAr: 'إعلان الجهاد المقدس' }, { id: 'c', textAr: 'قيام أول دول عربي في سوريا' }, { id: 'd', textAr: 'تفوق الجيش الإسرائيلي' }], correctAnswer: 'a', marks: 1 },
+            { id: 70, type: 'mcq', questionAr: 'الواجب الرئيسي للقو البحري الملكي:', options: [{ id: 'a', textAr: 'مراقب الطرق الارجي' }, { id: 'b', textAr: 'احتلال وتعزيز الأرض' }, { id: 'c', textAr: 'تدمير تشكيلات العدو المدرع' }, { id: 'd', textAr: 'الدفاع عن المياه الإقليمي للمملك' }], correctAnswer: 'd', marks: 1 },
+            { id: 71, type: 'mcq', questionAr: 'يمتلك سلاح الجو الملكي الأردني حاليًا:', options: [{ id: 'a', textAr: 'أحدث معدات النقل' }, { id: 'b', textAr: 'أحدث أجهز التصاريح' }, { id: 'c', textAr: 'أحدث الطائرات التدريبي والعملياتي' }, { id: 'd', textAr: 'أحدث الوحدات الميداني' }], correctAnswer: 'c', marks: 1 },
+            { id: 72, type: 'mcq', questionAr: 'من واجبات سلاح التموين والنقل الملكي:', options: [{ id: 'a', textAr: 'تنفيذ سياس القياد العام لإدام القوات المسلح' }, { id: 'b', textAr: 'زراع الأراضي حول المناطق العسكري' }, { id: 'c', textAr: 'تدريب القطاع العام على التزويد' }, { id: 'd', textAr: 'السيطر على نقليات النقل الاص' }], correctAnswer: 'a', marks: 1 },
+            { id: 73, type: 'mcq', questionAr: 'مشاريع الحصاد المائي تتمثل في:', options: [{ id: 'a', textAr: 'إدار الأزمات' }, { id: 'b', textAr: 'التنقيب عن الثروات' }, { id: 'c', textAr: 'الجهد الوطني للأزمات' }, { id: 'd', textAr: 'إنشاء السدود والحفائر والبرك وحفر الآبار' }], correctAnswer: 'd', marks: 1 },
+            { id: 74, type: 'mcq', questionAr: 'من واجبات حرس الحدود المرتبط بالتطيط:', options: [{ id: 'a', textAr: 'صيان الأرض' }, { id: 'b', textAr: 'رؤي قياس مستوى التهديد' }, { id: 'c', textAr: 'اللجوء الاقتصادي' }, { id: 'd', textAr: 'فهم وتقدير طبيع وحجم التهديد' }], correctAnswer: 'd', marks: 1 },
+            { id: 75, type: 'mcq', questionAr: 'تم تعريب قياد الجيش العربي في عام:', options: [{ id: 'a', textAr: '1 آذار 1956' }, { id: 'b', textAr: '2 أيار 1954' }, { id: 'c', textAr: '31 آذار 1956' }, { id: 'd', textAr: '25 أيار 1957' }], correctAnswer: 'a', marks: 1 },
+            { id: 76, type: 'mcq', questionAr: 'إعاد وحد العرب الروحي وإحياء التاري القومي العربي والاعتراف بدول عربي مستقل من:', options: [{ id: 'a', textAr: 'نتائج الثور العربي الكبرى' }, { id: 'b', textAr: 'الصعوبات' }, { id: 'c', textAr: 'المرتكزات' }, { id: 'd', textAr: 'الأسباب' }], correctAnswer: 'a', marks: 1 },
+            { id: 77, type: 'mcq', questionAr: 'ضمت ولاي الديكابولس في العهد الروماني مناطق:', options: [{ id: 'a', textAr: 'بيريا والأنباط' }, { id: 'b', textAr: 'عجلون وشرق البلقاء وفيلادلفيا' }, { id: 'c', textAr: 'فيلادلفيا وجدارا' }, { id: 'd', textAr: 'فيلادلفيا وبيلا' }], correctAnswer: 'd', marks: 1 },
+            { id: 78, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثور العربي الكبرى في:', options: [{ id: 'a', textAr: '10 حزيران 1916' }, { id: 'b', textAr: '10 تموز 1917' }, { id: 'c', textAr: '5 أيلول 1916' }, { id: 'd', textAr: '10 آذار 1921' }], correctAnswer: 'a', marks: 1 },
+            { id: 79, type: 'mcq', questionAr: 'أول وزار تشكلت في إمار شرق الأردن عام 1921 حملت اسم:', options: [{ id: 'a', textAr: 'المجلس التشريعي' }, { id: 'b', textAr: 'رئاس الأركان' }, { id: 'c', textAr: 'مجلس المشاورين' }, { id: 'd', textAr: 'مجلس الأم' }], correctAnswer: 'c', marks: 1 },
+            { id: 80, type: 'mcq', questionAr: 'طرد القوات التركي من الأراضي العربي هدف من أهداف الثور العربي:', options: [{ id: 'a', textAr: 'السياسي' }, { id: 'b', textAr: 'العسكري' }, { id: 'c', textAr: 'النفسي والمعنوي' }, { id: 'd', textAr: 'الاقتصادي' }], correctAnswer: 'b', marks: 1 }
         ]
     },
     military_science_mid_p5: {
         id: 'military_science_mid_p5',
         title: 'Mid Exam - Part 5',
-        titleAr: 'مادة الميد - الجزء الخامس',
+        titleAr: 'ماد الميد - الجزء الامس',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 81, type: 'mcq', questionAr: 'الدور الرئيسي لسلاح المدفعية الملكي:', options: [{ id: 'a', textAr: 'الإسناد الهندسي' }, { id: 'b', textAr: 'مساعدة المدنيين' }, { id: 'c', textAr: 'تقديم نيران الإسناد للوحدات المقاتلة' }, { id: 'd', textAr: 'التفتيش البحري' }], correctAnswer: 'c', marks: 1 },
-            { id: 82, type: 'mcq', questionAr: 'مجموعة ضباط مؤهلين عسكريًا وفنيًا لنصح القائد تُسمى:', options: [{ id: 'a', textAr: 'وكيل القوة' }, { id: 'b', textAr: 'هيئة الركن' }, { id: 'c', textAr: 'قائد الفصيل' }, { id: 'd', textAr: 'ليس مما ذكر' }], correctAnswer: 'b', marks: 1 },
+            { id: 81, type: 'mcq', questionAr: 'الدور الرئيسي لسلاح المدفعي الملكي:', options: [{ id: 'a', textAr: 'الإسناد الهندسي' }, { id: 'b', textAr: 'مساعد المدنيين' }, { id: 'c', textAr: 'تقديم نيران الإسناد للوحدات المقاتل' }, { id: 'd', textAr: 'التفتيش البحري' }], correctAnswer: 'c', marks: 1 },
+            { id: 82, type: 'mcq', questionAr: 'مجموع ضباط مؤهلين عسكريًا وفنيًا لنصح القائد تُسمى:', options: [{ id: 'a', textAr: 'وكيل القو' }, { id: 'b', textAr: 'هيئ الركن' }, { id: 'c', textAr: 'قائد الفصيل' }, { id: 'd', textAr: 'ليس مما ذكر' }], correctAnswer: 'b', marks: 1 },
             { id: 83, type: 'mcq', questionAr: 'استشهد الملك عبدالله الأول بن الحسين عام:', options: [{ id: 'a', textAr: '1951' }, { id: 'b', textAr: '1952' }, { id: 'c', textAr: '1948' }, { id: 'd', textAr: '1968' }], correctAnswer: 'a', marks: 1 },
-            { id: 84, type: 'mcq', questionAr: 'ثلاثة شرائط على الذراع هي رتبة:', options: [{ id: 'a', textAr: 'رقيب' }, { id: 'b', textAr: 'وكيل' }, { id: 'c', textAr: 'نقيب' }, { id: 'd', textAr: 'عريف' }], correctAnswer: 'a', marks: 1 },
-            { id: 85, type: 'mcq', questionAr: 'شفرتان نحاسيتان على الكتف هي رتبة:', options: [{ id: 'a', textAr: 'رقيب' }, { id: 'b', textAr: 'وكيل أول' }, { id: 'c', textAr: 'وكيل' }, { id: 'd', textAr: 'جندي' }], correctAnswer: 'c', marks: 1 },
-            { id: 86, type: 'mcq', questionAr: 'اللون الذي اتخذه العباسيون لرايتهم هو:', options: [{ id: 'a', textAr: 'الأسود' }, { id: 'b', textAr: 'الأبيض' }, { id: 'c', textAr: 'الأحمر' }, { id: 'd', textAr: 'الأخضر' }], correctAnswer: 'a', marks: 1 },
-            { id: 87, type: 'mcq', questionAr: 'دخلت شرق الأردن تحت الحكم الإسلامي عام 630م بعد:', options: [{ id: 'a', textAr: 'معركة اليرموك' }, { id: 'b', textAr: 'غزوة تبوك' }, { id: 'c', textAr: 'غزوة مؤتة' }, { id: 'd', textAr: 'معركة فحل' }], correctAnswer: 'b', marks: 1 },
-            { id: 88, type: 'mcq', questionAr: 'نشبت حرب الخليج الثانية في عهد الملك:', options: [{ id: 'a', textAr: 'عبدالله الثاني' }, { id: 'b', textAr: 'عبدالله الأول' }, { id: 'c', textAr: 'الحسين بن طلال' }, { id: 'd', textAr: 'طلال بن عبدالله' }], correctAnswer: 'c', marks: 1 },
-            { id: 89, type: 'mcq', questionAr: 'سُمي الجيش العربي عام 1923 بـ:', options: [{ id: 'a', textAr: 'قوة البادية' }, { id: 'b', textAr: 'القوة السيارة' }, { id: 'c', textAr: 'القوة الآلية' }, { id: 'd', textAr: 'الحرس الوطني' }], correctAnswer: 'b', marks: 1 },
-            { id: 90, type: 'mcq', questionAr: 'تستمد الراية الهاشمية لونها الأحمر الداكن من راية:', options: [{ id: 'a', textAr: 'الشريف أبي نمي' }, { id: 'b', textAr: 'العباسيين' }, { id: 'c', textAr: 'الفاطميين' }, { id: 'd', textAr: 'الأمويين' }], correctAnswer: 'a', marks: 1 }
+            { id: 84, type: 'mcq', questionAr: 'ثلاث شرائط على الذراع هي رتب:', options: [{ id: 'a', textAr: 'رقيب' }, { id: 'b', textAr: 'وكيل' }, { id: 'c', textAr: 'نقيب' }, { id: 'd', textAr: 'عريف' }], correctAnswer: 'a', marks: 1 },
+            { id: 85, type: 'mcq', questionAr: 'شفرتان نحاسيتان على الكتف هي رتب:', options: [{ id: 'a', textAr: 'رقيب' }, { id: 'b', textAr: 'وكيل أول' }, { id: 'c', textAr: 'وكيل' }, { id: 'd', textAr: 'جندي' }], correctAnswer: 'c', marks: 1 },
+            { id: 86, type: 'mcq', questionAr: 'اللون الذي اتذه العباسيون لرايتهم هو:', options: [{ id: 'a', textAr: 'الأسود' }, { id: 'b', textAr: 'الأبيض' }, { id: 'c', textAr: 'الأحمر' }, { id: 'd', textAr: 'الأضر' }], correctAnswer: 'a', marks: 1 },
+            { id: 87, type: 'mcq', questionAr: 'دلت شرق الأردن تحت الحكم الإسلامي عام 630م بعد:', options: [{ id: 'a', textAr: 'معرك اليرموك' }, { id: 'b', textAr: 'غزو تبوك' }, { id: 'c', textAr: 'غزو مؤت' }, { id: 'd', textAr: 'معرك فحل' }], correctAnswer: 'b', marks: 1 },
+            { id: 88, type: 'mcq', questionAr: 'نشبت حرب الليج الثاني في عهد الملك:', options: [{ id: 'a', textAr: 'عبدالله الثاني' }, { id: 'b', textAr: 'عبدالله الأول' }, { id: 'c', textAr: 'الحسين بن طلال' }, { id: 'd', textAr: 'طلال بن عبدالله' }], correctAnswer: 'c', marks: 1 },
+            { id: 89, type: 'mcq', questionAr: 'سُمي الجيش العربي عام 1923 بـ:', options: [{ id: 'a', textAr: 'قو البادي' }, { id: 'b', textAr: 'القو السيار' }, { id: 'c', textAr: 'القو الآلي' }, { id: 'd', textAr: 'الحرس الوطني' }], correctAnswer: 'b', marks: 1 },
+            { id: 90, type: 'mcq', questionAr: 'تستمد الراي الهاشمي لونها الأحمر الداكن من راي:', options: [{ id: 'a', textAr: 'الشريف أبي نمي' }, { id: 'b', textAr: 'العباسيين' }, { id: 'c', textAr: 'الفاطميين' }, { id: 'd', textAr: 'الأمويين' }], correctAnswer: 'a', marks: 1 }
         ]
     },
     military_science_final: {
         id: 'military_science_final',
         title: 'Final Exam',
-        titleAr: 'امتحان نهاية الفصل',
+        titleAr: 'امتحان نهاي الفصل',
         icon: '🎖️',
         color: '#5D4037',
         questions: []
@@ -2452,41 +2452,41 @@ export const quizData = {
     islam_and_life_p1: {
         id: 'islam_and_life_p1',
         title: 'Islam and Life - Part 1',
-        titleAr: 'إسلام وحياة - الجزء الأول',
+        titleAr: 'إسلام وحيا - الجزء الأول',
         icon: '🕌',
         color: '#4CAF50',
         questions: [
-            { id: 1, type: 'mcq', questionAr: 'التزام الأخلاق الحميدة يزيد في إيمان العبد كما أن سوء الخلق ينقص من الإيمان، ويدل على هذا المعنى النص الشرعي الآتي:', options: [{ id: 'a', textAr: 'حديث: أكمل المؤمنين إيمانًا أحسنهم خلقًا' }, { id: 'b', textAr: 'حديث: الإيمان بضع وسبعون شعبة' }, { id: 'c', textAr: 'حديث: لا يزني الزاني حين يزني وهو مؤمن' }, { id: 'd', textAr: 'حديث: إنما بعثت لأتمم مكارم الأخلاق' }], correctAnswer: 'a', marks: 1 },
-            { id: 2, type: 'mcq', questionAr: 'الأخلاق الطيبة أساس لتكوين الشخصية الفردية، هذه العبارة تعبّر عن أثر من آثار الأخلاق على:', options: [{ id: 'a', textAr: 'العبادة' }, { id: 'b', textAr: 'المؤسسات التعليمية' }, { id: 'c', textAr: 'النفس الإنسانية' }, { id: 'd', textAr: 'المجتمع' }], correctAnswer: 'c', marks: 1 },
-            { id: 3, type: 'mcq', questionAr: 'الخُلُق بضم اللام يختص في معناه اللغوي بـ:', options: [{ id: 'a', textAr: 'الهيئات' }, { id: 'b', textAr: 'الصور المدركة بالبصر' }, { id: 'c', textAr: 'الأشكال' }, { id: 'd', textAr: 'السجية' }], correctAnswer: 'd', marks: 1 },
-            { id: 4, type: 'mcq', questionAr: 'النص الشرعي الذي يدل على أن مفهوم العبادة يتسع ليشمل كثيرًا من الممارسات الأخلاقية الحسية هو:', options: [{ id: 'a', textAr: 'قوله تعالى: إن الصلاة تنهى عن الفحشاء والمنكر' }, { id: 'b', textAr: 'حديث: أتدرون ما المفلس؟' }, { id: 'c', textAr: 'حديث: كل سلامى من الناس عليه صدقة كل يوم تطلع فيه الشمس' }, { id: 'd', textAr: 'حديث: من لم يدع قول الزور والعمل به فلا حاجة أن يدع طعامه وشرابه' }], correctAnswer: 'c', marks: 1 },
-            { id: 5, type: 'mcq', questionAr: 'خُلُق يعف به الإنسان عمّا ليس له به حق وإن تهيأت له ظروف العدوان عليه دون أن تلحقه إدانة، المقصود هو خُلُق:', options: [{ id: 'a', textAr: 'الأمانة' }, { id: 'b', textAr: 'التواضع' }, { id: 'c', textAr: 'الإيثار' }, { id: 'd', textAr: 'الكرم' }], correctAnswer: 'a', marks: 1 },
-            { id: 6, type: 'mcq', questionAr: 'إن العناية بحفظ الضرورات في الإسلام يعتبر:', options: [{ id: 'a', textAr: 'دينًا وعبادة ووصية من الله يثاب عليها ويعاقب على التفريط بها' }, { id: 'b', textAr: 'مجرد تشريع قانوني' }, { id: 'c', textAr: 'أمرًا مستحبًا لا واجبًا' }, { id: 'd', textAr: 'أمرًا يفرضه واقع الوجود الإنساني' }], correctAnswer: 'a', marks: 1 },
-            { id: 7, type: 'mcq', questionAr: 'جاء في الحديث: لا يحل دم امرئ مسلم يشهد أن لا إله إلا الله وأني رسول الله إلا بإحدى ثلاث:', options: [{ id: 'a', textAr: 'الثيب الزاني والنفس بالنفس والتجسس' }, { id: 'b', textAr: 'الثيب الزاني والسحر والتارك لدينه' }, { id: 'c', textAr: 'الثيب الزاني والنفس بالنفس والتارك لدينه المفارق للجماعة' }, { id: 'd', textAr: 'الثيب الزاني والنفس بالنفس والسحر' }], correctAnswer: 'c', marks: 1 },
-            { id: 8, type: 'mcq', questionAr: 'جاء في الحديث: أول ما يقضى به بين الناس:', options: [{ id: 'a', textAr: 'الصلاة' }, { id: 'b', textAr: 'الأموال' }, { id: 'c', textAr: 'الأعراض' }, { id: 'd', textAr: 'الدماء' }], correctAnswer: 'd', marks: 1 },
-            { id: 9, type: 'mcq', questionAr: 'شرع الله ما يحفظ الدين بالحد الأعلى والأكمل ومن ذلك أن يقوم الفرد بـ:', options: [{ id: 'a', textAr: 'أداء الصلوات المكتوبة' }, { id: 'b', textAr: 'إيتاء الزكاة' }, { id: 'c', textAr: 'صيام رمضان' }, { id: 'd', textAr: 'أداء السنن الرواتب في الصلاة' }], correctAnswer: 'd', marks: 1 },
-            { id: 10, type: 'mcq', questionAr: 'واحدة فقط من الضرورات لم تراعها كل الشرائع والملل والقوانين البشرية، وهي حفظ:', options: [{ id: 'a', textAr: 'العقل' }, { id: 'b', textAr: 'العرض' }, { id: 'c', textAr: 'النفس' }, { id: 'd', textAr: 'الدين' }], correctAnswer: 'd', marks: 1 },
-            { id: 11, type: 'mcq', questionAr: 'في قوله تعالى: ﴿ولا تقربوا الزنا﴾ حفظ لـ:', options: [{ id: 'a', textAr: 'النسل' }, { id: 'b', textAr: 'النسب' }, { id: 'c', textAr: 'العرض' }, { id: 'd', textAr: 'جميع الإجابات صحيحة' }], correctAnswer: 'd', marks: 1 }
+            { id: 1, type: 'mcq', questionAr: 'التزام الألاق الحميد يزيد في إيمان العبد كما أن سوء اللق ينقص من الإيمان، ويدل على هذا المعنى النص الشرعي الآتي:', options: [{ id: 'a', textAr: 'حديث: أكمل المؤمنين إيمانًا أحسنهم لقًا' }, { id: 'b', textAr: 'حديث: الإيمان بضع وسبعون شعب' }, { id: 'c', textAr: 'حديث: لا يزني الزاني حين يزني وهو مؤمن' }, { id: 'd', textAr: 'حديث: إنما بعثت لأتمم مكارم الألاق' }], correctAnswer: 'a', marks: 1 },
+            { id: 2, type: 'mcq', questionAr: 'الألاق الطيب أساس لتكوين الشصي الفردي، هذه العبار تعبّر عن أثر من آثار الألاق على:', options: [{ id: 'a', textAr: 'العباد' }, { id: 'b', textAr: 'المؤسسات التعليمي' }, { id: 'c', textAr: 'النفس الإنساني' }, { id: 'd', textAr: 'المجتمع' }], correctAnswer: 'c', marks: 1 },
+            { id: 3, type: 'mcq', questionAr: 'الُلُق بضم اللام يتص في معناه اللغوي بـ:', options: [{ id: 'a', textAr: 'الهيئات' }, { id: 'b', textAr: 'الصور المدرك بالبصر' }, { id: 'c', textAr: 'الأشكال' }, { id: 'd', textAr: 'السجي' }], correctAnswer: 'd', marks: 1 },
+            { id: 4, type: 'mcq', questionAr: 'النص الشرعي الذي يدل على أن مفهوم العباد يتسع ليشمل كثيرًا من الممارسات الألاقي الحسي هو:', options: [{ id: 'a', textAr: 'قوله تعالى: إن الصلا تنهى عن الفحشاء والمنكر' }, { id: 'b', textAr: 'حديث: أتدرون ما المفلس؟' }, { id: 'c', textAr: 'حديث: كل سلامى من الناس عليه صدق كل يوم تطلع فيه الشمس' }, { id: 'd', textAr: 'حديث: من لم يدع قول الزور والعمل به فلا حاج أن يدع طعامه وشرابه' }], correctAnswer: 'c', marks: 1 },
+            { id: 5, type: 'mcq', questionAr: 'ُلُق يعف به الإنسان عمّا ليس له به حق وإن تهيأت له ظروف العدوان عليه دون أن تلحقه إدان، المقصود هو ُلُق:', options: [{ id: 'a', textAr: 'الأمان' }, { id: 'b', textAr: 'التواضع' }, { id: 'c', textAr: 'الإيثار' }, { id: 'd', textAr: 'الكرم' }], correctAnswer: 'a', marks: 1 },
+            { id: 6, type: 'mcq', questionAr: 'إن العناي بحفظ الضرورات في الإسلام يعتبر:', options: [{ id: 'a', textAr: 'دينًا وعباد ووصي من الله يثاب عليها ويعاقب على التفريط بها' }, { id: 'b', textAr: 'مجرد تشريع قانوني' }, { id: 'c', textAr: 'أمرًا مستحبًا لا واجبًا' }, { id: 'd', textAr: 'أمرًا يفرضه واقع الوجود الإنساني' }], correctAnswer: 'a', marks: 1 },
+            { id: 7, type: 'mcq', questionAr: 'جاء في الحديث: لا يحل دم امرئ مسلم يشهد أن لا إله إلا الله وأني رسول الله إلا بإحدى ثلاث:', options: [{ id: 'a', textAr: 'الثيب الزاني والنفس بالنفس والتجسس' }, { id: 'b', textAr: 'الثيب الزاني والسحر والتارك لدينه' }, { id: 'c', textAr: 'الثيب الزاني والنفس بالنفس والتارك لدينه المفارق للجماع' }, { id: 'd', textAr: 'الثيب الزاني والنفس بالنفس والسحر' }], correctAnswer: 'c', marks: 1 },
+            { id: 8, type: 'mcq', questionAr: 'جاء في الحديث: أول ما يقضى به بين الناس:', options: [{ id: 'a', textAr: 'الصلا' }, { id: 'b', textAr: 'الأموال' }, { id: 'c', textAr: 'الأعراض' }, { id: 'd', textAr: 'الدماء' }], correctAnswer: 'd', marks: 1 },
+            { id: 9, type: 'mcq', questionAr: 'شرع الله ما يحفظ الدين بالحد الأعلى والأكمل ومن ذلك أن يقوم الفرد بـ:', options: [{ id: 'a', textAr: 'أداء الصلوات المكتوب' }, { id: 'b', textAr: 'إيتاء الزكا' }, { id: 'c', textAr: 'صيام رمضان' }, { id: 'd', textAr: 'أداء السنن الرواتب في الصلا' }], correctAnswer: 'd', marks: 1 },
+            { id: 10, type: 'mcq', questionAr: 'واحد فقط من الضرورات لم تراعها كل الشرائع والملل والقوانين البشري، وهي حفظ:', options: [{ id: 'a', textAr: 'العقل' }, { id: 'b', textAr: 'العرض' }, { id: 'c', textAr: 'النفس' }, { id: 'd', textAr: 'الدين' }], correctAnswer: 'd', marks: 1 },
+            { id: 11, type: 'mcq', questionAr: 'في قوله تعالى: ﴿ولا تقربوا الزنا﴾ حفظ لـ:', options: [{ id: 'a', textAr: 'النسل' }, { id: 'b', textAr: 'النسب' }, { id: 'c', textAr: 'العرض' }, { id: 'd', textAr: 'جميع الإجابات صحيح' }], correctAnswer: 'd', marks: 1 }
         ]
     },
     islam_and_life_p2: {
         id: 'islam_and_life_p2',
         title: 'Islam and Life - Part 2',
-        titleAr: 'إسلام وحياة - الجزء الثاني',
+        titleAr: 'إسلام وحيا - الجزء الثاني',
         icon: '🕌',
         color: '#4CAF50',
         questions: [
-            { id: 12, type: 'mcq', questionAr: 'زنت امرأة مجنونة محصنة على عهد عمر فأراد أن يقيم عليها حد الرجم فمنعه الصحابي:', options: [{ id: 'a', textAr: 'عثمان بن عفان' }, { id: 'b', textAr: 'عبد الله بن عباس' }, { id: 'c', textAr: 'عبد الله بن مسعود' }, { id: 'd', textAr: 'علي بن أبي طالب' }], correctAnswer: 'd', marks: 1 },
-            { id: 13, type: 'mcq', questionAr: 'قال تعالى: ﴿قل هذه سبيلي أدعو إلى الله على بصيرة أنا ومن اتبعني﴾، السبيل المقصودة هي:', options: [{ id: 'a', textAr: 'أدعو إلى الله' }, { id: 'b', textAr: 'أؤمن بالله' }, { id: 'c', textAr: 'أعمل لله' }, { id: 'd', textAr: 'أجاهد لله' }], correctAnswer: 'a', marks: 1 },
-            { id: 14, type: 'mcq', questionAr: 'لمن لم يحكم بما أنزل الله أثبت الله في القرآن صفة:', options: [{ id: 'a', textAr: 'الكفر' }, { id: 'b', textAr: 'الظلم' }, { id: 'c', textAr: 'الفسق' }, { id: 'd', textAr: 'جميع الإجابات صحيحة' }], correctAnswer: 'd', marks: 1 },
+            { id: 12, type: 'mcq', questionAr: 'زنت امرأ مجنون محصن على عهد عمر فأراد أن يقيم عليها حد الرجم فمنعه الصحابي:', options: [{ id: 'a', textAr: 'عثمان بن عفان' }, { id: 'b', textAr: 'عبد الله بن عباس' }, { id: 'c', textAr: 'عبد الله بن مسعود' }, { id: 'd', textAr: 'علي بن أبي طالب' }], correctAnswer: 'd', marks: 1 },
+            { id: 13, type: 'mcq', questionAr: 'قال تعالى: ﴿قل هذه سبيلي أدعو إلى الله على بصير أنا ومن اتبعني﴾، السبيل المقصود هي:', options: [{ id: 'a', textAr: 'أدعو إلى الله' }, { id: 'b', textAr: 'أؤمن بالله' }, { id: 'c', textAr: 'أعمل لله' }, { id: 'd', textAr: 'أجاهد لله' }], correctAnswer: 'a', marks: 1 },
+            { id: 14, type: 'mcq', questionAr: 'لمن لم يحكم بما أنزل الله أثبت الله في القرآن صف:', options: [{ id: 'a', textAr: 'الكفر' }, { id: 'b', textAr: 'الظلم' }, { id: 'c', textAr: 'الفسق' }, { id: 'd', textAr: 'جميع الإجابات صحيح' }], correctAnswer: 'd', marks: 1 },
             { id: 15, type: 'mcq', questionAr: 'جاء في الحديث: من حمل علينا السلاح:', options: [{ id: 'a', textAr: 'كافر' }, { id: 'b', textAr: 'فليس منا' }, { id: 'c', textAr: 'ملعون' }, { id: 'd', textAr: 'قتلناه' }], correctAnswer: 'b', marks: 1 },
-            { id: 16, type: 'mcq', questionAr: 'من بلغ حد الاضطرار جوعًا يجوز له أن:', options: [{ id: 'a', textAr: 'يتزود من الميتة أو الطعام المحرم حتى يجد حلالًا' }, { id: 'b', textAr: 'يأكل الميتة فقط' }, { id: 'c', textAr: 'جميع الإجابات صحيحة' }, { id: 'd', textAr: 'يأكل من مال الغير ولو جبرًا' }], correctAnswer: 'a', marks: 1 },
-            { id: 17, type: 'mcq', questionAr: 'بينت السنة فيما يتعلق بالضرورات أن:', options: [{ id: 'a', textAr: 'من قُتل دونها فهو شهيد' }, { id: 'b', textAr: 'الاعتداء عليها من أعظم الذنوب' }, { id: 'c', textAr: 'الاعتداء على واحدة منها من المهلكات' }, { id: 'd', textAr: 'جميع الإجابات صحيحة' }], correctAnswer: 'd', marks: 1 },
+            { id: 16, type: 'mcq', questionAr: 'من بلغ حد الاضطرار جوعًا يجوز له أن:', options: [{ id: 'a', textAr: 'يتزود من الميت أو الطعام المحرم حتى يجد حلالًا' }, { id: 'b', textAr: 'يأكل الميت فقط' }, { id: 'c', textAr: 'جميع الإجابات صحيح' }, { id: 'd', textAr: 'يأكل من مال الغير ولو جبرًا' }], correctAnswer: 'a', marks: 1 },
+            { id: 17, type: 'mcq', questionAr: 'بينت السن فيما يتعلق بالضرورات أن:', options: [{ id: 'a', textAr: 'من قُتل دونها فهو شهيد' }, { id: 'b', textAr: 'الاعتداء عليها من أعظم الذنوب' }, { id: 'c', textAr: 'الاعتداء على واحد منها من المهلكات' }, { id: 'd', textAr: 'جميع الإجابات صحيح' }], correctAnswer: 'd', marks: 1 },
             { id: 18, type: 'mcq', questionAr: 'أنزل الله القرآن أساسًا من أجل:', options: [{ id: 'a', textAr: 'فهمه وتدبره' }, { id: 'b', textAr: 'العمل بما فيه من أمر ونهي' }, { id: 'c', textAr: 'تلاوته بأحكام التجويد' }, { id: 'd', textAr: 'حفظه وعدم نسيانه' }], correctAnswer: 'b', marks: 1 },
-            { id: 19, type: 'mcq', questionAr: 'يقتل الزاني المحصن رجمًا بإقامة البينة وهي شهادة:', options: [{ id: 'a', textAr: 'أربعة من الرجال العدول' }, { id: 'b', textAr: 'رجلين وامرأتين' }, { id: 'c', textAr: 'ثلاثة رجال عدول' }, { id: 'd', textAr: 'رجلين عدول' }], correctAnswer: 'a', marks: 1 },
-            { id: 20, type: 'mcq', questionAr: 'إقامة الحدود والقصاص من اختصاص:', options: [{ id: 'a', textAr: 'أصحاب النفوذ' }, { id: 'b', textAr: 'أهل الحل والعقد' }, { id: 'c', textAr: 'المجني عليه' }, { id: 'd', textAr: 'الإمام أو نائبه فقط' }], correctAnswer: 'd', marks: 1 },
-            { id: 21, type: 'mcq', questionAr: 'لا يكون الدين محفوظًا حقًا إلا أن يكون:', options: [{ id: 'a', textAr: 'يعتنقه عدد كبير' }, { id: 'b', textAr: 'عامرة به المساجد' }, { id: 'c', textAr: 'في قلوب العلماء' }, { id: 'd', textAr: 'حاكمًا للحياة يحفظ الحقوق ويرد الباطل' }], correctAnswer: 'd', marks: 1 },
-            { id: 22, type: 'mcq', questionAr: 'يجوز لمن كان معرضًا للهلاك من الجوع أن:', options: [{ id: 'a', textAr: 'يأكل الطعام المحرم عند الضرورة' }, { id: 'b', textAr: 'يأكل المحرم إن لم يجد غيره' }, { id: 'c', textAr: 'جميع الإجابات صحيحة' }, { id: 'd', textAr: 'يأكل من مال الغير عند الحاجة' }], correctAnswer: 'c', marks: 1 }
+            { id: 19, type: 'mcq', questionAr: 'يقتل الزاني المحصن رجمًا بإقام البين وهي شهاد:', options: [{ id: 'a', textAr: 'أربع من الرجال العدول' }, { id: 'b', textAr: 'رجلين وامرأتين' }, { id: 'c', textAr: 'ثلاث رجال عدول' }, { id: 'd', textAr: 'رجلين عدول' }], correctAnswer: 'a', marks: 1 },
+            { id: 20, type: 'mcq', questionAr: 'إقام الحدود والقصاص من اتصاص:', options: [{ id: 'a', textAr: 'أصحاب النفوذ' }, { id: 'b', textAr: 'أهل الحل والعقد' }, { id: 'c', textAr: 'المجني عليه' }, { id: 'd', textAr: 'الإمام أو نائبه فقط' }], correctAnswer: 'd', marks: 1 },
+            { id: 21, type: 'mcq', questionAr: 'لا يكون الدين محفوظًا حقًا إلا أن يكون:', options: [{ id: 'a', textAr: 'يعتنقه عدد كبير' }, { id: 'b', textAr: 'عامر به المساجد' }, { id: 'c', textAr: 'في قلوب العلماء' }, { id: 'd', textAr: 'حاكمًا للحيا يحفظ الحقوق ويرد الباطل' }], correctAnswer: 'd', marks: 1 },
+            { id: 22, type: 'mcq', questionAr: 'يجوز لمن كان معرضًا للهلاك من الجوع أن:', options: [{ id: 'a', textAr: 'يأكل الطعام المحرم عند الضرور' }, { id: 'b', textAr: 'يأكل المحرم إن لم يجد غيره' }, { id: 'c', textAr: 'جميع الإجابات صحيح' }, { id: 'd', textAr: 'يأكل من مال الغير عند الحاج' }], correctAnswer: 'c', marks: 1 }
         ]
     },
     calculus_quiz1: {
@@ -2956,7 +2956,7 @@ export const quizData = {
     entrepreneurship_quiz5: {
         id: 'entrepreneurship_quiz5',
         title: 'Quiz 5',
-        titleAr: 'الكويز الخامس',
+        titleAr: 'الكويز الامس',
         icon: '📝',
         color: '#FFC107',
         forceEnglish: true,
@@ -3280,7 +3280,7 @@ export const quizData = {
                 id: 1,
                 type: 'tf',
                 questionEn: 'Python lists are immutable, meaning their elements cannot be changed after creation.',
-                questionAr: 'القوائم في بايثون غير قابلة للتغيير، أي لا يمكن تغيير عناصرها بعد إنشائها.',
+                questionAr: 'القوائم في بايثون غير قابل للتغيير، أي لا يمكن تغيير عناصرها بعد إنشائها.',
                 correctAnswer: false,
                 marks: 2.0
             },
@@ -3288,7 +3288,7 @@ export const quizData = {
                 id: 2,
                 type: 'tf',
                 questionEn: 'List indexing in Python starts from index 1.',
-                questionAr: 'فهرسة القوائم في بايثون تبدأ من الفهرس 1.',
+                questionAr: 'فهرس القوائم في بايثون تبدأ من الفهرس 1.',
                 correctAnswer: false,
                 marks: 2.0
             },
@@ -3304,7 +3304,7 @@ export const quizData = {
                 id: 4,
                 type: 'tf',
                 questionEn: 'A tuple with one element must include a trailing comma to be recognized as a tuple.',
-                questionAr: 'يجب أن يتضمن الـ tuple الذي يحتوي على عنصر واحد فاصلة في النهاية ليتم التعرف عليه كـ tuple.',
+                questionAr: 'يجب أن يتضمن الـ tuple الذي يحتوي على عنصر واحد فاصل في النهاي ليتم التعرف عليه كـ tuple.',
                 correctAnswer: true,
                 marks: 2.0
             },
@@ -3312,7 +3312,7 @@ export const quizData = {
                 id: 5,
                 type: 'tf',
                 questionEn: 'You can delete an entire tuple using the del keyword.',
-                questionAr: 'يمكنك حذف tuple بالكامل باستخدام الكلمة المفتاحية del.',
+                questionAr: 'يمكنك حذف tuple بالكامل باستدام الكلم المفتاحي del.',
                 correctAnswer: true,
                 marks: 1.0
             }
@@ -3321,7 +3321,7 @@ export const quizData = {
     ml_midterm: {
         id: 'ml_midterm',
         title: 'Midterm Past Papers',
-        titleAr: 'أسئلة سنوات ميد',
+        titleAr: 'أسئل سنوات ميد',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -3418,7 +3418,7 @@ export const quizData = {
                 id: 1,
                 type: 'tf',
                 questionEn: 'Python lists are immutable, meaning their elements cannot be changed after creation.',
-                questionAr: 'القوائم في بايثون غير قابلة للتغيير، أي لا يمكن تغيير عناصرها بعد إنشائها.',
+                questionAr: 'القوائم في بايثون غير قابل للتغيير، أي لا يمكن تغيير عناصرها بعد إنشائها.',
                 correctAnswer: false,
                 marks: 2.0
             },
@@ -3426,7 +3426,7 @@ export const quizData = {
                 id: 2,
                 type: 'tf',
                 questionEn: 'List indexing in Python starts from index 1.',
-                questionAr: 'فهرسة القوائم في بايثون تبدأ من الفهرس 1.',
+                questionAr: 'فهرس القوائم في بايثون تبدأ من الفهرس 1.',
                 correctAnswer: false,
                 marks: 2.0
             },
@@ -3442,7 +3442,7 @@ export const quizData = {
                 id: 4,
                 type: 'tf',
                 questionEn: 'A tuple with one element must include a trailing comma to be recognized as a tuple.',
-                questionAr: 'يجب أن يتضمن الـ tuple الذي يحتوي على عنصر واحد فاصلة في النهاية ليتم التعرف عليه كـ tuple.',
+                questionAr: 'يجب أن يتضمن الـ tuple الذي يحتوي على عنصر واحد فاصل في النهاي ليتم التعرف عليه كـ tuple.',
                 correctAnswer: true,
                 marks: 2.0
             },
@@ -3450,7 +3450,7 @@ export const quizData = {
                 id: 5,
                 type: 'tf',
                 questionEn: 'You can delete an entire tuple using the del keyword.',
-                questionAr: 'يمكنك حذف tuple بالكامل باستخدام الكلمة المفتاحية del.',
+                questionAr: 'يمكنك حذف tuple بالكامل باستدام الكلم المفتاحي del.',
                 correctAnswer: true,
                 marks: 1.0
             }
@@ -3459,7 +3459,7 @@ export const quizData = {
     ml_midterm: {
         id: 'ml_midterm',
         title: 'Midterm Past Papers',
-        titleAr: 'أسئلة سنوات ميد',
+        titleAr: 'أسئل سنوات ميد',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -3547,7 +3547,7 @@ export const quizData = {
     ml_final: {
         id: 'ml_final',
         title: 'Final Past Papers',
-        titleAr: 'أسئلة فاينل',
+        titleAr: 'أسئل فاينل',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -4096,7 +4096,7 @@ export const quizData = {
     biometrics_security_quiz1: {
         id: 'biometrics_security_quiz1',
         title: 'Quiz 1: Sensing & Image Processing',
-        titleAr: 'الكويز الأول: الاستشعار ومعالجة الصور',
+        titleAr: 'الكويز الأول: الاستشعار ومعالج الصور',
         icon: '👁️',
         color: '#9C27B0',
         forceEnglish: true,
@@ -4440,7 +4440,7 @@ export const quizData = {
                 id: 1, type: 'mcq', marks: 2.0,
                 questionAr: 'من وظائف القانون',
                 options: [
-                    { id: 'a', textAr: 'التوفيق بين المصالح المتعارضة' },
+                    { id: 'a', textAr: 'التوفيق بين المصالح المتعارض' },
                     { id: 'b', textAr: 'جميع ما ذكر' },
                     { id: 'c', textAr: 'دعم السلام في المجتمع' }
                 ],
@@ -4450,18 +4450,18 @@ export const quizData = {
                 id: 2, type: 'mcq', marks: 2.0,
                 questionAr: 'تعتبر قواعد القانون العام',
                 options: [
-                    { id: 'a', textAr: 'جميعها امرة' },
-                    { id: 'b', textAr: 'معظمها امرة' },
-                    { id: 'c', textAr: 'قواعد مكملة' }
+                    { id: 'a', textAr: 'جميعها امر' },
+                    { id: 'b', textAr: 'معظمها امر' },
+                    { id: 'c', textAr: 'قواعد مكمل' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 3, type: 'mcq', marks: 2.0,
-                questionAr: 'من خصائص القاعدة القانونية',
+                questionAr: 'من صائص القاعد القانوني',
                 options: [
-                    { id: 'a', textAr: 'قاعدة ملزمة غير مقترنة بجزاء' },
-                    { id: 'b', textAr: 'قاعدة خاصة' },
+                    { id: 'a', textAr: 'قاعد ملزم غير مقترن بجزاء' },
+                    { id: 'b', textAr: 'قاعد اص' },
                     { id: 'c', textAr: 'تحكم السلوك الظاهر' }
                 ],
                 correctAnswer: 'c'
@@ -4470,15 +4470,15 @@ export const quizData = {
                 id: 4, type: 'mcq', marks: 2.0,
                 questionAr: 'التجريد يعتبر',
                 options: [
-                    { id: 'a', textAr: 'الاثر المترتب على القاعدة القانونية' },
-                    { id: 'b', textAr: 'صفة من صفات القاعدة القانونية' },
+                    { id: 'a', textAr: 'الاثر المترتب على القاعد القانوني' },
+                    { id: 'b', textAr: 'صف من صفات القاعد القانوني' },
                     { id: 'c', textAr: 'تنظيم لعلاقات المجتمع' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 5, type: 'mcq', marks: 2.0,
-                questionAr: 'يعتبر قانون اصول المحاكمات المدنية',
+                questionAr: 'يعتبر قانون اصول المحاكمات المدني',
                 options: [
                     { id: 'a', textAr: 'قانون موضوعي' },
                     { id: 'b', textAr: 'قانون سلوكي' },
@@ -4497,9 +4497,9 @@ export const quizData = {
         questions: [
             {
                 id: 1, type: 'mcq', marks: 1.0,
-                questionAr: 'وظيفة القانون تتمثل في',
+                questionAr: 'وظيف القانون تتمثل في',
                 options: [
-                    { id: 'a', textAr: 'تخصيص القاعدة القانونية' },
+                    { id: 'a', textAr: 'تصيص القاعد القانوني' },
                     { id: 'b', textAr: 'تحقيق التعارض في المجتمع' },
                     { id: 'c', textAr: 'دعم السلام في المجتمع' }
                 ],
@@ -4507,17 +4507,17 @@ export const quizData = {
             },
             {
                 id: 2, type: 'mcq', marks: 1.0,
-                questionAr: 'سن القواعد القانونية واخراجها مكتوبة محددة بالفاظ معينة بواسطة سلطة مختصة يطلق على',
+                questionAr: 'سن القواعد القانوني واراجها مكتوب محدد بالفاظ معين بواسط سلط متص يطلق على',
                 options: [
                     { id: 'a', textAr: 'التشريع' },
-                    { id: 'b', textAr: 'الاجتهادات القضائية' },
+                    { id: 'b', textAr: 'الاجتهادات القضائي' },
                     { id: 'c', textAr: 'الفقه' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 3, type: 'mcq', marks: 1.0,
-                questionAr: 'يقصد بالتشريع الاعلى في الدولة والذي يحدد شكل الدولة ونظام الحكم فيها والسلطات الثلاثة والحقوق والحريات',
+                questionAr: 'يقصد بالتشريع الاعلى في الدول والذي يحدد شكل الدول ونظام الحكم فيها والسلطات الثلاث والحقوق والحريات',
                 options: [
                     { id: 'a', textAr: 'التعليمات' },
                     { id: 'b', textAr: 'التشريع العادي' },
@@ -4527,21 +4527,21 @@ export const quizData = {
             },
             {
                 id: 4, type: 'mcq', marks: 1.0,
-                questionAr: 'اعتياد الناس على نوع من السلوك مع الاعتقاد بأنه ملزم لهم في معاملاتهم وان مخالفته تستتبع ايقاع الجزاء يقصد به',
+                questionAr: 'اعتياد الناس على نوع من السلوك مع الاعتقاد بأنه ملزم لهم في معاملاتهم وان مالفته تستتبع ايقاع الجزاء يقصد به',
                 options: [
                     { id: 'a', textAr: 'القانون' },
-                    { id: 'b', textAr: 'العادة الاتفاقية' },
+                    { id: 'b', textAr: 'العاد الاتفاقي' },
                     { id: 'c', textAr: 'العرف' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 5, type: 'mcq', marks: 1.0,
-                questionAr: 'واحدة من الاتية لا تعتبر من خصائص القاعدة القانونية',
+                questionAr: 'واحد من الاتي لا تعتبر من صائص القاعد القانوني',
                 options: [
-                    { id: 'a', textAr: 'عامة ومجردة' },
-                    { id: 'b', textAr: 'تحكم السلوك الداخلي' },
-                    { id: 'c', textAr: 'قاعدة اجتماعية' }
+                    { id: 'a', textAr: 'عام ومجرد' },
+                    { id: 'b', textAr: 'تحكم السلوك الدالي' },
+                    { id: 'c', textAr: 'قاعد اجتماعي' }
                 ],
                 correctAnswer: 'b'
             }
@@ -4556,22 +4556,22 @@ export const quizData = {
         questions: [
             {
                 id: 1, type: 'mcq', marks: 1.0,
-                questionAr: 'يحدد موطن ناقص الاهلية في القانون المدني بناء على',
+                questionAr: 'يحدد موطن ناقص الاهلي في القانون المدني بناء على',
                 options: [
                     { id: 'a', textAr: 'موطن من ينوب عنه قانونا' },
-                    { id: 'b', textAr: 'اي موطن مختار يختاره القاضي' },
+                    { id: 'b', textAr: 'اي موطن متار يتاره القاضي' },
                     { id: 'c', textAr: 'موطن اقامته الاصلي' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 2, type: 'tf', marks: 1.0,
-                questionAr: 'يعتبر الشخص قريبا لابن عمه من الدرجة الرابعة حيث يحذف الاصل المشترك وهو الجد',
+                questionAr: 'يعتبر الشص قريبا لابن عمه من الدرج الرابع حيث يحذف الاصل المشترك وهو الجد',
                 correctAnswer: true
             },
             {
                 id: 3, type: 'mcq', marks: 1.0,
-                questionAr: 'الحكم القانوني اذا ارتكب شخص فعلا بدون قصد اضر بالغير',
+                questionAr: 'الحكم القانوني اذا ارتكب شص فعلا بدون قصد اضر بالغير',
                 options: [
                     { id: 'a', textAr: 'يحكم عليه بالحبس' },
                     { id: 'b', textAr: 'لايحكم عليه لانه بدون قصد' },
@@ -4581,21 +4581,21 @@ export const quizData = {
             },
             {
                 id: 4, type: 'mcq', marks: 1.0,
-                questionAr: 'التعريف الاتي : طائفة من الحقوق تهدف الى احاطة شخص الانسان بالرعاية والاحترام الواجبين له',
+                questionAr: 'التعريف الاتي : طائف من الحقوق تهدف الى احاط شص الانسان بالرعاي والاحترام الواجبين له',
                 options: [
-                    { id: 'a', textAr: 'الحقوق العامة' },
-                    { id: 'b', textAr: 'الحقوق الخاصة' },
-                    { id: 'c', textAr: 'حقوق الاسرة' }
+                    { id: 'a', textAr: 'الحقوق العام' },
+                    { id: 'b', textAr: 'الحقوق الاص' },
+                    { id: 'c', textAr: 'حقوق الاسر' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 5, type: 'mcq', marks: 1.0,
-                questionAr: 'اختصاص شخص بشئ مادي اختصاص مباشر يقره القانون فيقوم بأعمال معينة تحقق له منفعة تتعلق بهذا الشئ يقصد بذلك',
+                questionAr: 'اتصاص شص بشئ مادي اتصاص مباشر يقره القانون فيقوم بأعمال معين تحقق له منفع تتعلق بهذا الشئ يقصد بذلك',
                 options: [
-                    { id: 'a', textAr: 'الحقوق الذهنية' },
-                    { id: 'b', textAr: 'الحقوق العينية' },
-                    { id: 'c', textAr: 'الحقوق الشخصية' }
+                    { id: 'a', textAr: 'الحقوق الذهني' },
+                    { id: 'b', textAr: 'الحقوق العيني' },
+                    { id: 'c', textAr: 'الحقوق الشصي' }
                 ],
                 correctAnswer: 'b'
             }
@@ -4605,7 +4605,7 @@ export const quizData = {
     intro_law_quizzes: {
         id: 'intro_law_quizzes',
         title: 'Introduction to Law - Quizzes',
-        titleAr: 'مدخل إلى علم القانون - الكويزات',
+        titleAr: 'مدل إلى علم القانون - الكويزات',
         icon: '⚖️',
         color: '#795548',
         parts: [
@@ -4618,7 +4618,7 @@ export const quizData = {
     intro_law_final: {
         id: 'intro_law_final',
         title: 'Introduction to Law Final Exam - Past Papers',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل',
         icon: '⚖️',
         color: '#795548',
         parts: [
@@ -4626,7 +4626,7 @@ export const quizData = {
             { id: 'intro_law_final_p2', title: 'Part 2', titleAr: 'الجزء الثاني' },
             { id: 'intro_law_final_p3', title: 'Part 3', titleAr: 'الجزء الثالث' },
             { id: 'intro_law_final_p4', title: 'Part 4', titleAr: 'الجزء الرابع' },
-            { id: 'intro_law_final_p5', title: 'Part 5', titleAr: 'الجزء الخامس' },
+            { id: 'intro_law_final_p5', title: 'Part 5', titleAr: 'الجزء الامس' },
             { id: 'intro_law_final_p6', title: 'Part 6', titleAr: 'الجزء السادس' },
             { id: 'intro_law_final_p7', title: 'Part 7', titleAr: 'الجزء السابع' },
             { id: 'intro_law_final_p8', title: 'Part 8', titleAr: 'الجزء الثامن' }
@@ -4636,21 +4636,21 @@ export const quizData = {
     intro_law_final_p1: {
         id: 'intro_law_final_p1',
         title: 'Introduction to Law Final - Part 1 (Q1-20)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الأول',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الأول',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يقصد بالقاعدة القانونية أنها:',
+                questionAr: 'يقصد بالقاعد القانوني أنها:',
                 options: [
-                    { id: 'a', textAr: 'قاعدة سلوكية اجتماعية ملزمة' },
-                    { id: 'b', textAr: 'قاعدة أخلاقية غير ملزمة' },
-                    { id: 'c', textAr: 'قاعدة دينية فقط' },
-                    { id: 'd', textAr: 'قاعدة تنظيمية اختيارية' }
+                    { id: 'a', textAr: 'قاعد سلوكي اجتماعي ملزم' },
+                    { id: 'b', textAr: 'قاعد ألاقي غير ملزم' },
+                    { id: 'c', textAr: 'قاعد ديني فقط' },
+                    { id: 'd', textAr: 'قاعد تنظيمي اتياري' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4658,12 +4658,12 @@ export const quizData = {
                 id: 2,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'ما الجزاء المترتب على مخالفة القاعدة القانونية؟',
+                questionAr: 'ما الجزاء المترتب على مالف القاعد القانوني؟',
                 options: [
                     { id: 'a', textAr: 'اللوم الاجتماعي' },
                     { id: 'b', textAr: 'الجزاء القانوني' },
                     { id: 'c', textAr: 'الجزاء الديني فقط' },
-                    { id: 'd', textAr: 'الجزاء الأخلاقي' }
+                    { id: 'd', textAr: 'الجزاء الألاقي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -4671,12 +4671,12 @@ export const quizData = {
                 id: 3,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تتميز القاعدة القانونية بأنها:',
+                questionAr: 'تتميز القاعد القانوني بأنها:',
                 options: [
-                    { id: 'a', textAr: 'عامة ومجردة' },
-                    { id: 'b', textAr: 'شخصية' },
-                    { id: 'c', textAr: 'اختيارية' },
-                    { id: 'd', textAr: 'مؤقتة' }
+                    { id: 'a', textAr: 'عام ومجرد' },
+                    { id: 'b', textAr: 'شصي' },
+                    { id: 'c', textAr: 'اتياري' },
+                    { id: 'd', textAr: 'مؤقت' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4684,10 +4684,10 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الفرق الجوهري بين القاعدة القانونية والقاعدة الأخلاقية هو:',
+                questionAr: 'الفرق الجوهري بين القاعد القانوني والقاعد الألاقي هو:',
                 options: [
                     { id: 'a', textAr: 'الجزاء' },
-                    { id: 'b', textAr: 'الغاية' },
+                    { id: 'b', textAr: 'الغاي' },
                     { id: 'c', textAr: 'المصدر' },
                     { id: 'd', textAr: 'الزمن' }
                 ],
@@ -4697,11 +4697,11 @@ export const quizData = {
                 id: 5,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي مما يلي يعد من مصادر القاعدة القانونية الرسمية؟',
+                questionAr: 'أي مما يلي يعد من مصادر القاعد القانوني الرسمي؟',
                 options: [
                     { id: 'a', textAr: 'التشريع' },
-                    { id: 'b', textAr: 'الأخلاق' },
-                    { id: 'c', textAr: 'العادات الاجتماعية' },
+                    { id: 'b', textAr: 'الألاق' },
+                    { id: 'c', textAr: 'العادات الاجتماعي' },
                     { id: 'd', textAr: 'الدين' }
                 ],
                 correctAnswer: 'a'
@@ -4712,10 +4712,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'التشريع هو:',
                 options: [
-                    { id: 'a', textAr: 'قاعدة تصدر عن السلطة المختصة' },
-                    { id: 'b', textAr: 'قاعدة عرفية' },
-                    { id: 'c', textAr: 'قاعدة دينية' },
-                    { id: 'd', textAr: 'قاعدة أخلاقية' }
+                    { id: 'a', textAr: 'قاعد تصدر عن السلط المتص' },
+                    { id: 'b', textAr: 'قاعد عرفي' },
+                    { id: 'c', textAr: 'قاعد ديني' },
+                    { id: 'd', textAr: 'قاعد ألاقي' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4726,9 +4726,9 @@ export const quizData = {
                 questionAr: 'العرف كمصدر للقانون يشترط فيه:',
                 options: [
                     { id: 'a', textAr: 'الاعتياد والاعتقاد بالإلزام' },
-                    { id: 'b', textAr: 'الكتابة' },
+                    { id: 'b', textAr: 'الكتاب' },
                     { id: 'c', textAr: 'صدوره عن البرلمان' },
-                    { id: 'd', textAr: 'الجزاء الأخلاقي' }
+                    { id: 'd', textAr: 'الجزاء الألاقي' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4736,12 +4736,12 @@ export const quizData = {
                 id: 8,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يقصد بعمومية القاعدة القانونية:',
+                questionAr: 'يقصد بعمومي القاعد القانوني:',
                 options: [
-                    { id: 'a', textAr: 'تطبق على الجميع دون تخصيص' },
-                    { id: 'b', textAr: 'تطبق على فئة معينة' },
+                    { id: 'a', textAr: 'تطبق على الجميع دون تصيص' },
+                    { id: 'b', textAr: 'تطبق على فئ معين' },
                     { id: 'c', textAr: 'تطبق مؤقتًا' },
-                    { id: 'd', textAr: 'تطبق على حالة فردية' }
+                    { id: 'd', textAr: 'تطبق على حال فردي' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4749,12 +4749,12 @@ export const quizData = {
                 id: 9,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية مقرونة بجزاء:',
+                questionAr: 'القاعد القانوني مقرون بجزاء:',
                 options: [
-                    { id: 'a', textAr: 'مادي توقعه السلطة العامة' },
+                    { id: 'a', textAr: 'مادي توقعه السلط العام' },
                     { id: 'b', textAr: 'أدبي فقط' },
                     { id: 'c', textAr: 'ديني' },
-                    { id: 'd', textAr: 'اختياري' }
+                    { id: 'd', textAr: 'اتياري' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4764,10 +4764,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القانون العام ينظم:',
                 options: [
-                    { id: 'a', textAr: 'علاقة الدولة بالأفراد' },
-                    { id: 'b', textAr: 'علاقة الأفراد ببعضهم' },
-                    { id: 'c', textAr: 'المعاملات التجارية فقط' },
-                    { id: 'd', textAr: 'الأحوال الشخصية فقط' }
+                    { id: 'a', textAr: 'علاق الدول بالأفراد' },
+                    { id: 'b', textAr: 'علاق الأفراد ببعضهم' },
+                    { id: 'c', textAr: 'المعاملات التجاري فقط' },
+                    { id: 'd', textAr: 'الأحوال الشصي فقط' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4775,12 +4775,12 @@ export const quizData = {
                 id: 11,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القانون الخاص ينظم:',
+                questionAr: 'القانون الاص ينظم:',
                 options: [
                     { id: 'a', textAr: 'علاقات الأفراد بعضهم ببعض' },
-                    { id: 'b', textAr: 'علاقات الدولة الدولية' },
+                    { id: 'b', textAr: 'علاقات الدول الدولي' },
                     { id: 'c', textAr: 'الجرائم والعقوبات' },
-                    { id: 'd', textAr: 'السلطات العامة' }
+                    { id: 'd', textAr: 'السلطات العام' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4791,8 +4791,8 @@ export const quizData = {
                 questionAr: 'القانون الدستوري يندرج ضمن:',
                 options: [
                     { id: 'a', textAr: 'القانون العام' },
-                    { id: 'b', textAr: 'القانون الخاص' },
-                    { id: 'c', textAr: 'القانون المختلط' },
+                    { id: 'b', textAr: 'القانون الاص' },
+                    { id: 'c', textAr: 'القانون المتلط' },
                     { id: 'd', textAr: 'القانون الدولي' }
                 ],
                 correctAnswer: 'a'
@@ -4803,10 +4803,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الجزاء الجنائي يتمثل في:',
                 options: [
-                    { id: 'a', textAr: 'العقوبة' },
+                    { id: 'a', textAr: 'العقوب' },
                     { id: 'b', textAr: 'التعويض' },
                     { id: 'c', textAr: 'البطلان' },
-                    { id: 'd', textAr: 'الفسخ' }
+                    { id: 'd', textAr: 'الفس' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4840,10 +4840,10 @@ export const quizData = {
                 id: 16,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية ملزمة لأنها:',
+                questionAr: 'القاعد القانوني ملزم لأنها:',
                 options: [
-                    { id: 'a', textAr: 'تصدر عن سلطة عامة' },
-                    { id: 'b', textAr: 'تتفق مع الأخلاق' },
+                    { id: 'a', textAr: 'تصدر عن سلط عام' },
+                    { id: 'b', textAr: 'تتفق مع الألاق' },
                     { id: 'c', textAr: 'تنسجم مع العرف' },
                     { id: 'd', textAr: 'تحقق الرضا الاجتماعي فقط' }
                 ],
@@ -4853,12 +4853,12 @@ export const quizData = {
                 id: 17,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'من خصائص القاعدة القانونية أنها:',
+                questionAr: 'من صائص القاعد القانوني أنها:',
                 options: [
-                    { id: 'a', textAr: 'اجتماعية' },
-                    { id: 'b', textAr: 'فردية' },
-                    { id: 'c', textAr: 'شخصية' },
-                    { id: 'd', textAr: 'استثنائية' }
+                    { id: 'a', textAr: 'اجتماعي' },
+                    { id: 'b', textAr: 'فردي' },
+                    { id: 'c', textAr: 'شصي' },
+                    { id: 'd', textAr: 'استثنائي' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4866,12 +4866,12 @@ export const quizData = {
                 id: 18,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية تختلف عن القاعدة الدينية من حيث:',
+                questionAr: 'القاعد القانوني تتلف عن القاعد الديني من حيث:',
                 options: [
                     { id: 'a', textAr: 'الجزاء' },
                     { id: 'b', textAr: 'المصدر الإلهي' },
                     { id: 'c', textAr: 'السلوك' },
-                    { id: 'd', textAr: 'الغاية' }
+                    { id: 'd', textAr: 'الغاي' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4879,9 +4879,9 @@ export const quizData = {
                 id: 19,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'التدرج في القواعد القانونية يعني:',
+                questionAr: 'التدرج في القواعد القانوني يعني:',
                 options: [
-                    { id: 'a', textAr: 'تفاوت قوتها الإلزامية' },
+                    { id: 'a', textAr: 'تفاوت قوتها الإلزامي' },
                     { id: 'b', textAr: 'تعدد مصادرها' },
                     { id: 'c', textAr: 'تشابهها' },
                     { id: 'd', textAr: 'عدم تعارضها' }
@@ -4892,7 +4892,7 @@ export const quizData = {
                 id: 20,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أسمى القواعد القانونية في الدولة هو:',
+                questionAr: 'أسمى القواعد القانوني في الدول هو:',
                 options: [
                     { id: 'a', textAr: 'الدستور' },
                     { id: 'b', textAr: 'القانون العادي' },
@@ -4907,10 +4907,10 @@ export const quizData = {
     intro_law_final_p2: {
         id: 'intro_law_final_p2',
         title: 'Introduction to Law Final - Part 2 (Q21-40)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الثاني',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الثاني',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -4919,9 +4919,9 @@ export const quizData = {
                 questionAr: 'يُقصد بالقانون العام بأنه:',
                 options: [
                     { id: 'a', textAr: 'العلاقات بين الأفراد' },
-                    { id: 'b', textAr: 'علاقة الدولة بالأفراد' },
-                    { id: 'c', textAr: 'العلاقات التجارية' },
-                    { id: 'd', textAr: 'العلاقات العائلية' }
+                    { id: 'b', textAr: 'علاق الدول بالأفراد' },
+                    { id: 'c', textAr: 'العلاقات التجاري' },
+                    { id: 'd', textAr: 'العلاقات العائلي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -4929,11 +4929,11 @@ export const quizData = {
                 id: 2,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يتميز القانون العام عن القانون الخاص بأن:',
+                questionAr: 'يتميز القانون العام عن القانون الاص بأن:',
                 options: [
-                    { id: 'a', textAr: 'يحقق مصلحة فردية' },
-                    { id: 'b', textAr: 'يحقق المصلحة العامة' },
-                    { id: 'c', textAr: 'يختص بالأفراد فقط' },
+                    { id: 'a', textAr: 'يحقق مصلح فردي' },
+                    { id: 'b', textAr: 'يحقق المصلح العام' },
+                    { id: 'c', textAr: 'يتص بالأفراد فقط' },
                     { id: 'd', textAr: 'لا جزاء له' }
                 ],
                 correctAnswer: 'b'
@@ -4942,12 +4942,12 @@ export const quizData = {
                 id: 3,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'من فروع القانون العام الداخلي:',
+                questionAr: 'من فروع القانون العام الدالي:',
                 options: [
                     { id: 'a', textAr: 'القانون التجاري' },
                     { id: 'b', textAr: 'القانون المدني' },
                     { id: 'c', textAr: 'القانون الدستوري' },
-                    { id: 'd', textAr: 'قانون الأسرة' }
+                    { id: 'd', textAr: 'قانون الأسر' }
                 ],
                 correctAnswer: 'c'
             },
@@ -4955,11 +4955,11 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القانون الدستوري يختص بـ:',
+                questionAr: 'القانون الدستوري يتص بـ:',
                 options: [
                     { id: 'a', textAr: 'تنظيم المعاملات' },
-                    { id: 'b', textAr: 'تنظيم شؤون الأسرة' },
-                    { id: 'c', textAr: 'تنظيم السلطة في الدولة' },
+                    { id: 'b', textAr: 'تنظيم شؤون الأسر' },
+                    { id: 'c', textAr: 'تنظيم السلط في الدول' },
                     { id: 'd', textAr: 'تنظيم العقود' }
                 ],
                 correctAnswer: 'c'
@@ -4970,10 +4970,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القانون الإداري ينظم:',
                 options: [
-                    { id: 'a', textAr: 'العلاقات الدولية' },
-                    { id: 'b', textAr: 'نشاط الإدارة العامة' },
+                    { id: 'a', textAr: 'العلاقات الدولي' },
+                    { id: 'b', textAr: 'نشاط الإدار العام' },
                     { id: 'c', textAr: 'الجرائم والعقوبات' },
-                    { id: 'd', textAr: 'الأحوال الشخصية' }
+                    { id: 'd', textAr: 'الأحوال الشصي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -4981,12 +4981,12 @@ export const quizData = {
                 id: 6,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'من خصائص القاعدة القانونية أنها:',
+                questionAr: 'من صائص القاعد القانوني أنها:',
                 options: [
-                    { id: 'a', textAr: 'اختيارية' },
-                    { id: 'b', textAr: 'عامة ومجردة' },
-                    { id: 'c', textAr: 'أخلاقية' },
-                    { id: 'd', textAr: 'دينية' }
+                    { id: 'a', textAr: 'اتياري' },
+                    { id: 'b', textAr: 'عام ومجرد' },
+                    { id: 'c', textAr: 'ألاقي' },
+                    { id: 'd', textAr: 'ديني' }
                 ],
                 correctAnswer: 'b'
             },
@@ -4994,11 +4994,11 @@ export const quizData = {
                 id: 7,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الجزاء في القاعدة القانونية يكون:',
+                questionAr: 'الجزاء في القاعد القانوني يكون:',
                 options: [
                     { id: 'a', textAr: 'أدبي' },
                     { id: 'b', textAr: 'ديني' },
-                    { id: 'c', textAr: 'مادي توقعه الدولة' },
+                    { id: 'c', textAr: 'مادي توقعه الدول' },
                     { id: 'd', textAr: 'اجتماعي' }
                 ],
                 correctAnswer: 'c'
@@ -5007,12 +5007,12 @@ export const quizData = {
                 id: 8,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية ذات طبيعة:',
+                questionAr: 'القاعد القانوني ذات طبيع:',
                 options: [
-                    { id: 'a', textAr: 'فردية' },
-                    { id: 'b', textAr: 'شخصية' },
-                    { id: 'c', textAr: 'عامة' },
-                    { id: 'd', textAr: 'استثنائية' }
+                    { id: 'a', textAr: 'فردي' },
+                    { id: 'b', textAr: 'شصي' },
+                    { id: 'c', textAr: 'عام' },
+                    { id: 'd', textAr: 'استثنائي' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5020,12 +5020,12 @@ export const quizData = {
                 id: 9,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الفرق الأساسي بين القانون العام والخاص هو:',
+                questionAr: 'الفرق الأساسي بين القانون العام والاص هو:',
                 options: [
                     { id: 'a', textAr: 'نوع الجزاء' },
-                    { id: 'b', textAr: 'طبيعة الأطراف' },
-                    { id: 'c', textAr: 'مصدر القاعدة' },
-                    { id: 'd', textAr: 'شكل القاعدة' }
+                    { id: 'b', textAr: 'طبيع الأطراف' },
+                    { id: 'c', textAr: 'مصدر القاعد' },
+                    { id: 'd', textAr: 'شكل القاعد' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5036,9 +5036,9 @@ export const quizData = {
                 questionAr: 'القانون الجنائي يهدف إلى:',
                 options: [
                     { id: 'a', textAr: 'تنظيم العقود' },
-                    { id: 'b', textAr: 'حماية المجتمع' },
-                    { id: 'c', textAr: 'تنظيم الأسرة' },
-                    { id: 'd', textAr: 'تنظيم الإدارة' }
+                    { id: 'b', textAr: 'حماي المجتمع' },
+                    { id: 'c', textAr: 'تنظيم الأسر' },
+                    { id: 'd', textAr: 'تنظيم الإدار' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5064,7 +5064,7 @@ export const quizData = {
                     { id: 'a', textAr: 'الاستمرار فقط' },
                     { id: 'b', textAr: 'القِدم فقط' },
                     { id: 'c', textAr: 'الإلزام مع الاستقرار' },
-                    { id: 'd', textAr: 'العلنية' }
+                    { id: 'd', textAr: 'العلني' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5072,7 +5072,7 @@ export const quizData = {
                 id: 13,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية تختلف عن القاعدة الأخلاقية من حيث:',
+                questionAr: 'القاعد القانوني تتلف عن القاعد الألاقي من حيث:',
                 options: [
                     { id: 'a', textAr: 'الجزاء' },
                     { id: 'b', textAr: 'المصدر' },
@@ -5087,7 +5087,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القانون الدولي العام ينظم:',
                 options: [
-                    { id: 'a', textAr: 'الأفراد داخل الدولة' },
+                    { id: 'a', textAr: 'الأفراد دال الدول' },
                     { id: 'b', textAr: 'العلاقات بين الدول' },
                     { id: 'c', textAr: 'الجرائم' },
                     { id: 'd', textAr: 'العقود' }
@@ -5098,10 +5098,10 @@ export const quizData = {
                 id: 15,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القانون الدولي الخاص يهتم بـ:',
+                questionAr: 'القانون الدولي الاص يهتم بـ:',
                 options: [
                     { id: 'a', textAr: 'العلاقات ذات العنصر الأجنبي' },
-                    { id: 'b', textAr: 'الجرائم الدولية' },
+                    { id: 'b', textAr: 'الجرائم الدولي' },
                     { id: 'c', textAr: 'المعاهدات' },
                     { id: 'd', textAr: 'حقوق الإنسان' }
                 ],
@@ -5111,12 +5111,12 @@ export const quizData = {
                 id: 16,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'السلطة العامة في الدولة تتمثل في:',
+                questionAr: 'السلط العام في الدول تتمثل في:',
                 options: [
-                    { id: 'a', textAr: 'السلطة التشريعية فقط' },
-                    { id: 'b', textAr: 'السلطة التنفيذية فقط' },
+                    { id: 'a', textAr: 'السلط التشريعي فقط' },
+                    { id: 'b', textAr: 'السلط التنفيذي فقط' },
                     { id: 'c', textAr: 'السلطات الثلاث' },
-                    { id: 'd', textAr: 'السلطة القضائية فقط' }
+                    { id: 'd', textAr: 'السلط القضائي فقط' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5124,12 +5124,12 @@ export const quizData = {
                 id: 17,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية عامة بمعنى أنها:',
+                questionAr: 'القاعد القانوني عام بمعنى أنها:',
                 options: [
-                    { id: 'a', textAr: 'تطبق على شخص معين' },
-                    { id: 'b', textAr: 'تطبق على فئة غير محددة' },
-                    { id: 'c', textAr: 'مؤقتة' },
-                    { id: 'd', textAr: 'اختيارية' }
+                    { id: 'a', textAr: 'تطبق على شص معين' },
+                    { id: 'b', textAr: 'تطبق على فئ غير محدد' },
+                    { id: 'c', textAr: 'مؤقت' },
+                    { id: 'd', textAr: 'اتياري' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5137,12 +5137,12 @@ export const quizData = {
                 id: 18,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية مجردة أي أنها:',
+                questionAr: 'القاعد القانوني مجرد أي أنها:',
                 options: [
-                    { id: 'a', textAr: 'تخاطب حالة معينة' },
-                    { id: 'b', textAr: 'تطبق على واقعة مستقبلية غير محددة' },
-                    { id: 'c', textAr: 'فردية' },
-                    { id: 'd', textAr: 'استثنائية' }
+                    { id: 'a', textAr: 'تاطب حال معين' },
+                    { id: 'b', textAr: 'تطبق على واقع مستقبلي غير محدد' },
+                    { id: 'c', textAr: 'فردي' },
+                    { id: 'd', textAr: 'استثنائي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5152,9 +5152,9 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الهدف الأساسي من سن القوانين هو:',
                 options: [
-                    { id: 'a', textAr: 'تحقيق العدالة والنظام' },
+                    { id: 'a', textAr: 'تحقيق العدال والنظام' },
                     { id: 'b', textAr: 'تحقيق الربح' },
-                    { id: 'c', textAr: 'تحقيق الأخلاق' },
+                    { id: 'c', textAr: 'تحقيق الألاق' },
                     { id: 'd', textAr: 'تحقيق العادات' }
                 ],
                 correctAnswer: 'a'
@@ -5178,10 +5178,10 @@ export const quizData = {
     intro_law_final_p3: {
         id: 'intro_law_final_p3',
         title: 'Introduction to Law Final - Part 3 (Q41-60)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الثالث',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الثالث',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -5200,9 +5200,9 @@ export const quizData = {
                 id: 2,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'التفسير القضائي يتم بواسطة:',
+                questionAr: 'التفسير القضائي يتم بواسط:',
                 options: [
-                    { id: 'a', textAr: 'السلطة التنفيذية' },
+                    { id: 'a', textAr: 'السلط التنفيذي' },
                     { id: 'b', textAr: 'المشرّع' },
                     { id: 'c', textAr: 'القاضي عند تطبيق القانون' },
                     { id: 'd', textAr: 'الفقهاء فقط' }
@@ -5213,12 +5213,12 @@ export const quizData = {
                 id: 3,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'من خصائص التفسير التشريعي:',
+                questionAr: 'من صائص التفسير التشريعي:',
                 options: [
                     { id: 'a', textAr: 'غير ملزم' },
-                    { id: 'b', textAr: 'ملزم وله قوة القانون' },
+                    { id: 'b', textAr: 'ملزم وله قو القانون' },
                     { id: 'c', textAr: 'مؤقت' },
-                    { id: 'd', textAr: 'يقتصر على حالة واحدة' }
+                    { id: 'd', textAr: 'يقتصر على حال واحد' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5226,7 +5226,7 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية غير المكتوبة تتمثل في:',
+                questionAr: 'القاعد القانوني غير المكتوب تتمثل في:',
                 options: [
                     { id: 'a', textAr: 'التشريع' },
                     { id: 'b', textAr: 'القضاء' },
@@ -5241,7 +5241,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'العرف لا يُعتد به كمصدر قانوني إلا إذا:',
                 options: [
-                    { id: 'a', textAr: 'خالف التشريع' },
+                    { id: 'a', textAr: 'الف التشريع' },
                     { id: 'b', textAr: 'استقر وثبت واستمر' },
                     { id: 'c', textAr: 'كان حديثاً' },
                     { id: 'd', textAr: 'ورد في حكم قضائي' }
@@ -5252,12 +5252,12 @@ export const quizData = {
                 id: 6,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'التدرج في القواعد القانونية يعني:',
+                questionAr: 'التدرج في القواعد القانوني يعني:',
                 options: [
-                    { id: 'a', textAr: 'تساوي القواعد القانونية' },
-                    { id: 'b', textAr: 'خضوع القاعدة الأدنى للأعلى' },
-                    { id: 'c', textAr: 'استقلال كل قاعدة' },
-                    { id: 'd', textAr: 'أولوية العرف' }
+                    { id: 'a', textAr: 'تساوي القواعد القانوني' },
+                    { id: 'b', textAr: 'ضوع القاعد الأدنى للأعلى' },
+                    { id: 'c', textAr: 'استقلال كل قاعد' },
+                    { id: 'd', textAr: 'أولوي العرف' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5265,7 +5265,7 @@ export const quizData = {
                 id: 7,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أعلى مرتبة في القواعد القانونية هي:',
+                questionAr: 'أعلى مرتب في القواعد القانوني هي:',
                 options: [
                     { id: 'a', textAr: 'القانون العادي' },
                     { id: 'b', textAr: 'النظام' },
@@ -5319,7 +5319,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الإلغاء الضمني يحدث عندما:',
                 options: [
-                    { id: 'a', textAr: 'يذكر صراحة' },
+                    { id: 'a', textAr: 'يذكر صراح' },
                     { id: 'b', textAr: 'يصدر تشريع جديد متعارض' },
                     { id: 'c', textAr: 'يتوقف العمل بالقانون' },
                     { id: 'd', textAr: 'ينقضي الزمن' }
@@ -5330,12 +5330,12 @@ export const quizData = {
                 id: 12,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية تتصف بأنها:',
+                questionAr: 'القاعد القانوني تتصف بأنها:',
                 options: [
-                    { id: 'a', textAr: 'شخصية' },
-                    { id: 'b', textAr: 'مجردة وعامة' },
-                    { id: 'c', textAr: 'مؤقتة' },
-                    { id: 'd', textAr: 'اختيارية' }
+                    { id: 'a', textAr: 'شصي' },
+                    { id: 'b', textAr: 'مجرد وعام' },
+                    { id: 'c', textAr: 'مؤقت' },
+                    { id: 'd', textAr: 'اتياري' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5382,7 +5382,7 @@ export const quizData = {
                 id: 16,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'وظيفة التفسير هي:',
+                questionAr: 'وظيف التفسير هي:',
                 options: [
                     { id: 'a', textAr: 'إنشاء قانون جديد' },
                     { id: 'b', textAr: 'إلغاء النص' },
@@ -5408,9 +5408,9 @@ export const quizData = {
                 id: 18,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'النص الخاص يقيد:',
+                questionAr: 'النص الاص يقيد:',
                 options: [
-                    { id: 'a', textAr: 'النص الخاص' },
+                    { id: 'a', textAr: 'النص الاص' },
                     { id: 'b', textAr: 'النص العام' },
                     { id: 'c', textAr: 'العرف' },
                     { id: 'd', textAr: 'الفقه' }
@@ -5423,9 +5423,9 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'التشريع العادي يصدر عن:',
                 options: [
-                    { id: 'a', textAr: 'السلطة القضائية' },
-                    { id: 'b', textAr: 'السلطة التنفيذية' },
-                    { id: 'c', textAr: 'السلطة التشريعية' },
+                    { id: 'a', textAr: 'السلط القضائي' },
+                    { id: 'b', textAr: 'السلط التنفيذي' },
+                    { id: 'c', textAr: 'السلط التشريعي' },
                     { id: 'd', textAr: 'الفقهاء' }
                 ],
                 correctAnswer: 'c'
@@ -5434,12 +5434,12 @@ export const quizData = {
                 id: 20,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية الجزائية تتميز بأنها:',
+                questionAr: 'القاعد القانوني الجزائي تتميز بأنها:',
                 options: [
-                    { id: 'a', textAr: 'اختيارية' },
-                    { id: 'b', textAr: 'أخلاقية' },
-                    { id: 'c', textAr: 'مقرونة بجزاء' },
-                    { id: 'd', textAr: 'غير ملزمة' }
+                    { id: 'a', textAr: 'اتياري' },
+                    { id: 'b', textAr: 'ألاقي' },
+                    { id: 'c', textAr: 'مقرون بجزاء' },
+                    { id: 'd', textAr: 'غير ملزم' }
                 ],
                 correctAnswer: 'c'
             }
@@ -5449,21 +5449,21 @@ export const quizData = {
     intro_law_final_p4: {
         id: 'intro_law_final_p4',
         title: 'Introduction to Law Final - Part 4 (Q61-80)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الرابع',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الرابع',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'ما المقصود بالعرف كمصدر من مصادر القاعدة القانونية؟',
+                questionAr: 'ما المقصود بالعرف كمصدر من مصادر القاعد القانوني؟',
                 options: [
-                    { id: 'a', textAr: 'قاعدة مكتوبة تصدر عن السلطة التشريعية' },
+                    { id: 'a', textAr: 'قاعد مكتوب تصدر عن السلط التشريعي' },
                     { id: 'b', textAr: 'سلوك اعتاد الناس على اتباعه مع الاعتقاد بإلزامه' },
                     { id: 'c', textAr: 'اجتهاد قضائي صادر عن المحاكم' },
-                    { id: 'd', textAr: 'قاعدة فقهية غير ملزمة' }
+                    { id: 'd', textAr: 'قاعد فقهي غير ملزم' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5475,8 +5475,8 @@ export const quizData = {
                 options: [
                     { id: 'a', textAr: 'اعتياد الناس على سلوك معين' },
                     { id: 'b', textAr: 'الاعتقاد بإلزام هذا السلوك' },
-                    { id: 'c', textAr: 'مرور مدة زمنية طويلة' },
-                    { id: 'd', textAr: 'عدم مخالفته للنظام العام' }
+                    { id: 'c', textAr: 'مرور مد زمني طويل' },
+                    { id: 'd', textAr: 'عدم مالفته للنظام العام' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5497,11 +5497,11 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي مما يلي يعد من وظائف محكمة التمييز؟',
+                questionAr: 'أي مما يلي يعد من وظائف محكم التمييز؟',
                 options: [
                     { id: 'a', textAr: 'الفصل في الوقائع' },
                     { id: 'b', textAr: 'تفسير القانون وتوحيد تطبيقه' },
-                    { id: 'c', textAr: 'إعادة سماع الشهود' },
+                    { id: 'c', textAr: 'إعاد سماع الشهود' },
                     { id: 'd', textAr: 'تعديل الوقائع' }
                 ],
                 correctAnswer: 'b'
@@ -5514,8 +5514,8 @@ export const quizData = {
                 options: [
                     { id: 'a', textAr: 'الفقه' },
                     { id: 'b', textAr: 'العرف' },
-                    { id: 'c', textAr: 'مبادئ العدالة' },
-                    { id: 'd', textAr: 'السوابق القضائية' }
+                    { id: 'c', textAr: 'مبادئ العدال' },
+                    { id: 'd', textAr: 'السوابق القضائي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5523,12 +5523,12 @@ export const quizData = {
                 id: 6,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي مما يلي لا يعد من مصادر القاعدة القانونية الرسمية؟',
+                questionAr: 'أي مما يلي لا يعد من مصادر القاعد القانوني الرسمي؟',
                 options: [
                     { id: 'a', textAr: 'التشريع' },
                     { id: 'b', textAr: 'العرف' },
                     { id: 'c', textAr: 'القضاء' },
-                    { id: 'd', textAr: 'الشريعة الإسلامية' }
+                    { id: 'd', textAr: 'الشريع الإسلامي' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5536,11 +5536,11 @@ export const quizData = {
                 id: 7,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة التي تقرر عدم جواز الاعتذار بجهل القانون تعني:',
+                questionAr: 'القاعد التي تقرر عدم جواز الاعتذار بجهل القانون تعني:',
                 options: [
                     { id: 'a', textAr: 'افتراض علم الجميع بالقانون' },
                     { id: 'b', textAr: 'عدم نشر القوانين' },
-                    { id: 'c', textAr: 'جواز مخالفة القانون' },
+                    { id: 'c', textAr: 'جواز مالف القانون' },
                     { id: 'd', textAr: 'عدم إلزام الأجانب بالقانون' }
                 ],
                 correctAnswer: 'a'
@@ -5551,10 +5551,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'متى يبدأ سريان القانون؟',
                 options: [
-                    { id: 'a', textAr: 'من تاريخ صدوره' },
-                    { id: 'b', textAr: 'من تاريخ نشره' },
-                    { id: 'c', textAr: 'من تاريخ العمل به' },
-                    { id: 'd', textAr: 'من تاريخ إقراره' }
+                    { id: 'a', textAr: 'من تاري صدوره' },
+                    { id: 'b', textAr: 'من تاري نشره' },
+                    { id: 'c', textAr: 'من تاري العمل به' },
+                    { id: 'd', textAr: 'من تاري إقراره' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5567,7 +5567,7 @@ export const quizData = {
                     { id: 'a', textAr: 'الأثر الرجعي' },
                     { id: 'b', textAr: 'الأثر الفوري' },
                     { id: 'c', textAr: 'الأثر المستقبلي فقط' },
-                    { id: 'd', textAr: 'الأثر الشخصي' }
+                    { id: 'd', textAr: 'الأثر الشصي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5575,12 +5575,12 @@ export const quizData = {
                 id: 10,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعدة القانونية تتميز بأنها:',
+                questionAr: 'القاعد القانوني تتميز بأنها:',
                 options: [
-                    { id: 'a', textAr: 'اختيارية' },
-                    { id: 'b', textAr: 'ملزمة' },
-                    { id: 'c', textAr: 'فردية' },
-                    { id: 'd', textAr: 'مؤقتة' }
+                    { id: 'a', textAr: 'اتياري' },
+                    { id: 'b', textAr: 'ملزم' },
+                    { id: 'c', textAr: 'فردي' },
+                    { id: 'd', textAr: 'مؤقت' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5593,7 +5593,7 @@ export const quizData = {
                     { id: 'a', textAr: 'إلغاء النص التشريعي' },
                     { id: 'b', textAr: 'تفسير النص التشريعي' },
                     { id: 'c', textAr: 'سد النقص في التشريع' },
-                    { id: 'd', textAr: 'مخالفة التشريع' }
+                    { id: 'd', textAr: 'مالف التشريع' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5601,11 +5601,11 @@ export const quizData = {
                 id: 12,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يشترط في العرف ألا يخالف:',
+                questionAr: 'يشترط في العرف ألا يالف:',
                 options: [
-                    { id: 'a', textAr: 'المصلحة الخاصة' },
+                    { id: 'a', textAr: 'المصلح الاص' },
                     { id: 'b', textAr: 'النظام العام والآداب' },
-                    { id: 'c', textAr: 'إرادة الأفراد' },
+                    { id: 'c', textAr: 'إراد الأفراد' },
                     { id: 'd', textAr: 'القضاء' }
                 ],
                 correctAnswer: 'b'
@@ -5614,12 +5614,12 @@ export const quizData = {
                 id: 13,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'من نتائج مبدأ عدم رجعية القوانين:',
+                questionAr: 'من نتائج مبدأ عدم رجعي القوانين:',
                 options: [
                     { id: 'a', textAr: 'تطبيق القانون الجديد على الماضي' },
-                    { id: 'b', textAr: 'حماية الحقوق المكتسبة' },
-                    { id: 'c', textAr: 'إلغاء الأحكام السابقة' },
-                    { id: 'd', textAr: 'إهدار المراكز القانونية' }
+                    { id: 'b', textAr: 'حماي الحقوق المكتسب' },
+                    { id: 'c', textAr: 'إلغاء الأحكام السابق' },
+                    { id: 'd', textAr: 'إهدار المراكز القانوني' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5629,7 +5629,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القاضي في النظام اللاتيني:',
                 options: [
-                    { id: 'a', textAr: 'ينشئ القاعدة القانونية' },
+                    { id: 'a', textAr: 'ينشئ القاعد القانوني' },
                     { id: 'b', textAr: 'يطبق القانون فقط' },
                     { id: 'c', textAr: 'غير ملزم بالنص' },
                     { id: 'd', textAr: 'يعتمد على السوابق' }
@@ -5640,7 +5640,7 @@ export const quizData = {
                 id: 15,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القواعد التفسيرية للقانون تهدف إلى:',
+                questionAr: 'القواعد التفسيري للقانون تهدف إلى:',
                 options: [
                     { id: 'a', textAr: 'تعديل النص' },
                     { id: 'b', textAr: 'إلغاء النص' },
@@ -5655,9 +5655,9 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الفقه القانوني يتمثل في:',
                 options: [
-                    { id: 'a', textAr: 'آراء القضاة' },
+                    { id: 'a', textAr: 'آراء القضا' },
                     { id: 'b', textAr: 'آراء رجال القانون' },
-                    { id: 'c', textAr: 'القوانين المكتوبة' },
+                    { id: 'c', textAr: 'القوانين المكتوب' },
                     { id: 'd', textAr: 'الأعراف' }
                 ],
                 correctAnswer: 'b'
@@ -5669,8 +5669,8 @@ export const quizData = {
                 questionAr: 'تطبيق القانون من حيث المكان يعني:',
                 options: [
                     { id: 'a', textAr: 'سريانه على المواطنين فقط' },
-                    { id: 'b', textAr: 'سريانه داخل إقليم الدولة' },
-                    { id: 'c', textAr: 'سريانه خارج الدولة' },
+                    { id: 'b', textAr: 'سريانه دال إقليم الدول' },
+                    { id: 'c', textAr: 'سريانه ارج الدول' },
                     { id: 'd', textAr: 'عدم سريانه على الأجانب' }
                 ],
                 correctAnswer: 'b'
@@ -5681,10 +5681,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'أي مما يلي يعد من عيوب العرف؟',
                 options: [
-                    { id: 'a', textAr: 'المرونة' },
+                    { id: 'a', textAr: 'المرون' },
                     { id: 'b', textAr: 'البطء في النشوء' },
                     { id: 'c', textAr: 'الاستقرار' },
-                    { id: 'd', textAr: 'الملاءمة' }
+                    { id: 'd', textAr: 'الملاءم' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5692,7 +5692,7 @@ export const quizData = {
                 id: 19,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'محكمة التمييز لا تتدخل في:',
+                questionAr: 'محكم التمييز لا تتدل في:',
                 options: [
                     { id: 'a', textAr: 'تفسير القانون' },
                     { id: 'b', textAr: 'تطبيق القانون' },
@@ -5709,7 +5709,7 @@ export const quizData = {
                 options: [
                     { id: 'a', textAr: 'يطبق العرف' },
                     { id: 'b', textAr: 'يطبق التشريع' },
-                    { id: 'c', textAr: 'يطبق العدالة' },
+                    { id: 'c', textAr: 'يطبق العدال' },
                     { id: 'd', textAr: 'يوقف الدعوى' }
                 ],
                 correctAnswer: 'b'
@@ -5720,16 +5720,16 @@ export const quizData = {
     intro_law_final_p5: {
         id: 'intro_law_final_p5',
         title: 'Introduction to Law Final - Part 5 (Q81-100)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الخامس',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الامس',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يقوم مبدأ عدم رجعية القوانين على أن:',
+                questionAr: 'يقوم مبدأ عدم رجعي القوانين على أن:',
                 options: [
                     { id: 'a', textAr: 'المستقبل فقط' },
                     { id: 'b', textAr: 'الماضي فقط' },
@@ -5742,12 +5742,12 @@ export const quizData = {
                 id: 2,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'ما المقصود بالحق المكتسب في النظرية التقليدية؟',
+                questionAr: 'ما المقصود بالحق المكتسب في النظري التقليدي؟',
                 options: [
                     { id: 'a', textAr: 'أمل قانوني' },
                     { id: 'b', textAr: 'مركز قانوني مكتمل' },
                     { id: 'c', textAr: 'توقع مستقبلي' },
-                    { id: 'd', textAr: 'واقعة مادية' }
+                    { id: 'd', textAr: 'واقع مادي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5768,12 +5768,12 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تسري القاعدة القانونية الجديدة من حيث الزمان على:',
+                questionAr: 'تسري القاعد القانوني الجديد من حيث الزمان على:',
                 options: [
-                    { id: 'a', textAr: 'الوقائع السابقة' },
-                    { id: 'b', textAr: 'الوقائع اللاحقة' },
+                    { id: 'a', textAr: 'الوقائع السابق' },
+                    { id: 'b', textAr: 'الوقائع اللاحق' },
                     { id: 'c', textAr: 'جميع الوقائع' },
-                    { id: 'd', textAr: 'الوقائع المنتهية' }
+                    { id: 'd', textAr: 'الوقائع المنتهي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5781,11 +5781,11 @@ export const quizData = {
                 id: 5,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يُقصد بمبدأ شخصية القانون أنه:',
+                questionAr: 'يُقصد بمبدأ شصي القانون أنه:',
                 options: [
                     { id: 'a', textAr: 'يسري على المواطنين فقط' },
                     { id: 'b', textAr: 'يسري على الإقليم' },
-                    { id: 'c', textAr: 'يسري على الأشخاص دون إقليم' },
+                    { id: 'c', textAr: 'يسري على الأشاص دون إقليم' },
                     { id: 'd', textAr: 'يسري على الوقائع' }
                 ],
                 correctAnswer: 'a'
@@ -5794,12 +5794,12 @@ export const quizData = {
                 id: 6,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تُطبق القوانين الجنائية من حيث المكان وفق مبدأ:',
+                questionAr: 'تُطبق القوانين الجنائي من حيث المكان وفق مبدأ:',
                 options: [
-                    { id: 'a', textAr: 'الشخصية' },
-                    { id: 'b', textAr: 'العينية' },
-                    { id: 'c', textAr: 'الإقليمية' },
-                    { id: 'd', textAr: 'العالمية' }
+                    { id: 'a', textAr: 'الشصي' },
+                    { id: 'b', textAr: 'العيني' },
+                    { id: 'c', textAr: 'الإقليمي' },
+                    { id: 'd', textAr: 'العالمي' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5807,12 +5807,12 @@ export const quizData = {
                 id: 7,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الاستثناء على مبدأ عدم رجعية القوانين يكون في حالة:',
+                questionAr: 'الاستثناء على مبدأ عدم رجعي القوانين يكون في حال:',
                 options: [
                     { id: 'a', textAr: 'القانون المدني' },
                     { id: 'b', textAr: 'القانون الأصلح للمتهم' },
-                    { id: 'c', textAr: 'القوانين المالية' },
-                    { id: 'd', textAr: 'القوانين الإدارية' }
+                    { id: 'c', textAr: 'القوانين المالي' },
+                    { id: 'd', textAr: 'القوانين الإداري' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5820,12 +5820,12 @@ export const quizData = {
                 id: 8,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'النظرية الحديثة في تنازع القوانين تقوم على:',
+                questionAr: 'النظري الحديث في تنازع القوانين تقوم على:',
                 options: [
                     { id: 'a', textAr: 'الحق المكتسب' },
                     { id: 'b', textAr: 'الأثر الرجعي' },
                     { id: 'c', textAr: 'الأثر الفوري' },
-                    { id: 'd', textAr: 'الإرادة' }
+                    { id: 'd', textAr: 'الإراد' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5833,9 +5833,9 @@ export const quizData = {
                 id: 9,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الأهلية في القانون المدني تتعلق بـ:',
+                questionAr: 'الأهلي في القانون المدني تتعلق بـ:',
                 options: [
-                    { id: 'a', textAr: 'الشخص' },
+                    { id: 'a', textAr: 'الشص' },
                     { id: 'b', textAr: 'المال' },
                     { id: 'c', textAr: 'المكان' },
                     { id: 'd', textAr: 'الزمان' }
@@ -5849,9 +5849,9 @@ export const quizData = {
                 questionAr: 'القانون الواجب التطبيق على الشكل في التصرفات هو:',
                 options: [
                     { id: 'a', textAr: 'قانون الموطن' },
-                    { id: 'b', textAr: 'قانون الجنسية' },
+                    { id: 'b', textAr: 'قانون الجنسي' },
                     { id: 'c', textAr: 'قانون مكان إبرام التصرف' },
-                    { id: 'd', textAr: 'قانون الإرادة' }
+                    { id: 'd', textAr: 'قانون الإراد' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5859,11 +5859,11 @@ export const quizData = {
                 id: 11,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'ما هو الأساس الذي تقوم عليه نظرية الحق المكتسب؟',
+                questionAr: 'ما هو الأساس الذي تقوم عليه نظري الحق المكتسب؟',
                 options: [
-                    { id: 'a', textAr: 'العدالة' },
+                    { id: 'a', textAr: 'العدال' },
                     { id: 'b', textAr: 'الاستقرار' },
-                    { id: 'c', textAr: 'المصلحة' },
+                    { id: 'c', textAr: 'المصلح' },
                     { id: 'd', textAr: 'النظام العام' }
                 ],
                 correctAnswer: 'b'
@@ -5872,12 +5872,12 @@ export const quizData = {
                 id: 12,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'مبدأ إقليمية القانون يعني:',
+                questionAr: 'مبدأ إقليمي القانون يعني:',
                 options: [
                     { id: 'a', textAr: 'تطبيق القانون على الإقليم' },
                     { id: 'b', textAr: 'تطبيقه على المواطنين فقط' },
                     { id: 'c', textAr: 'تطبيقه على الأجانب فقط' },
-                    { id: 'd', textAr: 'تطبيقه خارج الدولة' }
+                    { id: 'd', textAr: 'تطبيقه ارج الدول' }
                 ],
                 correctAnswer: 'a'
             },
@@ -5885,7 +5885,7 @@ export const quizData = {
                 id: 13,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تطبق القوانين المتعلقة بالنظام العام:',
+                questionAr: 'تطبق القوانين المتعلق بالنظام العام:',
                 options: [
                     { id: 'a', textAr: 'دائماً' },
                     { id: 'b', textAr: 'استثناءً' },
@@ -5924,10 +5924,10 @@ export const quizData = {
                 id: 16,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تطبق القوانين الإجرائية من حيث الزمان على:',
+                questionAr: 'تطبق القوانين الإجرائي من حيث الزمان على:',
                 options: [
-                    { id: 'a', textAr: 'الوقائع السابقة' },
-                    { id: 'b', textAr: 'الوقائع المستقبلية' },
+                    { id: 'a', textAr: 'الوقائع السابق' },
+                    { id: 'b', textAr: 'الوقائع المستقبلي' },
                     { id: 'c', textAr: 'الدعوى' },
                     { id: 'd', textAr: 'الحكم' }
                 ],
@@ -5940,9 +5940,9 @@ export const quizData = {
                 questionAr: 'تنازع القوانين من حيث الزمان يحدث عندما:',
                 options: [
                     { id: 'a', textAr: 'تعارض قوانين دول' },
-                    { id: 'b', textAr: 'تعارض قوانين زمنية' },
+                    { id: 'b', textAr: 'تعارض قوانين زمني' },
                     { id: 'c', textAr: 'تعارض محاكم' },
-                    { id: 'd', textAr: 'تعارض أشخاص' }
+                    { id: 'd', textAr: 'تعارض أشاص' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5950,7 +5950,7 @@ export const quizData = {
                 id: 18,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القانون الجديد يسري على الوقائع المستقبلية وفق:',
+                questionAr: 'القانون الجديد يسري على الوقائع المستقبلي وفق:',
                 options: [
                     { id: 'a', textAr: 'الأثر الرجعي' },
                     { id: 'b', textAr: 'الأثر الفوري' },
@@ -5963,10 +5963,10 @@ export const quizData = {
                 id: 19,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القوانين المتعلقة بالإثبات تسري على:',
+                questionAr: 'القوانين المتعلق بالإثبات تسري على:',
                 options: [
-                    { id: 'a', textAr: 'الوقائع الجديدة' },
-                    { id: 'b', textAr: 'الوقائع السابقة' },
+                    { id: 'a', textAr: 'الوقائع الجديد' },
+                    { id: 'b', textAr: 'الوقائع السابق' },
                     { id: 'c', textAr: 'الدعوى' },
                     { id: 'd', textAr: 'الحكم' }
                 ],
@@ -5991,21 +5991,21 @@ export const quizData = {
     intro_law_final_p6: {
         id: 'intro_law_final_p6',
         title: 'Introduction to Law Final - Part 6 (Q101-120)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء السادس',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء السادس',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'مجموعة القواعد القانونية التي تحدد شكل الدولة ونظام الحكم فيها واختصاصات السلطات العامة هي:',
+                questionAr: 'مجموع القواعد القانوني التي تحدد شكل الدول ونظام الحكم فيها واتصاصات السلطات العام هي:',
                 options: [
                     { id: 'a', textAr: 'القانون الإداري.' },
                     { id: 'b', textAr: 'القانون الدستوري.' },
                     { id: 'c', textAr: 'القانون المدني.' },
-                    { id: 'd', textAr: 'القانون الدولي الخاص.' }
+                    { id: 'd', textAr: 'القانون الدولي الاص.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6013,7 +6013,7 @@ export const quizData = {
                 id: 2,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الجزاء الذي يقع عند الاعتداء على "الحق الخاص" ويتولى تنظيم أحكامه القانون المدني هو:',
+                questionAr: 'الجزاء الذي يقع عند الاعتداء على "الحق الاص" ويتولى تنظيم أحكامه القانون المدني هو:',
                 options: [
                     { id: 'a', textAr: 'الجزاء الجنائي.' },
                     { id: 'b', textAr: 'الجزاء الإداري.' },
@@ -6026,12 +6026,12 @@ export const quizData = {
                 id: 3,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القواعد القانونية التي "لا يجوز" للأفراد الاتفاق على خالفها لتعلقها بالنظام العام تسمى:',
+                questionAr: 'القواعد القانوني التي "لا يجوز" للأفراد الاتفاق على الفها لتعلقها بالنظام العام تسمى:',
                 options: [
-                    { id: 'a', textAr: 'قواعد مكملة.' },
-                    { id: 'b', textAr: 'قواعد مفسرة.' },
-                    { id: 'c', textAr: 'قواعد آمرة.' },
-                    { id: 'd', textAr: 'قواعد مرنة.' }
+                    { id: 'a', textAr: 'قواعد مكمل.' },
+                    { id: 'b', textAr: 'قواعد مفسر.' },
+                    { id: 'c', textAr: 'قواعد آمر.' },
+                    { id: 'd', textAr: 'قواعد مرن.' }
                 ],
                 correctAnswer: 'c'
             },
@@ -6039,12 +6039,12 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'المعيار الذي يستند إلى "عبارة النص وألفاظه ذاتها" للتمييز بين القاعدة الآمرة والمكملة هو:',
+                questionAr: 'المعيار الذي يستند إلى "عبار النص وألفاظه ذاتها" للتمييز بين القاعد الآمر والمكمل هو:',
                 options: [
                     { id: 'a', textAr: 'المعيار الموضوعي.' },
                     { id: 'b', textAr: 'المعيار المعنوي.' },
                     { id: 'c', textAr: 'المعيار الشكلي (اللفظي).' },
-                    { id: 'd', textAr: 'المعيار التاريخي.' }
+                    { id: 'd', textAr: 'المعيار التاريي.' }
                 ],
                 correctAnswer: 'c'
             },
@@ -6052,7 +6052,7 @@ export const quizData = {
                 id: 5,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي مما يلي يعد من فروع القانون العام الداخلي؟',
+                questionAr: 'أي مما يلي يعد من فروع القانون العام الدالي؟',
                 options: [
                     { id: 'a', textAr: 'القانون التجاري.' },
                     { id: 'b', textAr: 'القانون المالي.' },
@@ -6065,12 +6065,12 @@ export const quizData = {
                 id: 6,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يُطلق على القانون المدني وصف "الشريعة العامة أو الأصلية" لأنه:',
+                questionAr: 'يُطلق على القانون المدني وصف "الشريع العام أو الأصلي" لأنه:',
                 options: [
                     { id: 'a', textAr: 'ينظم علاقات الدول في السلم والحرب.' },
-                    { id: 'b', textAr: 'يحتوي على القواعد العامة التي تُطبق على أي نزاع سكت عنه المشرع في الفروع الأخرى.' },
-                    { id: 'c', textAr: 'ينظم السلطة القضائية وشروط تنصيب القضاة.' },
-                    { id: 'd', textAr: 'جميع قواعده تعتبر قواعد شكلية إجرائية.' }
+                    { id: 'b', textAr: 'يحتوي على القواعد العام التي تُطبق على أي نزاع سكت عنه المشرع في الفروع الأرى.' },
+                    { id: 'c', textAr: 'ينظم السلط القضائي وشروط تنصيب القضا.' },
+                    { id: 'd', textAr: 'جميع قواعده تعتبر قواعد شكلي إجرائي.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6078,12 +6078,12 @@ export const quizData = {
                 id: 7,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي من المحاكم التالية تندرج تحت فئة "المحاكم النظامية" في الأردن؟',
+                questionAr: 'أي من المحاكم التالي تندرج تحت فئ "المحاكم النظامي" في الأردن؟',
                 options: [
-                    { id: 'a', textAr: 'محكمة الأحداث.' },
-                    { id: 'b', textAr: 'محكمة أمن الدولة.' },
-                    { id: 'c', textAr: 'محكمة البداية (والصلح والاستئناف).' },
-                    { id: 'd', textAr: 'المحكمة الشرعية.' }
+                    { id: 'a', textAr: 'محكم الأحداث.' },
+                    { id: 'b', textAr: 'محكم أمن الدول.' },
+                    { id: 'c', textAr: 'محكم البداي (والصلح والاستئناف).' },
+                    { id: 'd', textAr: 'المحكم الشرعي.' }
                 ],
                 correctAnswer: 'c'
             },
@@ -6093,10 +6093,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'العنصر المعنوي في "العرف" يعني:',
                 options: [
-                    { id: 'a', textAr: 'اعتياد الناس على سلوك معين لمدة طويلة.' },
-                    { id: 'b', textAr: 'تدوين القواعد العرفية في وثيقة رسمية.' },
-                    { id: 'c', textAr: 'اعتقاد الناس بأن هذه العادة ملزمة لهم فقهياً وقانونياً.' },
-                    { id: 'd', textAr: 'إحالة المشرع رصاحة إلى قواعد العدالة.' }
+                    { id: 'a', textAr: 'اعتياد الناس على سلوك معين لمد طويل.' },
+                    { id: 'b', textAr: 'تدوين القواعد العرفي في وثيق رسمي.' },
+                    { id: 'c', textAr: 'اعتقاد الناس بأن هذه العاد ملزم لهم فقهياً وقانونياً.' },
+                    { id: 'd', textAr: 'إحال المشرع رصاح إلى قواعد العدال.' }
                 ],
                 correctAnswer: 'c'
             },
@@ -6107,9 +6107,9 @@ export const quizData = {
                 questionAr: 'إذا لم يجد القاضي نصاً تشريعياً ولا عرفاً ولا فقهًا إسلامياً، فإنه يستند في حكمه إلى:',
                 options: [
                     { id: 'a', textAr: 'القانون الدولي العام.' },
-                    { id: 'b', textAr: 'قواعد العدالة.' },
+                    { id: 'b', textAr: 'قواعد العدال.' },
                     { id: 'c', textAr: 'القانون الإداري.' },
-                    { id: 'd', textAr: 'الأوامر والقرارات الإدارية.' }
+                    { id: 'd', textAr: 'الأوامر والقرارات الإداري.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6117,12 +6117,12 @@ export const quizData = {
                 id: 10,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تنتهي القاعدة القانونية (بينما تنتهي الأوامر والقرارات بمجرد تطبيقها):',
+                questionAr: 'تنتهي القاعد القانوني (بينما تنتهي الأوامر والقرارات بمجرد تطبيقها):',
                 options: [
-                    { id: 'a', textAr: 'بمجرد تطبيقها على شخص معين.' },
-                    { id: 'b', textAr: 'لا تنتهي بل تظل باقية ومستمرة بعد تطبيقها لأنها عامة ومجردة.' },
-                    { id: 'c', textAr: 'بوفاة الشخص المخاطب بها بذاته.' },
-                    { id: 'd', textAr: 'بمجرد صدور أمر إداري يخالفها.' }
+                    { id: 'a', textAr: 'بمجرد تطبيقها على شص معين.' },
+                    { id: 'b', textAr: 'لا تنتهي بل تظل باقي ومستمر بعد تطبيقها لأنها عام ومجرد.' },
+                    { id: 'c', textAr: 'بوفا الشص الماطب بها بذاته.' },
+                    { id: 'd', textAr: 'بمجرد صدور أمر إداري يالفها.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6130,10 +6130,10 @@ export const quizData = {
                 id: 11,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'المكان الذي يباشر فيه الشخص تجارته أو حرفته يسمى قانوناً بـ:',
+                questionAr: 'المكان الذي يباشر فيه الشص تجارته أو حرفته يسمى قانوناً بـ:',
                 options: [
                     { id: 'a', textAr: 'الموطن العام.' },
-                    { id: 'b', textAr: 'الموطن المختار.' },
+                    { id: 'b', textAr: 'الموطن المتار.' },
                     { id: 'c', textAr: 'الموطن الإلزامي.' },
                     { id: 'd', textAr: 'الموطن الافتراضي (الحرفي).' }
                 ],
@@ -6143,12 +6143,12 @@ export const quizData = {
                 id: 12,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'صلاحية الشخص لكسب الحقوق وتحمل الالتزامات منذ ولادته تسمى:',
+                questionAr: 'صلاحي الشص لكسب الحقوق وتحمل الالتزامات منذ ولادته تسمى:',
                 options: [
-                    { id: 'a', textAr: 'أهلية الأداء.' },
-                    { id: 'b', textAr: 'أهلية الوجوب.' },
-                    { id: 'c', textAr: 'الأهلية القانونية الناقصة.' },
-                    { id: 'd', textAr: 'الولاية القضائية.' }
+                    { id: 'a', textAr: 'أهلي الأداء.' },
+                    { id: 'b', textAr: 'أهلي الوجوب.' },
+                    { id: 'c', textAr: 'الأهلي القانوني الناقص.' },
+                    { id: 'd', textAr: 'الولاي القضائي.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6156,12 +6156,12 @@ export const quizData = {
                 id: 13,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الخلل الذي يصيب عقل الإنسان ويؤدي إلى نقصان إدراكه ويجعله قليل الفهم مختلط الكلام هو:',
+                questionAr: 'اللل الذي يصيب عقل الإنسان ويؤدي إلى نقصان إدراكه ويجعله قليل الفهم متلط الكلام هو:',
                 options: [
                     { id: 'a', textAr: 'الجنون.' },
                     { id: 'b', textAr: 'العته (المعتوه).' },
                     { id: 'c', textAr: 'السفه.' },
-                    { id: 'd', textAr: 'ذو الغفلة.' }
+                    { id: 'd', textAr: 'ذو الغفل.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6169,11 +6169,11 @@ export const quizData = {
                 id: 14,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الأشياء التي تتفاوت أفرادها في الصفات أو القيمة تفاوتاً يعتد به ويندر وجود أفرادها في التعامل هي:',
+                questionAr: 'الأشياء التي تتفاوت أفرادها في الصفات أو القيم تفاوتاً يعتد به ويندر وجود أفرادها في التعامل هي:',
                 options: [
-                    { id: 'a', textAr: 'الأشياء المثلية.' },
-                    { id: 'b', textAr: 'الأشياء القيمية.' },
-                    { id: 'c', textAr: 'الأشياء القابلة للاستهلاك.' },
+                    { id: 'a', textAr: 'الأشياء المثلي.' },
+                    { id: 'b', textAr: 'الأشياء القيمي.' },
+                    { id: 'c', textAr: 'الأشياء القابل للاستهلاك.' },
                     { id: 'd', textAr: 'العقارات بطبيعتها.' }
                 ],
                 correctAnswer: 'b'
@@ -6184,10 +6184,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'يعد "الالتصاق بفعل الإنسان" من مصادر:',
                 options: [
-                    { id: 'a', textAr: 'الحق الشخصي.' },
+                    { id: 'a', textAr: 'الحق الشصي.' },
                     { id: 'b', textAr: 'الحق العيني.' },
-                    { id: 'c', textAr: 'الحقوق السياسية.' },
-                    { id: 'd', textAr: 'الأهلية القانونية.' }
+                    { id: 'c', textAr: 'الحقوق السياسي.' },
+                    { id: 'd', textAr: 'الأهلي القانوني.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6195,12 +6195,12 @@ export const quizData = {
                 id: 16,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي من الخصائص التالية "لا تنطبق" على الاسم الشخصي للإنسان؟',
+                questionAr: 'أي من الصائص التالي "لا تنطبق" على الاسم الشصي للإنسان؟',
                 options: [
                     { id: 'a', textAr: 'يجوز التصرف فيه والتنازل عنه للغير.' },
-                    { id: 'b', textAr: 'لا يسقط بالتقادم (عدم الاستعمال مده طويلة).' },
+                    { id: 'b', textAr: 'لا يسقط بالتقادم (عدم الاستعمال مده طويل).' },
                     { id: 'c', textAr: 'لا يجوز تبديله وتغييره إلا بمسوغ قانوني.' },
-                    { id: 'd', textAr: 'يظل الإنسان محتفظاً به ما بقيت شخصيته.' }
+                    { id: 'd', textAr: 'يظل الإنسان محتفظاً به ما بقيت شصيته.' }
                 ],
                 correctAnswer: 'a'
             },
@@ -6208,11 +6208,11 @@ export const quizData = {
                 id: 17,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'وفقاً للتشريعات، يكتسب القاصر الذي أتم السن القانونية "الإذن بالتجارة" بشرط:',
+                questionAr: 'وفقاً للتشريعات، يكتسب القاصر الذي أتم السن القانوني "الإذن بالتجار" بشرط:',
                 options: [
                     { id: 'a', textAr: 'بلوغه سن 10 سنوات فقط.' },
-                    { id: 'b', textAr: 'صدور ترخيص وإذن من المحكمة (وأن يكون قد أتم 15 سنة).' },
-                    { id: 'c', textAr: 'موافقة أصدقائه في العمل.' },
+                    { id: 'b', textAr: 'صدور تريص وإذن من المحكم (وأن يكون قد أتم 15 سن).' },
+                    { id: 'c', textAr: 'موافق أصدقائه في العمل.' },
                     { id: 'd', textAr: 'لا يجوز منحه الإذن مطلقاً إلا عند سن 18.' }
                 ],
                 correctAnswer: 'b'
@@ -6221,11 +6221,11 @@ export const quizData = {
                 id: 18,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يتميز "الحق الشخصي" عن "الحق العيني" بأن الحق الشخصي:',
+                questionAr: 'يتميز "الحق الشصي" عن "الحق العيني" بأن الحق الشصي:',
                 options: [
-                    { id: 'a', textAr: 'سلطة مباشرة لشخص على شيء مادي.' },
-                    { id: 'b', textAr: 'رابطة قانونية بين شخصين أحدهما دائن والآخر مدين.' },
-                    { id: 'c', textAr: 'يعتبر من الحقوق المطلقة دائماً.' },
+                    { id: 'a', textAr: 'سلط مباشر لشص على شيء مادي.' },
+                    { id: 'b', textAr: 'رابط قانوني بين شصين أحدهما دائن والآر مدين.' },
+                    { id: 'c', textAr: 'يعتبر من الحقوق المطلق دائماً.' },
                     { id: 'd', textAr: 'لا يسري عليه التقادم الزمني.' }
                 ],
                 correctAnswer: 'b'
@@ -6234,12 +6234,12 @@ export const quizData = {
                 id: 19,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تعتبر "الشركات، والبلديات، والوقف، والطوائف الدينية" من أمثلة:',
+                questionAr: 'تعتبر "الشركات، والبلديات، والوقف، والطوائف الديني" من أمثل:',
                 options: [
-                    { id: 'a', textAr: 'الشخصية الطبيعية.' },
-                    { id: 'b', textAr: 'الشخصية الحكمية (الاعتبارية).' },
-                    { id: 'c', textAr: 'أهلية الأداء الكاملة.' },
-                    { id: 'd', textAr: 'الحقوق اللصيقة بالمرأة فقط.' }
+                    { id: 'a', textAr: 'الشصي الطبيعي.' },
+                    { id: 'b', textAr: 'الشصي الحكمي (الاعتباري).' },
+                    { id: 'c', textAr: 'أهلي الأداء الكامل.' },
+                    { id: 'd', textAr: 'الحقوق اللصيق بالمرأ فقط.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6247,10 +6247,10 @@ export const quizData = {
                 id: 20,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'المنقول الذي يضعه مالكه في عقار يملكه رصدًا لخدمة هذا العقار واستغلاله يُعرف بـ:',
+                questionAr: 'المنقول الذي يضعه مالكه في عقار يملكه رصدًا لدم هذا العقار واستغلاله يُعرف بـ:',
                 options: [
                     { id: 'a', textAr: 'منقول بطبيعته.' },
-                    { id: 'b', textAr: 'عقار بالتخصيص.' },
+                    { id: 'b', textAr: 'عقار بالتصيص.' },
                     { id: 'c', textAr: 'منقول بحسب المآل.' },
                     { id: 'd', textAr: 'مال عام.' }
                 ],
@@ -6262,18 +6262,18 @@ export const quizData = {
     intro_law_final_p7: {
         id: 'intro_law_final_p7',
         title: 'Introduction to Law Final - Part 7 (Q121-140)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء السابع',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء السابع',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'كسب ذمة شخص على حساب ذمة شخص آخر دون سبب قانوني يسمى فقهياً وقانونياً بـ:',
+                questionAr: 'كسب ذم شص على حساب ذم شص آر دون سبب قانوني يسمى فقهياً وقانونياً بـ:',
                 options: [
-                    { id: 'a', textAr: 'الفضالة.' },
+                    { id: 'a', textAr: 'الفضال.' },
                     { id: 'b', textAr: 'الإثراء بلا سبب.' },
                     { id: 'c', textAr: 'الفعل الضار.' },
                     { id: 'd', textAr: 'الترصف الانفرادي.' }
@@ -6284,10 +6284,10 @@ export const quizData = {
                 id: 2,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يحتل المرتبة الأولى من حيث القوة والصدارة في أنواع التشريع:',
+                questionAr: 'يحتل المرتب الأولى من حيث القو والصدار في أنواع التشريع:',
                 options: [
                     { id: 'a', textAr: 'التشريع العادي (القانون).' },
-                    { id: 'b', textAr: 'التشريع الفرعي (الأنظمة).' },
+                    { id: 'b', textAr: 'التشريع الفرعي (الأنظم).' },
                     { id: 'c', textAr: 'التشريع الأساسي (الدستور).' },
                     { id: 'd', textAr: 'التعليمات والقرارات.' }
                 ],
@@ -6297,11 +6297,11 @@ export const quizData = {
                 id: 3,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'تتكون السلطة التشريعية في المملكة الأردنية الهاشمية من:',
+                questionAr: 'تتكون السلط التشريعي في المملك الأردني الهاشمي من:',
                 options: [
                     { id: 'a', textAr: 'مجلس الوزراء فقط.' },
-                    { id: 'b', textAr: 'مجلس الأمة (الأعيان والنواب) وجلالة الملك.' },
-                    { id: 'c', textAr: 'المجلس الوطني والمحاكم النظامية.' },
+                    { id: 'b', textAr: 'مجلس الأم (الأعيان والنواب) وجلال الملك.' },
+                    { id: 'c', textAr: 'المجلس الوطني والمحاكم النظامي.' },
                     { id: 'd', textAr: 'ديوان التشريع والرأي منفصلاً.' }
                 ],
                 correctAnswer: 'b'
@@ -6310,9 +6310,9 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'إذا تم اقتراح مشروع قانون من قبل "فريق من أعضاء مجلس الأمة" فإنه يسمى:',
+                questionAr: 'إذا تم اقتراح مشروع قانون من قبل "فريق من أعضاء مجلس الأم" فإنه يسمى:',
                 options: [
-                    { id: 'a', textAr: 'لائحة بقانون.' },
+                    { id: 'a', textAr: 'لائح بقانون.' },
                     { id: 'b', textAr: 'مشروعاً بقانون.' },
                     { id: 'c', textAr: 'اقتراحاً بقانون.' },
                     { id: 'd', textAr: 'نظاماً تفعيلياً.' }
@@ -6323,12 +6323,12 @@ export const quizData = {
                 id: 5,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'مرحلة "نفاذ التشريع" (الإصدار والنشر في الجريدة الرسمية) تدخل ضمن اختصاصات السلطة:',
+                questionAr: 'مرحل "نفاذ التشريع" (الإصدار والنشر في الجريد الرسمي) تدل ضمن اتصاصات السلط:',
                 options: [
-                    { id: 'a', textAr: 'التشريعية.' },
-                    { id: 'b', textAr: 'القضائية.' },
-                    { id: 'c', textAr: 'التنفيذية.' },
-                    { id: 'd', textAr: 'التأسيسية.' }
+                    { id: 'a', textAr: 'التشريعي.' },
+                    { id: 'b', textAr: 'القضائي.' },
+                    { id: 'c', textAr: 'التنفيذي.' },
+                    { id: 'd', textAr: 'التأسيسي.' }
                 ],
                 correctAnswer: 'c'
             },
@@ -6339,9 +6339,9 @@ export const quizData = {
                 questionAr: 'يتميز "الدستور الجامد" عن "الدستور المرن" بأنه:',
                 options: [
                     { id: 'a', textAr: 'لا يمكن تعديله نهائياً.' },
-                    { id: 'b', textAr: 'يتطلب تعديله إجراءات خاصة معقدة أشد من إجراءات تعديل القوانين العادية.' },
-                    { id: 'c', textAr: 'يتم تعديله بنفس إجراءات القوانين العادية تماماً.' },
-                    { id: 'd', textAr: 'يصدر دائماً بمنحة دون استفتاء.' }
+                    { id: 'b', textAr: 'يتطلب تعديله إجراءات اص معقد أشد من إجراءات تعديل القوانين العادي.' },
+                    { id: 'c', textAr: 'يتم تعديله بنفس إجراءات القوانين العادي تماماً.' },
+                    { id: 'd', textAr: 'يصدر دائماً بمنح دون استفتاء.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6351,7 +6351,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الغائب الذي لا يُعلم حاله أهو حي أم ميت يُعرف قانوناً بـ:',
                 options: [
-                    { id: 'a', textAr: 'ناقص الأهلية.' },
+                    { id: 'a', textAr: 'ناقص الأهلي.' },
                     { id: 'b', textAr: 'المفقود.' },
                     { id: 'c', textAr: 'المعتوه.' },
                     { id: 'd', textAr: 'الجنين المستكن.' }
@@ -6362,11 +6362,11 @@ export const quizData = {
                 id: 8,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'مفهوم "الإفلاس" في القانون التجاري يختلف عن "الإعسار" في المدني لأنه يتطلب:',
+                questionAr: 'مفهوم "الإفلاس" في القانون التجاري يتلف عن "الإعسار" في المدني لأنه يتطلب:',
                 options: [
-                    { id: 'a', textAr: 'زيادة ديون الشخص عن أمواله فقط.' },
-                    { id: 'b', textAr: 'توقف التاجر عن دفع دين مستحق الأداء بعد إخطاره بصرف النظر عما يملكه.' },
-                    { id: 'c', textAr: 'سلامة قلب الشخص وضعف إدراكه.' },
+                    { id: 'a', textAr: 'زياد ديون الشص عن أمواله فقط.' },
+                    { id: 'b', textAr: 'توقف التاجر عن دفع دين مستحق الأداء بعد إطاره بصرف النظر عما يملكه.' },
+                    { id: 'c', textAr: 'سلام قلب الشص وضعف إدراكه.' },
                     { id: 'd', textAr: 'إثبات الضرر المادي والأدبي معاً.' }
                 ],
                 correctAnswer: 'b'
@@ -6375,12 +6375,12 @@ export const quizData = {
                 id: 9,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'قانون أصول المحاكمات المدنية يعتبر قانوناً:',
+                questionAr: 'قانون أصول المحاكمات المدني يعتبر قانوناً:',
                 options: [
                     { id: 'a', textAr: 'موضوعياً ينظم أصل الحق.' },
-                    { id: 'b', textAr: 'شكلياً ينظم إجراءات سير العدالة وكيفية التقاضي.' },
+                    { id: 'b', textAr: 'شكلياً ينظم إجراءات سير العدال وكيفي التقاضي.' },
                     { id: 'c', textAr: 'جنائياً يحدد العقوبات والجرائم.' },
-                    { id: 'd', textAr: 'دولياً خارجياً يحكم المعاهدات.' }
+                    { id: 'd', textAr: 'دولياً ارجياً يحكم المعاهدات.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6390,9 +6390,9 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'تعدد الزوجات وفقاً للتفصيل الفقهي في الأردن يعتبر:',
                 options: [
-                    { id: 'a', textAr: 'مخالفاً للنظام العام.' },
+                    { id: 'a', textAr: 'مالفاً للنظام العام.' },
                     { id: 'b', textAr: 'جزءاً من النظام العام ويجوز قانوناً.' },
-                    { id: 'c', textAr: 'قاعدة مكملة يجوز الاتفاق على حظرها مطلقاً في المجتمع.' },
+                    { id: 'c', textAr: 'قاعد مكمل يجوز الاتفاق على حظرها مطلقاً في المجتمع.' },
                     { id: 'd', textAr: 'تصرفاً انفرادياً باطلاً.' }
                 ],
                 correctAnswer: 'b'
@@ -6401,11 +6401,11 @@ export const quizData = {
                 id: 11,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القانون الذي يعين المحكمة المختصة والقانون الواجب التطبيق في القضايا المشوبة بـ"عنصر أجنبي" هو:',
+                questionAr: 'القانون الذي يعين المحكم المتص والقانون الواجب التطبيق في القضايا المشوب بـ"عنصر أجنبي" هو:',
                 options: [
                     { id: 'a', textAr: 'القانون الدولي العام.' },
-                    { id: 'b', textAr: 'القانون الدولي الخاص.' },
-                    { id: 'c', textAr: 'قانون أصول المحاكمات الجزائية.' },
+                    { id: 'b', textAr: 'القانون الدولي الاص.' },
+                    { id: 'c', textAr: 'قانون أصول المحاكمات الجزائي.' },
                     { id: 'd', textAr: 'القانون التجاري الجوي.' }
                 ],
                 correctAnswer: 'b'
@@ -6416,10 +6416,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الحد الأدنى للأجور وساعات العمل في قانون العمل تُعد قواعد:',
                 options: [
-                    { id: 'a', textAr: 'مكملة يجوز للعامل التنازل عنها.' },
-                    { id: 'b', textAr: 'آمرة متصلة بالنظام العام لا يجوز الاتفاق على الانتقاص منها.' },
-                    { id: 'c', textAr: 'شكلية لا يلتزم بها رب العمل.' },
-                    { id: 'd', textAr: 'عرفية غير مكتوبة.' }
+                    { id: 'a', textAr: 'مكمل يجوز للعامل التنازل عنها.' },
+                    { id: 'b', textAr: 'آمر متصل بالنظام العام لا يجوز الاتفاق على الانتقاص منها.' },
+                    { id: 'c', textAr: 'شكلي لا يلتزم بها رب العمل.' },
+                    { id: 'd', textAr: 'عرفي غير مكتوب.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6427,12 +6427,12 @@ export const quizData = {
                 id: 13,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يقصد بـ "مبنى التراي الإداري" أو "أعمال الإدارة" اليومية العادية القواعد التي تنظمها أحكام:',
+                questionAr: 'يقصد بـ "مبنى التراي الإداري" أو "أعمال الإدار" اليومي العادي القواعد التي تنظمها أحكام:',
                 options: [
                     { id: 'a', textAr: 'القانون الدستوري.' },
                     { id: 'b', textAr: 'القانون الإداري.' },
                     { id: 'c', textAr: 'القانون الجنائي.' },
-                    { id: 'd', textAr: 'قانون أصول المحاكمات المدنية.' }
+                    { id: 'd', textAr: 'قانون أصول المحاكمات المدني.' }
                 ],
                 correctAnswer: 'b'
             },
@@ -6440,11 +6440,11 @@ export const quizData = {
                 id: 14,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي مما يلي يعتبر من العقوبات الجنائية البدنية أو السالبة والمقيدة للحرية؟',
+                questionAr: 'أي مما يلي يعتبر من العقوبات الجنائي البدني أو السالب والمقيد للحري؟',
                 options: [
-                    { id: 'a', textAr: 'الإنذار والتوبيخ.' },
-                    { id: 'b', textAr: 'الحبس والأشغال الشاقة المؤقتة أو المؤبدة.' },
-                    { id: 'c', textAr: 'الغرامة المالية فقط في كل الأحوال.' },
+                    { id: 'a', textAr: 'الإنذار والتوبي.' },
+                    { id: 'b', textAr: 'الحبس والأشغال الشاق المؤقت أو المؤبد.' },
+                    { id: 'c', textAr: 'الغرام المالي فقط في كل الأحوال.' },
                     { id: 'd', textAr: 'التعويض المدني التضميني.' }
                 ],
                 correctAnswer: 'b'
@@ -6453,9 +6453,9 @@ export const quizData = {
                 id: 15,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'عند صعود القرابة المباشرة للأصل، تُحسب درجة القرابة بـ:',
+                questionAr: 'عند صعود القراب المباشر للأصل، تُحسب درج القراب بـ:',
                 options: [
-                    { id: 'a', textAr: 'اعتبار كل فرع درجة، صعوداً للأصل مع خروج هذا الأصل من الحساب.' },
+                    { id: 'a', textAr: 'اعتبار كل فرع درج، صعوداً للأصل مع روج هذا الأصل من الحساب.' },
                     { id: 'b', textAr: 'ضرب عدد الفروع في اثنين.' },
                     { id: 'c', textAr: 'حساب الأصل المشترك مرتين.' },
                     { id: 'd', textAr: 'عَدّ الدرجات نزولاً فقط.' }
@@ -6466,23 +6466,23 @@ export const quizData = {
                 id: 16,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'القانون العام ينظم العلاقات بين الأفراد والأفراد أو بين الأفراد والدولة باعتبارها شخصاً عادياً لا صاحبة سلطة وسيادة.',
+                questionAr: 'القانون العام ينظم العلاقات بين الأفراد والأفراد أو بين الأفراد والدول باعتبارها شصاً عادياً لا صاحب سلط وسياد.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذا القانون الخاص'
+                explanationAr: 'طأ. تصحيح: هذا القانون الاص'
             },
             {
                 id: 17,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'القانون الإداري يبين كيف رُكبت أجزاء الآلة الحكومية، بينما القانون الدستوري يبين كيف تسير ميكانيكية عملها اليومي.',
+                questionAr: 'القانون الإداري يبين كيف رُكبت أجزاء الآل الحكومي، بينما القانون الدستوري يبين كيف تسير ميكانيكي عملها اليومي.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: العكس هو الصحيح'
+                explanationAr: 'طأ. تصحيح: العكس هو الصحيح'
             },
             {
                 id: 18,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'من عيوب العرف أنه أداة بطيئة في إنتاج القواعد القانونية لأنه يحتاج إلى فترة طويلة حتى يشعر الناس بإلزاميته.',
+                questionAr: 'من عيوب العرف أنه أدا بطيئ في إنتاج القواعد القانوني لأنه يحتاج إلى فتر طويل حتى يشعر الناس بإلزاميته.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6498,9 +6498,9 @@ export const quizData = {
                 id: 20,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'القواعد الإجرائية (الشكلية) هي القواعد التي تضع تنظيماً موضوعياً للعلاقات كقواعد القانون المدني والتجاري.',
+                questionAr: 'القواعد الإجرائي (الشكلي) هي القواعد التي تضع تنظيماً موضوعياً للعلاقات كقواعد القانون المدني والتجاري.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذه القواعد الموضوعية'
+                explanationAr: 'طأ. تصحيح: هذه القواعد الموضوعي'
             }
         ]
     },
@@ -6508,24 +6508,24 @@ export const quizData = {
     intro_law_final_p8: {
         id: 'intro_law_final_p8',
         title: 'Introduction to Law Final - Part 8 (Q141-170)',
-        titleAr: 'مدخل إلى علم القانون - أسئلة فاينل - الجزء الثامن',
+        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الثامن',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'المعيار الموضوعي للتمييز بين القواعد هو الذي يستند إلى دلالة الألفاظ مثل استخدام المشرع لفظ "لا يجوز" أو "يقع باطلاً".',
+                questionAr: 'المعيار الموضوعي للتمييز بين القواعد هو الذي يستند إلى دلال الألفاظ مثل استدام المشرع لفظ "لا يجوز" أو "يقع باطلاً".',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذا المعيار الشكلي/اللفظي'
+                explanationAr: 'طأ. تصحيح: هذا المعيار الشكلي/اللفظي'
             },
             {
                 id: 2,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'فكرة النظام العام هي فكرة مرنة نسبية وليست مطلقة، تتغير وتتفاوت باختلاف الزمان والمكان داخل الدولة.',
+                questionAr: 'فكر النظام العام هي فكر مرن نسبي وليست مطلق، تتغير وتتفاوت باتلاف الزمان والمكان دال الدول.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6533,7 +6533,7 @@ export const quizData = {
                 id: 3,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'العرف يكمل التشريع في كل فروع القانون العام والخاص باستثناء القانون الجنائي لوجود قاعدة "لا جريمة ولا عقوبة إلا بنص".',
+                questionAr: 'العرف يكمل التشريع في كل فروع القانون العام والاص باستثناء القانون الجنائي لوجود قاعد "لا جريم ولا عقوب إلا بنص".',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6541,7 +6541,7 @@ export const quizData = {
                 id: 4,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'المصدر الوحيد للقانون المالي هو التشريع، إذ لا يجوز فرض ضريبة أو رسم أو الإعفاء منهما إلا بنص القانون.',
+                questionAr: 'المصدر الوحيد للقانون المالي هو التشريع، إذ لا يجوز فرض ضريب أو رسم أو الإعفاء منهما إلا بنص القانون.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6549,15 +6549,15 @@ export const quizData = {
                 id: 5,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'القسم الخاص من قانون العقوبات يتناول الأحكام العامة التي تسري على جميع الجرائم كتعريف الجريمة وأركانها.',
+                questionAr: 'القسم الاص من قانون العقوبات يتناول الأحكام العام التي تسري على جميع الجرائم كتعريف الجريم وأركانها.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذا القسم العام'
+                explanationAr: 'طأ. تصحيح: هذا القسم العام'
             },
             {
                 id: 6,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'تشمل الجرائم من حيث جسامتها ثلاثة أنواع هي: الجنايات، والجنح، والمخالفات.',
+                questionAr: 'تشمل الجرائم من حيث جسامتها ثلاث أنواع هي: الجنايات، والجنح، والمالفات.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6565,7 +6565,7 @@ export const quizData = {
                 id: 7,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'يشترط لتطبيق القانون على الشخص أن يكون بكامل قواه العقلية، ويرتبط ذلك بالشخص كامل الأهلية.',
+                questionAr: 'يشترط لتطبيق القانون على الشص أن يكون بكامل قواه العقلي، ويرتبط ذلك بالشص كامل الأهلي.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6573,23 +6573,23 @@ export const quizData = {
                 id: 8,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'مبدأ إقليمية القانون يعني أن قانون الدولة يطبق على جميع المنتمين لها داخلها وخارجها.',
+                questionAr: 'مبدأ إقليمي القانون يعني أن قانون الدول يطبق على جميع المنتمين لها دالها وارجها.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذا مبدأ شخصية القانون'
+                explanationAr: 'طأ. تصحيح: هذا مبدأ شصي القانون'
             },
             {
                 id: 9,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'الجزاء المدني لا يُقاس بمقدار الحق المعتدى عليه، بل بما ينطوي عليه من إخلال بنظام المجتمع لأنه حق عام.',
+                questionAr: 'الجزاء المدني لا يُقاس بمقدار الحق المعتدى عليه، بل بما ينطوي عليه من إلال بنظام المجتمع لأنه حق عام.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذا وصف الجزاء الجنائي'
+                explanationAr: 'طأ. تصحيح: هذا وصف الجزاء الجنائي'
             },
             {
                 id: 10,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'قواعد الأخلاق تقتصر على بيان الواجبات فقط دون أن يتجاوز ذلك إلى تقرير الحقوق المقابلة لها.',
+                questionAr: 'قواعد الألاق تقتصر على بيان الواجبات فقط دون أن يتجاوز ذلك إلى تقرير الحقوق المقابل لها.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6597,7 +6597,7 @@ export const quizData = {
                 id: 11,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'النية تعتبر في قانون العقوبات الأردني سبباً من أسباب تشديد العقاب في بعض الجرائم مثل جريمة القتل قصداً.',
+                questionAr: 'الني تعتبر في قانون العقوبات الأردني سبباً من أسباب تشديد العقاب في بعض الجرائم مثل جريم القتل قصداً.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6605,15 +6605,15 @@ export const quizData = {
                 id: 12,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'دائرة القانون أوسع شمولاً من دائرة الأخلاق لأن القانون يهتم بالسرائر والبواعث الداخلية للنفس.',
+                questionAr: 'دائر القانون أوسع شمولاً من دائر الألاق لأن القانون يهتم بالسرائر والبواعث الدالي للنفس.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: دائرة الأخلاق هي الأوسع وتشمل البواطن'
+                explanationAr: 'طأ. تصحيح: دائر الألاق هي الأوسع وتشمل البواطن'
             },
             {
                 id: 13,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'الجزاء في القاعدة الدينية جزاء مزدوج (دنيوي وأخروي)، بينما جزاء القاعدة القانونية دنيوي مادي حال فقط.',
+                questionAr: 'الجزاء في القاعد الديني جزاء مزدوج (دنيوي وأروي)، بينما جزاء القاعد القانوني دنيوي مادي حال فقط.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6621,15 +6621,15 @@ export const quizData = {
                 id: 14,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'القوانين غير المكتوبة (مثل الأعراف المستقرة في الأذهان) تحتاج دائماً إلى التفسير لاستخلاص عباراتها وتصحيح غموضها.',
+                questionAr: 'القوانين غير المكتوب (مثل الأعراف المستقر في الأذهان) تحتاج دائماً إلى التفسير لاستلاص عباراتها وتصحيح غموضها.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: القوانين المكتوبة هي التي تحتاج للتفسير'
+                explanationAr: 'طأ. تصحيح: القوانين المكتوب هي التي تحتاج للتفسير'
             },
             {
                 id: 15,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'يلتزم القاضي بتطبيق القواعد القانونية الآمرة من تلقاء نفسه دون الالتفات إلى أي اتفاق بين الخصوم على خلافها.',
+                questionAr: 'يلتزم القاضي بتطبيق القواعد القانوني الآمر من تلقاء نفسه دون الالتفات إلى أي اتفاق بين الصوم على لافها.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6637,23 +6637,23 @@ export const quizData = {
                 id: 16,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'تعتبر أموال الدولة الخاصة مخصصة للمنفعة العامة مثل الطرق العامة والجسور.',
+                questionAr: 'تعتبر أموال الدول الاص مصص للمنفع العام مثل الطرق العام والجسور.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: الأموال العامة هي المخصصة للمنفعة العامة'
+                explanationAr: 'طأ. تصحيح: الأموال العام هي المصص للمنفع العام'
             },
             {
                 id: 17,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'يجوز للموظف العام وفقاً لقواعد القانون الإداري أن يتنازل عن وظيفته أو إجازته المرشية لشخص آخر بموجب اتفاق خاص.',
+                questionAr: 'يجوز للموظف العام وفقاً لقواعد القانون الإداري أن يتنازل عن وظيفته أو إجازته المرشي لشص آر بموجب اتفاق اص.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: لا يجوز لأنها من النظام العام'
+                explanationAr: 'طأ. تصحيح: لا يجوز لأنها من النظام العام'
             },
             {
                 id: 18,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'قانون العمل ينظم علاقات العمل "التابع" الفردية والجماعية حيث يعمل العامل تحت إشراف وتوجيه ورقابة صاحب العمل.',
+                questionAr: 'قانون العمل ينظم علاقات العمل "التابع" الفردي والجماعي حيث يعمل العامل تحت إشراف وتوجيه ورقاب صاحب العمل.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6661,15 +6661,15 @@ export const quizData = {
                 id: 19,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'الدستور المرن هو الدستور الذي يحتاج تعديله إلى إجراءات خاصة صعبة ومعقدة تختلف عن تعديل القوانين العادية.',
+                questionAr: 'الدستور المرن هو الدستور الذي يحتاج تعديله إلى إجراءات اص صعب ومعقد تتلف عن تعديل القوانين العادي.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذا الدستور الجامد'
+                explanationAr: 'طأ. تصحيح: هذا الدستور الجامد'
             },
             {
                 id: 20,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'في المملكة الأردنية الهاشمية، يتم تعيين أعضاء مجلس الأعيان من قبل جلالة الملك مباشرة ضمن شروط حددها الدستور.',
+                questionAr: 'في المملك الأردني الهاشمي، يتم تعيين أعضاء مجلس الأعيان من قبل جلال الملك مباشر ضمن شروط حددها الدستور.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6677,7 +6677,7 @@ export const quizData = {
                 id: 21,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'إذا رد جلالة الملك مشروع القانون ولم يصدق عليه، وأقره مجلسا الأعيان والنواب مرة ثانية بموافقة ثلثي الأعضاء يصبح مصدقاً وجب إصداره.',
+                questionAr: 'إذا رد جلال الملك مشروع القانون ولم يصدق عليه، وأقره مجلسا الأعيان والنواب مر ثاني بموافق ثلثي الأعضاء يصبح مصدقاً وجب إصداره.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6685,7 +6685,7 @@ export const quizData = {
                 id: 22,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'تبدأ الشخصية الطبيعية للإنسان بتمام ولادته حياً وتنتهي قانوناً بموته.',
+                questionAr: 'تبدأ الشصي الطبيعي للإنسان بتمام ولادته حياً وتنتهي قانوناً بموته.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6693,7 +6693,7 @@ export const quizData = {
                 id: 23,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'يثبت للجنين المستكن (الحمل المستكن) في بطن أمه حقوق عيَّنها القانون مثل حقه في النسب، والإرث، والوصية صالحه.',
+                questionAr: 'يثبت للجنين المستكن (الحمل المستكن) في بطن أمه حقوق عيَّنها القانون مثل حقه في النسب، والإرث، والوصي صالحه.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6701,15 +6701,15 @@ export const quizData = {
                 id: 24,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'أهلية الأداء لا علاقة لها بإرادة الإنسان ولا تتأثر بعوارض الأهلية كالجنون والعته.',
+                questionAr: 'أهلي الأداء لا علاق لها بإراد الإنسان ولا تتأثر بعوارض الأهلي كالجنون والعته.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: أهلية الوجوب هي التي لا تتأثر، أما الأداء فتتأثر بالعوارض'
+                explanationAr: 'طأ. تصحيح: أهلي الوجوب هي التي لا تتأثر، أما الأداء فتتأثر بالعوارض'
             },
             {
                 id: 25,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'ينفسخ عقد البيع ويسترد المشتري ما أداه من الثمن إذا هلك المبيع قبل التسليم بسبب لا يد لأحد المتبايعين فيه.',
+                questionAr: 'ينفس عقد البيع ويسترد المشتري ما أداه من الثمن إذا هلك المبيع قبل التسليم بسبب لا يد لأحد المتبايعين فيه.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6717,15 +6717,15 @@ export const quizData = {
                 id: 26,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'الأشياء المثلية هي ما تتفاوت أفرادها في الصفات أو القيمة تفاوتاً يعتد به ويندر وجود أفرادها في التعامل.',
+                questionAr: 'الأشياء المثلي هي ما تتفاوت أفرادها في الصفات أو القيم تفاوتاً يعتد به ويندر وجود أفرادها في التعامل.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: هذه الأشياء القيمية'
+                explanationAr: 'طأ. تصحيح: هذه الأشياء القيمي'
             },
             {
                 id: 27,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'العقارات بطبيعتها تشمل الأراضي، والمباني، والنباتات المستقرة في مكانها.',
+                questionAr: 'العقارات بطبيعتها تشمل الأراضي، والمباني، والنباتات المستقر في مكانها.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6733,7 +6733,7 @@ export const quizData = {
                 id: 28,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'لا يجوز للشخص أن يصطنع الدليل لنفسه، كما لا يجوز إجبار الخصم على تقديم دليل ضد نفسه كأصل عام في الإثبات.',
+                questionAr: 'لا يجوز للشص أن يصطنع الدليل لنفسه، كما لا يجوز إجبار الصم على تقديم دليل ضد نفسه كأصل عام في الإثبات.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6741,15 +6741,15 @@ export const quizData = {
                 id: 29,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'في المعاملات المدنية بالأردن، يجوز الإثبات بالبينة الشخصية (الشهادة) مهما بلغت قيمة الالتزام التعاقدي دون قيود.',
+                questionAr: 'في المعاملات المدني بالأردن، يجوز الإثبات بالبين الشصي (الشهاد) مهما بلغت قيم الالتزام التعاقدي دون قيود.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: لا يجوز إذا تجاوزت قيمة الالتزام عشرة دنانير ما لم يوجد دليل كتابي'
+                explanationAr: 'طأ. تصحيح: لا يجوز إذا تجاوزت قيم الالتزام عشر دنانير ما لم يوجد دليل كتابي'
             },
             {
                 id: 30,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'الجزاء الإداري (أو التأديبي) يتم فرضه من قبل الرئيس الإداري أو الهيئة المشرفة على المهنة دون أن يُوكل للقضاء دائماً.',
+                questionAr: 'الجزاء الإداري (أو التأديبي) يتم فرضه من قبل الرئيس الإداري أو الهيئ المشرف على المهن دون أن يُوكل للقضاء دائماً.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             }
@@ -6759,8 +6759,8 @@ export const quizData = {
     digital_logic_design_quiz1: {
         id: 'digital_logic_design_quiz1',
         title: 'Quiz 1: Final Exam Archive',
-        titleAr: 'اسئلة سنوات فاينل',
-        icon: '🧮',
+        titleAr: 'اسئل سنوات فاينل',
+        icon: '',
         color: '#4CAF50',
         forceEnglish: true,
         questions: [
@@ -7078,7 +7078,7 @@ export const quizData = {
             {
                 id: 3,
                 type: 'mcq',
-                questionEn: "Let A and B be two events in a random experiment such that P(A ∩ B') = 0.3, P(B ∩ A') = 0.2 and P((A ∩ B)') = 0.7, then P(B) =",
+                questionEn: "Let A and B be two events in a random experiment such that P(A  B') = 0.3, P(B  A') = 0.2 and P((A  B)') = 0.7, then P(B) =",
                 options: [
                     { id: 'a', textEn: '0.9' },
                     { id: 'b', textEn: '0.8' },
@@ -7188,23 +7188,23 @@ export const quizData = {
                 id: 1,
                 type: 'mcq',
                 questionEn: 'Consider SRTF scheduling with: P1(arrival=0, burst=7), P2(arrival=2, burst=3), P3(arrival=3, burst=6), P4(arrival=5, burst=4). What is the Average Waiting Time?',
-                questionAr: 'باستخدام خوارزمية SRTF مع: P1(وصول=0, تنفيذ=7), P2(وصول=2, تنفيذ=3), P3(وصول=3, تنفيذ=6), P4(وصول=5, تنفيذ=4). ما هو متوسط وقت الانتظار؟',
+                questionAr: 'باستدام وارزمي SRTF مع: P1(وصول=0, تنفيذ=7), P2(وصول=2, تنفيذ=3), P3(وصول=3, تنفيذ=6), P4(وصول=5, تنفيذ=4). ما هو متوسط وقت الانتظار؟',
                 options: [
-                    { id: 'a', textEn: '3.0 ms', textAr: '3.0 ملي ثانية' },
-                    { id: 'b', textEn: '4.5 ms', textAr: '4.5 ملي ثانية' },
-                    { id: 'c', textEn: '5.25 ms', textAr: '5.25 ملي ثانية' },
-                    { id: 'd', textEn: '2.75 ms', textAr: '2.75 ملي ثانية' }
+                    { id: 'a', textEn: '3.0 ms', textAr: '3.0 ملي ثاني' },
+                    { id: 'b', textEn: '4.5 ms', textAr: '4.5 ملي ثاني' },
+                    { id: 'c', textEn: '5.25 ms', textAr: '5.25 ملي ثاني' },
+                    { id: 'd', textEn: '2.75 ms', textAr: '2.75 ملي ثاني' }
                 ],
                 correctAnswer: 'b',
                 explanation: 'P1 wait = 14-0-7 = 7, P2 wait = 5-2-3 = 0, P3 wait = 20-3-6 = 11, P4 wait = 9-5-4 = 0. Average = (7+0+11+0)/4 = 4.5 ms',
-                explanationAr: 'وقت انتظار P1 = 14-0-7 = 7، P2 = 5-2-3 = 0، P3 = 20-3-6 = 11، P4 = 9-5-4 = 0. المتوسط = (7+0+11+0)/4 = 4.5 ملي ثانية',
+                explanationAr: 'وقت انتظار P1 = 14-0-7 = 7، P2 = 5-2-3 = 0، P3 = 20-3-6 = 11، P4 = 9-5-4 = 0. المتوسط = (7+0+11+0)/4 = 4.5 ملي ثاني',
                 marks: 1.0
             },
             {
                 id: 2,
                 type: 'mcq',
                 questionEn: 'Using the same SRTF scenario (P1:0,7 | P2:2,3 | P3:3,6 | P4:5,4), which process runs during the time interval [t=5, t=9]?',
-                questionAr: 'في نفس مثال SRTF (P1:0,7 | P2:2,3 | P3:3,6 | P4:5,4)، أي عملية تعمل في الفترة الزمنية [t=5, t=9]؟',
+                questionAr: 'في نفس مثال SRTF (P1:0,7 | P2:2,3 | P3:3,6 | P4:5,4)، أي عملي تعمل في الفتر الزمني [t=5, t=9]؟',
                 options: [
                     { id: 'a', textEn: 'P1', textAr: 'P1' },
                     { id: 'b', textEn: 'P2', textAr: 'P2' },
@@ -7213,62 +7213,62 @@ export const quizData = {
                 ],
                 correctAnswer: 'd',
                 explanation: 'At t=5, P2 finishes and P4 arrives with burst=4. Ready processes: P1(rem=5), P3(rem=6), P4(rem=4). P4 has the shortest remaining time, so it runs from t=5 to t=9.',
-                explanationAr: 'عند t=5، تنتهي P2 وتصل P4 ببرست=4. العمليات الجاهزة: P1(متبقي=5), P3(متبقي=6), P4(متبقي=4). P4 لديها أقصر وقت متبقي فتعمل من t=5 إلى t=9.',
+                explanationAr: 'عند t=5، تنتهي P2 وتصل P4 ببرست=4. العمليات الجاهز: P1(متبقي=5), P3(متبقي=6), P4(متبقي=4). P4 لديها أقصر وقت متبقي فتعمل من t=5 إلى t=9.',
                 marks: 1.0
             },
             {
                 id: 3,
                 type: 'mcq',
                 questionEn: 'In SRTF scheduling, what is the waiting time of process P3 (arrival=3, burst=6) given the order: P1(0-2), P2(2-5), P4(5-9), P1(9-14), P3(14-20)?',
-                questionAr: 'في جدولة SRTF، ما هو وقت انتظار العملية P3 (وصول=3، تنفيذ=6) بالترتيب: P1(0-2)، P2(2-5)، P4(5-9)، P1(9-14)، P3(14-20)؟',
+                questionAr: 'في جدول SRTF، ما هو وقت انتظار العملي P3 (وصول=3، تنفيذ=6) بالترتيب: P1(0-2)، P2(2-5)، P4(5-9)، P1(9-14)، P3(14-20)؟',
                 options: [
-                    { id: 'a', textEn: '5 ms', textAr: '5 ملي ثانية' },
-                    { id: 'b', textEn: '7 ms', textAr: '7 ملي ثانية' },
-                    { id: 'c', textEn: '9 ms', textAr: '9 ملي ثانية' },
-                    { id: 'd', textEn: '11 ms', textAr: '11 ملي ثانية' }
+                    { id: 'a', textEn: '5 ms', textAr: '5 ملي ثاني' },
+                    { id: 'b', textEn: '7 ms', textAr: '7 ملي ثاني' },
+                    { id: 'c', textEn: '9 ms', textAr: '9 ملي ثاني' },
+                    { id: 'd', textEn: '11 ms', textAr: '11 ملي ثاني' }
                 ],
                 correctAnswer: 'd',
                 explanation: 'P3 waiting time = Finish time - Arrival time - Burst time = 20 - 3 - 6 = 11 ms',
-                explanationAr: 'وقت انتظار P3 = وقت الانتهاء - وقت الوصول - وقت التنفيذ = 20 - 3 - 6 = 11 ملي ثانية',
+                explanationAr: 'وقت انتظار P3 = وقت الانتهاء - وقت الوصول - وقت التنفيذ = 20 - 3 - 6 = 11 ملي ثاني',
                 marks: 1.0
             },
             {
                 id: 4,
                 type: 'mcq',
                 questionEn: 'What does SRTF stand for?',
-                questionAr: 'ماذا تعني اختصار SRTF؟',
+                questionAr: 'ماذا تعني اتصار SRTF؟',
                 options: [
                     { id: 'a', textEn: 'Shortest Run Time First', textAr: 'أقصر وقت تشغيل أولاً' },
-                    { id: 'b', textEn: 'Scheduled Round Time First', textAr: 'وقت الجولة المجدولة أولاً' },
+                    { id: 'b', textEn: 'Scheduled Round Time First', textAr: 'وقت الجول المجدول أولاً' },
                     { id: 'c', textEn: 'Shortest Remaining Time First', textAr: 'أقصر وقت متبقٍّ أولاً' },
-                    { id: 'd', textEn: 'Sequential Run Task First', textAr: 'المهمة التسلسلية أولاً' }
+                    { id: 'd', textEn: 'Sequential Run Task First', textAr: 'المهم التسلسلي أولاً' }
                 ],
                 correctAnswer: 'c',
                 explanation: 'SRTF = Shortest Remaining Time First. It is the preemptive version of SJF where the running process can be preempted if a new process with a shorter remaining burst time arrives.',
-                explanationAr: 'SRTF = Shortest Remaining Time First (أقصر وقت متبقٍّ أولاً). وهي النسخة الاستباقية من SJF حيث يمكن استباق العملية الجارية إذا وصلت عملية جديدة بوقت تنفيذ متبقٍّ أقصر.',
+                explanationAr: 'SRTF = Shortest Remaining Time First (أقصر وقت متبقٍّ أولاً). وهي النس الاستباقي من SJF حيث يمكن استباق العملي الجاري إذا وصلت عملي جديد بوقت تنفيذ متبقٍّ أقصر.',
                 marks: 1.0
             },
             {
                 id: 5,
                 type: 'mcq',
                 questionEn: 'In SRTF scheduling, when does a running process get preempted?',
-                questionAr: 'في جدولة SRTF، متى يتم استباق العملية الجارية؟',
+                questionAr: 'في جدول SRTF، متى يتم استباق العملي الجاري؟',
                 options: [
-                    { id: 'a', textEn: 'After every fixed time quantum', textAr: 'بعد كل حصة زمنية ثابتة' },
-                    { id: 'b', textEn: 'When a new process arrives with a shorter remaining burst time', textAr: 'عند وصول عملية جديدة بوقت تنفيذ متبقٍّ أقصر' },
-                    { id: 'c', textEn: 'When the process requests I/O', textAr: 'عندما تطلب العملية عملية إدخال/إخراج' },
+                    { id: 'a', textEn: 'After every fixed time quantum', textAr: 'بعد كل حص زمني ثابت' },
+                    { id: 'b', textEn: 'When a new process arrives with a shorter remaining burst time', textAr: 'عند وصول عملي جديد بوقت تنفيذ متبقٍّ أقصر' },
+                    { id: 'c', textEn: 'When the process requests I/O', textAr: 'عندما تطلب العملي عملي إدال/إراج' },
                     { id: 'd', textEn: 'It is never preempted once started', textAr: 'لا يتم استباقها أبداً بعد البدء' }
                 ],
                 correctAnswer: 'b',
                 explanation: 'SRTF is a preemptive algorithm: the currently running process is preempted whenever a newly arrived process has a shorter remaining burst time.',
-                explanationAr: 'SRTF خوارزمية استباقية: يتم استباق العملية الجارية عندما تصل عملية جديدة بوقت تنفيذ متبقٍّ أقصر.',
+                explanationAr: 'SRTF وارزمي استباقي: يتم استباق العملي الجاري عندما تصل عملي جديد بوقت تنفيذ متبقٍّ أقصر.',
                 marks: 1.0
             },
             {
                 id: 6,
                 type: 'mcq',
                 questionEn: 'In the Producer-Consumer problem, what condition does the producer check BEFORE adding an item to the buffer to avoid overflow?',
-                questionAr: 'في مسألة المنتج والمستهلك، ما الشرط الذي يتحقق منه المنتج قبل إضافة عنصر إلى المخزن المؤقت لتفادي الفيضان؟',
+                questionAr: 'في مسأل المنتج والمستهلك، ما الشرط الذي يتحقق منه المنتج قبل إضاف عنصر إلى المزن المؤقت لتفادي الفيضان؟',
                 options: [
                     { id: 'a', textEn: 'counter == 0', textAr: 'counter == 0' },
                     { id: 'b', textEn: 'in == out', textAr: 'in == out' },
@@ -7277,62 +7277,62 @@ export const quizData = {
                 ],
                 correctAnswer: 'c',
                 explanation: 'The producer must check that counter != BUFFER_SIZE (i.e., buffer is not full) before producing. If counter == BUFFER_SIZE the producer waits (busy-waits or blocks).',
-                explanationAr: 'يجب على المنتج التحقق من أن counter != BUFFER_SIZE (أي المخزن ليس ممتلئاً) قبل الإنتاج. إذا كان counter == BUFFER_SIZE ينتظر المنتج.',
+                explanationAr: 'يجب على المنتج التحقق من أن counter != BUFFER_SIZE (أي المزن ليس ممتلئاً) قبل الإنتاج. إذا كان counter == BUFFER_SIZE ينتظر المنتج.',
                 marks: 1.0
             },
             {
                 id: 7,
                 type: 'mcq',
                 questionEn: 'What is the purpose of the statement `in = (in + 1) % BUFFER_SIZE` in the producer code?',
-                questionAr: 'ما الغرض من العبارة `in = (in + 1) % BUFFER_SIZE` في كود المنتج؟',
+                questionAr: 'ما الغرض من العبار `in = (in + 1) % BUFFER_SIZE` في كود المنتج؟',
                 options: [
-                    { id: 'a', textEn: 'Resets the buffer index to 0 every time', textAr: 'يُعيد مؤشر المخزن إلى 0 في كل مرة' },
-                    { id: 'b', textEn: 'Calculates the total number of items in the buffer', textAr: 'يحسب إجمالي العناصر في المخزن' },
-                    { id: 'c', textEn: 'Moves to the next slot in a circular (ring) buffer fashion', textAr: 'يتقدم إلى الفتحة التالية بطريقة المخزن الدائري' },
+                    { id: 'a', textEn: 'Resets the buffer index to 0 every time', textAr: 'يُعيد مؤشر المزن إلى 0 في كل مر' },
+                    { id: 'b', textEn: 'Calculates the total number of items in the buffer', textAr: 'يحسب إجمالي العناصر في المزن' },
+                    { id: 'c', textEn: 'Moves to the next slot in a circular (ring) buffer fashion', textAr: 'يتقدم إلى الفتح التالي بطريق المزن الدائري' },
                     { id: 'd', textEn: 'Signals the consumer to start consuming immediately', textAr: 'يُشير للمستهلك كي يبدأ الاستهلاك فوراً' }
                 ],
                 correctAnswer: 'c',
                 explanation: 'Using modulo BUFFER_SIZE makes the index wrap around from the last slot back to 0, implementing a circular (ring) buffer.',
-                explanationAr: 'استخدام باقي القسمة على BUFFER_SIZE يجعل المؤشر يعود من الفتحة الأخيرة إلى الصفر، مما يُنفّذ المخزن الدائري.',
+                explanationAr: 'استدام باقي القسم على BUFFER_SIZE يجعل المؤشر يعود من الفتح الأير إلى الصفر، مما يُنفّذ المزن الدائري.',
                 marks: 1.0
             },
             {
                 id: 8,
                 type: 'mcq',
                 questionEn: 'In the classic Producer-Consumer problem, what happens when the consumer tries to consume from an EMPTY buffer?',
-                questionAr: 'في مسألة المنتج والمستهلك الكلاسيكية، ماذا يحدث عندما يحاول المستهلك الاستهلاك من مخزن فارغ؟',
+                questionAr: 'في مسأل المنتج والمستهلك الكلاسيكي، ماذا يحدث عندما يحاول المستهلك الاستهلاك من مزن فارغ؟',
                 options: [
-                    { id: 'a', textEn: 'It overwrites the oldest item in the buffer', textAr: 'يستبدل العنصر الأقدم في المخزن' },
+                    { id: 'a', textEn: 'It overwrites the oldest item in the buffer', textAr: 'يستبدل العنصر الأقدم في المزن' },
                     { id: 'b', textEn: 'It causes an immediate system crash', textAr: 'يتسبب في انهيار النظام فوراً' },
                     { id: 'c', textEn: 'It waits (busy-waits or blocks) until the producer adds an item', textAr: 'ينتظر (دوار أو محجوب) حتى يضيف المنتج عنصراً' },
-                    { id: 'd', textEn: 'It produces its own item to consume', textAr: 'ينتج عنصره الخاص ليستهلكه' }
+                    { id: 'd', textEn: 'It produces its own item to consume', textAr: 'ينتج عنصره الاص ليستهلكه' }
                 ],
                 correctAnswer: 'c',
                 explanation: 'When counter == 0 (buffer empty), the consumer must wait. In busy-wait solutions it loops; in semaphore-based solutions it blocks until the producer signals.',
-                explanationAr: 'عندما يكون counter == 0 (المخزن فارغ)، يجب على المستهلك الانتظار. في حلول الانتظار الدوار يستمر في الحلقة؛ في الحلول المبنية على الإشارات يُحجب حتى يُشير المنتج.',
+                explanationAr: 'عندما يكون counter == 0 (المزن فارغ)، يجب على المستهلك الانتظار. في حلول الانتظار الدوار يستمر في الحلق؛ في الحلول المبني على الإشارات يُحجب حتى يُشير المنتج.',
                 marks: 1.0
             },
             {
                 id: 9,
                 type: 'mcq',
                 questionEn: 'Which of the following BEST describes a preemptive CPU scheduling algorithm?',
-                questionAr: 'أيٌّ مما يلي يصف بشكل أفضل خوارزمية جدولة المعالج الاستباقية؟',
+                questionAr: 'أيٌّ مما يلي يصف بشكل أفضل وارزمي جدول المعالج الاستباقي؟',
                 options: [
-                    { id: 'a', textEn: 'A process runs until it voluntarily releases the CPU', textAr: 'تعمل العملية حتى تتخلى عن المعالج طوعاً' },
-                    { id: 'b', textEn: 'The CPU can be taken away from a running process before it finishes', textAr: 'يمكن انتزاع المعالج من العملية الجارية قبل اكتمالها' },
+                    { id: 'a', textEn: 'A process runs until it voluntarily releases the CPU', textAr: 'تعمل العملي حتى تتلى عن المعالج طوعاً' },
+                    { id: 'b', textEn: 'The CPU can be taken away from a running process before it finishes', textAr: 'يمكن انتزاع المعالج من العملي الجاري قبل اكتمالها' },
                     { id: 'c', textEn: 'All processes receive equal CPU time regardless of burst', textAr: 'تحصل جميع العمليات على وقت معالج متساوٍ بغض النظر عن وقت التنفيذ' },
-                    { id: 'd', textEn: 'Processes are sorted only once at the start and never reordered', textAr: 'تُرتَّب العمليات مرة واحدة فقط في البداية ولا تُعاد رتبتها' }
+                    { id: 'd', textEn: 'Processes are sorted only once at the start and never reordered', textAr: 'تُرتَّب العمليات مر واحد فقط في البداي ولا تُعاد رتبتها' }
                 ],
                 correctAnswer: 'b',
                 explanation: 'In preemptive scheduling the OS can forcibly remove the CPU from a running process (e.g., when a higher-priority or shorter-remaining-time process arrives). SRTF is a preemptive algorithm.',
-                explanationAr: 'في الجدولة الاستباقية يمكن لنظام التشغيل انتزاع المعالج قسراً من العملية الجارية (مثلاً عند وصول عملية ذات أولوية أعلى أو وقت متبقٍّ أقصر). SRTF خوارزمية استباقية.',
+                explanationAr: 'في الجدول الاستباقي يمكن لنظام التشغيل انتزاع المعالج قسراً من العملي الجاري (مثلاً عند وصول عملي ذات أولوي أعلى أو وقت متبقٍّ أقصر). SRTF وارزمي استباقي.',
                 marks: 1.0
             },
             {
                 id: 10,
                 type: 'mcq',
                 questionEn: 'In the SRTF example (P1:0,7 | P2:2,3 | P3:3,6 | P4:5,4), what is the FINISH (completion) time of process P1?',
-                questionAr: 'في مثال SRTF (P1:0,7 | P2:2,3 | P3:3,6 | P4:5,4)، ما هو وقت الانتهاء للعملية P1؟',
+                questionAr: 'في مثال SRTF (P1:0,7 | P2:2,3 | P3:3,6 | P4:5,4)، ما هو وقت الانتهاء للعملي P1؟',
                 options: [
                     { id: 'a', textEn: '9', textAr: '9' },
                     { id: 'b', textEn: '11', textAr: '11' },
@@ -7341,7 +7341,7 @@ export const quizData = {
                 ],
                 correctAnswer: 'c',
                 explanation: 'P1 runs from t=0 to t=2 (2 units), is preempted by P2 and P4, then resumes at t=9 running from t=9 to t=14 (5 units). Total burst = 7. Finish time = 14.',
-                explanationAr: 'P1 تعمل من t=0 إلى t=2 (وحدتان)، يتم استباقها بواسطة P2 ثم P4، ثم تستأنف من t=9 إلى t=14 (5 وحدات). إجمالي التنفيذ = 7. وقت الانتهاء = 14.',
+                explanationAr: 'P1 تعمل من t=0 إلى t=2 (وحدتان)، يتم استباقها بواسط P2 ثم P4، ثم تستأنف من t=9 إلى t=14 (5 وحدات). إجمالي التنفيذ = 7. وقت الانتهاء = 14.',
                 marks: 1.0
             }
         ]
@@ -7471,7 +7471,7 @@ export const quizData = {
     biometrics_security_midterm_expected: {
         id: 'biometrics_security_midterm_expected',
         title: 'Expected Midterm Questions',
-        titleAr: 'اسئلة ميد توقعية',
+        titleAr: 'اسئل ميد توقعي',
         icon: '👁️',
         color: '#9C27B0',
         forceEnglish: true,
@@ -7672,7 +7672,7 @@ export const quizData = {
     ml_lab_quiz1: {
         id: 'ml_lab_quiz1',
         title: 'Machine Learning Lab - Quiz 1',
-        titleAr: 'مختبر تعلم الآلة - كويز 1',
+        titleAr: 'متبر تعلم الآل - كويز 1',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -8264,7 +8264,7 @@ export const quizData = {
     criminal_law_general_final: {
         id: 'criminal_law_general_final',
         title: 'Penal Code Final Exam - Past Papers',
-        titleAr: 'قانون العقوبات - أسئلة فاينل',
+        titleAr: 'قانون العقوبات - أسئل فاينل',
         icon: '📜',
         color: '#F44336',
         parts: [
@@ -8277,92 +8277,92 @@ export const quizData = {
     criminal_law_general_final_p1: {
         id: 'criminal_law_general_final_p1',
         title: 'Penal Code Final - Part 1 (Q1-18)',
-        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الأول',
+        titleAr: 'قانون العقوبات - أسئل فاينل - الجزء الأول',
         icon: '📜',
         color: '#F44336',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1, type: 'mcq', marks: 1.0,
-                questionAr: 'مبدأ الشرعية يوجب أن يكون النص التشريعي كاملاً ومستنداً على العمل غير المشروع والجزاء، وتحديداً في النص المفترض أن يكون:',
+                questionAr: 'مبدأ الشرعي يوجب أن يكون النص التشريعي كاملاً ومستنداً على العمل غير المشروع والجزاء، وتحديداً في النص المفترض أن يكون:',
                 options: [
                     { id: 'a', textAr: 'صادراً قبل ارتكاب الفعل المراد تجريمه' },
-                    { id: 'b', textAr: 'صادراً بعد وقوع الجريمة لضمان العدالة' },
+                    { id: 'b', textAr: 'صادراً بعد وقوع الجريم لضمان العدال' },
                     { id: 'c', textAr: 'قابلاً للتفسير الواسع من المحاكم' },
-                    { id: 'd', textAr: 'مقتصراً على العقوبات الجسيمة' }
+                    { id: 'd', textAr: 'مقتصراً على العقوبات الجسيم' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 2, type: 'mcq', marks: 1.0,
-                questionAr: 'أُصدر قانون جديد يغير صفة التجريم عن فعل وجاء بعقوبة أخف، فأيهما تطبق على جرائم الاعتداء اللاحقة لنفاذ القانون الجديد؟',
+                questionAr: 'أُصدر قانون جديد يغير صف التجريم عن فعل وجاء بعقوب أف، فأيهما تطبق على جرائم الاعتداء اللاحق لنفاذ القانون الجديد؟',
                 options: [
                     { id: 'a', textAr: 'القانون القديم لأنه الأصل' },
-                    { id: 'b', textAr: 'القانون الجديد يسري من تاريخ نفاذه على جميع الأفعال اللاحقة' },
+                    { id: 'b', textAr: 'القانون الجديد يسري من تاري نفاذه على جميع الأفعال اللاحق' },
                     { id: 'c', textAr: 'يطبق القانون الأصلح للمتهم في جميع الأحوال' },
-                    { id: 'd', textAr: 'القانون الجديد على الأفعال اللاحقة حتى لو كانت عقوبته أشد من السابق' }
+                    { id: 'd', textAr: 'القانون الجديد على الأفعال اللاحق حتى لو كانت عقوبته أشد من السابق' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 3, type: 'mcq', marks: 1.0,
-                questionAr: 'مع المستجد بخصوص القانون الجديد في حالتين، إحداهما أن يصدر القانون الجديد قبل انتهاء حالة الاستمرار، والحالة الثانية هي:',
+                questionAr: 'مع المستجد بصوص القانون الجديد في حالتين، إحداهما أن يصدر القانون الجديد قبل انتهاء حال الاستمرار، والحال الثاني هي:',
                 options: [
-                    { id: 'a', textAr: 'أن يكون مرتكب الجريمة ناصراً' },
+                    { id: 'a', textAr: 'أن يكون مرتكب الجريم ناصراً' },
                     { id: 'b', textAr: 'أن يتحقق الركن المادي بكل فئاته' },
-                    { id: 'c', textAr: 'أن تكون الجريمة من جرائم الجنايات فقط' },
+                    { id: 'c', textAr: 'أن تكون الجريم من جرائم الجنايات فقط' },
                     { id: 'd', textAr: 'أن يصدر القانون الجديد قبل صدور الحكم النهائي' }
                 ],
                 correctAnswer: 'd'
             },
             {
                 id: 4, type: 'mcq', marks: 1.0,
-                questionAr: 'مبدأ إقليمية القوانين يعني أن الأردن يطبق قانونه الجزائي على الجرائم المرتكبة على إقليمه، ويطبق القاضي الأردني قانون بلده.',
+                questionAr: 'مبدأ إقليمي القوانين يعني أن الأردن يطبق قانونه الجزائي على الجرائم المرتكب على إقليمه، ويطبق القاضي الأردني قانون بلده.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 5, type: 'mcq', marks: 1.0,
-                questionAr: 'جريمة الاعتياد يشترط لتجريمها وللمعاقبة عليها تكرار العمل المادي المكون للجريمة، ولا يكتفى بوقوعها مرة واحدة.',
+                questionAr: 'جريم الاعتياد يشترط لتجريمها وللمعاقب عليها تكرار العمل المادي المكون للجريم، ولا يكتفى بوقوعها مر واحد.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 6, type: 'mcq', marks: 1.0,
-                questionAr: 'نائب الأمة (النواب والأعيان) يتمتع بحصانة برلمانية تحول دون مساءلته جزائياً أو تطبيق قانون العقوبات عليه أثناء قيامه بمهامه الدستورية. هذه الحصانة هي:',
+                questionAr: 'نائب الأم (النواب والأعيان) يتمتع بحصان برلماني تحول دون مساءلته جزائياً أو تطبيق قانون العقوبات عليه أثناء قيامه بمهامه الدستوري. هذه الحصان هي:',
                 options: [
-                    { id: 'a', textAr: 'مطلقة تشمل جميع الأفعال داخل الأردن وخارجه' },
-                    { id: 'b', textAr: 'نسبية تشمل الجرائم التي يرتكبها أثناء قيامه بمهامه الدستورية شريطة ارتكابها أثناء قيامه بها' },
-                    { id: 'c', textAr: 'دائمة تستمر بعد انتهاء عضويته في المجلس' },
-                    { id: 'd', textAr: 'تسقط بمجرد طلب مدعي عام المحكمة' }
+                    { id: 'a', textAr: 'مطلق تشمل جميع الأفعال دال الأردن وارجه' },
+                    { id: 'b', textAr: 'نسبي تشمل الجرائم التي يرتكبها أثناء قيامه بمهامه الدستوري شريط ارتكابها أثناء قيامه بها' },
+                    { id: 'c', textAr: 'دائم تستمر بعد انتهاء عضويته في المجلس' },
+                    { id: 'd', textAr: 'تسقط بمجرد طلب مدعي عام المحكم' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 7, type: 'mcq', marks: 1.0,
-                questionAr: 'الشروع في الجريمة يُعاقب عليه في:',
+                questionAr: 'الشروع في الجريم يُعاقب عليه في:',
                 options: [
-                    { id: 'a', textAr: 'الجنايات والجنح والمخالفات' },
+                    { id: 'a', textAr: 'الجنايات والجنح والمالفات' },
                     { id: 'b', textAr: 'الجنايات فقط' },
                     { id: 'c', textAr: 'الجنايات فقط ولا عقاب عليه في الجنح' },
-                    { id: 'd', textAr: 'الجنايات والجنح ولا عقاب عليه في المخالفات' }
+                    { id: 'd', textAr: 'الجنايات والجنح ولا عقاب عليه في المالفات' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 8, type: 'mcq', marks: 1.0,
-                questionAr: 'مكان وقوع الجريمة في الأردن هو الذي يعتمد بحيث يكون الاختصاص المكاني للمحكمة التي وقع الجرم في دائرتها، ولا يشترط لاعتبار الجريمة مرتكبة في الأردن:',
+                questionAr: 'مكان وقوع الجريم في الأردن هو الذي يعتمد بحيث يكون الاتصاص المكاني للمحكم التي وقع الجرم في دائرتها، ولا يشترط لاعتبار الجريم مرتكب في الأردن:',
                 options: [
-                    { id: 'a', textAr: 'أن يتحقق فيها السلوك الإجرامي أو النتيجة الإجرامية' },
-                    { id: 'b', textAr: 'أن تتحقق النتيجة والسلوك معاً داخل الأردن' },
+                    { id: 'a', textAr: 'أن يتحقق فيها السلوك الإجرامي أو النتيج الإجرامي' },
+                    { id: 'b', textAr: 'أن تتحقق النتيج والسلوك معاً دال الأردن' },
                     { id: 'c', textAr: 'أن يكون أي عنصر مادي من عناصرها قد تحقق في الأردن' },
-                    { id: 'd', textAr: 'أن يعلن جنسية الجاني عند المحاكمة' }
+                    { id: 'd', textAr: 'أن يعلن جنسي الجاني عند المحاكم' }
                 ],
                 correctAnswer: 'b'
             },
@@ -8379,12 +8379,12 @@ export const quizData = {
             },
             {
                 id: 10, type: 'mcq', marks: 1.0,
-                questionAr: 'شروط الدفاع الشرعي المتعلقة بالاعتداء المبرر للدفاع هي أن يكون الاعتداء:',
+                questionAr: 'شروط الدفاع الشرعي المتعلق بالاعتداء المبرر للدفاع هي أن يكون الاعتداء:',
                 options: [
                     { id: 'a', textAr: 'حالاً أو وشيكاً وغير مشروع ومهدداً للنفس أو المال' },
                     { id: 'b', textAr: 'ماضياً أو محتملاً في المستقبل' },
-                    { id: 'c', textAr: 'صادراً من شخص كامل الأهلية فقط' },
-                    { id: 'd', textAr: 'موجهاً لخصم وأنه على المتهم الدفاع' }
+                    { id: 'c', textAr: 'صادراً من شص كامل الأهلي فقط' },
+                    { id: 'd', textAr: 'موجهاً لصم وأنه على المتهم الدفاع' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8392,19 +8392,19 @@ export const quizData = {
                 id: 11, type: 'mcq', marks: 1.0,
                 questionAr: 'شروط الدفاع الشرعي أن يكون الدفاع متناسباً مع الاعتداء، ويعني ذلك أن:',
                 options: [
-                    { id: 'a', textAr: 'يكون الدفاع مساوياً تماماً لقوة الاعتداء' },
+                    { id: 'a', textAr: 'يكون الدفاع مساوياً تماماً لقو الاعتداء' },
                     { id: 'b', textAr: 'لا يتجاوز الدفاع ما هو ضروري لرد الاعتداء' },
-                    { id: 'c', textAr: 'يستخدم المدافع نفس الأداة التي استخدمها المعتدي' },
+                    { id: 'c', textAr: 'يستدم المدافع نفس الأدا التي استدمها المعتدي' },
                     { id: 'd', textAr: 'يكون الدفاع أشد من الاعتداء لضمان الردع' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 12, type: 'mcq', marks: 1.0,
-                questionAr: 'الدفاع الشرعي ضد اعتداء صادر من شخص فاقد الأهلية كالمجنون والصغير:',
+                questionAr: 'الدفاع الشرعي ضد اعتداء صادر من شص فاقد الأهلي كالمجنون والصغير:',
                 options: [
-                    { id: 'a', textAr: 'صح (لا غبار على نظرية الاعتداء لـ فاقد الأهلية)' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'a', textAr: 'صح (لا غبار على نظري الاعتداء لـ فاقد الأهلي)' },
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8412,28 +8412,28 @@ export const quizData = {
                 id: 13, type: 'mcq', marks: 1.0,
                 questionAr: 'دور وجود الدفاع الشرعي يعتبر:',
                 options: [
-                    { id: 'a', textAr: 'سبباً مبيحاً كاملاً يرفع المسؤولية الجزائية' },
-                    { id: 'b', textAr: 'ظرفاً مخففاً للعقوبة لا غير' },
-                    { id: 'c', textAr: 'جريمة مستقلة بعقوبة مخففة' },
-                    { id: 'd', textAr: 'مانعاً من موانع المسؤولية يعفي من العقاب كلياً' }
+                    { id: 'a', textAr: 'سبباً مبيحاً كاملاً يرفع المسؤولي الجزائي' },
+                    { id: 'b', textAr: 'ظرفاً مففاً للعقوب لا غير' },
+                    { id: 'c', textAr: 'جريم مستقل بعقوب مفف' },
+                    { id: 'd', textAr: 'مانعاً من موانع المسؤولي يعفي من العقاب كلياً' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 14, type: 'mcq', marks: 1.0,
-                questionAr: 'الدفاع الشرعي عن النفس ضد اعتداء صادر من موظف عام يؤدي عمله بصورة مشروعة ومأذون له بها قانوناً:',
+                questionAr: 'الدفاع الشرعي عن النفس ضد اعتداء صادر من موظف عام يؤدي عمله بصور مشروع ومأذون له بها قانوناً:',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ (لا يجوز الدفاع الشرعي ضد موظف يمارس عمله المشروع)' }
+                    { id: 'b', textAr: 'طأ (لا يجوز الدفاع الشرعي ضد موظف يمارس عمله المشروع)' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 15, type: 'mcq', marks: 1.0,
-                questionAr: 'الشخص الذي يعتمد استقرار أمر أمني عليه ثم يدعى الدفاع الشرعي:',
+                questionAr: 'الشص الذي يعتمد استقرار أمر أمني عليه ثم يدعى الدفاع الشرعي:',
                 options: [
                     { id: 'a', textAr: 'يحق له التدرج بالدفاع الشرعي إلى الاعتداء ولو فعلاً' },
-                    { id: 'b', textAr: 'لا يحق له التدرج بالدفاع الشرعي لأن الخطر نشأ عن فعله' },
+                    { id: 'b', textAr: 'لا يحق له التدرج بالدفاع الشرعي لأن الطر نشأ عن فعله' },
                     { id: 'c', textAr: 'يحق له الدفاع عن ماله فقط لا نفسه' },
                     { id: 'd', textAr: 'يعفى من العقاب إذا كان الاعتداء أشد من الاستمرار' }
                 ],
@@ -8444,27 +8444,27 @@ export const quizData = {
                 questionAr: 'هل للمعتدي دفاعاً شرعياً ضد من يدافع عن المال في جميع الأحوال؟',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 17, type: 'mcq', marks: 1.0,
-                questionAr: 'المسؤولية الجنائية لا تتحقق إلا مع وجود الاختيار والإدراك والتمييز المخصصة لدى مرتكب الجريمة.',
+                questionAr: 'المسؤولي الجنائي لا تتحقق إلا مع وجود الاتيار والإدراك والتمييز المصص لدى مرتكب الجريم.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 18, type: 'mcq', marks: 1.0,
-                questionAr: 'المسؤولية الجنائية لا تقام للغير دون سن البلوغ والشباب استقلالاً عن هؤلاء المعافين لأساس:',
+                questionAr: 'المسؤولي الجنائي لا تقام للغير دون سن البلوغ والشباب استقلالاً عن هؤلاء المعافين لأساس:',
                 options: [
                     { id: 'a', textAr: 'الإلزام الإجرامي والنفس الجنائي' },
                     { id: 'b', textAr: 'التمييز لديهم' },
                     { id: 'c', textAr: 'الوعي بالقانون الجنائي' },
-                    { id: 'd', textAr: 'الشخصية الإرادية' }
+                    { id: 'd', textAr: 'الشصي الإرادي' }
                 ],
                 correctAnswer: 'b'
             }
@@ -8474,112 +8474,112 @@ export const quizData = {
     criminal_law_general_final_p2: {
         id: 'criminal_law_general_final_p2',
         title: 'Penal Code Final - Part 2 (Q19-36)',
-        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الثاني',
+        titleAr: 'قانون العقوبات - أسئل فاينل - الجزء الثاني',
         icon: '📜',
         color: '#E53935',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 19, type: 'mcq', marks: 1.0,
-                questionAr: 'المسؤولية الأخلاقية والالمسؤولية الجنائية تشترك كلاهما مع توافر حرية الاختيار، والمسؤولية الجنائية تتطلب الإدراك والتمييز كذلك، لكنهما تختلفان في أن:',
+                questionAr: 'المسؤولي الألاقي والالمسؤولي الجنائي تشترك كلاهما مع توافر حري الاتيار، والمسؤولي الجنائي تتطلب الإدراك والتمييز كذلك، لكنهما تتلفان في أن:',
                 options: [
-                    { id: 'a', textAr: 'المسؤولية الجنائية تقتصر على الأفراد الراشدين فقط' },
-                    { id: 'b', textAr: 'المسؤولية الأخلاقية كفيلها الضمير وهي مسؤولية الذات بينما العدالة مظهرها القضاء' },
-                    { id: 'c', textAr: 'المسؤولية الجنائية تتقبل الأشخاص المعنوية' },
-                    { id: 'd', textAr: 'المسؤولية الأخلاقية أشد من الجنائية في العقوبة' }
+                    { id: 'a', textAr: 'المسؤولي الجنائي تقتصر على الأفراد الراشدين فقط' },
+                    { id: 'b', textAr: 'المسؤولي الألاقي كفيلها الضمير وهي مسؤولي الذات بينما العدال مظهرها القضاء' },
+                    { id: 'c', textAr: 'المسؤولي الجنائي تتقبل الأشاص المعنوي' },
+                    { id: 'd', textAr: 'المسؤولي الألاقي أشد من الجنائي في العقوب' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 20, type: 'mcq', marks: 1.0,
-                questionAr: 'حالة الإكراه المعنوي (التهديد) كمانع من موانع المسؤولية يشترط فيه أن:',
+                questionAr: 'حال الإكراه المعنوي (التهديد) كمانع من موانع المسؤولي يشترط فيه أن:',
                 options: [
                     { id: 'a', textAr: 'يكون التهديد إيذاء نفسياً كشر غير الفكري' },
-                    { id: 'b', textAr: 'يكون الخطر حالاً أو وشيكاً وجسيماً ولا سبيل لتفاديه إلا بارتكاب الجريمة' },
-                    { id: 'c', textAr: 'يكون مكتوباً ومؤكداً كإنذار مانعاً للمسؤولية' },
-                    { id: 'd', textAr: 'يكون صادراً من شخص ذي سلطة رسمية' }
+                    { id: 'b', textAr: 'يكون الطر حالاً أو وشيكاً وجسيماً ولا سبيل لتفاديه إلا بارتكاب الجريم' },
+                    { id: 'c', textAr: 'يكون مكتوباً ومؤكداً كإنذار مانعاً للمسؤولي' },
+                    { id: 'd', textAr: 'يكون صادراً من شص ذي سلط رسمي' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 21, type: 'mcq', marks: 1.0,
-                questionAr: 'الغلط في الوقائع يُعد مانعاً من موانع المسؤولية إذا كان غلطاً جوهرياً غير ناتج عن الإهمال.',
+                questionAr: 'الغلط في الوقائع يُعد مانعاً من موانع المسؤولي إذا كان غلطاً جوهرياً غير ناتج عن الإهمال.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 22, type: 'mcq', marks: 1.0,
-                questionAr: 'الجهل بالقانون الجنائي يعفي من المسؤولية الجنائية.',
+                questionAr: 'الجهل بالقانون الجنائي يعفي من المسؤولي الجنائي.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 23, type: 'mcq', marks: 1.0,
-                questionAr: 'القصد الجرمي (أو النية الجرمية) له أهمية قصوى في الجنايات لأنه:',
+                questionAr: 'القصد الجرمي (أو الني الجرمي) له أهمي قصوى في الجنايات لأنه:',
                 options: [
-                    { id: 'a', textAr: 'يحدد صلاحية المحكمة للمحاكمة' },
-                    { id: 'b', textAr: 'يفرق بين الجرائم المقصودة وغير المقصودة' },
-                    { id: 'c', textAr: 'يُحدد الإقليم الذي وقعت فيه الجريمة' },
-                    { id: 'd', textAr: 'يُحدد نوع الجريمة جناية أم جنحة أم مخالفة' }
+                    { id: 'a', textAr: 'يحدد صلاحي المحكم للمحاكم' },
+                    { id: 'b', textAr: 'يفرق بين الجرائم المقصود وغير المقصود' },
+                    { id: 'c', textAr: 'يُحدد الإقليم الذي وقعت فيه الجريم' },
+                    { id: 'd', textAr: 'يُحدد نوع الجريم جناي أم جنح أم مالف' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 24, type: 'mcq', marks: 1.0,
-                questionAr: 'الجريمة المقصودة هي كل جريمة يريد الجاني ارتكابها وتحقيق نتيجتها بحيث يتوافر القصد الجرمي بعنصريه:',
+                questionAr: 'الجريم المقصود هي كل جريم يريد الجاني ارتكابها وتحقيق نتيجتها بحيث يتوافر القصد الجرمي بعنصريه:',
                 options: [
-                    { id: 'a', textAr: 'الإرادة والقبول للنتيجة' },
-                    { id: 'b', textAr: 'العلم والإرادة' },
-                    { id: 'c', textAr: 'الاختيار والقدرة على الفهم' },
-                    { id: 'd', textAr: 'الدافع والنية الإجرامية' }
+                    { id: 'a', textAr: 'الإراد والقبول للنتيج' },
+                    { id: 'b', textAr: 'العلم والإراد' },
+                    { id: 'c', textAr: 'الاتيار والقدر على الفهم' },
+                    { id: 'd', textAr: 'الدافع والني الإجرامي' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 25, type: 'mcq', marks: 1.0,
-                questionAr: 'الجريمة غير المقصودة تقوم على ركن الخطأ، حيث يكون الخطأ بثلاث صور وهي:',
+                questionAr: 'الجريم غير المقصود تقوم على ركن الطأ، حيث يكون الطأ بثلاث صور وهي:',
                 options: [
-                    { id: 'a', textAr: 'الإهمال وقلة الاحتراز وعدم مراعاة القوانين والأنظمة' },
-                    { id: 'b', textAr: 'الغضب والانفعال وفقدان السيطرة' },
-                    { id: 'c', textAr: 'الجهل والعمى وضعف الشخصية' },
-                    { id: 'd', textAr: 'الإدراك والتمييز وانعدام الإرادة' }
+                    { id: 'a', textAr: 'الإهمال وقل الاحتراز وعدم مراعا القوانين والأنظم' },
+                    { id: 'b', textAr: 'الغضب والانفعال وفقدان السيطر' },
+                    { id: 'c', textAr: 'الجهل والعمى وضعف الشصي' },
+                    { id: 'd', textAr: 'الإدراك والتمييز وانعدام الإراد' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 26, type: 'mcq', marks: 1.0,
-                questionAr: 'لا اشتراك ولا تدخل في الجرائم غير المقصودة.',
+                questionAr: 'لا اشتراك ولا تدل في الجرائم غير المقصود.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 27, type: 'mcq', marks: 1.0,
-                questionAr: 'الركن المادي للجريمة يتكون من عناصر ثلاثة أساسية هي:',
+                questionAr: 'الركن المادي للجريم يتكون من عناصر ثلاث أساسي هي:',
                 options: [
-                    { id: 'a', textAr: 'الفعل الإجرامي والقصد الجنائي والعقوبة' },
-                    { id: 'b', textAr: 'السلوك الإجرامي والنتيجة وعلاقة السببية بينهما' },
-                    { id: 'c', textAr: 'الجاني والمجني عليه وأدوات الجريمة' },
-                    { id: 'd', textAr: 'التجريم والعقوبة والمسؤولية' }
+                    { id: 'a', textAr: 'الفعل الإجرامي والقصد الجنائي والعقوب' },
+                    { id: 'b', textAr: 'السلوك الإجرامي والنتيج وعلاق السببي بينهما' },
+                    { id: 'c', textAr: 'الجاني والمجني عليه وأدوات الجريم' },
+                    { id: 'd', textAr: 'التجريم والعقوب والمسؤولي' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 28, type: 'mcq', marks: 1.0,
-                questionAr: 'مدة تقادم الدعوى العمومية في الجنايات في الأردن هي:',
+                questionAr: 'مد تقادم الدعوى العمومي في الجنايات في الأردن هي:',
                 options: [
                     { id: 'a', textAr: '10 سنوات' },
-                    { id: 'b', textAr: '15 سنة' },
-                    { id: 'c', textAr: '20 سنة' },
-                    { id: 'd', textAr: '30 سنة' }
+                    { id: 'b', textAr: '15 سن' },
+                    { id: 'c', textAr: '20 سن' },
+                    { id: 'd', textAr: '30 سن' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8587,90 +8587,90 @@ export const quizData = {
                 id: 29, type: 'mcq', marks: 1.0,
                 questionAr: 'في جرائم الاعتداء يبدأ ميعاد التقادم من:',
                 options: [
-                    { id: 'a', textAr: 'تاريخ أول فعل في سلسلة أفعال الاعتداء' },
-                    { id: 'b', textAr: 'اليوم التالي لآخر فعل من الأفعال' },
-                    { id: 'c', textAr: 'تاريخ علم المجني عليه بالجريمة' },
-                    { id: 'd', textAr: 'تاريخ إلقاء القبض على المتهم' }
+                    { id: 'a', textAr: 'تاري أول فعل في سلسل أفعال الاعتداء' },
+                    { id: 'b', textAr: 'اليوم التالي لآر فعل من الأفعال' },
+                    { id: 'c', textAr: 'تاري علم المجني عليه بالجريم' },
+                    { id: 'd', textAr: 'تاري إلقاء القبض على المتهم' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 30, type: 'mcq', marks: 1.0,
-                questionAr: 'تقادم الجريمة لا يزيد عن:',
+                questionAr: 'تقادم الجريم لا يزيد عن:',
                 options: [
-                    { id: 'a', textAr: 'خمس سنوات' },
+                    { id: 'a', textAr: 'مس سنوات' },
                     { id: 'b', textAr: 'عشر سنوات' },
-                    { id: 'c', textAr: 'خمس عشرة سنة' },
-                    { id: 'd', textAr: 'عشرين سنة' }
+                    { id: 'c', textAr: 'مس عشر سن' },
+                    { id: 'd', textAr: 'عشرين سن' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 31, type: 'mcq', marks: 1.0,
-                questionAr: 'جريمة احتجاز الرهائن التي تهدد أمن الدولة الأردنية ارتكبها أجنبي في دولة أجنبية، أي مبدأ يمنح الأردن الاختصاص بمحاكمته؟',
+                questionAr: 'جريم احتجاز الرهائن التي تهدد أمن الدول الأردني ارتكبها أجنبي في دول أجنبي، أي مبدأ يمنح الأردن الاتصاص بمحاكمته؟',
                 options: [
-                    { id: 'a', textAr: 'مبدأ الاختصاص الإقليمي' },
-                    { id: 'b', textAr: 'مبدأ الاختصاص الشخصي' },
-                    { id: 'c', textAr: 'مبدأ الاختصاص العيني' },
-                    { id: 'd', textAr: 'مبدأ الاختصاص الشمولي' }
+                    { id: 'a', textAr: 'مبدأ الاتصاص الإقليمي' },
+                    { id: 'b', textAr: 'مبدأ الاتصاص الشصي' },
+                    { id: 'c', textAr: 'مبدأ الاتصاص العيني' },
+                    { id: 'd', textAr: 'مبدأ الاتصاص الشمولي' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 32, type: 'mcq', marks: 1.0,
-                questionAr: 'سائق سيارة تجاوز الإشارة الحمراء مخالفاً قواعد السير وأدى ذلك إلى إصابة شخص بجروح بالغة. هذه الجريمة هي:',
+                questionAr: 'سائق سيار تجاوز الإشار الحمراء مالفاً قواعد السير وأدى ذلك إلى إصاب شص بجروح بالغ. هذه الجريم هي:',
                 options: [
-                    { id: 'a', textAr: 'جريومة مقصودة لأنه علم بخطورة تجاوز الإشارة' },
-                    { id: 'b', textAr: 'جريمة غير مقصودة (خطأ جنائي) لعدم توافر القصد الجرمي رغم وجود الركن المادي' },
-                    { id: 'c', textAr: 'جريمة شروع في القتل' },
-                    { id: 'd', textAr: 'ليست جريمة لأنها حادث عرضي' }
+                    { id: 'a', textAr: 'جريوم مقصود لأنه علم بطور تجاوز الإشار' },
+                    { id: 'b', textAr: 'جريم غير مقصود (طأ جنائي) لعدم توافر القصد الجرمي رغم وجود الركن المادي' },
+                    { id: 'c', textAr: 'جريم شروع في القتل' },
+                    { id: 'd', textAr: 'ليست جريم لأنها حادث عرضي' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 33, type: 'mcq', marks: 1.0,
                 questionAr: 'تمتاز أسباب التبرير في قانون العقوبات بأنها ذات طابع:',
-                explanationAr: 'أسباب التبرير موضوعية؛ لأنها ترفع الصفة الجرمية عن الفعل وتجعله مشروعاً، وبالتالي يستفيد منها كل من ساهم في الجريمة (فاعل، شريك، متدخل).',
+                explanationAr: 'أسباب التبرير موضوعي؛ لأنها ترفع الصف الجرمي عن الفعل وتجعله مشروعاً، وبالتالي يستفيد منها كل من ساهم في الجريم (فاعل، شريك، متدل).',
                 options: [
-                    { id: 'a', textAr: 'شخصي يتعلق بصفة الجاني ومسؤوليته' },
-                    { id: 'b', textAr: 'موضوعي ينصرف إلى الفعل نفسه فيجرده من الصفة الجرمية' },
-                    { id: 'c', textAr: 'تقديري يترك بالكامل لملائمة المحكمة دون نص' },
+                    { id: 'a', textAr: 'شصي يتعلق بصف الجاني ومسؤوليته' },
+                    { id: 'b', textAr: 'موضوعي ينصرف إلى الفعل نفسه فيجرده من الصف الجرمي' },
+                    { id: 'c', textAr: 'تقديري يترك بالكامل لملائم المحكم دون نص' },
                     { id: 'd', textAr: 'نسبي يقتصر أثره على الفاعل الأصلي دون الشركاء' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 34, type: 'mcq', marks: 1.0,
-                questionAr: 'أصاب لاعب كرة قدم مدافع لاعباً مهاجماً بجرح بليغ أثناء محاولته منع هدف، وكان قد التزم وراعى قواعد اللعب المعترف بها. لا يُعاقب المدافع لأن فعله يندرج تحت:',
-                explanationAr: 'ممارسة الألعاب الرياضية تندرج تحت سبب التبرير الخاص بـ "استعمال الحق" أو "ممارسة حق أفرزه وقرره القانون" ما دامت القواعد الرياضية مرعية.',
+                questionAr: 'أصاب لاعب كر قدم مدافع لاعباً مهاجماً بجرح بليغ أثناء محاولته منع هدف، وكان قد التزم وراعى قواعد اللعب المعترف بها. لا يُعاقب المدافع لأن فعله يندرج تحت:',
+                explanationAr: 'ممارس الألعاب الرياضي تندرج تحت سبب التبرير الاص بـ "استعمال الحق" أو "ممارس حق أفرزه وقرره القانون" ما دامت القواعد الرياضي مرعي.',
                 options: [
                     { id: 'a', textAr: 'أداء الواجب المكلف به' },
-                    { id: 'b', textAr: 'حالة الدفاع الشرعي' },
-                    { id: 'c', textAr: 'استعمال حق أجازه وقرره القانون (ممارسة الألعاب الرياضية)' },
-                    { id: 'd', textAr: 'حالة الضرورة القصوى' }
+                    { id: 'b', textAr: 'حال الدفاع الشرعي' },
+                    { id: 'c', textAr: 'استعمال حق أجازه وقرره القانون (ممارس الألعاب الرياضي)' },
+                    { id: 'd', textAr: 'حال الضرور القصوى' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 35, type: 'mcq', marks: 1.0,
-                questionAr: 'أجرى طبيب جراح عملية جراحية عاجلة لمريض وفق الأصول الطبية المعتمدة بقصد شفاءه، فنتج عن العملية إصابة جسدية أو وفاة المريض. ما هو الوضع القانوني للطبيب؟',
-                explanationAr: 'ممارسة العمل الطبي وفق الأصول الطبية وبقصد الشفاء يعتبر استعمالاً لحق قرره القانون كسبب تبرير يمنع المسؤولية الجنائية والمدنية.',
+                questionAr: 'أجرى طبيب جراح عملي جراحي عاجل لمريض وفق الأصول الطبي المعتمد بقصد شفاءه، فنتج عن العملي إصاب جسدي أو وفا المريض. ما هو الوضع القانوني للطبيب؟',
+                explanationAr: 'ممارس العمل الطبي وفق الأصول الطبي وبقصد الشفاء يعتبر استعمالاً لحق قرره القانون كسبب تبرير يمنع المسؤولي الجنائي والمدني.',
                 options: [
                     { id: 'a', textAr: 'يسأل جنائياً لأنه سبب أذىً مادياً للمريض' },
-                    { id: 'b', textAr: 'يسأل مدنياً بالتعويض فقط دون المسؤولية الجنائية' },
+                    { id: 'b', textAr: 'يسأل مدنياً بالتعويض فقط دون المسؤولي الجنائي' },
                     { id: 'c', textAr: 'لا يسأل جنائياً ولا مدنياً لأن فعله يندرج ضمن أسباب التبرير' },
-                    { id: 'd', textAr: 'يسأل جنائياً إذا لم تنجح العملية في تحقيق الشفاء التام' }
+                    { id: 'd', textAr: 'يسأل جنائياً إذا لم تنجح العملي في تحقيق الشفاء التام' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 36, type: 'mcq', marks: 1.0,
-                questionAr: 'لكي يقوم حق الدفاع الشرعي لرد اعتداء غير مشروع يهدد النفس أو المال، يشترط في خطر الاعتداء أن يكون:',
-                explanationAr: 'شروط الخطر في الدفاع الشرعي أن يكون حالاً أو وشيك الوقوع وغير مشروع؛ فإذا انقضى الخطر فلا محل للدفاع الشرعي.',
+                questionAr: 'لكي يقوم حق الدفاع الشرعي لرد اعتداء غير مشروع يهدد النفس أو المال، يشترط في طر الاعتداء أن يكون:',
+                explanationAr: 'شروط الطر في الدفاع الشرعي أن يكون حالاً أو وشيك الوقوع وغير مشروع؛ فإذا انقضى الطر فلا محل للدفاع الشرعي.',
                 options: [
                     { id: 'a', textAr: 'محتملاً في المستقبل البعيد' },
-                    { id: 'b', textAr: 'حالاً أو على وشك الحلول ولا يمكن دفعه بوسيلة أخرى' },
-                    { id: 'c', textAr: 'صادراً عن جهة حكومية تنفذ أمراً قضائياً' },
+                    { id: 'b', textAr: 'حالاً أو على وشك الحلول ولا يمكن دفعه بوسيل أرى' },
+                    { id: 'c', textAr: 'صادراً عن جه حكومي تنفذ أمراً قضائياً' },
                     { id: 'd', textAr: 'جسيماً دائماً بحيث يؤدي إلى الموت حتماً' }
                 ],
                 correctAnswer: 'b'
@@ -8680,206 +8680,206 @@ export const quizData = {
     criminal_law_general_final_p3: {
         id: 'criminal_law_general_final_p3',
         title: 'Penal Code Final - Part 3 (Q37-54)',
-        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الثالث',
+        titleAr: 'قانون العقوبات - أسئل فاينل - الجزء الثالث',
         icon: '📜',
         color: '#E53935',
-        noteAr: '⚠️ ملاحظة مهمة: هذه الأسئلة تمت كتابتها بواسطة الذكاء الاصطناعي (AI). يُرجى مراجعة المصادر الأكاديمية الأصلية للتأكد من صحة المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 37, type: 'mcq', marks: 1.0,
-                questionAr: 'إذا وقع تجاوز في حدود الدفاع الشرعي بحسن نية نتيجة الرعب والضغط النفسي، فإن المحكمة:',
-                explanationAr: 'التجاوز بحسن نية في الدفاع الشرعي يخرج الفعل من الإباحة الكاملة، ولكنه يمنح عذراً مخففاً أو إعفاءً طبقاً لأحكام القانون.',
+                questionAr: 'إذا وقع تجاوز في حدود الدفاع الشرعي بحسن ني نتيج الرعب والضغط النفسي، فإن المحكم:',
+                explanationAr: 'التجاوز بحسن ني في الدفاع الشرعي يرج الفعل من الإباح الكامل، ولكنه يمنح عذراً مففاً أو إعفاءً طبقاً لأحكام القانون.',
                 options: [
-                    { id: 'a', textAr: 'تعاقب الفاعل بعقوبة الجريمة كاملة دون أي تخفيف' },
-                    { id: 'b', textAr: 'يمكنها إعفاء فاعل الجريمة كلياً من العقاب أو تخفيفها إذا توافرت شروط المادة 89 من قانون العقوبات' },
-                    { id: 'c', textAr: 'تعتبر الفعل جريمة مقصودة مشددة' },
-                    { id: 'd', textAr: 'تحكم ببراءة الفاعل لتوفر سبب التبرير كاملاً دون قيد' }
+                    { id: 'a', textAr: 'تعاقب الفاعل بعقوب الجريم كامل دون أي تفيف' },
+                    { id: 'b', textAr: 'يمكنها إعفاء فاعل الجريم كلياً من العقاب أو تفيفها إذا توافرت شروط الماد 89 من قانون العقوبات' },
+                    { id: 'c', textAr: 'تعتبر الفعل جريم مقصود مشدد' },
+                    { id: 'd', textAr: 'تحكم ببراء الفاعل لتوفر سبب التبرير كاملاً دون قيد' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 38, type: 'mcq', marks: 1.0,
-                questionAr: 'تختلف حالة الضرورة عن الدفاع الشرعي في أن حالة الضرورة:',
-                explanationAr: 'في الدفاع الشرعي يوجه الفعل للمعتدي الظالم، أما في حالة الضرورة يوجه الفعل لبريء لإنقاذ النفس من خطر محدق كحريق أو غرق، ولذلك يظل التعويض المدني قائماً.',
+                questionAr: 'تتلف حال الضرور عن الدفاع الشرعي في أن حال الضرور:',
+                explanationAr: 'في الدفاع الشرعي يوجه الفعل للمعتدي الظالم، أما في حال الضرور يوجه الفعل لبريء لإنقاذ النفس من طر محدق كحريق أو غرق، ولذلك يظل التعويض المدني قائماً.',
                 options: [
-                    { id: 'a', textAr: 'توجّه ضد اعتداء بشري عدواني وغير مشروع من شخص معين' },
-                    { id: 'b', textAr: 'الخطر فيها يهدد مال الغير فقط ولا يهدد النفس' },
-                    { id: 'c', textAr: 'الخطر فيها ينشأ عادة من قوى طبيعية، ويُضحى ببريء لدفع الخطر' },
-                    { id: 'd', textAr: 'تعتبر سبباً من أسباب التبرير المطلقة وتمنع التعويض المدني' }
+                    { id: 'a', textAr: 'توجّه ضد اعتداء بشري عدواني وغير مشروع من شص معين' },
+                    { id: 'b', textAr: 'الطر فيها يهدد مال الغير فقط ولا يهدد النفس' },
+                    { id: 'c', textAr: 'الطر فيها ينشأ عاد من قوى طبيعي، ويُضحى ببريء لدفع الطر' },
+                    { id: 'd', textAr: 'تعتبر سبباً من أسباب التبرير المطلق وتمنع التعويض المدني' }
                 ],
                 correctAnswer: 'c'
             },
             {
                 id: 39, type: 'mcq', marks: 1.0,
-                questionAr: 'يتميز الشروع التام (الجريمة الخائبة) عن الشروع الناقص (الجريمة الموقوفة) بأن الفاعل في الشروع التام:',
+                questionAr: 'يتميز الشروع التام (الجريم الائب) عن الشروع الناقص (الجريم الموقوف) بأن الفاعل في الشروع التام:',
                 explanationAr: 'الشروع التام يعني أن الجاني قام بكل ما بوسعه لكنه لم يصب المجني عليه، أما الناقص فيتم قطعه قبل استكمال السلوك المادي.',
                 options: [
-                    { id: 'a', textAr: 'يستنفد كل الأفعال المادية اللازمة للجريمة لكن النتيجة لا تتحقق لأسباب خارجة عن إرادته' },
-                    { id: 'b', textAr: 'يتوقف باختياره وعدوله الطوعي قبل إتمام الأفعال التنفيذية' },
+                    { id: 'a', textAr: 'يستنفد كل الأفعال المادي اللازم للجريم لكن النتيج لا تتحقق لأسباب ارج عن إرادته' },
+                    { id: 'b', textAr: 'يتوقف باتياره وعدوله الطوعي قبل إتمام الأفعال التنفيذي' },
                     { id: 'c', textAr: 'يتم وقف نشاطه المادي قسراً من قبل رجال الأمن قبل إتمام السلوك' },
-                    { id: 'd', textAr: 'يرتكب سلوكاً يستحيل معه تحقيق النتيجة مطلقاً لعدم صلاحية الوسيلة' }
+                    { id: 'd', textAr: 'يرتكب سلوكاً يستحيل معه تحقيق النتيج مطلقاً لعدم صلاحي الوسيل' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 40, type: 'mcq', marks: 1.0,
-                questionAr: 'إذا قام شخص بإطلاق النار على سرير يعتقد أن خصمه نائم فيه بقصد قتله، فتبين أن الخصم كان قد توفي قبل ذلك بساعات، فإن هذه الحالة تعتبر:',
-                explanationAr: 'إطلاق النار على جثة يعتبر جريمة مستحيلة لاستحالة محل الجريمة (الإنسان الحي)، والقانون يعاقب على الجريمة المستحيلة باعتبارها شروعاً.',
+                questionAr: 'إذا قام شص بإطلاق النار على سرير يعتقد أن صمه نائم فيه بقصد قتله، فتبين أن الصم كان قد توفي قبل ذلك بساعات، فإن هذه الحال تعتبر:',
+                explanationAr: 'إطلاق النار على جث يعتبر جريم مستحيل لاستحال محل الجريم (الإنسان الحي)، والقانون يعاقب على الجريم المستحيل باعتبارها شروعاً.',
                 options: [
-                    { id: 'a', textAr: 'جريمة تامة؛ لأن القصد الجرمي متوفر' },
-                    { id: 'b', textAr: 'شروعاً في جريمة مستحيلة معاقب عليها كشروع' },
-                    { id: 'c', textAr: 'عدولاً اختيارياً يمنع العقاب' },
-                    { id: 'd', textAr: 'جريمة غير مقصودة' }
+                    { id: 'a', textAr: 'جريم تام؛ لأن القصد الجرمي متوفر' },
+                    { id: 'b', textAr: 'شروعاً في جريم مستحيل معاقب عليها كشروع' },
+                    { id: 'c', textAr: 'عدولاً اتيارياً يمنع العقاب' },
+                    { id: 'd', textAr: 'جريم غير مقصود' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 41, type: 'mcq', marks: 1.0,
-                questionAr: 'يتكون القصد الجرمي العام (الركن المعنوي في الجرائم المقصودة) من عنصرين أساسيين هما:',
-                explanationAr: 'القصد الجرمي يقوم قانوناً على توفر العلم بالوقائع وعناصر النموذج القانوني للجريمة، واتجاه الإرادة الحرة إلى ارتكاب الفعل وتحقيق النتيجة الإجرامية.',
+                questionAr: 'يتكون القصد الجرمي العام (الركن المعنوي في الجرائم المقصود) من عنصرين أساسيين هما:',
+                explanationAr: 'القصد الجرمي يقوم قانوناً على توفر العلم بالوقائع وعناصر النموذج القانوني للجريم، واتجاه الإراد الحر إلى ارتكاب الفعل وتحقيق النتيج الإجرامي.',
                 options: [
                     { id: 'a', textAr: 'الباعث والدافع النفسي' },
-                    { id: 'b', textAr: 'العلم والإرادة' },
-                    { id: 'c', textAr: 'الخطأ والإهمال' },
-                    { id: 'd', textAr: 'التوقع والاحتمال فقط دون إرادة السلوك' }
+                    { id: 'b', textAr: 'العلم والإراد' },
+                    { id: 'c', textAr: 'الطأ والإهمال' },
+                    { id: 'd', textAr: 'التوقع والاحتمال فقط دون إراد السلوك' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 42, type: 'mcq', marks: 1.0,
-                questionAr: 'تجاوز سائق سيارة الإشارة الضوئية الحمراء مخالفاً قواعد السير، مما أدى إلى صدم أحد المارة وإصابته بجروح. توصف هذه الجريمة بأنها:',
-                explanationAr: 'الجريمة غير عمدية؛ لأن إرادة السائق اتجهت للسلوك (تجاوز الإشارة) ولكنها لم تتجه إلى تحقيق النتيجة (إصابة الشخص).',
+                questionAr: 'تجاوز سائق سيار الإشار الضوئي الحمراء مالفاً قواعد السير، مما أدى إلى صدم أحد المار وإصابته بجروح. توصف هذه الجريم بأنها:',
+                explanationAr: 'الجريم غير عمدي؛ لأن إراد السائق اتجهت للسلوك (تجاوز الإشار) ولكنها لم تتجه إلى تحقيق النتيج (إصاب الشص).',
                 options: [
-                    { id: 'a', textAr: 'جريمة مقصودة؛ لأن السائق علم بخطورة تجاوز الإشارة وتوقع النتيجة' },
-                    { id: 'b', textAr: 'جريمة غير مقصودة (خطأ غير عمدي)؛ لتوافر الركن المادي والخطأ دون اتجاه إرادته للنتيجة' },
+                    { id: 'a', textAr: 'جريم مقصود؛ لأن السائق علم بطور تجاوز الإشار وتوقع النتيج' },
+                    { id: 'b', textAr: 'جريم غير مقصود (طأ غير عمدي)؛ لتوافر الركن المادي والطأ دون اتجاه إرادته للنتيج' },
                     { id: 'c', textAr: 'شروع في القتل العمد' },
-                    { id: 'd', textAr: 'لا تعد جريمة؛ لأنها حادث عرضي بحت' }
+                    { id: 'd', textAr: 'لا تعد جريم؛ لأنها حادث عرضي بحت' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 43, type: 'mcq', marks: 1.0,
-                questionAr: 'يُعد فاعلاً أصلياً (مساهماً أصلياً) في الجريمة كل من:',
-                explanationAr: 'المساهم الأصلي (الفاعل) هو من ينفذ الركن المادي أو يساهم في تنفيذه مباشرة، أما تقديم السلاح فهو تدخل، وإيواء الجاني هو جريمة إخفاء مستقلة.',
+                questionAr: 'يُعد فاعلاً أصلياً (مساهماً أصلياً) في الجريم كل من:',
+                explanationAr: 'المساهم الأصلي (الفاعل) هو من ينفذ الركن المادي أو يساهم في تنفيذه مباشر، أما تقديم السلاح فهو تدل، وإيواء الجاني هو جريم إفاء مستقل.',
                 options: [
-                    { id: 'a', textAr: 'يقتصر دوره على تقديم السلاح المستعمل في الجريمة قبل ارتكابها' },
-                    { id: 'b', textAr: 'يقوم بالأعمال المكونة للركن المادي للجريمة أو يرتكبها بالاشتراك المباشر مع غيره' },
-                    { id: 'c', textAr: 'يوجه نصائح وإرشادات عامة للجاني دون التدخل في التنفيذ المادي' },
-                    { id: 'd', textAr: 'يخبئ الجاني في بيته بعد إتمام الجريمة هرباً من العدالة' }
+                    { id: 'a', textAr: 'يقتصر دوره على تقديم السلاح المستعمل في الجريم قبل ارتكابها' },
+                    { id: 'b', textAr: 'يقوم بالأعمال المكون للركن المادي للجريم أو يرتكبها بالاشتراك المباشر مع غيره' },
+                    { id: 'c', textAr: 'يوجه نصائح وإرشادات عام للجاني دون التدل في التنفيذ المادي' },
+                    { id: 'd', textAr: 'يبئ الجاني في بيته بعد إتمام الجريم هرباً من العدال' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 44, type: 'mcq', marks: 1.0,
-                questionAr: 'يشترط لقيام القصد الجرمي في المساهمة التبعية (المتدخل والشريك) أن:',
-                explanationAr: 'القصد الجرمي للمتدخل يقوم على وحدة المصلحة أو "التضامن الإجرامي"، أي علمه بما ينوي الفاعل القيام به وتوجيه إرادته لمساعدته.',
+                questionAr: 'يشترط لقيام القصد الجرمي في المساهم التبعي (المتدل والشريك) أن:',
+                explanationAr: 'القصد الجرمي للمتدل يقوم على وحد المصلح أو "التضامن الإجرامي"، أي علمه بما ينوي الفاعل القيام به وتوجيه إرادته لمساعدته.',
                 options: [
-                    { id: 'a', textAr: 'يكون المتدخل جاهلاً بنية الفاعل الأصلي ومخططه الإجرامي' },
-                    { id: 'b', textAr: 'يتوفر لديه العلم بالجريمة التي يرتكبها الفاعل الأصلي وتتجه إرادته لتقديم المساعدة' },
-                    { id: 'c', textAr: 'يرتكب المتدخل الفعل تحت تأثير القوة القاهرة والضرورة القصوى' },
-                    { id: 'd', textAr: 'يقتصر علمه على المخالفات البسيطة دون الجنايات والجنح' }
+                    { id: 'a', textAr: 'يكون المتدل جاهلاً بني الفاعل الأصلي ومططه الإجرامي' },
+                    { id: 'b', textAr: 'يتوفر لديه العلم بالجريم التي يرتكبها الفاعل الأصلي وتتجه إرادته لتقديم المساعد' },
+                    { id: 'c', textAr: 'يرتكب المتدل الفعل تحت تأثير القو القاهر والضرور القصوى' },
+                    { id: 'd', textAr: 'يقتصر علمه على المالفات البسيط دون الجنايات والجنح' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 45, type: 'mcq', marks: 1.0,
-                questionAr: 'تتميز أسباب التبرير في قانون العقوبات بأنها ذات طابع موضوعي يزيل الصفة الجرمية عن الفعل كلياً، بخلاف موانع المسؤولية (كالجنون أو الصغر) التي لها طابع شخصي ترفع العقاب عن الشخص مع بقاء الفعل جريمة.',
+                questionAr: 'تتميز أسباب التبرير في قانون العقوبات بأنها ذات طابع موضوعي يزيل الصف الجرمي عن الفعل كلياً، بلاف موانع المسؤولي (كالجنون أو الصغر) التي لها طابع شصي ترفع العقاب عن الشص مع بقاء الفعل جريم.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. أسباب التبرير موضوعية تزيل صفة الجريمة عن الفعل ذاته، أما موانع المسؤولية فشخصية ترفع العقاب عن الشخص فقط.'
+                explanationAr: 'صحيح. أسباب التبرير موضوعي تزيل صف الجريم عن الفعل ذاته، أما موانع المسؤولي فشصي ترفع العقاب عن الشص فقط.'
             },
             {
                 id: 46, type: 'mcq', marks: 1.0,
-                questionAr: 'يجوز للمجني عليه المطالبة بالتعويض المدني في حالة الفعل المبرر (كالطبيب الذي يعالج مريضاً أو المدافع شرعاً) لأن الفعل يظل غير مشروع مدنياً.',
+                questionAr: 'يجوز للمجني عليه المطالب بالتعويض المدني في حال الفعل المبرر (كالطبيب الذي يعالج مريضاً أو المدافع شرعاً) لأن الفعل يظل غير مشروع مدنياً.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'خطأ. الفعل المبرر يصبح مباحاً ومشروعاً جنائياً ومدنياً، فلا مسؤولية ولا تعويض عليه.'
+                explanationAr: 'طأ. الفعل المبرر يصبح مباحاً ومشروعاً جنائياً ومدنياً، فلا مسؤولي ولا تعويض عليه.'
             },
             {
                 id: 47, type: 'mcq', marks: 1.0,
-                questionAr: 'نظم المشرع الأردني أحكام الدفاع الشرعي في المواد 340-343 من قانون العقوبات، وأجازه للشخص لرد اعتداء غير مشروع يهدد نفسه أو نفس غيره، أو ماله أو مال غيره.',
+                questionAr: 'نظم المشرع الأردني أحكام الدفاع الشرعي في المواد 340-343 من قانون العقوبات، وأجازه للشص لرد اعتداء غير مشروع يهدد نفسه أو نفس غيره، أو ماله أو مال غيره.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a',
                 explanationAr: 'صحيح. الدفاع الشرعي منظم في قانون العقوبات الأردني ويشمل الدفاع عن النفس والمال لصاحبهما ولغيره.'
             },
             {
                 id: 48, type: 'mcq', marks: 1.0,
-                questionAr: 'يعتبر الشخص في حالة دفاع شرعي إذا قام بضرب شخص آخر انتقاماً منه بعد أن انتهى الاعتداء وتمكن رجال الأمن من القبض على المعتدي.',
+                questionAr: 'يعتبر الشص في حال دفاع شرعي إذا قام بضرب شص آر انتقاماً منه بعد أن انتهى الاعتداء وتمكن رجال الأمن من القبض على المعتدي.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'خطأ. الدفاع الشرعي يهدف لصد خطر "حال" أو "وشيك"؛ أما الضرب بعد انتهاء الخطر فيعد انتقاماً وجريمة مستقلة.'
+                explanationAr: 'طأ. الدفاع الشرعي يهدف لصد طر "حال" أو "وشيك"؛ أما الضرب بعد انتهاء الطر فيعد انتقاماً وجريم مستقل.'
             },
             {
                 id: 49, type: 'mcq', marks: 1.0,
-                questionAr: 'رضاء المجني عليه لا يعتبر سبباً عاماً للتبرير في قانون العقوبات إلا في أحوال ضيقة أجازها القانون، فلا يملك الشخص التنازل عن حقه في الحياة (كالقتل رحمة).',
+                questionAr: 'رضاء المجني عليه لا يعتبر سبباً عاماً للتبرير في قانون العقوبات إلا في أحوال ضيق أجازها القانون، فلا يملك الشص التنازل عن حقه في الحيا (كالقتل رحم).',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. الرضا لا يُبيح القتل أو الإيذاء الجسيم لأن الحق في الحياة وسلامة الجسد من الحقوق التي لا يملك الشخص التنازل عنها.'
+                explanationAr: 'صحيح. الرضا لا يُبيح القتل أو الإيذاء الجسيم لأن الحق في الحيا وسلام الجسد من الحقوق التي لا يملك الشص التنازل عنها.'
             },
             {
                 id: 50, type: 'mcq', marks: 1.0,
-                questionAr: 'لا يعاقب القانون الأردني على الشروع في الجريمة إذا توقف الفاعل قسراً بسبب صراخ المجني عليه أو قدوم الشرطة.',
+                questionAr: 'لا يعاقب القانون الأردني على الشروع في الجريم إذا توقف الفاعل قسراً بسبب صرا المجني عليه أو قدوم الشرط.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'خطأ. هذا التوقف قسري وخارج عن إرادة الجاني، وهو صلب تعريف "الشروع" المعاقب عليه قانوناً.'
+                explanationAr: 'طأ. هذا التوقف قسري وارج عن إراد الجاني، وهو صلب تعريف "الشروع" المعاقب عليه قانوناً.'
             },
             {
                 id: 51, type: 'mcq', marks: 1.0,
-                questionAr: 'تعتبر الجريمة مستحيلة ويعاقب عليها كشروع إذا استحال تحقيق النتيجة بسبب ظروف مادية يجهلها الجاني، مثل محاولة سرقة خزنة يظنها مليئة بالنقود وتبين أنها فارغة.',
+                questionAr: 'تعتبر الجريم مستحيل ويعاقب عليها كشروع إذا استحال تحقيق النتيج بسبب ظروف مادي يجهلها الجاني، مثل محاول سرق زن يظنها مليئ بالنقود وتبين أنها فارغ.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. الجريمة المستحيلة يُعاقب عليها كشروع لوجود الخطورة الإجرامية وبدء التنفيذ رغم استحالة النتيجة.'
+                explanationAr: 'صحيح. الجريم المستحيل يُعاقب عليها كشروع لوجود الطور الإجرامي وبدء التنفيذ رغم استحال النتيج.'
             },
             {
                 id: 52, type: 'mcq', marks: 1.0,
-                questionAr: 'يتوفر القصد الجرمي دائماً بمجرد حدوث النتيجة الضارة، حتى لو ثبت أن الجاني كان يجهل تماماً عنصراً أساسياً من عناصر الجريمة وقت ارتكابها.',
+                questionAr: 'يتوفر القصد الجرمي دائماً بمجرد حدوث النتيج الضار، حتى لو ثبت أن الجاني كان يجهل تماماً عنصراً أساسياً من عناصر الجريم وقت ارتكابها.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'خطأ. الجهل بالوقائع الجوهرية ينفي العلم، وإذا انتفى العلم انتفى القصد الجرمي.'
+                explanationAr: 'طأ. الجهل بالوقائع الجوهري ينفي العلم، وإذا انتفى العلم انتفى القصد الجرمي.'
             },
             {
                 id: 53, type: 'mcq', marks: 1.0,
-                questionAr: 'في المساهمة التبعية (التدخل)، يستعير المتدخل صفته الإجرامية من الفعل الأصلي؛ فإذا كان فعل الفاعل الأصلي مباحاً بسبب سبب تبرير، فلا يعاقب المتدخل أيضاً.',
+                questionAr: 'في المساهم التبعي (التدل)، يستعير المتدل صفته الإجرامي من الفعل الأصلي؛ فإذا كان فعل الفاعل الأصلي مباحاً بسبب سبب تبرير، فلا يعاقب المتدل أيضاً.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. أسباب التبرير موضوعية تنصرف إلى الفعل، فإذا كان الفعل مباحاً انتفى التجريم عن كل المساهمين.'
+                explanationAr: 'صحيح. أسباب التبرير موضوعي تنصرف إلى الفعل، فإذا كان الفعل مباحاً انتفى التجريم عن كل المساهمين.'
             },
             {
                 id: 54, type: 'mcq', marks: 1.0,
-                questionAr: 'يتطلب القصد الجرمي في المساهمة التبعية علم المتدخل بالنشاط الإجرامي للفاعل الأصلي واتجاه إرادته إلى معونة الفاعل في تحقيق هذه الجريمة.',
+                questionAr: 'يتطلب القصد الجرمي في المساهم التبعي علم المتدل بالنشاط الإجرامي للفاعل الأصلي واتجاه إرادته إلى معون الفاعل في تحقيق هذه الجريم.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'خطأ' }
+                    { id: 'b', textAr: 'طأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. لا تقوم المساهمة التبعية إلا بتوافر العلم بالجريمة وإرادة المساعدة في تحقيقها.'
+                explanationAr: 'صحيح. لا تقوم المساهم التبعي إلا بتوافر العلم بالجريم وإراد المساعد في تحقيقها.'
             }
         ]
     }
@@ -8889,13 +8889,13 @@ export const quizCategories = [
     {
         id: 'oop',
         name: 'Object Oriented Programming',
-        nameAr: 'برمجة موجهة للكائنات',
+        nameAr: 'برمج موجه للكائنات',
         icon: '💻',
         color: '#2196F3',
         isNew: true,
         parts: [
-            { id: 'oop_midterm', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' },
-            { id: 'oop_final', title: 'Final Past Papers', titleAr: 'أسئلة فاينل' },
+            { id: 'oop_midterm', title: 'Midterm Past Papers', titleAr: 'أسئل سنوات ميد' },
+            { id: 'oop_final', title: 'Final Past Papers', titleAr: 'أسئل فاينل' },
             { id: 'oop_quizzes', title: 'Quizzes', titleAr: 'كويزات' }
         ]
     },
@@ -8925,7 +8925,7 @@ export const quizCategories = [
         ]
     },
     { id: 'psych_basics', name: 'Principles of Psychology', nameAr: 'مبادئ علم النفس', icon: '🧠', color: '#E91E63' },
-    { id: 'applied_english_102', name: 'Applied English 102', nameAr: 'اللغة الإنجليزية التطبيقية 102', icon: '🇬🇧', color: '#3F51B5' },
+    { id: 'applied_english_102', name: 'Applied English 102', nameAr: 'اللغ الإنجليزي التطبيقي 102', icon: '🇬🇧', color: '#3F51B5' },
     {
         id: 'comp_networks_1',
         name: 'Computer Networks 1',
@@ -8940,19 +8940,19 @@ export const quizCategories = [
     {
         id: 'operating_systems',
         name: 'Operating Systems',
-        nameAr: 'نظم تشغيل للهندسة',
+        nameAr: 'نظم تشغيل للهندس',
         icon: '⚙️',
         color: '#FF5722',
         isNew: true,
         parts: [
-            { id: 'os_mid', title: 'Mid Exam', titleAr: 'مادة الميد' },
-            { id: 'os_final', title: 'Final Exam', titleAr: 'مادة الفاينل' }
+            { id: 'os_mid', title: 'Mid Exam', titleAr: 'ماد الميد' },
+            { id: 'os_final', title: 'Final Exam', titleAr: 'ماد الفاينل' }
         ]
     },
     {
         id: 'islam_and_life',
         name: 'Islam and Life',
-        nameAr: 'الإسلام والحياة',
+        nameAr: 'الإسلام والحيا',
         icon: '🕌',
         color: '#4CAF50',
         isNew: true,
@@ -8987,7 +8987,7 @@ export const quizCategories = [
     {
         id: 'entrepreneurship',
         name: 'Entrepreneurship & Innovation',
-        nameAr: 'الريادة والابتكار (باللغة الإنجليزية)',
+        nameAr: 'الرياد والابتكار (باللغ الإنجليزي)',
         icon: '🚀',
         color: '#FFC107',
         forceEnglish: true,
@@ -8997,7 +8997,7 @@ export const quizCategories = [
             { id: 'entrepreneurship_quiz2', title: 'Quiz 2', titleAr: 'الكويز الثاني' },
             { id: 'entrepreneurship_quiz3', title: 'Quiz 3', titleAr: 'الكويز الثالث' },
             { id: 'entrepreneurship_quiz4', title: 'Quiz 4', titleAr: 'الكويز الرابع' },
-            { id: 'entrepreneurship_quiz5', title: 'Quiz 5', titleAr: 'الكويز الخامس' },
+            { id: 'entrepreneurship_quiz5', title: 'Quiz 5', titleAr: 'الكويز الامس' },
             { id: 'entrepreneurship_quiz6', title: 'Quiz 6', titleAr: 'الكويز السادس' },
             { id: 'entrepreneurship_quiz7', title: 'Quiz 7', titleAr: 'الكويز السابع' },
             { id: 'entrepreneurship_quiz8', title: 'Quiz 8', titleAr: 'الكويز الثامن' },
@@ -9018,7 +9018,7 @@ export const quizCategories = [
     {
         id: 'ai_programming',
         name: 'AI Programming',
-        nameAr: 'برمجة الذكاء الاصطناعي',
+        nameAr: 'برمج الذكاء الاصطناعي',
         icon: '🤖',
         color: '#009688',
         isNew: true,
@@ -9029,14 +9029,14 @@ export const quizCategories = [
     {
         id: 'machine_learning',
         name: 'Machine Learning',
-        nameAr: 'تعلم الآلة',
+        nameAr: 'تعلم الآل',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
         isNew: true,
         parts: [
-            { id: 'ml_midterm', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' },
-            { id: 'ml_final', title: 'Final Past Papers', titleAr: 'أسئلة فاينل' },
+            { id: 'ml_midterm', title: 'Midterm Past Papers', titleAr: 'أسئل سنوات ميد' },
+            { id: 'ml_final', title: 'Final Past Papers', titleAr: 'أسئل فاينل' },
             { id: 'ml_quizzes', title: 'Quizzes', titleAr: 'كويزات' }
         ]
     },
@@ -9055,7 +9055,7 @@ export const quizCategories = [
     {
         id: 'ml_lab',
         name: 'Machine Learning Lab',
-        nameAr: 'مختبر تعلم الآلة',
+        nameAr: 'متبر تعلم الآل',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -9067,7 +9067,7 @@ export const quizCategories = [
     {
         id: 'biometrics_security',
         name: 'Biometrics and Security',
-        nameAr: 'أمن وقياسات بيولوجية',
+        nameAr: 'أمن وقياسات بيولوجي',
         icon: '👁️',
         color: '#9C27B0',
         isNew: true,
@@ -9076,19 +9076,19 @@ export const quizCategories = [
             { id: 'biometrics_security_quiz2', title: 'Quiz 2', titleAr: 'الكويز الثاني' },
             { id: 'biometrics_security_quiz3', title: 'Quiz 3', titleAr: 'الكويز الثالث' },
             { id: 'biometrics_security_quiz4', title: 'Quiz 4', titleAr: 'الكويز الرابع' },
-            { id: 'biometrics_security_midterm_expected', title: 'Expected Midterm', titleAr: 'اسئلة ميد توقعية' }
+            { id: 'biometrics_security_midterm_expected', title: 'Expected Midterm', titleAr: 'اسئل ميد توقعي' }
         ]
     },
     {
         id: 'intro_law',
         name: 'Introduction to Law',
-        nameAr: 'مدخل الى علم القانون',
+        nameAr: 'مدل الى علم القانون',
         icon: '⚖️',
         color: '#795548',
         isNew: true,
         parts: [
             { id: 'intro_law_quizzes', title: 'Quizzes', titleAr: 'الكويزات' },
-            { id: 'intro_law_final', title: 'Final Exam', titleAr: 'أسئلة فاينل' }
+            { id: 'intro_law_final', title: 'Final Exam', titleAr: 'أسئل فاينل' }
         ]
     },
     {
@@ -9100,14 +9100,14 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'criminal_law_general_quizzes', title: 'Quizzes', titleAr: 'الكويزات' },
-            { id: 'criminal_law_general_final', title: 'Final Exam', titleAr: 'أسئلة فاينل' }
+            { id: 'criminal_law_general_final', title: 'Final Exam', titleAr: 'أسئل فاينل' }
         ]
     },
     {
         id: 'digital_logic_design',
         name: 'Digital Logic Design',
         nameAr: 'تصميم منطق رقمي',
-        icon: '🧮',
+        icon: '',
         color: '#4CAF50',
         parts: [
             { id: 'digital_logic_design_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' }
@@ -9133,13 +9133,13 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'databases_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' },
-            { id: 'databases_past_years', title: 'Past Year Questions', titleAr: 'أسئلة سنوات' },
+            { id: 'databases_past_years', title: 'Past Year Questions', titleAr: 'أسئل سنوات' },
         ]
     },
     {
         id: 'comp_skills_2_science',
         name: 'Computer Skills 2 for Science Faculties',
-        nameAr: 'مهارات حاسوب 2 لطلبة الكليات العلمية',
+        nameAr: 'مهارات حاسوب 2 لطلب الكليات العلمي',
         icon: '💻',
         color: '#00BCD4',
         isNew: true,
@@ -9150,13 +9150,13 @@ export const quizCategories = [
     {
         id: 'military_science',
         name: 'Military Science',
-        nameAr: 'علوم عسكرية',
+        nameAr: 'علوم عسكري',
         icon: '🎖️',
         color: '#5D4037',
         isNew: true,
         parts: [
-            { id: 'military_science_mid', title: 'Mid Exam', titleAr: 'مادة الميد' },
-            { id: 'military_science_final', title: 'Final Exam', titleAr: 'مادة الفاينل' }
+            { id: 'military_science_mid', title: 'Mid Exam', titleAr: 'ماد الميد' },
+            { id: 'military_science_final', title: 'Final Exam', titleAr: 'ماد الفاينل' }
         ]
     },
     {
@@ -9167,8 +9167,8 @@ export const quizCategories = [
         color: '#FF9800',
         isNew: true,
         parts: [
-            { id: 'prob_stats_mid', title: 'Quiz questions', titleAr: 'أسئلة كويزات' },
-            { id: 'prob_stats_final', title: 'Final Exam', titleAr: 'مادة الفاينل' }
+            { id: 'prob_stats_mid', title: 'Quiz questions', titleAr: 'أسئل كويزات' },
+            { id: 'prob_stats_final', title: 'Final Exam', titleAr: 'ماد الفاينل' }
         ]
     },
     {
@@ -9185,7 +9185,7 @@ export const quizCategories = [
     {
         id: 'df_operating_systems',
         name: 'Operating Systems for Digital Forensics',
-        nameAr: 'نظم تشغيل للتحقيقات الجنائية',
+        nameAr: 'نظم تشغيل للتحقيقات الجنائي',
         icon: '🖥️',
         color: '#3F51B5',
         isNew: true,
@@ -9200,7 +9200,7 @@ export const quizCategories = [
                     { id: 'df_os_quiz2', title: 'Quiz 2', titleAr: 'كويز 2' }
                 ]
             },
-            { id: 'df_operating_systems', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' }
+            { id: 'df_operating_systems', title: 'Midterm Past Papers', titleAr: 'أسئل سنوات ميد' }
         ]
     },
 

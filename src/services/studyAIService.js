@@ -16,21 +16,21 @@ const MODEL = "llama-3.3-70b-versatile";
 
 const buildQuizPrompt = (text, lang, count, type) => {
     const langNote = lang === 'ar'
-        ? 'اكتب الأسئلة والإجابات باللغة العربية الفصحى.'
+        ? 'اكتب الأسئل والإجابات باللغ العربي الفصحى.'
         : 'Write all questions and answers in English.';
 
     const typeInstructions = {
         mcq: lang === 'ar'
-            ? `أنشئ ${count} سؤال اختيار متعدد (MCQ). لكل سؤال: نص السؤال، 4 خيارات (A/B/C/D)، والإجابة الصحيحة.`
+            ? `أنشئ ${count} سؤال اتيار متعدد (MCQ). لكل سؤال: نص السؤال، 4 يارات (A/B/C/D)، والإجاب الصحيح.`
             : `Generate ${count} multiple choice questions (MCQ). For each: question text, 4 options (A/B/C/D), correct answer.`,
         tf: lang === 'ar'
-            ? `أنشئ ${count} سؤال صح أو خطأ. لكل سؤال: عبارة وإجابة (صح/خطأ) مع شرح قصير.`
+            ? `أنشئ ${count} سؤال صح أو طأ. لكل سؤال: عبار وإجاب (صح/طأ) مع شرح قصير.`
             : `Generate ${count} True/False questions. For each: statement, answer (True/False), brief explanation.`,
         essay: lang === 'ar'
-            ? `أنشئ ${count} سؤال مقالي. لكل سؤال: نص السؤال ونموذج إجابة كاملة.`
+            ? `أنشئ ${count} سؤال مقالي. لكل سؤال: نص السؤال ونموذج إجاب كامل.`
             : `Generate ${count} essay questions. For each: question text and a complete model answer.`,
         mixed: lang === 'ar'
-            ? `أنشئ ${count} سؤال متنوع (مزيج من MCQ وصح/خطأ ومقالي). وضح نوع كل سؤال.`
+            ? `أنشئ ${count} سؤال متنوع (مزيج من MCQ وصح/طأ ومقالي). وضح نوع كل سؤال.`
             : `Generate ${count} mixed questions (mix of MCQ, True/False, Essay). Label each type.`,
     };
 
@@ -38,7 +38,7 @@ const buildQuizPrompt = (text, lang, count, type) => {
 
 ${typeInstructions[type]}
 
-أرجع النتيجة بصيغة JSON فقط بدون أي نص خارجه. الصيغة:
+أرجع النتيج بصيغ JSON فقط بدون أي نص ارجه. الصيغ:
 {
   "questions": [
     {
@@ -60,16 +60,16 @@ ${text.slice(0, 6000)}
 
 const buildSummaryPrompt = (text, lang) => {
     if (lang === 'ar') {
-        return `أنت خبير أكاديمي متخصص في تلخيص المواد الجامعية.
-قم بتلخيص النص التالي باللغة العربية الفصحى بشكل منظم وشامل.
+        return `أنت بير أكاديمي متصص في تليص المواد الجامعي.
+قم بتليص النص التالي باللغ العربي الفصحى بشكل منظم وشامل.
 
-أرجع النتيجة بصيغة JSON فقط:
+أرجع النتيج بصيغ JSON فقط:
 {
-  "title": "عنوان مناسب للمادة",
-  "overview": "فقرة تمهيدية قصيرة (2-3 جمل)",
-  "keyPoints": ["نقطة رئيسية 1", "نقطة رئيسية 2", ...],
+  "title": "عنوان مناسب للماد",
+  "overview": "فقر تمهيدي قصير (2-3 جمل)",
+  "keyPoints": ["نقط رئيسي 1", "نقط رئيسي 2", ...],
   "definitions": [{"term": "المصطلح", "definition": "التعريف"}, ...],
-  "conclusion": "خلاصة ختامية"
+  "conclusion": "لاص تامي"
 }
 
 النص:
@@ -98,10 +98,10 @@ ${text.slice(0, 6000)}
 
 const buildMindMapPrompt = (text, lang) => {
     if (lang === 'ar') {
-        return `أنت خبير في إنشاء المخططات الذهنية للمواد الجامعية.
-أنشئ مخططاً ذهنياً منظماً للنص التالي باللغة العربية.
+        return `أنت بير في إنشاء المططات الذهني للمواد الجامعي.
+أنشئ مططاً ذهنياً منظماً للنص التالي باللغ العربي.
 
-أرجع النتيجة بصيغة JSON فقط:
+أرجع النتيج بصيغ JSON فقط:
 {
   "root": "الموضوع الرئيسي",
   "branches": [
@@ -148,24 +148,24 @@ ${text.slice(0, 6000)}
 
 const buildStudyPlanPrompt = (text, lang) => {
     if (lang === 'ar') {
-        return `أنت مرشد أكاديمي خبير في تخطيط الدراسة الجامعية.
-بناءً على النص التالي، أنشئ خطة دراسة مخصصة وعملية باللغة العربية.
+        return `أنت مرشد أكاديمي بير في تطيط الدراس الجامعي.
+بناءً على النص التالي، أنشئ ط دراس مصص وعملي باللغ العربي.
 
-أرجع النتيجة بصيغة JSON فقط:
+أرجع النتيج بصيغ JSON فقط:
 {
-  "subject": "اسم المادة أو الموضوع",
-  "totalDays": عدد الأيام المقترحة,
+  "subject": "اسم الماد أو الموضوع",
+  "totalDays": عدد الأيام المقترح,
   "difficulty": "سهل" | "متوسط" | "صعب",
   "days": [
     {
       "day": 1,
       "title": "عنوان اليوم",
       "topics": ["موضوع 1", "موضوع 2"],
-      "duration": "مدة الدراسة المقترحة",
-      "tips": "نصيحة خاصة لهذا اليوم"
+      "duration": "مد الدراس المقترح",
+      "tips": "نصيح اص لهذا اليوم"
     }
   ],
-  "generalTips": ["نصيحة عامة 1", "نصيحة عامة 2", "نصيحة عامة 3"],
+  "generalTips": ["نصيح عام 1", "نصيح عام 2", "نصيح عام 3"],
   "importantTopics": ["أهم موضوع 1", "أهم موضوع 2"]
 }
 

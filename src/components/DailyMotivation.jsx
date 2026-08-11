@@ -4,16 +4,16 @@ import './DailyMotivation.css';
 
 const QUOTES = {
     ar: [
-        { text: 'النجاح ليس نهاية الطريق، والفشل ليس نهاية الأمل. الشجاعة هي ما يستمر.', author: 'ونستون تشرشل' },
-        { text: 'التعليم هو أقوى سلاح يمكنك استخدامه لتغيير العالم.', author: 'نيلسون مانديلا' },
+        { text: 'النجاح ليس نهاي الطريق، والفشل ليس نهاي الأمل. الشجاع هي ما يستمر.', author: 'ونستون تشرشل' },
+        { text: 'التعليم هو أقوى سلاح يمكنك استدامه لتغيير العالم.', author: 'نيلسون مانديلا' },
         { text: 'لا تقل لم أستطع، بل قل لم أحاول بعد.', author: 'مجهول' },
-        { text: 'كل خبير كان في يوم من الأيام مبتدئاً. لا تخجل من البداية.', author: 'هيلين هايز' },
-        { text: 'الإرادة تتغلب على ما يبدو مستحيلاً.', author: 'مجهول' },
-        { text: 'الدراسة ليست عبئاً، إنها استثمار في نفسك ومستقبلك.', author: 'مجهول' },
-        { text: 'كل يوم جديد هو فرصة جديدة لتكون أفضل مما كنت عليه أمس.', author: 'مجهول' },
-        { text: 'المعرفة قوة، لكن تطبيق المعرفة هو السلطة الحقيقية.', author: 'فرنسيس بيكون' },
-        { text: 'الذكاء هو القدرة على التكيف مع التغيير.', author: 'ستيفن هوكينج' },
-        { text: 'امنح كل يوم فرصة لأن يكون أجمل أيامك.', author: 'مارك توين' },
+        { text: 'كل بير كان في يوم من الأيام مبتدئاً. لا تجل من البداي.', author: 'هيلين هايز' },
+        { text: 'الإراد تتغلب على ما يبدو مستحيلاً.', author: 'مجهول' },
+        { text: 'الدراس ليست عبئاً، إنها استثمار في نفسك ومستقبلك.', author: 'مجهول' },
+        { text: 'كل يوم جديد هو فرص جديد لتكون أفضل مما كنت عليه أمس.', author: 'مجهول' },
+        { text: 'المعرف قو، لكن تطبيق المعرف هو السلط الحقيقي.', author: 'فرنسيس بيكون' },
+        { text: 'الذكاء هو القدر على التكيف مع التغيير.', author: 'ستيفن هوكينج' },
+        { text: 'امنح كل يوم فرص لأن يكون أجمل أيامك.', author: 'مارك توين' },
     ],
     en: [
         { text: 'Success is not final, failure is not fatal: it is the courage to continue that counts.', author: 'Winston Churchill' },
@@ -56,7 +56,7 @@ const DailyMotivation = () => {
         <div className="daily-motivation-card glass-card">
             <div className="motivation-top-bar">
                 <span className="motivation-badge">✨ {isAr ? 'اقتباس اليوم' : "Today's Quote"}</span>
-                <button className="motivation-refresh-btn" onClick={handleRefresh} title={isAr ? 'اقتباس آخر' : 'Next quote'}>
+                <button className="motivation-refresh-btn" onClick={handleRefresh} title={isAr ? 'اقتباس آر' : 'Next quote'}>
                     🔄
                 </button>
             </div>

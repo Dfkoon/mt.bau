@@ -75,7 +75,7 @@ const QRBookingCard = ({
                 <div style={{ marginBottom: '1.2rem' }}>
                     <div style={{ fontSize: '1.8rem', marginBottom: '0.3rem' }}>📦</div>
                     <h3 style={{ margin: 0, color: '#fff', fontSize: '1.1rem', fontWeight: 700 }}>
-                        {isAr ? 'بطاقة استلام الحجز' : 'Booking QR Card'}
+                        {isAr ? 'بطاق استلام الحجز' : 'Booking QR Card'}
                     </h3>
                     <p style={{ margin: '0.3rem 0 0', color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }}>
                         {isAr ? 'أرِ هذا الكود للمنسق عند الاستلام' : 'Show this code to the coordinator on pickup'}
@@ -110,11 +110,11 @@ const QRBookingCard = ({
                     textAlign: 'right'
                 }}>
                     {[
-                        { label: isAr ? '📦 المادة:' : '📦 Material:', value: materialName },
+                        { label: isAr ? '📦 الماد:' : '📦 Material:', value: materialName },
                         { label: isAr ? '👤 الاسم:' : '👤 Student:', value: studentName },
                         { label: isAr ? '🎁 المتبرع:' : '🎁 Donor:', value: donorName },
                         { label: isAr ? '🧑‍💼 المنسق:' : '🧑‍💼 Coordinator:', value: coordinatorName },
-                        { label: isAr ? '📅 الموعد:' : '📅 Date:', value: `${pickupDate || '—'} ${pickupTime ? `الساعة ${pickupTime}` : ''}` },
+                        { label: isAr ? '📅 الموعد:' : '📅 Date:', value: `${pickupDate || '—'} ${pickupTime ? `الساع ${pickupTime}` : ''}` },
                     ].map((row, i) => row.value && (
                         <div key={i} style={{
                             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -143,7 +143,7 @@ const QRBookingCard = ({
                         #{bookingId?.slice(-8)?.toUpperCase() || 'N/A'}
                     </span>
                     <span style={{ fontSize: '0.7rem', color: copied ? '#55efc4' : 'rgba(255,255,255,0.3)' }}>
-                        {copied ? (isAr ? '✅ تم النسخ' : '✅ Copied') : (isAr ? '📋 انسخ' : '📋 Copy')}
+                        {copied ? (isAr ? '✅ تم النس' : '✅ Copied') : (isAr ? '📋 انس' : '📋 Copy')}
                     </span>
                 </div>
 

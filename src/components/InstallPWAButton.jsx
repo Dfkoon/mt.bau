@@ -110,7 +110,7 @@ const InstallPWAButton = ({ isAr = true }) => {
                             📲
                         </span>
                         <span style={{ color: '#ffffff', fontWeight: '700' }}>
-                            {isAr ? 'التثبيت وإنشاء اختصار' : 'Install & Add Shortcut'}
+                            {isAr ? 'التثبيت وإنشاء اتصار' : 'Install & Add Shortcut'}
                         </span>
                     </button>
 
@@ -191,7 +191,7 @@ const InstallPWAButton = ({ isAr = true }) => {
                                     📲
                                 </span>
                                 <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#ffffff', fontWeight: 800 }}>
-                                    {isAr ? 'التثبيت وإنشاء اختصار للتطبيق' : 'Install & Add Shortcut'}
+                                    {isAr ? 'التثبيت وإنشاء اتصار للتطبيق' : 'Install & Add Shortcut'}
                                 </h3>
                             </div>
                             <button
@@ -223,27 +223,27 @@ const InstallPWAButton = ({ isAr = true }) => {
                                 <div style={{ background: 'rgba(255,255,255,0.04)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>1</span>
-                                        <span>{isAr ? 'اضغط على زر المشاركة في أسفل Safari' : 'Tap Share button in Safari'} <strong style={{ color: '#fbbf24' }}>(⎋)</strong></span>
+                                        <span>{isAr ? 'اضغط على زر المشارك في أسفل Safari' : 'Tap Share button in Safari'} <strong style={{ color: '#fbbf24' }}>(⎋)</strong></span>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
-                                        <span>{isAr ? 'اختر "إضافة إلى الشاشة الرئيسية"' : 'Select "Add to Home Screen"'} <strong style={{ color: '#fbbf24' }}>(➕)</strong></span>
+                                        <span>{isAr ? 'اتر "إضاف إلى الشاش الرئيسي"' : 'Select "Add to Home Screen"'} <strong style={{ color: '#fbbf24' }}>(➕)</strong></span>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.95rem', lineHeight: 1.6 }}>
                                 <p style={{ margin: 0, color: 'rgba(255,255,255,0.75)' }}>
-                                    {isAr ? 'خطوات التثبيت المباشرة من متصفح كروم / أندرويد:' : 'Direct installation steps for Chrome:'}
+                                    {isAr ? 'طوات التثبيت المباشر من متصفح كروم / أندرويد:' : 'Direct installation steps for Chrome:'}
                                 </p>
                                 <div style={{ background: 'rgba(255,255,255,0.04)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>1</span>
-                                        <span>{isAr ? 'اضغط على نقاط القائمة الثلاث أعلى المتصفح' : 'Tap menu dots'} <strong style={{ color: '#fbbf24' }}>(⋮)</strong></span>
+                                        <span>{isAr ? 'اضغط على نقاط القائم الثلاث أعلى المتصفح' : 'Tap menu dots'} <strong style={{ color: '#fbbf24' }}>()</strong></span>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
-                                        <span>{isAr ? 'اختر الخيار:' : 'Choose:'} <strong style={{ color: '#4ade80' }}>"التثبيت وإنشاء اختصار" 📲</strong></span>
+                                        <span>{isAr ? 'اتر اليار:' : 'Choose:'} <strong style={{ color: '#4ade80' }}>"التثبيت وإنشاء اتصار" 📲</strong></span>
                                     </div>
                                 </div>
                             </div>

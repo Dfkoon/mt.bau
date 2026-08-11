@@ -17,7 +17,7 @@ const GradingSystem = () => {
                 <div className="hero-overlay"></div>
                 <div className="hero-content">
                     <h1>{isAr ? 'نظام العلامات' : 'Grading System'}</h1>
-                    <p>{isAr ? 'استكشف أنظمة العلامات المختلفة والمعلومات المتعلقة بها' : 'Explore different grading systems and related information'}</p>
+                    <p>{isAr ? 'استكشف أنظم العلامات المتلف والمعلومات المتعلق بها' : 'Explore different grading systems and related information'}</p>
                 </div>
             </section>
 
@@ -32,7 +32,7 @@ const GradingSystem = () => {
                             <span className="announcement-icon">✨</span>
                             <p>
                                 {isAr
-                                    ? 'تم إقرار تعديلات إيجابية على أوزان النقاط لدعم الطلبة وتحفيزهم، اعتباراً من الفصل الدراسي الأول للعام الدراسي 2025/2026.'
+                                    ? 'تم إقرار تعديلات إيجابي على أوزان النقاط لدعم الطلب وتحفيزهم، اعتباراً من الفصل الدراسي الأول للعام الدراسي 2025/2026.'
                                     : 'Positive amendments to grade weights have been approved to support and motivate students, effective from the first semester of the academic year 2025/2026.'}
                             </p>
                         </div>
@@ -40,7 +40,7 @@ const GradingSystem = () => {
                             <span className="announcement-icon">⚠️</span>
                             <p>
                                 {isAr
-                                    ? 'تنبيه: تم رفع وزن علامة (D-) لتخفيف أثرها على المعدل التراكمي، مع التأكيد أنها تبقى علامة رسوب ولا تُعد من علامات النجاح.'
+                                    ? 'تنبيه: تم رفع وزن علام (D-) لتفيف أثرها على المعدل التراكمي، مع التأكيد أنها تبقى علام رسوب ولا تُعد من علامات النجاح.'
                                     : 'Note: The weight of the (D-) grade has been increased to reduce its impact on the GPA, but it remains a failing grade.'}
                             </p>
                         </div>
@@ -65,7 +65,7 @@ const GradingSystem = () => {
                         {isAr ? ')' : ')'}
                     </h3>
                     <p className="section-desc">
-                        {isAr ? 'يوضح الجدول التالي الرموز والنقاط وحالة النجاح وفقاً للتعديلات الأخيرة:' : 'The following table shows symbols, points, and pass status according to the latest amendments:'}
+                        {isAr ? 'يوضح الجدول التالي الرموز والنقاط وحال النجاح وفقاً للتعديلات الأير:' : 'The following table shows symbols, points, and pass status according to the latest amendments:'}
                     </p>
 
                     <div className="table-responsive">
@@ -73,7 +73,7 @@ const GradingSystem = () => {
                             <thead>
                                 <tr>
                                     <th>{isAr ? 'الرمز' : 'Symbol'}</th>
-                                    <th>{isAr ? 'الحالة' : 'Status'}</th>
+                                    <th>{isAr ? 'الحال' : 'Status'}</th>
                                     <th>{isAr ? 'النقاط (الوزن)' : 'Points (Weight)'}</th>
                                 </tr>
                             </thead>
@@ -110,17 +110,17 @@ const GradingSystem = () => {
                 {/* Comparison Table (Old vs New) */}
                 <section className="grading-section glass-card" data-aos="fade-up">
                     <h3>
-                        {isAr ? 'مقارنة الأوزان (القديم vs الجديد)' : 'Weight Comparison (Old vs New)'}
+                        {isAr ? 'مقارن الأوزان (القديم vs الجديد)' : 'Weight Comparison (Old vs New)'}
                     </h3>
                     <p className="section-desc">
-                        {isAr ? 'يوضح الجدول التالي التغييرات الإيجابية التي طرأت على أوزان العلامات:' : 'The following table shows the positive changes in grade weights:'}
+                        {isAr ? 'يوضح الجدول التالي التغييرات الإيجابي التي طرأت على أوزان العلامات:' : 'The following table shows the positive changes in grade weights:'}
                     </p>
 
                     <div className="table-responsive">
                         <table className="grading-table comparison-table">
                             <thead>
                                 <tr>
-                                    <th>{isAr ? 'الفئة' : 'Category'}</th>
+                                    <th>{isAr ? 'الفئ' : 'Category'}</th>
                                     <th>{isAr ? 'الوزن القديم' : 'Old Weight'}</th>
                                     <th className="new-weight-header">{isAr ? 'الوزن الجديد' : 'New Weight'}</th>
                                     <th>{isAr ? 'الفرق' : 'Difference'}</th>
@@ -196,7 +196,7 @@ const GradingSystem = () => {
                             { range: '3.0 – 3.64', labelAr: 'جيد جداً ✨', labelEn: 'Very Good ✨', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)' },
                             { range: '2.5 – 2.99', labelAr: 'جيد 👍', labelEn: 'Good 👍', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' },
                             { range: '2.0 – 2.49', labelAr: 'مقبول ⚠️', labelEn: 'Satisfactory ⚠️', color: '#f97316', bg: 'rgba(249,115,22,0.08)' },
-                            { range: '< 2.0', labelAr: 'خطر أكاديمي ❗', labelEn: 'Academic Warning ❗', color: '#e02b20', bg: 'rgba(224,43,32,0.08)' },
+                            { range: '< 2.0', labelAr: 'طر أكاديمي ❗', labelEn: 'Academic Warning ❗', color: '#e02b20', bg: 'rgba(224,43,32,0.08)' },
                         ].map((s, i) => (
                             <div key={i} className="gpa-status-item" style={{ background: s.bg, borderColor: s.color }}>
                                 <span className="gpa-status-range" style={{ color: s.color }}>{s.range}</span>
@@ -206,7 +206,7 @@ const GradingSystem = () => {
                     </div>
                     <p className="gpa-status-tip">
                         💡 {isAr
-                            ? 'طالب يحتاج معدل ≥ 2.0 للتسجيل الطبيعي. استخدم مخطط المعدل الهدف أعلاه لمعرفة ما تحتاجه.'
+                            ? 'طالب يحتاج معدل ≥ 2.0 للتسجيل الطبيعي. استدم مطط المعدل الهدف أعلاه لمعرف ما تحتاجه.'
                             : 'Students need GPA ≥ 2.0 for normal enrollment. Use the Target GPA Planner above to know what you need.'}
                     </p>
                 </section>

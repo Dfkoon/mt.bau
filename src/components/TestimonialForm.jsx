@@ -17,7 +17,7 @@ const TestimonialForm = () => {
 
     const detectGender = (name) => {
         if (!name) return 'male';
-        const femaleEndings = ['ة', 'ى', 'اء', 'ا'];
+        const femaleEndings = ['', 'ى', 'اء', 'ا'];
         const commonFemaleNames = ['فرح', 'رهف', 'لجين', 'ميس', 'نور', 'شهد'];
         const lastChar = name.trim().slice(-1);
         const lastTwo = name.trim().slice(-2);
@@ -68,7 +68,7 @@ const TestimonialForm = () => {
             const submissionPromise = submitTestimonial({
                 ...formData,
                 role: language === 'ar'
-                    ? `${formData.gender === 'male' ? 'طالب' : 'طالبة'}`
+                    ? `${formData.gender === 'male' ? 'طالب' : 'طالب'}`
                     : `${formData.gender === 'male' ? 'Male' : 'Female'} Student`,
                 language: language,
                 avatar: avatarPath,
@@ -110,7 +110,7 @@ const TestimonialForm = () => {
                 </h3>
                 <p className="form-subtitle">
                     {language === 'ar'
-                        ? 'أخبرنا عن تجربتك مع الموقع'
+                        ? 'أبرنا عن تجربتك مع الموقع'
                         : 'Tell us about your experience with the website'}
                 </p>
 
@@ -120,7 +120,7 @@ const TestimonialForm = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                     >
-                        ✅ {language === 'ar' ? 'شكراً لك! رأيك قيد المراجعة وسيظهر قريباً' : 'Thank you! Your review is pending approval'}
+                        ✅ {language === 'ar' ? 'شكراً لك! رأيك قيد المراجع وسيظهر قريباً' : 'Thank you! Your review is pending approval'}
                     </motion.div>
                 )}
 
@@ -130,7 +130,7 @@ const TestimonialForm = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                     >
-                        ❌ {language === 'ar' ? 'حدث خطأ، يرجى المحاولة مرة أخرى' : 'An error occurred, please try again'}
+                        ❌ {language === 'ar' ? 'حدث طأ، يرجى المحاول مر أرى' : 'An error occurred, please try again'}
                     </motion.div>
                 )}
 
@@ -166,7 +166,7 @@ const TestimonialForm = () => {
                                     className={formData.gender === 'female' ? 'active' : ''}
                                     onClick={() => setFormData({ ...formData, gender: 'female' })}
                                 >
-                                    {language === 'ar' ? 'طالبة' : 'Female'}
+                                    {language === 'ar' ? 'طالب' : 'Female'}
                                 </button>
                             </div>
                         </div>
@@ -175,7 +175,7 @@ const TestimonialForm = () => {
                     <div className="form-row">
                         <div className="form-group full-width">
                             <label htmlFor="major">
-                                {language === 'ar' ? 'التخصص' : 'Major'} *
+                                {language === 'ar' ? 'التصص' : 'Major'} *
                             </label>
                             <input
                                 type="text"

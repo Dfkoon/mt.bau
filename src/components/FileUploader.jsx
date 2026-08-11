@@ -164,12 +164,12 @@ const FileUploader = ({ onClose }) => {
         if (!contributionType) return;
 
         if (!subjectName || subjectName.trim().length < 2) {
-            toast.error(language === 'ar' ? 'يرجى إدخال اسم المادة بشكل صحيح' : 'Please enter a valid subject name');
+            toast.error(language === 'ar' ? 'يرجى إدال اسم الماد بشكل صحيح' : 'Please enter a valid subject name');
             return;
         }
 
         if (contributionType !== 'external_link' && files.length === 0) {
-            toast.error(language === 'ar' ? 'يرجى اختيار ملف واحد على الأقل' : 'Please select at least one file');
+            toast.error(language === 'ar' ? 'يرجى اتيار ملف واحد على الأقل' : 'Please select at least one file');
             return;
         }
 
@@ -210,7 +210,7 @@ const FileUploader = ({ onClose }) => {
             }));
 
             setUploadProgress(10); // Start at 10% after prep
-            setStatusMessage(language === 'ar' ? `جاري رفـع ${files.length} ملفـات بسرعة...` : `Uploading ${files.length} files fast...`);
+            setStatusMessage(language === 'ar' ? `جاري رفـع ${files.length} ملفـات بسرع...` : `Uploading ${files.length} files fast...`);
 
             let completedCount = 0;
             const fileProgresses = new Array(finalizedFiles.length).fill(0);
@@ -253,7 +253,7 @@ const FileUploader = ({ onClose }) => {
                 setErrorDetails(failedResult.messageAr || failedResult.error || 'Unknown error');
                 setStatusMessage(language === 'ar' ? 'فشل رفع بعض الملفات' : 'Some files failed to upload');
                 toast.error(language === 'ar'
-                    ? (failedResult.messageAr || `فشل رفع ${failedCount} ملفات، يرجى المحاولة لاحقاً`)
+                    ? (failedResult.messageAr || `فشل رفع ${failedCount} ملفات، يرجى المحاول لاحقاً`)
                     : (failedResult.messageEn || `Failed to upload ${failedCount} files, please try again`));
                 setIsUploading(false);
             }
@@ -262,8 +262,8 @@ const FileUploader = ({ onClose }) => {
             activeTasks.current.forEach(t => t.cancel?.());
             setStatus('error');
             setErrorDetails(error.friendly?.ar || error.message || 'Upload failed');
-            setStatusMessage(language === 'ar' ? 'حدث خطأ أثناء الرفع' : 'Upload failed');
-            toast.error(language === 'ar' ? (error.friendly?.ar || 'حدث خطأ أثناء الرفع') : (error.friendly?.en || 'Upload failed'));
+            setStatusMessage(language === 'ar' ? 'حدث طأ أثناء الرفع' : 'Upload failed');
+            toast.error(language === 'ar' ? (error.friendly?.ar || 'حدث طأ أثناء الرفع') : (error.friendly?.en || 'Upload failed'));
             setIsUploading(false);
             setUploadProgress(0);
         }
@@ -285,7 +285,7 @@ const FileUploader = ({ onClose }) => {
                 <button className="close-upload-btn" onClick={handleCancel}>×</button>
 
                 <div className="uploader-header">
-                    <h2>{language === 'ar' ? 'مساهمة جديدة 📁' : 'New Contribution 📁'}</h2>
+                    <h2>{language === 'ar' ? 'مساهم جديد 📁' : 'New Contribution 📁'}</h2>
                     <p>{language === 'ar' ? 'ارفع حتى 10 صور أو ملفين PDF' : 'Upload up to 10 images or 2 PDFs'}</p>
                 </div>
 
@@ -303,8 +303,8 @@ const FileUploader = ({ onClose }) => {
                             </h3>
                             <p className="status-desc-large">
                                 {status === 'success'
-                                    ? (language === 'ar' ? 'شكراً لمساهمتك القيمة! ✨' : 'Thank you for your valuable contribution! ✨')
-                                    : (errorDetails || (language === 'ar' ? 'حدث خطأ، يرجى المحاولة لاحقاً' : 'An error occurred, please try again later'))
+                                    ? (language === 'ar' ? 'شكراً لمساهمتك القيم! ✨' : 'Thank you for your valuable contribution! ✨')
+                                    : (errorDetails || (language === 'ar' ? 'حدث طأ، يرجى المحاول لاحقاً' : 'An error occurred, please try again later'))
                                 }
                             </p>
                             {status === 'error' && (
@@ -313,30 +313,30 @@ const FileUploader = ({ onClose }) => {
                                     setIsUploading(false);
                                     setErrorDetails('');
                                 }}>
-                                    {language === 'ar' ? 'إعادة المحاولة 🔄' : 'Try Again 🔄'}
+                                    {language === 'ar' ? 'إعاد المحاول 🔄' : 'Try Again 🔄'}
                                 </button>
                             )}
                         </div>
                     ) : (
                         <>
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'نوع المساهمة (إجباري)' : 'Contribution Type (Mandatory)'}</label>
+                                <label>{language === 'ar' ? 'نوع المساهم (إجباري)' : 'Contribution Type (Mandatory)'}</label>
                                 <select
                                     className="type-select"
                                     value={contributionType}
                                     onChange={(e) => setContributionType(e.target.value)}
                                     disabled={isUploading}
                                 >
-                                    <option value="">{language === 'ar' ? '-- اختر نوع المرفق --' : '-- Select Type --'}</option>
-                                    <option value="past_papers">{language === 'ar' ? 'أسئلة سنوات' : 'Past Papers'}</option>
+                                    <option value="">{language === 'ar' ? '-- اتر نوع المرفق --' : '-- Select Type --'}</option>
+                                    <option value="past_papers">{language === 'ar' ? 'أسئل سنوات' : 'Past Papers'}</option>
                                     <option value="quizzes">{language === 'ar' ? 'كويزات' : 'Quizzes'}</option>
-                                    <option value="summaries">{language === 'ar' ? 'ملخصات' : 'Summaries'}</option>
-                                    <option value="material_pdf">{language === 'ar' ? 'مادة PDF' : 'PDF Material'}</option>
+                                    <option value="summaries">{language === 'ar' ? 'ملصات' : 'Summaries'}</option>
+                                    <option value="material_pdf">{language === 'ar' ? 'ماد PDF' : 'PDF Material'}</option>
                                 </select>
                             </div>
 
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'اسم المادة (إجباري)' : 'Subject Name (Mandatory)'}</label>
+                                <label>{language === 'ar' ? 'اسم الماد (إجباري)' : 'Subject Name (Mandatory)'}</label>
                                 <input
                                     type="text"
                                     placeholder={language === 'ar' ? 'مثال: حاسوب، فيزياء...' : 'e.g. CS, Physics...'}
@@ -348,10 +348,10 @@ const FileUploader = ({ onClose }) => {
                             </div>
 
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'اسمك (اختياري - سيظهر كمساهم)' : 'Your Name (Optional - will show as contributor)'}</label>
+                                <label>{language === 'ar' ? 'اسمك (اتياري - سيظهر كمساهم)' : 'Your Name (Optional - will show as contributor)'}</label>
                                 <input
                                     type="text"
-                                    placeholder={language === 'ar' ? 'مثال: أحمد خالد...' : 'e.g. Ahmed Khaled...'}
+                                    placeholder={language === 'ar' ? 'مثال: أحمد الد...' : 'e.g. Ahmed Khaled...'}
                                     value={studentName}
                                     onChange={(e) => setStudentName(e.target.value)}
                                     disabled={isUploading}
@@ -381,7 +381,7 @@ const FileUploader = ({ onClose }) => {
                                             <span className="drop-icon">📤</span>
                                             <p>{language === 'ar' ? 'اسحب الملفات هنا أو' : 'Drag files here or'}</p>
                                             <label className="file-input-label">
-                                                {language === 'ar' ? 'اختر ملفات' : 'Browse Files'}
+                                                {language === 'ar' ? 'اتر ملفات' : 'Browse Files'}
                                                 <input type="file" onChange={handleFileChange} multiple hidden />
                                             </label>
                                             <span className="file-hint">PDF, PNG, JPG (Max 10MB/file)</span>
@@ -402,7 +402,7 @@ const FileUploader = ({ onClose }) => {
                                             ))}
                                             {!isUploading && files.length < 10 && (
                                                 <label className="add-more-files">
-                                                    + {language === 'ar' ? 'إضافة المزيد' : 'Add More'}
+                                                    + {language === 'ar' ? 'إضاف المزيد' : 'Add More'}
                                                     <input type="file" onChange={handleFileChange} multiple hidden />
                                                 </label>
                                             )}

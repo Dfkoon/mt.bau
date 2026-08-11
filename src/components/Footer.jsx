@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { Link } from 'react-router-dom';
 import AnimatedLogo from './AnimatedLogo';
 import './Footer.css';
 
@@ -29,10 +30,10 @@ const Footer = () => {
                     <div className="footer-links-col">
                         <h3>{t('footer.quicklinks')}</h3>
                         <ul>
-                            <li><a href="#hero">{t('nav.home')}</a></li>
-                            <li><a href="#events">{t('nav.calendar')}</a></li>
-                            <li><a href="#updates">{t('nav.materials')}</a></li>
-                            <li><a href="#services">{t('nav.plans')}</a></li>
+                            <li><Link to="/">{t('nav.home')}</Link></li>
+                            <li><Link to="/calendar">{t('nav.calendar')}</Link></li>
+                            <li><Link to="/materials">{t('nav.materials')}</Link></li>
+                            <li><Link to="/plans">{t('nav.plans')}</Link></li>
                         </ul>
                     </div>
 
@@ -64,7 +65,7 @@ const Footer = () => {
                 <div className="footer-bottom">
                     <p>{t('footer.rights')}</p>
                     <div className="footer-bottom-links">
-                        <a href="#/legal" className="legal-link">{t('nav.legal')}</a>
+                        <Link to="/legal" className="legal-link">{t('nav.legal')}</Link>
                     </div>
                     <div className="developer-tag">{t('footer.dev')}</div>
                 </div>

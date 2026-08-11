@@ -6,10 +6,10 @@ const STORAGE_KEY = 'koon_study_progress_v1';
 
 const PRESET_SUBJECTS = [
     { id: 'math', nameAr: 'تفاضل وتكامل', nameEn: 'Calculus', icon: '📐' },
-    { id: 'phys', nameAr: 'فيزياء عامة', nameEn: 'Physics', icon: '⚛️' },
-    { id: 'prog', nameAr: 'أساسيات البرمجة', nameEn: 'Programming', icon: '💻' },
-    { id: 'arabic', nameAr: 'اللغة العربية', nameEn: 'Arabic', icon: '📖' },
-    { id: 'english', nameAr: 'اللغة الإنجليزية', nameEn: 'English', icon: '🌐' },
+    { id: 'phys', nameAr: 'فيزياء عام', nameEn: 'Physics', icon: '⚛️' },
+    { id: 'prog', nameAr: 'أساسيات البرمج', nameEn: 'Programming', icon: '💻' },
+    { id: 'arabic', nameAr: 'اللغ العربي', nameEn: 'Arabic', icon: '📖' },
+    { id: 'english', nameAr: 'اللغ الإنجليزي', nameEn: 'English', icon: '🌐' },
 ];
 
 const StudyProgressTracker = () => {
@@ -72,8 +72,8 @@ const StudyProgressTracker = () => {
         <div className="progress-tracker-container">
             <div className="tracker-header">
                 <div className="tracker-title">
-                    <h3>📊 {isAr ? 'متتبع تقدم الدراسة الشخصي' : 'Personal Study Progress Tracker'}</h3>
-                    <p>{isAr ? 'راقب مسيرتك الدراسية وتقدمك في مواد الفصل بشكل يومي' : 'Monitor your academic journey and daily study progress per subject'}</p>
+                    <h3>📊 {isAr ? 'متتبع تقدم الدراس الشصي' : 'Personal Study Progress Tracker'}</h3>
+                    <p>{isAr ? 'راقب مسيرتك الدراسي وتقدمك في مواد الفصل بشكل يومي' : 'Monitor your academic journey and daily study progress per subject'}</p>
                 </div>
                 <div className="overall-circle">
                     <svg viewBox="0 0 36 36" className="circular-chart">
@@ -99,7 +99,7 @@ const StudyProgressTracker = () => {
                                 <div>
                                     <span className="subject-tracker-name">{isAr ? subject.nameAr : subject.nameEn}</span>
                                     <span className="sessions-count">
-                                        {isAr ? `${subject.sessions} جلسة دراسية` : `${subject.sessions} sessions`}
+                                        {isAr ? `${subject.sessions} جلس دراسي` : `${subject.sessions} sessions`}
                                         {isGoalReached && <span className="goal-badge">🎯 {isAr ? 'تم!' : 'Done!'}</span>}
                                     </span>
                                 </div>
@@ -148,7 +148,7 @@ const StudyProgressTracker = () => {
                 <form onSubmit={handleAddSubject} className="add-subject-form">
                     <input
                         type="text"
-                        placeholder={isAr ? 'اسم المادة (عربي)' : 'Subject name (EN)'}
+                        placeholder={isAr ? 'اسم الماد (عربي)' : 'Subject name (EN)'}
                         value={isAr ? newSubject.nameAr : newSubject.nameEn}
                         onChange={e => isAr
                             ? setNewSubject({ ...newSubject, nameAr: e.target.value })
@@ -169,7 +169,7 @@ const StudyProgressTracker = () => {
                 </form>
             ) : (
                 <button className="btn-add-tracker-subject" onClick={() => setAddMode(true)}>
-                    ＋ {isAr ? 'إضافة مادة جديدة' : 'Add New Subject'}
+                    ＋ {isAr ? 'إضاف ماد جديد' : 'Add New Subject'}
                 </button>
             )}
         </div>

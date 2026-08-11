@@ -59,9 +59,9 @@ const SuggestionsSection = () => {
             clearTimeout(timeoutId);
             console.error('Error adding document: ', err);
             if (err.message === 'timeout') {
-                setError('تعذر الإرسال. يرجى التحقق من اتصالك بالإنترنت والمحاولة مجدداً.');
+                setError('تعذر الإرسال. يرجى التحقق من اتصالك بالإنترنت والمحاول مجدداً.');
             } else {
-                setError('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.');
+                setError('حدث طأ أثناء الإرسال. يرجى المحاول مر أرى.');
             }
         } finally {
             setIsLoading(false);

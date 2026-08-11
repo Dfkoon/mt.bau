@@ -143,24 +143,26 @@
     flex: 1;
 }
 
-.stat-value {
+.academic-calendar-page .stat-value {
     font-size: 2rem;
     font-weight: 800;
     color: #ffffff;
     line-height: 1;
     margin-bottom: 0.3rem;
+    text-shadow: none;
 }
 
 [data-theme="light"] .stat-value {
     color: var(--text-main);
 }
 
-.stat-label {
+.academic-calendar-page .stat-label {
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.5);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-shadow: none;
 }
 
 [data-theme="light"] .stat-label {

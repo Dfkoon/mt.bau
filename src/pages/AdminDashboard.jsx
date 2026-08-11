@@ -24,6 +24,7 @@ import AdminContributions from '../components/admin/AdminContributions';
 import AdminActivityLog from '../components/admin/AdminActivityLog';
 import AdminChatFAQ from '../components/admin/AdminChatFAQ';
 import AdminCoordinators from '../components/admin/AdminCoordinators';
+import AdminCoordinatorApplications from '../components/admin/AdminCoordinatorApplications';
 import AdminCourseStatusManager from '../components/AdminCourseStatusManager';
 import AdminNotices from '../components/admin/AdminNotices';
 import AdminServiceRequests from '../components/admin/AdminServiceRequests';
@@ -76,17 +77,17 @@ function drawCanvas(canvas, text) {
 
 // ── Path label helper ─────────────────────────────────────────────────
 const PATH_LABELS = {
-  '/': 'الرئيسية',
-  '/materials': 'المواد الدراسية',
-  '/plans': 'الخطط الدراسية',
-  '/quiz': 'الاختبارات',
+  '/': 'الرئيسي',
+  '/materials': 'المواد الدراسي',
+  '/plans': 'الطط الدراسي',
+  '/quiz': 'الاتبارات',
   '/calendar': 'التقويم',
   '/grading': 'الدرجات',
   '/exchange': 'تبادل المواد',
   '/about': 'من نحن',
-  '/faq': 'الأسئلة الشائعة',
+  '/faq': 'الأسئل الشائع',
   '/materials/click': 'مواد (تحميل)',
-  '/quiz/complete': 'اختبار (إتمام)',
+  '/quiz/complete': 'اتبار (إتمام)',
 };
 const getPathLabel = (path, lang) => {
   if (lang === 'ar') {
@@ -104,9 +105,9 @@ const getPathLabel = (path, lang) => {
 // ── Type badge ────────────────────────────────────────────────────────
 function TypeBadge({ type }) {
   const map = {
-    visit: { label: 'زيارة', cls: 'badge-visit', en: 'Visit' },
-    material_view: { label: 'مادة', cls: 'badge-material', en: 'Material' },
-    quiz_completed: { label: 'اختبار', cls: 'badge-quiz', en: 'Quiz' },
+    visit: { label: 'زيار', cls: 'badge-visit', en: 'Visit' },
+    material_view: { label: 'ماد', cls: 'badge-material', en: 'Material' },
+    quiz_completed: { label: 'اتبار', cls: 'badge-quiz', en: 'Quiz' },
   };
   const b = map[type] || { label: type, cls: 'badge-visit', en: type };
   return <span className={`badge ${b.cls}`}>{b.label}</span>;
@@ -150,7 +151,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         feedbackPopupEnabled: newValue,
       }, { merge: true });
       setFeedbackPopupEnabled(newValue);
-      toast.success(isAr ? 'تم تحديث إعداد نافذة التقييم' : 'Feedback popup setting updated');
+      toast.success(isAr ? 'تم تحديث إعداد نافذ التقييم' : 'Feedback popup setting updated');
     } catch (err) {
       console.error('Failed to update feedback popup setting', err);
       toast.error(isAr ? 'فشل تحديث إعدادات النظام' : 'Failed to update system setting');
@@ -190,7 +191,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     }
 
     if (adminUsername.trim().toLowerCase() !== 'admin' || adminPwd !== expectedPass) {
-      setLoginErr(isAr ? 'اسم المستخدم أو كود التحقق غير صحيح' : 'Incorrect username or access code');
+      setLoginErr(isAr ? 'اسم المستدم أو كود التحقق غير صحيح' : 'Incorrect username or access code');
       genCaptcha();
       return;
     }
@@ -246,6 +247,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const [showAdminUploader, setShowAdminUploader] = useState(false);
   const [previewFile, setPreviewFile] = useState(null); // { url, type, name }
   const [selectedGeneralPage, setSelectedGeneralPage] = useState('system_settings');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   // ── Question-edit modal ──
   const [editingReport, setEditingReport] = useState(null);
   const [editForm, setEditForm] = useState({ questionAr: '', questionEn: '', options: [], correctAnswer: '' });
@@ -366,7 +368,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       },
       err => {
         console.error('question_reports read error:', err.code, err.message);
-        toast.error(isAr ? `خطأ في تحميل البلاغات: ${err.code}` : `Reports load error: ${err.code}`);
+        toast.error(isAr ? `طأ في تحميل البلاغات: ${err.code}` : `Reports load error: ${err.code}`);
         setLoading(false);
       }
     );
@@ -476,25 +478,25 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     try {
       await updateDoc(doc(db, 'suggestions', id), { status: 'resolved', read: true });
       toast.success(isAr ? 'تم حل الشكوى' : 'Marked as resolved');
-    } catch { toast.error(isAr ? 'خطأ في التحديث' : 'Update failed'); }
+    } catch { toast.error(isAr ? 'طأ في التحديث' : 'Update failed'); }
   };
 
   const deleteSuggestion = async (id) => {
-    if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسالة؟' : 'Delete this message?')) return;
-    try { await deleteDoc(doc(db, 'suggestions', id)); toast.success(''); } catch { toast.error('خطأ'); }
+    if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسال؟' : 'Delete this message?')) return;
+    try { await deleteDoc(doc(db, 'suggestions', id)); toast.success(''); } catch { toast.error('طأ'); }
   };
 
   const toggleTestimonialApproval = async (id, current) => {
     try {
       await updateDoc(doc(db, 'testimonials', id), { approved: !current });
-      toast.success(isAr ? (current ? 'تم إلغاء الظهور' : 'تم الموافقة') : (current ? 'Hidden' : 'Approved'));
-    } catch { toast.error(isAr ? 'خطأ في التحديث' : 'Update failed'); }
+      toast.success(isAr ? (current ? 'تم إلغاء الظهور' : 'تم الموافق') : (current ? 'Hidden' : 'Approved'));
+    } catch { toast.error(isAr ? 'طأ في التحديث' : 'Update failed'); }
   };
 
   const resolveReport = async (id) => {
     try {
       await updateDoc(doc(db, 'question_reports', id), { status: 'resolved' });
-      toast.success(isAr ? 'تم وضع علامة محلول' : 'Marked resolved');
+      toast.success(isAr ? 'تم وضع علام محلول' : 'Marked resolved');
     } catch (err) {
       console.error('Error resolving report:', err);
       toast.error((isAr ? 'تعذر الحفظ: ' : 'Error: ') + (err.message || err));
@@ -580,7 +582,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       closeEditModal();
     } catch (e) {
       console.error(e);
-      toast.error(isAr ? 'خطأ في الحفظ' : 'Save failed');
+      toast.error(isAr ? 'طأ في الحفظ' : 'Save failed');
     } finally {
       setEditSaving(false);
     }
@@ -607,10 +609,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
           }
         });
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return list;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qManageSubjects, subjectRefreshKey]);
 
   const activeSubject = allSubjects.find(s => s.id === selectedSubjectId);
@@ -648,7 +650,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   const saveSubject = async () => {
     if (!subjectForm.id || !subjectForm.name || !subjectForm.nameAr) {
-      toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامية' : 'Please fill all required fields');
+      toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامي' : 'Please fill all required fields');
       return;
     }
     const subId = subjectForm.id.toLowerCase().trim().replace(/\s+/g, '_');
@@ -668,7 +670,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       const localSubjects = JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}');
       localSubjects[subId] = payload;
       localStorage.setItem('koon_local_quiz_subjects', JSON.stringify(localSubjects));
-    } catch (e) {}
+    } catch (e) { }
 
     // Update state & selection immediately, then force memo refresh
     setQManageSubjects(prev => {
@@ -685,16 +687,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     // Cloud Save to Firestore (awaited)
     try {
       await setDoc(doc(db, 'quiz_subjects', subId), payload);
-      toast.success(isAr ? 'تم حفظ المادة ونشرها في السحابة بنجاح!' : 'Subject saved and published to cloud successfully!');
+      toast.success(isAr ? 'تم حفظ الماد ونشرها في السحاب بنجاح!' : 'Subject saved and published to cloud successfully!');
     } catch (cloudErr) {
       console.error('Cloud save failed for quiz_subjects:', cloudErr);
-      toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم تحفظ بالسحابة بسبب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
+      toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم تحفظ بالسحاب بسبب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
     }
   };
 
   const deleteSubject = async (subId) => {
-    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه المادة؟ سيتم حذف كافة الأجزاء والأسئلة التابعة لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
-    
+    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه الماد؟ سيتم حذف كاف الأجزاء والأسئل التابع لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
+
     setQManageSubjects(prev => prev.filter(s => s.id !== subId));
     if (selectedSubjectId === subId) setSelectedSubjectId('');
 
@@ -702,7 +704,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       const localSubjects = JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}');
       delete localSubjects[subId];
       localStorage.setItem('koon_local_quiz_subjects', JSON.stringify(localSubjects));
-    } catch (e) {}
+    } catch (e) { }
 
     try {
       await deleteDoc(doc(db, 'quiz_subjects', subId));
@@ -719,11 +721,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   const savePart = async () => {
     if (!selectedSubjectId) {
-      toast.error(isAr ? ' يرجى اختيار المادة أولاً' : ' Please select a subject first');
+      toast.error(isAr ? ' يرجى اتيار الماد أولاً' : ' Please select a subject first');
       return;
     }
     if (!partForm.id || !partForm.title || !partForm.titleAr) {
-      toast.error(isAr ? ' يرجى ملء جميع الحقول الإلزامية' : ' Please fill all required fields');
+      toast.error(isAr ? ' يرجى ملء جميع الحقول الإلزامي' : ' Please fill all required fields');
       return;
     }
     const partId = partForm.id.toLowerCase().trim().replace(/\s+/g, '_');
@@ -742,7 +744,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       const localParts = JSON.parse(localStorage.getItem('koon_local_quiz_parts') || '{}');
       localParts[partId] = payload;
       localStorage.setItem('koon_local_quiz_parts', JSON.stringify(localParts));
-    } catch (e) {}
+    } catch (e) { }
 
     // Update state immediately
     setQManageParts(prev => {
@@ -758,15 +760,15 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     // Cloud save to Firestore (awaited)
     try {
       await setDoc(doc(db, 'quiz_parts', partId), payload);
-      toast.success(isAr ? 'تم حفظ الجزء ونشره في السحابة بنجاح!' : 'Quiz part saved and published to cloud successfully!');
+      toast.success(isAr ? 'تم حفظ الجزء ونشره في السحاب بنجاح!' : 'Quiz part saved and published to cloud successfully!');
     } catch (cloudErr) {
       console.error('Cloud save failed for quiz_parts:', cloudErr);
-      toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم يحفظ بالسحابة: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
+      toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم يحفظ بالسحاب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
     }
   };
 
   const deletePart = async (partId) => {
-    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئلة التابعة له!' : 'Are you sure? This will delete all questions in this part!')) return;
+    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئل التابع له!' : 'Are you sure? This will delete all questions in this part!')) return;
 
     // Remove from state immediately
     setQManageParts(prev => prev.filter(p => p.id !== partId));
@@ -777,9 +779,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       const localParts = JSON.parse(localStorage.getItem('koon_local_quiz_parts') || '{}');
       delete localParts[partId];
       localStorage.setItem('koon_local_quiz_parts', JSON.stringify(localParts));
-    } catch (e) {}
+    } catch (e) { }
 
-    toast.success(isAr ? ' تم حذف الجزء وكافة أسئلته' : ' Part and questions deleted');
+    toast.success(isAr ? ' تم حذف الجزء وكاف أسئلته' : ' Part and questions deleted');
 
     // Cloud delete in background
     try {
@@ -822,7 +824,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       if (newType === 'true_false') {
         options = [
           { id: 'a', textAr: 'صح', textEn: 'True' },
-          { id: 'b', textAr: 'خطأ', textEn: 'False' }
+          { id: 'b', textAr: 'طأ', textEn: 'False' }
         ];
         if (correctAnswer !== 'a' && correctAnswer !== 'b') correctAnswer = 'a';
         subQuestions = [];
@@ -949,9 +951,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     // For table, no selection needed — just append
     if (tagType === 'table') {
-      const relName = prompt(isAr ? 'أدخل اسم الجدول / العلاقة (مثال: B):' : 'Enter relation name (e.g. B):');
+      const relName = prompt(isAr ? 'أدل اسم الجدول / العلاق (مثال: B):' : 'Enter relation name (e.g. B):');
       if (relName === null) return;
-      const attrsInput = prompt(isAr ? 'أدخل الحقول مفصولة بفاصلة. ضع نجمة (*) قبل الحقل لتسطيره كمفتاح أساسي (مثال: *s1, b1, x, y):' : 'Enter attributes separated by commas. Put an asterisk (*) before an attribute to underline it (e.g., *s1, b1, x, y):');
+      const attrsInput = prompt(isAr ? 'أدل الحقول مفصول بفاصل. ضع نجم (*) قبل الحقل لتسطيره كمفتاح أساسي (مثال: *s1, b1, x, y):' : 'Enter attributes separated by commas. Put an asterisk (*) before an attribute to underline it (e.g., *s1, b1, x, y):');
       if (attrsInput === null) return;
       const cells = attrsInput.split(',').map(attr => {
         const trimmed = attr.trim();
@@ -1058,7 +1060,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         const file = item.getAsFile();
         if (!file) continue;
 
-        toast(isAr ? 'جاري رفع الصورة الملصقة...' : 'Uploading pasted image...');
+        toast(isAr ? 'جاري رفع الصور الملصق...' : 'Uploading pasted image...');
         try {
           const fd = new FormData();
           fd.append('file', file);
@@ -1079,13 +1081,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 return { ...prev, image2: data.secure_url };
               }
             });
-            toast.success(isAr ? ' تم رفع ولصق الصورة بنجاح!' : ' Image uploaded and pasted!');
+            toast.success(isAr ? ' تم رفع ولصق الصور بنجاح!' : ' Image uploaded and pasted!');
           } else {
-            toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
+            toast.error(isAr ? 'فشل رفع الصور' : 'Image upload failed');
           }
         } catch (err) {
           console.error(err);
-          toast.error(isAr ? 'حدث خطأ أثناء رفع الصورة' : 'Error uploading image');
+          toast.error(isAr ? 'حدث طأ أثناء رفع الصور' : 'Error uploading image');
         }
         break;
       }
@@ -1173,7 +1175,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) {
-      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
       e.target.value = '';
       return;
     }
@@ -1190,7 +1192,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       setOcrProgress(100);
       const parsed = parseOcrText(text);
       if (!parsed) {
-        toast.error(isAr ? 'لم يتم استخراج نص واضح من الصورة' : 'Could not extract clear text from the image');
+        toast.error(isAr ? 'لم يتم استراج نص واضح من الصور' : 'Could not extract clear text from the image');
         return;
       }
       const isArabic = /[\u0600-\u06FF]/.test(parsed.question);
@@ -1204,10 +1206,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
           textEn: isArabic ? '' : opt,
         })) : prev.options,
       }));
-      toast.success(isAr ? ' تم استخراج السؤال بنجاح' : ' Question scanned successfully');
+      toast.success(isAr ? ' تم استراج السؤال بنجاح' : ' Question scanned successfully');
     } catch (err) {
       console.error(err);
-      toast.error(isAr ? 'فشل مسح الصورة ضوئياً' : 'OCR scan failed');
+      toast.error(isAr ? 'فشل مسح الصور ضوئياً' : 'OCR scan failed');
     } finally {
       setOcrScanning(false);
       setOcrProgress(0);
@@ -1220,7 +1222,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const cleaned = raw.replace(/[\u2028\u2029]/g, '\n');
     const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
     if (lines.length < 2) return null;
-    const filtered = lines.filter(l => !/^(select one|choose|اختر|select|answer|إجابة)/i.test(l));
+    const filtered = lines.filter(l => !/^(select one|choose|اتر|select|answer|إجاب)/i.test(l));
     if (filtered.length < 2) return null;
     const question = filtered[0];
     const optionLines = filtered.slice(1).map(l => l.replace(/^[a-d][\).\-\s]+/i, '').trim()).filter(Boolean);
@@ -1233,7 +1235,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
       return;
     }
     try {
@@ -1254,10 +1256,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         img.src = url;
       });
       updateQuestionOption(idx, 'image', compressed);
-      toast.success(isAr ? ' تم تحميل صورة الخيار' : ' Option image loaded');
+      toast.success(isAr ? ' تم تحميل صور اليار' : ' Option image loaded');
     } catch (err) {
       console.error(err);
-      toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+      toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
     }
     e.target.value = '';
   };
@@ -1273,11 +1275,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         if (!file) continue;
 
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+          toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
           return;
         }
 
-        toast(isAr ? 'جاري معالجة ولصق صورة الخيار...' : 'Processing and pasting option image...');
+        toast(isAr ? 'جاري معالج ولصق صور اليار...' : 'Processing and pasting option image...');
         try {
           const compressed = await new Promise((resolve, reject) => {
             const img = new Image();
@@ -1296,10 +1298,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             img.src = url;
           });
           updateQuestionOption(idx, 'image', compressed);
-          toast.success(isAr ? ' تم لصق صورة الخيار بنجاح!' : ' Option image pasted successfully!');
+          toast.success(isAr ? ' تم لصق صور اليار بنجاح!' : ' Option image pasted successfully!');
         } catch (err) {
           console.error(err);
-          toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+          toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
         }
         break;
       }
@@ -1309,20 +1311,20 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const saveQuestion = async () => {
     if (!selectedPartId) return;
     if (!questionForm.questionAr && !questionForm.questionEn) {
-      toast.error(isAr ? 'يرجى إدخال نص السؤال (عربي أو إنجليزي)' : 'Please enter question text');
+      toast.error(isAr ? 'يرجى إدال نص السؤال (عربي أو إنجليزي)' : 'Please enter question text');
       return;
     }
     if (questionForm.type !== 'matching' && questionForm.options.length < 2) {
-      toast.error(isAr ? 'يجب إدخال خيارين على الأقل' : 'Please add at least 2 options');
+      toast.error(isAr ? 'يجب إدال يارين على الأقل' : 'Please add at least 2 options');
       return;
     }
     if (questionForm.type === 'matching') {
       if (questionForm.options.length < 2) {
-        toast.error(isAr ? 'يجب إدخال خيارين على الأقل في قائمة الإجابات' : 'Please add at least 2 answer options');
+        toast.error(isAr ? 'يجب إدال يارين على الأقل في قائم الإجابات' : 'Please add at least 2 answer options');
         return;
       }
       if (questionForm.subQuestions.length < 1) {
-        toast.error(isAr ? 'يجب إدخال جملة فرعية واحدة على الأقل' : 'Please add at least 1 sub-question');
+        toast.error(isAr ? 'يجب إدال جمل فرعي واحد على الأقل' : 'Please add at least 1 sub-question');
         return;
       }
     } else if (questionForm.type === 'multi_select') {
@@ -1332,7 +1334,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         return;
       }
     } else if (!questionForm.correctAnswer && questionForm.type !== 'text') {
-      toast.error(isAr ? 'يرجى اختيار الإجابة الصحيحة' : 'Please select the correct answer');
+      toast.error(isAr ? 'يرجى اتيار الإجاب الصحيح' : 'Please select the correct answer');
       return;
     }
 
@@ -1402,35 +1404,35 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       id: 'system_settings',
       titleAr: 'إعدادات النظام',
       titleEn: 'System Settings',
-      descAr: 'ضبط الإعدادات العامة للموقع والتطبيق.',
+      descAr: 'ضبط الإعدادات العام للموقع والتطبيق.',
       descEn: 'Configure general site and app settings.',
     },
     {
       id: 'user_management',
-      titleAr: 'إدارة المستخدمين',
+      titleAr: 'إدار المستدمين',
       titleEn: 'User Management',
-      descAr: 'عرض وتعديل صلاحيات الموظفين والمستخدمين.',
+      descAr: 'عرض وتعديل صلاحيات الموظفين والمستدمين.',
       descEn: 'View and edit staff and user permissions.',
     },
     {
       id: 'content_management',
-      titleAr: 'إدارة المحتوى',
+      titleAr: 'إدار المحتوى',
       titleEn: 'Content Management',
-      descAr: 'إدارة الصفحات الداخلية والمحتوى العام.',
+      descAr: 'إدار الصفحات الدالي والمحتوى العام.',
       descEn: 'Manage internal pages and general content.',
     },
     {
       id: 'student_contributions',
       titleAr: 'مساهمات الطلاب',
       titleEn: 'Student Contributions',
-      descAr: 'عرض وإدارة المساهمات الواردة من قسم إثراء محتوى مكانك.',
+      descAr: 'عرض وإدار المساهمات الوارد من قسم إثراء محتوى مكانك.',
       descEn: 'View and manage contributions submitted through the content enrichment section.',
     },
     {
       id: 'reports_archive',
       titleAr: 'التقارير والأرشيف',
       titleEn: 'Reports & Archive',
-      descAr: 'مراجعة سجل النظام والتقارير الهامة.',
+      descAr: 'مراجع سجل النظام والتقارير الهام.',
       descEn: 'Review system logs and important reports.',
     },
   ];
@@ -1444,18 +1446,18 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     <div className="admin-login-screen">
       <div className="admin-login-card">
         <div className="admin-login-logo"></div>
-        <h1 className="admin-login-title">{isAr ? 'لوحة التحكم' : 'Admin Dashboard'}</h1>
+        <h1 className="admin-login-title">{isAr ? 'لوح التحكم' : 'Admin Dashboard'}</h1>
         <>
-          <p className="admin-login-subtitle">{isAr ? 'أدخل اسم المستخدم وكود الوصول للمتابعة' : 'Enter username and access code to continue'}</p>
+          <p className="admin-login-subtitle">{isAr ? 'أدل اسم المستدم وكود الوصول للمتابع' : 'Enter username and access code to continue'}</p>
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div className="form-group" style={{ margin: 0 }}>
-              <label className="form-label">{isAr ? 'اسم المستخدم' : 'Username'}</label>
+              <label className="form-label">{isAr ? 'اسم المستدم' : 'Username'}</label>
               <input
                 type="text"
                 className={`form-input${loginErr ? ' input-error-shake' : ''}`}
                 value={adminUsername}
                 onChange={e => { setAdminUsername(e.target.value); setLoginErr(''); }}
-                placeholder={isAr ? 'أدخل اسم المستخدم' : 'Enter username'}
+                placeholder={isAr ? 'أدل اسم المستدم' : 'Enter username'}
                 autoComplete="username"
                 required
               />
@@ -1469,7 +1471,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   className={`form-input${loginErr ? ' input-error-shake' : ''}`}
                   value={adminPwd}
                   onChange={e => { setAdminPwd(e.target.value); setLoginErr(''); }}
-                  placeholder={isAr ? 'أدخل كود الوصول' : 'Enter access code'}
+                  placeholder={isAr ? 'أدل كود الوصول' : 'Enter access code'}
                   autoComplete="current-password"
                   required
                 />
@@ -1477,7 +1479,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   type="button"
                   className="admin-pwd-toggle"
                   onClick={() => setShowAdminPwd(p => !p)}
-                  title={showAdminPwd ? (isAr ? 'إخفاء' : 'Hide') : (isAr ? 'إظهار' : 'Show')}
+                  title={showAdminPwd ? (isAr ? 'إفاء' : 'Hide') : (isAr ? 'إظهار' : 'Show')}
                 >
                   {showAdminPwd ? (
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1513,7 +1515,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   className={`form-input captcha-input-field${captchaErr ? ' input-error-shake' : ''}`}
                   value={captchaInput}
                   onChange={e => { setCaptchaInput(e.target.value); setCaptchaErr(false); }}
-                  placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
+                  placeholder={isAr ? 'أدل الرمز أعلاه' : 'Enter the code above'}
                   autoComplete="off"
                   maxLength="5"
                   required
@@ -1558,16 +1560,17 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const tabs = [
     { id: 'analytics', label: isAr ? 'الإحصائيات' : 'Analytics' },
     { id: 'notices', label: isAr ? '📢 الإعلانات' : '📢 Notices' },
-    { id: 'service_requests', label: isAr ? '🛠️ طلبات الخدمات' : '🛠️ Service Requests' },
-    { id: 'general', label: isAr ? 'الإدارة العامة' : 'General' },
-    { id: 'donations', label: isAr ? 'إدارة التبرعات' : 'Donations' },
-    { id: 'quizzes', label: isAr ? 'الاختبارات' : 'Quizzes' },
+    { id: 'service_requests', label: isAr ? '🛠️ طلبات الدمات' : '🛠️ Service Requests' },
+    { id: 'coordinator_apps', label: isAr ? 'طلبات الانضمام' : 'Coordinator Applications' },
+    { id: 'general', label: isAr ? 'الإدار العام' : 'General' },
+    { id: 'donations', label: isAr ? 'إدار التبرعات' : 'Donations' },
+    { id: 'quizzes', label: isAr ? 'الاتبارات' : 'Quizzes' },
     { id: 'feedback', label: isAr ? 'الآراء والتقييمات' : 'Feedback & Testimonials' },
-    { id: 'courses', label: isAr ? 'إدارة المواد الدراسية' : 'Manage Courses' },
+    { id: 'courses', label: isAr ? 'إدار المواد الدراسي' : 'Manage Courses' },
     { id: 'reports', label: isAr ? 'البلاغات' : 'Reports' },
     { id: 'contributions', label: isAr ? 'المساهمات' : 'Contributions' },
     { id: 'activity', label: isAr ? 'سجل النشاط' : 'Activity' },
-    { id: 'chatfaq', label: isAr ? 'نشمي والأسئلة الشائعة' : 'Nashmi & FAQ' },
+    { id: 'chatfaq', label: isAr ? 'نشمي والأسئل الشائع' : 'Nashmi & FAQ' },
     { id: 'coordinators', label: isAr ? 'المنسقون' : 'Coordinators' },
   ];
 
@@ -1580,21 +1583,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
           <nav className="admin-top-navbar">
             <div className="admin-navbar-container">
               <div className="admin-navbar-logo">
-                {tabs.find(t => t.id === activeTab)?.label || (isAr ? 'لوحة التحكم الشاملة' : 'Admin Dashboard')}
+                <button className="admin-sidebar-toggle" onClick={() => setSidebarOpen(prev => !prev)}>
+                  {sidebarOpen ? '☰' : '☰'}
+                </button>
+                <span>{tabs.find(t => t.id === activeTab)?.label || (isAr ? 'لوح التحكم الشامل' : 'Admin Dashboard')}</span>
               </div>
-
-              <ul className="admin-navbar-links">
-                {tabs.map(t => (
-                  <li key={t.id}>
-                    <button
-                      className={`admin-navbar-btn ${activeTab === t.id ? 'active' : ''}`}
-                      onClick={() => setActiveTab(t.id)}
-                    >
-                      {t.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
 
               <button className="admin-navbar-logout-btn" onClick={() => {
                 sessionStorage.removeItem('exchange_staff');
@@ -1604,43 +1597,65 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 genCaptcha();
                 setLoggedIn(false);
               }}>
-                {isAr ? 'خروج' : 'Logout'}
+                {isAr ? 'روج' : 'Logout'}
               </button>
             </div>
           </nav>
         )}
 
-        <div className={isEmbedded ? "" : "admin-dashboard-inner"}>
+        <div className={isEmbedded ? "" : `admin-dashboard-inner${sidebarOpen ? ' sidebar-open' : ' sidebar-closed'}`}>
+          {!isEmbedded && (
+            <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+              <div className="admin-sidebar-header">
+                <h3>{isAr ? 'القائم' : 'Menu'}</h3>
+                <button className="admin-sidebar-close" onClick={() => setSidebarOpen(false)}>×</button>
+              </div>
+              <ul className="admin-sidebar-links">
+                {tabs.map(t => (
+                  <li key={t.id}>
+                    <button
+                      className={`admin-sidebar-btn ${activeTab === t.id ? 'active' : ''}`}
+                      onClick={() => setActiveTab(t.id)}
+                    >
+                      {t.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          )}
 
           {/* ── KPI Cards ── */}
-          <div className="admin-kpi-row" style={{ marginTop: isEmbedded ? '0' : '2.5rem' }}>
-            <div className="admin-kpi-card">
-              <div className="kpi-icon"></div>
-              <div className="kpi-value">{totalVisits}</div>
-              <div className="kpi-label">{isAr ? 'إجمالي الزيارات' : 'Total Page Views'}</div>
-            </div>
+          {activeTab === 'analytics' && (
+            <div className="admin-kpi-row" style={{ marginTop: isEmbedded ? '0' : '2.5rem' }}>
+              <div className="admin-kpi-card">
+                <div className="kpi-icon"></div>
+                <div className="kpi-value">{totalVisits}</div>
+                <div className="kpi-label">{isAr ? 'إجمالي الزيارات' : 'Total Page Views'}</div>
+              </div>
 
-            <div className="admin-kpi-card">
-              <div className="kpi-icon"></div>
-              <div className="kpi-value">{materialViews}</div>
-              <div className="kpi-label">{isAr ? 'فتح مواد دراسية' : 'Material Opens'}</div>
+              <div className="admin-kpi-card">
+                <div className="kpi-icon"></div>
+                <div className="kpi-value">{materialViews}</div>
+                <div className="kpi-label">{isAr ? 'فتح مواد دراسي' : 'Material Opens'}</div>
+              </div>
+              <div className="admin-kpi-card">
+                <div className="kpi-icon"></div>
+                <div className="kpi-value">{quizCompletions}</div>
+                <div className="kpi-label">{isAr ? 'اتبارات مكتمل' : 'Quizzes Completed'}</div>
+              </div>
+              <div className="admin-kpi-card">
+                <div className="kpi-icon"></div>
+                <div className="kpi-value">{suggestions.length}</div>
+                <div className="kpi-label">{isAr ? 'رسائل واقتراحات' : 'Suggestions'}</div>
+              </div>
+              <div className="admin-kpi-card">
+                <div className="kpi-icon"></div>
+                <div className="kpi-value">{reports.filter(r => r.status === 'pending').length}</div>
+                <div className="kpi-label">{isAr ? 'بلاغات معلّق' : 'Pending Reports'}</div>
+              </div>
             </div>
-            <div className="admin-kpi-card">
-              <div className="kpi-icon"></div>
-              <div className="kpi-value">{quizCompletions}</div>
-              <div className="kpi-label">{isAr ? 'اختبارات مكتملة' : 'Quizzes Completed'}</div>
-            </div>
-            <div className="admin-kpi-card">
-              <div className="kpi-icon"></div>
-              <div className="kpi-value">{suggestions.length}</div>
-              <div className="kpi-label">{isAr ? 'رسائل واقتراحات' : 'Suggestions'}</div>
-            </div>
-            <div className="admin-kpi-card">
-              <div className="kpi-icon"></div>
-              <div className="kpi-value">{reports.filter(r => r.status === 'pending').length}</div>
-              <div className="kpi-label">{isAr ? 'بلاغات معلّقة' : 'Pending Reports'}</div>
-            </div>
-          </div>
+          )}
 
           {/* ══════════════════════════════════════════════════════ */}
           {/* TAB: Analytics */}
@@ -1655,6 +1670,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
           {/* ══════════════════════════════════════════════════════ */}
           {/* TAB: Service Requests */}
           {/* ══════════════════════════════════════════════════════ */}
+          {activeTab === 'coordinator_apps' && <AdminCoordinatorApplications />}
           {activeTab === 'service_requests' && <AdminServiceRequests />}
 
           {/* ══════════════════════════════════════════════════════ */}
@@ -1709,9 +1725,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {/* Column 1: Subjects List */}
                 <div className="qmanage-column subjects-col">
                   <div className="qmanage-col-header">
-                    <h4> {isAr ? 'المواد الدراسية' : 'Subjects'}</h4>
+                    <h4> {isAr ? 'المواد الدراسي' : 'Subjects'}</h4>
                     <button className="qmanage-add-btn" onClick={() => setShowAddSubjectModal(true)}>
-                      {isAr ? 'مادة جديدة' : 'New Subject'}
+                      {isAr ? 'ماد جديد' : 'New Subject'}
                     </button>
                   </div>
                   <div className="qmanage-list">
@@ -1733,7 +1749,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                           <button
                             className="qmanage-item-delete-btn"
                             onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
-                            title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
+                            title={isAr ? 'حذف الماد بالكامل' : 'Delete entire subject'}
                           >
 
                           </button>
@@ -1746,21 +1762,21 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {/* Column 2: Quiz Parts */}
                 <div className="qmanage-column parts-col">
                   <div className="qmanage-col-header">
-                    <h4> {isAr ? 'الأجزاء / الاختبارات' : 'Quizzes / Parts'}</h4>
+                    <h4> {isAr ? 'الأجزاء / الاتبارات' : 'Quizzes / Parts'}</h4>
                     {selectedSubjectId ? (
                       <button className="qmanage-add-btn" onClick={() => setShowAddPartModal(true)}>
-                        {isAr ? 'اختبار جديد' : 'New Quiz'}
+                        {isAr ? 'اتبار جديد' : 'New Quiz'}
                       </button>
                     ) : (
                       <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {isAr ? 'اختر مادة أولاً' : 'Select a subject first'}
+                        {isAr ? 'اتر ماد أولاً' : 'Select a subject first'}
                       </span>
                     )}
                   </div>
                   <div className="qmanage-list">
                     {selectedSubjectId ? (
                       allParts.length === 0 ? (
-                        <div className="qmanage-empty">{isAr ? 'لا توجد اختبارات مضافة بعد' : 'No quiz parts yet'}</div>
+                        <div className="qmanage-empty">{isAr ? 'لا توجد اتبارات مضاف بعد' : 'No quiz parts yet'}</div>
                       ) : (
                         allParts.map(part => (
                           <div
@@ -1785,7 +1801,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         ))
                       )
                     ) : (
-                      <div className="qmanage-empty">{isAr ? 'يرجى اختيار مادة من اليمين' : 'Please select a subject from left'}</div>
+                      <div className="qmanage-empty">{isAr ? 'يرجى اتيار ماد من اليمين' : 'Please select a subject from left'}</div>
                     )}
                   </div>
                 </div>
@@ -1793,21 +1809,21 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {/* Column 3: Questions List */}
                 <div className="qmanage-column questions-col">
                   <div className="qmanage-col-header">
-                    <h4> {isAr ? 'أسئلة الاختبار' : 'Questions List'}</h4>
+                    <h4> {isAr ? 'أسئل الاتبار' : 'Questions List'}</h4>
                     {selectedPartId ? (
                       <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
-                        {isAr ? 'إضافة سؤال' : 'New Question'}
+                        {isAr ? 'إضاف سؤال' : 'New Question'}
                       </button>
                     ) : (
                       <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {isAr ? 'اختر اختباراً أولاً' : 'Select a quiz first'}
+                        {isAr ? 'اتر اتباراً أولاً' : 'Select a quiz first'}
                       </span>
                     )}
                   </div>
                   <div className="qmanage-list">
                     {selectedPartId ? (
                       allQuestions.length === 0 ? (
-                        <div className="qmanage-empty">{isAr ? 'لا توجد أسئلة في هذا الجزء بعد' : 'No questions in this part yet'}</div>
+                        <div className="qmanage-empty">{isAr ? 'لا توجد أسئل في هذا الجزء بعد' : 'No questions in this part yet'}</div>
                       ) : (
                         allQuestions.map((q, idx) => (
                           <div key={q.id || idx} className="qmanage-question-card">
@@ -1852,7 +1868,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         ))
                       )
                     ) : (
-                      <div className="qmanage-empty">{isAr ? 'يرجى اختيار جزء/اختبار لعرض أسئلته' : 'Please select a quiz to see questions'}</div>
+                      <div className="qmanage-empty">{isAr ? 'يرجى اتيار جزء/اتبار لعرض أسئلته' : 'Please select a quiz to see questions'}</div>
                     )}
                   </div>
                 </div>
@@ -1880,7 +1896,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             </div>
 
             <div className="qedit-title">
-              {isAr ? 'تعديل السؤال والخيارات' : 'Edit Question & Options'}
+              {isAr ? 'تعديل السؤال واليارات' : 'Edit Question & Options'}
             </div>
 
             <div className="qedit-body">
@@ -1896,7 +1912,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   onChange={e => setEditForm(prev => ({ ...prev, questionAr: e.target.value }))}
                   dir="rtl"
                   rows={3}
-                  placeholder={isAr ? 'اكتب السؤال بالعربية...' : 'Arabic question text...'}
+                  placeholder={isAr ? 'اكتب السؤال بالعربي...' : 'Arabic question text...'}
                 />
               </div>
 
@@ -1919,7 +1935,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
                 {/* Image 1 */}
                 <div className="qedit-field" style={{ flex: '1 1 200px', margin: 0 }}>
-                  <label className="qedit-label"> {isAr ? 'صورة السؤال الأولى (اختياري)' : 'Question Image 1 (optional)'}</label>
+                  <label className="qedit-label"> {isAr ? 'صور السؤال الأولى (اتياري)' : 'Question Image 1 (optional)'}</label>
                   <input
                     ref={quizImageInputRef}
                     type="file"
@@ -1929,7 +1945,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       if (file.size > 10 * 1024 * 1024) {
-                        toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                        toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                         return;
                       }
                       setQuizImageUploading(true);
@@ -1953,10 +1969,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         });
                         setQuizImageProgress(100);
                         setQuestionForm(prev => ({ ...prev, image: compressed }));
-                        toast.success(isAr ? ' تم تحميل الصورة الأولى بنجاح' : ' Image 1 loaded successfully');
+                        toast.success(isAr ? ' تم تحميل الصور الأولى بنجاح' : ' Image 1 loaded successfully');
                       } catch (err) {
                         console.error(err);
-                        toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                        toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
                       } finally {
                         setQuizImageUploading(false);
                         setQuizImageProgress(0);
@@ -1967,7 +1983,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   {!questionForm.image && !quizImageUploading && (
                     <div className="qedit-image-dropzone" onClick={() => quizImageInputRef.current?.click()}>
                       <span style={{ fontSize: '1.5rem' }}></span>
-                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاختيار صورة 1' : 'Click to choose image 1'}</p>
+                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاتيار صور 1' : 'Click to choose image 1'}</p>
                     </div>
                   )}
                   {quizImageUploading && (
@@ -1991,7 +2007,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
                 {/* Image 2 */}
                 <div className="qedit-field" style={{ flex: '1 1 200px', margin: 0 }}>
-                  <label className="qedit-label"> {isAr ? 'صورة السؤال الثانية (اختياري)' : 'Question Image 2 (optional)'}</label>
+                  <label className="qedit-label"> {isAr ? 'صور السؤال الثاني (اتياري)' : 'Question Image 2 (optional)'}</label>
                   <input
                     ref={quizImage2InputRef}
                     type="file"
@@ -2001,7 +2017,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       if (file.size > 10 * 1024 * 1024) {
-                        toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                        toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                         return;
                       }
                       setQuizImage2Uploading(true);
@@ -2025,10 +2041,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         });
                         setQuizImage2Progress(100);
                         setQuestionForm(prev => ({ ...prev, image2: compressed }));
-                        toast.success(isAr ? ' تم تحميل الصورة الثانية بنجاح' : ' Image 2 loaded successfully');
+                        toast.success(isAr ? ' تم تحميل الصور الثاني بنجاح' : ' Image 2 loaded successfully');
                       } catch (err) {
                         console.error(err);
-                        toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                        toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
                       } finally {
                         setQuizImage2Uploading(false);
                         setQuizImage2Progress(0);
@@ -2039,7 +2055,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   {!questionForm.image2 && !quizImage2Uploading && (
                     <div className="qedit-image-dropzone" onClick={() => quizImage2InputRef.current?.click()}>
                       <span style={{ fontSize: '1.5rem' }}></span>
-                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاختيار صورة 2' : 'Click to choose image 2'}</p>
+                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاتيار صور 2' : 'Click to choose image 2'}</p>
                     </div>
                   )}
                   {quizImage2Uploading && (
@@ -2065,7 +2081,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
               {/* Options — with add/delete */}
               <div className="qedit-field">
                 <label className="qedit-label">
-                  {isAr ? 'الخيارات — اختر الإجابة الصحيحة' : 'Options — select the correct answer'}
+                  {isAr ? 'اليارات — اتر الإجاب الصحيح' : 'Options — select the correct answer'}
                 </label>
                 <div className="qedit-options-list">
                   {editForm.options.map((opt, idx) => (
@@ -2087,12 +2103,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                             checked={editForm.correctAnswer === opt.id}
                             onChange={() => setEditForm(prev => ({ ...prev, correctAnswer: opt.id }))}
                           />
-                          {isAr ? 'الإجابة الصحيحة ' : 'Correct Answer '}
+                          {isAr ? 'الإجاب الصحيح ' : 'Correct Answer '}
                         </label>
                         <button
                           className="qedit-opt-delete"
                           onClick={() => deleteOption(idx)}
-                          title={isAr ? 'حذف الخيار' : 'Delete option'}
+                          title={isAr ? 'حذف اليار' : 'Delete option'}
                         ></button>
                       </div>
                       {/* Arabic option text */}
@@ -2101,7 +2117,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                           className="qedit-opt-input"
                           value={opt.textAr || ''}
                           onChange={e => updateOption(idx, 'textAr', e.target.value)}
-                          placeholder={isAr ? 'نص الخيار (عربي)' : 'Option text (AR)'}
+                          placeholder={isAr ? 'نص اليار (عربي)' : 'Option text (AR)'}
                           dir="rtl"
                         />
                       )}
@@ -2118,14 +2134,14 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 </div>
                 {/* Add Option Button */}
                 <button className="qedit-add-option" onClick={addOption}>
-                  + {isAr ? 'إضافة خيار جديد' : 'Add New Option'}
+                  + {isAr ? 'إضاف يار جديد' : 'Add New Option'}
                 </button>
               </div>
 
               {/* Question Image — file upload from device */}
               <div className="qedit-field">
                 <label className="qedit-label">
-                  {isAr ? 'صورة السؤال (اختياري)' : 'Question Image (optional)'}
+                  {isAr ? 'صور السؤال (اتياري)' : 'Question Image (optional)'}
                 </label>
 
                 {/* Hidden file input — compresses and stores as base64 */}
@@ -2138,7 +2154,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
                     if (file.size > 10 * 1024 * 1024) {
-                      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                       return;
                     }
                     setImageUploading(true);
@@ -2163,10 +2179,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       });
                       setImageUploadProgress(100);
                       setEditForm(prev => ({ ...prev, image: compressed }));
-                      toast.success(isAr ? ' تم تحميل الصورة بنجاح' : ' Image loaded successfully');
+                      toast.success(isAr ? ' تم تحميل الصور بنجاح' : ' Image loaded successfully');
                     } catch (err) {
                       console.error(err);
-                      toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                      toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
                     } finally {
                       setImageUploading(false);
                       setImageUploadProgress(0);
@@ -2183,7 +2199,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   >
                     <span style={{ fontSize: '2rem' }}></span>
                     <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>
-                      {isAr ? 'اضغط لاختيار صورة من جهازك' : 'Click to choose an image from your device'}
+                      {isAr ? 'اضغط لاتيار صور من جهازك' : 'Click to choose an image from your device'}
                     </p>
                     <p style={{ margin: '0.2rem 0 0', fontSize: '0.78rem', opacity: 0.5 }}>
                       {isAr ? 'حد أقصى 5 ميجابايت' : 'Max 5MB'}
@@ -2216,7 +2232,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         style={{ width: 'auto', padding: '0.3rem 0.8rem' }}
                         onClick={() => imageInputRef.current?.click()}
                       >
-                        {isAr ? 'تغيير الصورة' : 'Change Image'}
+                        {isAr ? 'تغيير الصور' : 'Change Image'}
                       </button>
                       <button
                         className="qedit-opt-delete"
@@ -2249,12 +2265,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         <div className="qedit-overlay" onClick={() => setShowAddSubjectModal(false)}>
           <div className="qedit-modal" onClick={e => e.stopPropagation()}>
             <div className="qedit-header">
-              <span className="qedit-badge-quiz">{isAr ? 'إضافة مادة جديدة' : 'Add New Subject'}</span>
+              <span className="qedit-badge-quiz">{isAr ? 'إضاف ماد جديد' : 'Add New Subject'}</span>
               <button className="qedit-close" onClick={() => setShowAddSubjectModal(false)}></button>
             </div>
             <div className="qedit-body">
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'رمز المادة (ID فريد بالإنجليزية)' : 'Subject ID (unique, e.g. networks_2)'}</label>
+                <label className="qedit-label">{isAr ? 'رمز الماد (ID فريد بالإنجليزي)' : 'Subject ID (unique, e.g. networks_2)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.id}
@@ -2263,7 +2279,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'اسم المادة باللغة العربية' : 'Subject Name (Arabic)'}</label>
+                <label className="qedit-label">{isAr ? 'اسم الماد باللغ العربي' : 'Subject Name (Arabic)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.nameAr}
@@ -2273,7 +2289,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'اسم المادة باللغة الإنجليزية' : 'Subject Name (English)'}</label>
+                <label className="qedit-label">{isAr ? 'اسم الماد باللغ الإنجليزي' : 'Subject Name (English)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.name}
@@ -2283,7 +2299,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
               </div>
               <div className="qedit-field" style={{ display: 'flex', gap: '1rem' }}>
                 <div style={{ flex: 1 }}>
-                  <label className="qedit-label">{isAr ? 'أيقونة (Emoji)' : 'Icon (Emoji)'}</label>
+                  <label className="qedit-label">{isAr ? 'أيقون (Emoji)' : 'Icon (Emoji)'}</label>
                   <input
                     className="qedit-opt-input"
                     value={subjectForm.icon}
@@ -2303,13 +2319,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 </div>
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'لغة الاختبار للمساق' : 'Quiz Language Mode'}</label>
+                <label className="qedit-label">{isAr ? 'لغ الاتبار للمساق' : 'Quiz Language Mode'}</label>
                 <select
                   className="qedit-opt-input"
                   value={subjectForm.languageMode || 'both'}
                   onChange={e => setSubjectForm(prev => ({ ...prev, languageMode: e.target.value }))}
                 >
-                  <option value="both">{isAr ? 'ثنائي اللغة (عربي + إنجليزي)' : 'Bilingual (Arabic + English)'}</option>
+                  <option value="both">{isAr ? 'ثنائي اللغ (عربي + إنجليزي)' : 'Bilingual (Arabic + English)'}</option>
                   <option value="en">{isAr ? 'إنجليزي فقط' : 'English Only'}</option>
                   <option value="ar">{isAr ? 'عربي فقط' : 'Arabic Only'}</option>
                 </select>
@@ -2317,7 +2333,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             </div>
             <div className="qedit-footer">
               <button className="qedit-btn-cancel" onClick={() => setShowAddSubjectModal(false)}>{isAr ? 'إلغاء' : 'Cancel'}</button>
-              <button className="qedit-btn-save" onClick={saveSubject}> {isAr ? 'حفظ المادة' : 'Save Subject'}</button>
+              <button className="qedit-btn-save" onClick={saveSubject}> {isAr ? 'حفظ الماد' : 'Save Subject'}</button>
             </div>
           </div>
         </div>
@@ -2328,12 +2344,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         <div className="qedit-overlay" onClick={() => setShowAddPartModal(false)}>
           <div className="qedit-modal" onClick={e => e.stopPropagation()}>
             <div className="qedit-header">
-              <span className="qedit-badge-quiz">{isAr ? 'إضافة اختبار/جزء جديد' : 'Add New Quiz / Part'}</span>
+              <span className="qedit-badge-quiz">{isAr ? 'إضاف اتبار/جزء جديد' : 'Add New Quiz / Part'}</span>
               <button className="qedit-close" onClick={() => setShowAddPartModal(false)}></button>
             </div>
             <div className="qedit-body">
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'رمز الجزء (ID فريد بالإنجليزية)' : 'Quiz ID (unique, e.g. networks_2_quiz1)'}</label>
+                <label className="qedit-label">{isAr ? 'رمز الجزء (ID فريد بالإنجليزي)' : 'Quiz ID (unique, e.g. networks_2_quiz1)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={partForm.id}
@@ -2342,17 +2358,17 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغة العربية' : 'Quiz Title (Arabic)'}</label>
+                <label className="qedit-label">{isAr ? 'عنوان الاتبار باللغ العربي' : 'Quiz Title (Arabic)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={partForm.titleAr}
                   onChange={e => setPartForm(prev => ({ ...prev, titleAr: e.target.value }))}
-                  placeholder="مثال: أسئلة سنوات ميد"
+                  placeholder="مثال: أسئل سنوات ميد"
                   dir="rtl"
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغة الإنجليزية' : 'Quiz Title (English)'}</label>
+                <label className="qedit-label">{isAr ? 'عنوان الاتبار باللغ الإنجليزي' : 'Quiz Title (English)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={partForm.title}
@@ -2363,7 +2379,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             </div>
             <div className="qedit-footer">
               <button className="qedit-btn-cancel" onClick={() => setShowAddPartModal(false)}>{isAr ? 'إلغاء' : 'Cancel'}</button>
-              <button className="qedit-btn-save" onClick={savePart}> {isAr ? 'حفظ الاختبار' : 'Save Quiz'}</button>
+              <button className="qedit-btn-save" onClick={savePart}> {isAr ? 'حفظ الاتبار' : 'Save Quiz'}</button>
             </div>
           </div>
         </div>
@@ -2376,7 +2392,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             <div className="qedit-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1 }}>
                 <span className="qedit-badge-quiz">
-                  {editingQuestion ? (isAr ? 'تعديل سؤال' : 'Edit Question') : (isAr ? 'إضافة سؤال جديد' : 'Add New Question')}
+                  {editingQuestion ? (isAr ? 'تعديل سؤال' : 'Edit Question') : (isAr ? 'إضاف سؤال جديد' : 'Add New Question')}
                 </span>
                 {editingQuestion && (() => {
                   const qIdx = allQuestions.findIndex(q => q.id === editingQuestion.id);
@@ -2434,17 +2450,17 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     value={questionForm.type}
                     onChange={e => handleQuestionTypeChange(e.target.value)}
                   >
-                    <option value="mcq">{isAr ? 'اختيار من متعدد (MCQ)' : 'Multiple Choice (MCQ)'}</option>
-                    <option value="multi_select">{isAr ? ' اختيار متعدد الإجابات (Multi-Select)' : ' Multi-Select (Multiple Correct)'}</option>
-                    <option value="true_false">{isAr ? 'صح أم خطأ (True/False)' : 'True / False'}</option>
-                    <option value="matching">{isAr ? 'تعبئة الفراغات بقائمة (Matching)' : 'Fill in the Blank (Matching)'}</option>
-                    <option value="short_answer">{isAr ? 'إجابة قصيرة (Short Answer)' : 'Short Answer'}</option>
+                    <option value="mcq">{isAr ? 'اتيار من متعدد (MCQ)' : 'Multiple Choice (MCQ)'}</option>
+                    <option value="multi_select">{isAr ? ' اتيار متعدد الإجابات (Multi-Select)' : ' Multi-Select (Multiple Correct)'}</option>
+                    <option value="true_false">{isAr ? 'صح أم طأ (True/False)' : 'True / False'}</option>
+                    <option value="matching">{isAr ? 'تعبئ الفراغات بقائم (Matching)' : 'Fill in the Blank (Matching)'}</option>
+                    <option value="short_answer">{isAr ? 'إجاب قصير (Short Answer)' : 'Short Answer'}</option>
                     <option value="text">{isAr ? 'مقالي (Essay)' : 'Essay / Text'}</option>
                   </select>
                 </div>
               </div>
               <div className="qedit-field" style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
-                {isAr ? 'استخدم $...$ أو $$...$$ للرياضيات. أمثلة: $x^2$, $\sqrt{x}$, $\cos x$, $\frac{a}{b}$، ويمكن كتابة القسمة الطويلة بنمط الكسر.' : 'Use $...$ or $$...$$ for math. Examples: $x^2$, $\sqrt{x}$, $\cos x$, $\frac{a}{b}$, and long division can be written as a fraction.'}
+                {isAr ? 'استدم $...$ أو $$...$$ للرياضيات. أمثل: $x^2$, $\sqrt{x}$, $\cos x$, $\frac{a}{b}$، ويمكن كتاب القسم الطويل بنمط الكسر.' : 'Use $...$ or $$...$$ for math. Examples: $x^2$, $\sqrt{x}$, $\cos x$, $\frac{a}{b}$, and long division can be written as a fraction.'}
               </div>
               <div className="qedit-field">
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.55rem' }}>
@@ -2462,7 +2478,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     disabled={ocrScanning}
                     style={{ padding: '0.28rem 0.6rem', fontSize: '0.75rem' }}
                   >
-                    {ocrScanning ? (isAr ? 'جاري المسح...' : 'Scanning...') : (isAr ? ' مسح من صورة' : ' Scan from image')}
+                    {ocrScanning ? (isAr ? 'جاري المسح...' : 'Scanning...') : (isAr ? ' مسح من صور' : ' Scan from image')}
                   </button>
                   {ocrScanning && (
                     <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
@@ -2474,7 +2490,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     type="button"
                     className="qmanage-add-btn"
                     style={{ padding: '0.28rem 0.6rem', fontSize: '0.75rem', background: 'rgba(139,92,246,0.15)', borderColor: 'rgba(139,92,246,0.4)', color: '#c4b5fd' }}
-                    title={isAr ? 'الصق صورة من الحافظة (Ctrl+V)' : 'Paste image from clipboard (Ctrl+V)'}
+                    title={isAr ? 'الصق صور من الحافظ (Ctrl+V)' : 'Paste image from clipboard (Ctrl+V)'}
                     onClick={async () => {
                       try {
                         const items = await navigator.clipboard.read();
@@ -2489,43 +2505,43 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                             fd.append('file', file);
                             fd.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'zkqqznab');
                             fd.append('folder', 'quiz_images');
-                            toast(isAr ? 'جاري رفع الصورة...' : 'Uploading image...');
+                            toast(isAr ? 'جاري رفع الصور...' : 'Uploading image...');
                             const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'yp11vyap'}/image/upload`, { method: 'POST', body: fd });
                             const data = await res.json();
                             if (data.secure_url) {
                               setQuestionForm(prev => ({ ...prev, image: data.secure_url }));
-                              toast.success(isAr ? ' تم لصق الصورة!' : ' Image pasted!');
+                              toast.success(isAr ? ' تم لصق الصور!' : ' Image pasted!');
                             } else {
-                              toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
+                              toast.error(isAr ? 'فشل رفع الصور' : 'Image upload failed');
                             }
                             break;
                           }
                         }
-                        if (!found) toast.error(isAr ? 'لا توجد صورة في الحافظة' : 'No image found in clipboard');
+                        if (!found) toast.error(isAr ? 'لا توجد صور في الحافظ' : 'No image found in clipboard');
                       } catch {
-                        toast.error(isAr ? 'تعذّر قراءة الحافظة — جرّب Ctrl+V في حقل السؤال' : 'Cannot read clipboard — try Ctrl+V in the question field');
+                        toast.error(isAr ? 'تعذّر قراء الحافظ — جرّب Ctrl+V في حقل السؤال' : 'Cannot read clipboard — try Ctrl+V in the question field');
                       }
                     }}
                   >
-                    {isAr ? 'لصق صورة' : 'Paste image'}
+                    {isAr ? 'لصق صور' : 'Paste image'}
                   </button>
                   {/* ── Paste text from clipboard ── */}
                   <button
                     type="button"
                     className="qmanage-add-btn"
                     style={{ padding: '0.28rem 0.6rem', fontSize: '0.75rem', background: 'rgba(16,185,129,0.1)', borderColor: 'rgba(16,185,129,0.35)', color: '#6ee7b7' }}
-                    title={isAr ? 'الصق نص من الحافظة في حقل السؤال' : 'Paste text from clipboard into question field'}
+                    title={isAr ? 'الصق نص من الحافظ في حقل السؤال' : 'Paste text from clipboard into question field'}
                     onClick={async () => {
                       try {
                         const text = await navigator.clipboard.readText();
-                        if (!text) { toast.error(isAr ? 'الحافظة فارغة' : 'Clipboard is empty'); return; }
+                        if (!text) { toast.error(isAr ? 'الحافظ فارغ' : 'Clipboard is empty'); return; }
                         setQuestionForm(prev => ({
                           ...prev,
                           questionAr: prev.questionAr ? prev.questionAr + '\n' + text : text
                         }));
                         toast.success(isAr ? ' تم لصق النص في حقل السؤال العربي' : ' Text pasted into Arabic question field');
                       } catch {
-                        toast.error(isAr ? 'تعذّر قراءة الحافظة' : 'Cannot read clipboard');
+                        toast.error(isAr ? 'تعذّر قراء الحافظ' : 'Cannot read clipboard');
                       }
                     }}
                   >
@@ -2533,7 +2549,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   </button>
                 </div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-                  {isAr ? 'ارفع صورة للسؤال أو الخيارات وسيتم استخراج النص وإدخاله تلقائيًا في الحقول.' : 'Upload a photo of the question or options and the text will be filled in automatically.'}
+                  {isAr ? 'ارفع صور للسؤال أو اليارات وسيتم استراج النص وإداله تلقائيًا في الحقول.' : 'Upload a photo of the question or options and the text will be filled in automatically.'}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
                   <label className="qedit-label" style={{ margin: 0 }}> {isAr ? 'نص السؤال — عربي' : 'Question Text — Arabic'}</label>
@@ -2542,18 +2558,18 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     className="qmanage-add-btn"
                     style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem' }}
                     onClick={async () => {
-                      if (!questionForm.questionAr) { toast.error(isAr ? 'يرجى كتابة النص بالعربي أولاً' : 'Please type Arabic text first'); return; }
-                      toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                      if (!questionForm.questionAr) { toast.error(isAr ? 'يرجى كتاب النص بالعربي أولاً' : 'Please type Arabic text first'); return; }
+                      toast(isAr ? 'جاري الترجم...' : 'Translating...');
                       const trans = await translateText(questionForm.questionAr, 'ar2en');
                       if (trans) {
                         setQuestionForm(prev => ({ ...prev, questionEn: trans }));
-                        toast.success(isAr ? 'تمت الترجمة!' : 'Translated!');
+                        toast.success(isAr ? 'تمت الترجم!' : 'Translated!');
                       } else {
-                        toast.error(isAr ? 'فشلت الترجمة' : 'Translation failed');
+                        toast.error(isAr ? 'فشلت الترجم' : 'Translation failed');
                       }
                     }}
                   >
-                    {isAr ? 'ترجم إلى الإنجليزية' : 'Translate to English'}
+                    {isAr ? 'ترجم إلى الإنجليزي' : 'Translate to English'}
                   </button>
                 </div>
                 {/* ── Formatting toolbar for Arabic question ── */}
@@ -2610,7 +2626,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {/* Live preview when HTML tags present */}
                 {/[<]/.test(questionForm.questionAr) && (
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                    <span style={{ opacity: 0.6 }}> معاينة: </span>
+                    <span style={{ opacity: 0.6 }}> معاين: </span>
                     <span dangerouslySetInnerHTML={{ __html: questionForm.questionAr }} dir="rtl" />
                   </div>
                 )}
@@ -2623,18 +2639,18 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     className="qmanage-add-btn"
                     style={{ padding: '0.2rem 0.5rem', fontSize: '0.72rem' }}
                     onClick={async () => {
-                      if (!questionForm.questionEn) { toast.error(isAr ? 'يرجى كتابة النص بالإنجليزي أولاً' : 'Please type English text first'); return; }
-                      toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                      if (!questionForm.questionEn) { toast.error(isAr ? 'يرجى كتاب النص بالإنجليزي أولاً' : 'Please type English text first'); return; }
+                      toast(isAr ? 'جاري الترجم...' : 'Translating...');
                       const trans = await translateText(questionForm.questionEn, 'en2ar');
                       if (trans) {
                         setQuestionForm(prev => ({ ...prev, questionAr: trans }));
-                        toast.success(isAr ? 'تمت الترجمة!' : 'Translated!');
+                        toast.success(isAr ? 'تمت الترجم!' : 'Translated!');
                       } else {
-                        toast.error(isAr ? 'فشلت الترجمة' : 'Translation failed');
+                        toast.error(isAr ? 'فشلت الترجم' : 'Translation failed');
                       }
                     }}
                   >
-                    {isAr ? 'ترجم إلى العربية' : 'Translate to Arabic'}
+                    {isAr ? 'ترجم إلى العربي' : 'Translate to Arabic'}
                   </button>
                 </div>
                 {/* ── Formatting toolbar for English question ── */}
@@ -2692,7 +2708,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
               {/* Code Block (Optional) */}
               <div className="qedit-field">
-                <label className="qedit-label"> {isAr ? 'كود برمجي مرافق للسؤال (اختياري)' : 'Associated Code Block (optional)'}</label>
+                <label className="qedit-label"> {isAr ? 'كود برمجي مرافق للسؤال (اتياري)' : 'Associated Code Block (optional)'}</label>
                 <textarea
                   className="qedit-textarea"
                   value={questionForm.codeBlock || ''}
@@ -2709,7 +2725,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     padding: '0.5rem 0.8rem',
                     marginTop: '0.3rem'
                   }}
-                  placeholder={isAr ? 'أدخل الكود البرمجي هنا...' : 'Enter the source code here...'}
+                  placeholder={isAr ? 'أدل الكود البرمجي هنا...' : 'Enter the source code here...'}
                 />
                 {/* Live preview when HTML tags present */}
                 {/[<]/.test(questionForm.questionEn) && (
@@ -2725,10 +2741,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 <div className="qedit-field">
                   <label className="qedit-label">
                     {questionForm.type === 'matching'
-                      ? ` ${isAr ? 'قائمة الإجابات المشتركة (يختار الطالب منها لكل فراغ)' : 'Shared Answer Pool (student picks for each blank)'}`
+                      ? ` ${isAr ? 'قائم الإجابات المشترك (يتار الطالب منها لكل فراغ)' : 'Shared Answer Pool (student picks for each blank)'}`
                       : questionForm.type === 'multi_select'
-                        ? ` ${isAr ? 'الخيارات — ضع على كل إجابة صحيحة (يمكن أكثر من واحدة)' : 'Options — check ALL correct answers (can be multiple)'}`
-                        : ` ${isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}`
+                        ? ` ${isAr ? 'اليارات — ضع على كل إجاب صحيح (يمكن أكثر من واحد)' : 'Options — check ALL correct answers (can be multiple)'}`
+                        : ` ${isAr ? 'اليارات — حدد الإجاب الصحيح' : 'Options — select correct answer'}`
                     }
                   </label>
                   <div className="qedit-options-list">
@@ -2756,7 +2772,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                   setQuestionForm(prev => ({ ...prev, correctAnswer: updated.join(',') }));
                                 }}
                               />
-                              {isAr ? 'صحيحة ' : 'Correct '}
+                              {isAr ? 'صحيح ' : 'Correct '}
                             </label>
                           ) : questionForm.type !== 'matching' ? (
                             <label className="qedit-correct-label">
@@ -2766,7 +2782,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 checked={questionForm.correctAnswer === opt.id}
                                 onChange={() => setQuestionForm(prev => ({ ...prev, correctAnswer: opt.id }))}
                               />
-                              {isAr ? 'صحيحة ' : 'Correct '}
+                              {isAr ? 'صحيح ' : 'Correct '}
                             </label>
                           ) : null}
                           <div style={{ display: 'flex', gap: '0.3rem', alignItems: 'center', marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto' }}>
@@ -2776,15 +2792,15 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                               style={{ padding: '0.15rem 0.4rem', fontSize: '0.68rem' }}
                               onClick={async () => {
                                 if (opt.textAr) {
-                                  toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                  toast(isAr ? 'جاري الترجم...' : 'Translating...');
                                   const res = await translateText(opt.textAr, 'ar2en');
-                                  if (res) { updateQuestionOption(idx, 'textEn', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
+                                  if (res) { updateQuestionOption(idx, 'textEn', res); toast.success(isAr ? 'تمت الترجم!' : 'Translated!'); }
                                 } else if (opt.textEn) {
-                                  toast(isAr ? 'جاري الترجمة...' : 'Translating...');
+                                  toast(isAr ? 'جاري الترجم...' : 'Translating...');
                                   const res = await translateText(opt.textEn, 'en2ar');
-                                  if (res) { updateQuestionOption(idx, 'textAr', res); toast.success(isAr ? 'تمت الترجمة!' : 'Translated!'); }
+                                  if (res) { updateQuestionOption(idx, 'textAr', res); toast.success(isAr ? 'تمت الترجم!' : 'Translated!'); }
                                 } else {
-                                  toast.error(isAr ? 'اكتب نص الخيار أولاً' : 'Type option text first');
+                                  toast.error(isAr ? 'اكتب نص اليار أولاً' : 'Type option text first');
                                 }
                               }}
                             >
@@ -2800,7 +2816,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                           value={opt.textAr || ''}
                           onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
                           onPaste={e => handlePasteInOption(e, idx)}
-                          placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
+                          placeholder={isAr ? 'نص اليار عربي (اتياري)' : 'Arabic option text (optional)'}
                           dir="rtl"
                         />
                         <input
@@ -2824,7 +2840,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         {/* Live preview when HTML table is present */}
                         {(opt.textEn || '').includes('relation-table') && (
                           <div style={{ marginTop: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>{isAr ? ' معاينة:' : ' Preview:'}</span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', flexShrink: 0 }}>{isAr ? ' معاين:' : ' Preview:'}</span>
                             <span dangerouslySetInnerHTML={{ __html: opt.textEn }} style={{ direction: 'ltr' }} />
                             <button
                               type="button"
@@ -2844,7 +2860,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                               onMouseDown={e => { e.preventDefault(); undoOptionChange(idx, 'textEn'); }}
                               title={isAr ? 'تراجع (Ctrl+Z)' : 'Undo (Ctrl+Z)'}
                               style={{ fontSize: '0.8rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
-                              ↩
+                              
                             </button>
                             <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
                             {/* Bold / Italic / Underline / Code */}
@@ -2903,7 +2919,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                 style={{ padding: '0.15rem 0.4rem', fontSize: '0.7rem', margin: 0, width: 'auto' }}
                                 onClick={() => updateQuestionOption(idx, 'image', '')}
                               >
-                                {isAr ? 'إزالة الصورة' : 'Remove Image'}
+                                {isAr ? 'إزال الصور' : 'Remove Image'}
                               </button>
                             </div>
                           )}
@@ -2925,7 +2941,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   {questionForm.type !== 'true_false' && (
                     <button className="qedit-add-option" onClick={addQuestionOption}>
                       + {isAr
-                        ? (questionForm.type === 'matching' ? 'إضافة للقائمة' : 'إضافة خيار')
+                        ? (questionForm.type === 'matching' ? 'إضاف للقائم' : 'إضاف يار')
                         : (questionForm.type === 'matching' ? 'Add to Pool' : 'Add Option')
                       }
                     </button>
@@ -2933,29 +2949,29 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 </div>
               ) : questionForm.type === 'short_answer' ? (
                 <div className="qedit-field" style={{ background: 'rgba(16,185,129,0.06)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(16,185,129,0.2)' }}>
-                  <label className="qedit-label"> {isAr ? 'الإجابة الصحيحة المقبولة' : 'Correct Accepted Answer'}</label>
+                  <label className="qedit-label"> {isAr ? 'الإجاب الصحيح المقبول' : 'Correct Accepted Answer'}</label>
                   <input
                     className="qedit-opt-input"
                     value={questionForm.correctAnswer || ''}
                     onChange={e => setQuestionForm(prev => ({ ...prev, correctAnswer: e.target.value }))}
-                    placeholder={isAr ? 'اكتب الإجابة المطلوبة هنا (مثال: عمان)' : 'Type accepted answer (e.g. Amman)'}
+                    placeholder={isAr ? 'اكتب الإجاب المطلوب هنا (مثال: عمان)' : 'Type accepted answer (e.g. Amman)'}
                     style={{ border: '1px solid rgba(16,185,129,0.3)', background: 'rgba(0,0,0,0.15)' }}
                   />
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: '0.4rem 0 0' }}>
-                    {isAr ? 'ملاحظة: يمكنك فصل الإجابات البديلة المقبولة بفاصلة عربية أو إنجليزية (مثال: عمان، عمان، عَمّان).' : 'Note: Separate alternative accepted spellings with commas.'}
+                    {isAr ? 'ملاحظ: يمكنك فصل الإجابات البديل المقبول بفاصل عربي أو إنجليزي (مثال: عمان، عمان، عَمّان).' : 'Note: Separate alternative accepted spellings with commas.'}
                   </p>
                 </div>
               ) : (
                 <div className="qedit-field" style={{ background: 'rgba(255,255,255,0.02)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
-                    {isAr ? 'هذا سؤال مقالي (Essay). لا يتطلب إعداد إجابة صحيحة مسبقة حيث يكتب الطالب فقرة حرة بيده ويتم تقييمها يدوياً.' : 'This is an Essay/Text question. No predefined correct answer is required, students type free text.'}
+                    {isAr ? 'هذا سؤال مقالي (Essay). لا يتطلب إعداد إجاب صحيح مسبق حيث يكتب الطالب فقر حر بيده ويتم تقييمها يدوياً.' : 'This is an Essay/Text question. No predefined correct answer is required, students type free text.'}
                   </p>
                 </div>
               )}
 
               {/* Image device upload zone */}
               <div className="qedit-field">
-                <label className="qedit-label"> {isAr ? 'صورة السؤال (اختياري)' : 'Question Image (optional)'}</label>
+                <label className="qedit-label"> {isAr ? 'صور السؤال (اتياري)' : 'Question Image (optional)'}</label>
                 <input
                   ref={quizImageInputRef}
                   type="file"
@@ -2965,7 +2981,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
                     if (file.size > 10 * 1024 * 1024) {
-                      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                       return;
                     }
                     setQuizImageUploading(true);
@@ -2989,10 +3005,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       });
                       setQuizImageProgress(100);
                       setQuestionForm(prev => ({ ...prev, image: compressed }));
-                      toast.success(isAr ? ' تم تحميل الصورة بنجاح' : ' Image loaded successfully');
+                      toast.success(isAr ? ' تم تحميل الصور بنجاح' : ' Image loaded successfully');
                     } catch (err) {
                       console.error(err);
-                      toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                      toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
                     } finally {
                       setQuizImageUploading(false);
                       setQuizImageProgress(0);
@@ -3003,7 +3019,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {!questionForm.image && !quizImageUploading && (
                   <div className="qedit-image-dropzone" onClick={() => quizImageInputRef.current?.click()}>
                     <span style={{ fontSize: '2rem' }}></span>
-                    <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>{isAr ? 'اضغط لاختيار صورة من جهازك' : 'Click to choose an image from your device'}</p>
+                    <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>{isAr ? 'اضغط لاتيار صور من جهازك' : 'Click to choose an image from your device'}</p>
                   </div>
                 )}
                 {quizImageUploading && (
@@ -3018,7 +3034,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   <div style={{ marginTop: '0.6rem', textAlign: 'center' }}>
                     <img src={questionForm.image} alt="preview" style={{ maxHeight: '180px', maxWidth: '100%', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.12)' }} />
                     <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                      <button className="qedit-add-option" style={{ width: 'auto', padding: '0.3rem 0.8rem' }} onClick={() => quizImageInputRef.current?.click()}> {isAr ? 'تغيير الصورة' : 'Change Image'}</button>
+                      <button className="qedit-add-option" style={{ width: 'auto', padding: '0.3rem 0.8rem' }} onClick={() => quizImageInputRef.current?.click()}> {isAr ? 'تغيير الصور' : 'Change Image'}</button>
                       <button className="qedit-opt-delete" onClick={() => setQuestionForm(prev => ({ ...prev, image: '' }))}>{isAr ? 'حذف ' : 'Remove '}</button>
                     </div>
                   </div>

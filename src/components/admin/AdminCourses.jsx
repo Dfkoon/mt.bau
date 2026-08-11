@@ -87,7 +87,7 @@ const AdminCourses = () => {
     const handleSaveCourse = async (e) => {
         e.preventDefault();
         if (!courseForm.name || !courseForm.id) {
-            toast.error(isAr ? 'الرجاء ملء الحقول المطلوبة' : 'Please fill required fields');
+            toast.error(isAr ? 'الرجاء ملء الحقول المطلوب' : 'Please fill required fields');
             return;
         }
 
@@ -116,22 +116,22 @@ const AdminCourses = () => {
 
             try {
                 await setDoc(courseRef, payload, { merge: true });
-                toast.success(isAr ? 'تم حفظ المادة ونشرها في السحابة بنجاح!' : 'Course saved and published to cloud successfully!');
+                toast.success(isAr ? 'تم حفظ الماد ونشرها في السحاب بنجاح!' : 'Course saved and published to cloud successfully!');
             } catch (cloudErr) {
                 console.error('Cloud save fallback for academic_courses:', cloudErr);
-                toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! فشل حفظ السحابة: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud save failed: ${cloudErr?.message || cloudErr}`);
+                toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! فشل حفظ السحاب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud save failed: ${cloudErr?.message || cloudErr}`);
             }
 
             setShowModal(false);
         } catch (err) {
             console.error("Error saving course:", err);
-            toast.error(isAr ? `خطأ أثناء الحفظ: ${err.message || err}` : `Save error: ${err.message || err}`);
+            toast.error(isAr ? `طأ أثناء الحفظ: ${err.message || err}` : `Save error: ${err.message || err}`);
             setShowModal(false);
         }
     };
 
     const handleDeleteCourse = async (course) => {
-        if (!window.confirm(isAr ? `هل أنت متأكد من حذف مادة "${course.name}"؟` : `Delete course "${course.name}"?`)) return;
+        if (!window.confirm(isAr ? `هل أنت متأكد من حذف ماد "${course.name}"؟` : `Delete course "${course.name}"?`)) return;
 
         try {
             const courseId = String(course.id);
@@ -143,7 +143,7 @@ const AdminCourses = () => {
                 deleted: true
             }, { merge: true });
             
-            toast.success(isAr ? 'تم حذف المادة بنجاح' : 'Course deleted successfully');
+            toast.success(isAr ? 'تم حذف الماد بنجاح' : 'Course deleted successfully');
         } catch (err) {
             console.error("Error deleting course:", err);
             toast.error(isAr ? 'فشل الحذف' : 'Failed to delete');
@@ -198,7 +198,7 @@ const AdminCourses = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل المواد الدراسية...' : 'Loading courses...'}</p>
+                <p>{isAr ? 'جاري تحميل المواد الدراسي...' : 'Loading courses...'}</p>
             </div>
         );
     }
@@ -206,7 +206,7 @@ const AdminCourses = () => {
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
             <h3 className="admin-section-title">
-                <span>{isAr ? 'إدارة المواد الدراسية' : 'Manage Study Materials'}</span>
+                <span>{isAr ? 'إدار المواد الدراسي' : 'Manage Study Materials'}</span>
             </h3>
 
             {/* Filters Card */}
@@ -216,7 +216,7 @@ const AdminCourses = () => {
                     {/* Faculty */}
                     <div className="filter-group" style={{ flex: '1 1 180px' }}>
                         <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem' }}>
-                            {isAr ? 'الكلية:' : 'Faculty:'}
+                            {isAr ? 'الكلي:' : 'Faculty:'}
                         </label>
                         <select 
                             className="admin-input-field" 
@@ -238,7 +238,7 @@ const AdminCourses = () => {
                     {activeSpecializations.length > 0 && (
                         <div className="filter-group" style={{ flex: '1 1 180px' }}>
                             <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem' }}>
-                                {isAr ? 'التخصص الفرعي:' : 'Specialization:'}
+                                {isAr ? 'التصص الفرعي:' : 'Specialization:'}
                             </label>
                             <select 
                                 className="admin-input-field" 
@@ -246,7 +246,7 @@ const AdminCourses = () => {
                                 value={selectedSpecialization} 
                                 onChange={e => setSelectedSpecialization(e.target.value)}
                             >
-                                <option value="all">{isAr ? 'كل التخصصات' : 'All Specializations'}</option>
+                                <option value="all">{isAr ? 'كل التصصات' : 'All Specializations'}</option>
                                 {activeSpecializations.map(s => (
                                     <option key={s.id} value={s.id}>{isAr ? s.name : s.nameEn}</option>
                                 ))}
@@ -274,7 +274,7 @@ const AdminCourses = () => {
                     {/* Add button */}
                     <div style={{ flex: '0 0 auto' }}>
                         <button className="admin-action-btn approve" style={{ padding: '0.6rem 1.4rem' }} onClick={openAddModal}>
-                            {isAr ? 'اضافة مادة جديدة' : 'Add New Course'}
+                            {isAr ? 'اضاف ماد جديد' : 'Add New Course'}
                         </button>
                     </div>
                 </div>
@@ -290,7 +290,7 @@ const AdminCourses = () => {
                     paddingBottom: '0.75rem',
                     borderBottom: '1px solid var(--adm-divider)'
                 }}>
-                    {isAr ? 'قائمة المواد المتوفرة' : 'Available Courses'} ({mergedCourses.length})
+                    {isAr ? 'قائم المواد المتوفر' : 'Available Courses'} ({mergedCourses.length})
                 </h4>
 
                 {mergedCourses.length === 0 ? (
@@ -321,17 +321,17 @@ const AdminCourses = () => {
                                         )}
                                         {course.files?.book && (
                                             <span style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--adm-success)', border: '1px solid rgba(16,185,129,0.2)', padding: '2px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-                                                {isAr ? 'كتاب المادة' : 'Book'}
+                                                {isAr ? 'كتاب الماد' : 'Book'}
                                             </span>
                                         )}
                                         {course.files?.summary && (
                                             <span style={{ background: 'rgba(59,130,246,0.1)', color: '#60a5fa', border: '1px solid rgba(59,130,246,0.2)', padding: '2px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-                                                {isAr ? 'تلاخيص' : 'Summary'}
+                                                {isAr ? 'تلايص' : 'Summary'}
                                             </span>
                                         )}
                                         {course.files?.questions && (
                                             <span style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--adm-success)', border: '1px solid rgba(16,185,129,0.2)', padding: '2px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-                                                {isAr ? 'اسئلة' : 'Questions'}
+                                                {isAr ? 'اسئل' : 'Questions'}
                                             </span>
                                         )}
                                         {course.files?.solutions && (
@@ -386,7 +386,7 @@ const AdminCourses = () => {
                             paddingBottom: '0.75rem',
                             borderBottom: '1px solid var(--adm-divider)'
                         }}>
-                            {editingCourse ? (isAr ? 'تعديل مادة' : 'Edit Course') : (isAr ? 'إضافة مادة جديدة' : 'Add New Course')}
+                            {editingCourse ? (isAr ? 'تعديل ماد' : 'Edit Course') : (isAr ? 'إضاف ماد جديد' : 'Add New Course')}
                         </h4>
 
                         <form onSubmit={handleSaveCourse} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -394,7 +394,7 @@ const AdminCourses = () => {
                             {/* Course ID */}
                             <div>
                                 <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                    {isAr ? 'معرف المادة الفريد (ID):' : 'Unique Course ID:'}
+                                    {isAr ? 'معرف الماد الفريد (ID):' : 'Unique Course ID:'}
                                 </label>
                                 <input 
                                     type="text" 
@@ -411,7 +411,7 @@ const AdminCourses = () => {
                             {/* Name Ar */}
                             <div>
                                 <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                    {isAr ? 'اسم المادة بالعربية:' : 'Course Name (Arabic):'}
+                                    {isAr ? 'اسم الماد بالعربي:' : 'Course Name (Arabic):'}
                                 </label>
                                 <input 
                                     type="text" 
@@ -426,7 +426,7 @@ const AdminCourses = () => {
                             {/* Name En */}
                             <div>
                                 <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                    {isAr ? 'اسم المادة بالإنجليزية:' : 'Course Name (English):'}
+                                    {isAr ? 'اسم الماد بالإنجليزي:' : 'Course Name (English):'}
                                 </label>
                                 <input 
                                     type="text" 
@@ -441,7 +441,7 @@ const AdminCourses = () => {
                             <div style={{ display: 'flex', gap: '1rem' }}>
                                 <div style={{ flex: '0 0 100px' }}>
                                     <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                        {isAr ? 'الأيقونة:' : 'Icon:'}
+                                        {isAr ? 'الأيقون:' : 'Icon:'}
                                     </label>
                                     <input 
                                         type="text" 
@@ -454,7 +454,7 @@ const AdminCourses = () => {
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                        {isAr ? 'التخصص:' : 'Specialization:'}
+                                        {isAr ? 'التصص:' : 'Specialization:'}
                                     </label>
                                     <select 
                                         className="admin-input-field"
@@ -479,9 +479,9 @@ const AdminCourses = () => {
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                     {[
                                         { key: 'pdf', label: isAr ? 'رابط ملف PDF الاساسي:' : 'PDF File Link:' },
-                                        { key: 'book', label: isAr ? 'رابط كتاب المادة:' : 'Textbook Link:' },
-                                        { key: 'summary', label: isAr ? 'رابط التلاخيص والشروحات:' : 'Summaries Link:' },
-                                        { key: 'questions', label: isAr ? 'رابط اسئلة السنوات السابقة:' : 'Past Papers Link:' },
+                                        { key: 'book', label: isAr ? 'رابط كتاب الماد:' : 'Textbook Link:' },
+                                        { key: 'summary', label: isAr ? 'رابط التلايص والشروحات:' : 'Summaries Link:' },
+                                        { key: 'questions', label: isAr ? 'رابط اسئل السنوات السابق:' : 'Past Papers Link:' },
                                         { key: 'solutions', label: isAr ? 'رابط الحلول والاجابات:' : 'Solutions Link:' },
                                         { key: 'link', label: isAr ? 'رابط المجلد العام (Drive):' : 'General Drive Link:' }
                                     ].map(({ key, label }) => (

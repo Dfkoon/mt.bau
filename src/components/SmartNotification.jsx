@@ -12,7 +12,7 @@ const NOTIFICATIONS = {
             emoji: '📊',
             titleAr: 'احسب معدلك الآن!',
             titleEn: 'Calculate your GPA now!',
-            msgAr: 'هل تعرف معدلك التراكمي بدقة؟ جرّب حاسبة المعدل الجديدة مع نظام باقة التحسين.',
+            msgAr: 'هل تعرف معدلك التراكمي بدق؟ جرّب حاسب المعدل الجديد مع نظام باق التحسين.',
             msgEn: 'Do you know your exact cumulative GPA? Try our new GPA calculator with the upgrade planner.',
             link: '/grading',
             type: 'info',
@@ -24,7 +24,7 @@ const NOTIFICATIONS = {
             emoji: '⭐',
             titleAr: 'ساعد زملاءك!',
             titleEn: 'Help your classmates!',
-            msgAr: 'بعد تحميل الملف، قيّم المادة بالنجوم لمساعدة الطلاب الآخرين على اختيار أفضل المراجع.',
+            msgAr: 'بعد تحميل الملف، قيّم الماد بالنجوم لمساعد الطلاب الآرين على اتيار أفضل المراجع.',
             msgEn: 'After downloading, rate the material with stars to help other students pick the best references.',
             type: 'tip',
         }
@@ -35,7 +35,7 @@ const NOTIFICATIONS = {
             emoji: '🎯',
             titleAr: 'حدّد هدفك الدراسي!',
             titleEn: 'Set your academic target!',
-            msgAr: 'استخدم مخطط معدل الهدف لمعرفة كم تحتاج تحصل في كل مادة لترفع معدلك.',
+            msgAr: 'استدم مطط معدل الهدف لمعرف كم تحتاج تحصل في كل ماد لترفع معدلك.',
             msgEn: 'Use the Target GPA planner to know exactly what grades you need to raise your average.',
             type: 'success',
         }

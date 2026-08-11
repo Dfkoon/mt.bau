@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../config/firebase';
-import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { useLanguage } from '../contexts/LanguageContext';
 import './NoticeBoard.css';
 
 const TYPE_ICONS = {
-    info:    { icon: 'ℹ️', color: '#3b82f6', bg: 'linear-gradient(135deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04))' },
+    info: { icon: 'ℹ️', color: '#3b82f6', bg: 'linear-gradient(135deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04))' },
     warning: { icon: '⚠️', color: '#f59e0b', bg: 'linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.04))' },
     success: { icon: '✅', color: '#10b981', bg: 'linear-gradient(135deg,rgba(16,185,129,0.12),rgba(16,185,129,0.04))' },
-    alert:   { icon: '🔔', color: '#e02b20', bg: 'linear-gradient(135deg,rgba(224,43,32,0.12),rgba(224,43,32,0.04))' },
+    alert: { icon: '🔔', color: '#e02b20', bg: 'linear-gradient(135deg,rgba(224,43,32,0.12),rgba(224,43,32,0.04))' },
 };
 
 /**
@@ -31,18 +31,25 @@ const NoticeBoard = () => {
     useEffect(() => {
         const q = query(
             collection(db, 'notices'),
-            where('active', '==', true),
-            orderBy('pinned', 'desc'),
-            orderBy('createdAt', 'desc')
+            where('active', '==', true)
         );
         const unsub = onSnapshot(q, snap => {
             const now = Date.now();
             const list = snap.docs
                 .map(d => ({ id: d.id, ...d.data() }))
-                .filter(n => !n.expiresAt || n.expiresAt.toMillis?.() > now || n.expiresAt > now);
+                .filter(n => !n.expiresAt || n.expiresAt.toMillis?.() > now || n.expiresAt > now)
+                .sort((a, b) => {
+                    if (Boolean(a.pinned) !== Boolean(b.pinned)) return a.pinned ? -1 : 1;
+                    const aTime = a.createdAt?.toMillis?.() || new Date(a.createdAt || 0).getTime();
+                    const bTime = b.createdAt?.toMillis?.() || new Date(b.createdAt || 0).getTime();
+                    return bTime - aTime;
+                });
             setNotices(list);
             setLoading(false);
-        }, () => setLoading(false));
+        }, (error) => {
+            console.error('NoticeBoard: failed to load active notices:', error);
+            setLoading(false);
+        });
         return () => unsub();
     }, []);
 
@@ -83,6 +90,16 @@ const NoticeBoard = () => {
         setDismissed(next);
         try { localStorage.setItem('koon_dismissed_notices', JSON.stringify(next)); } catch { /**/ }
         setOpen(false);
+    };
+
+    const skipCurrent = () => {
+        dismissCurrent();
+    };
+
+    const goToSection = () => {
+        if (!notice.targetPath) return;
+        dismissCurrent();
+        window.location.hash = notice.targetPath;
     };
 
     const visible = notices.filter(n => !dismissed.includes(n.id));
@@ -130,13 +147,17 @@ const NoticeBoard = () => {
                         </div>
                     )}
                     <div className="nb-actions">
-                        {hasMultiple && currentIndex < visible.length - 1 ? (
+                        <button className="nb-btn-skip" onClick={skipCurrent}>
+                            {isAr ? 'تطي' : 'Skip'}
+                        </button>
+                        {notice.targetPath && (
+                            <button className="nb-btn-dismiss" onClick={goToSection} style={{ '--btn-color': t.color }}>
+                                {isAr ? 'الذهاب إلى القسم المذكور' : 'Go to mentioned section'}
+                            </button>
+                        )}
+                        {hasMultiple && currentIndex < visible.length - 1 && (
                             <button className="nb-btn-next" onClick={() => setCurrentIndex(i => i + 1)}>
                                 {isAr ? 'التالي ←' : 'Next →'}
-                            </button>
-                        ) : (
-                            <button className="nb-btn-dismiss" onClick={dismissAll} style={{ '--btn-color': t.color }}>
-                                {isAr ? 'تم الاطلاع ✓' : 'Got it ✓'}
                             </button>
                         )}
                     </div>

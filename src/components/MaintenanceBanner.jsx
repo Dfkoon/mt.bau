@@ -68,7 +68,7 @@ export default function MaintenanceBanner() {
             margin: '0 0 10px',
             letterSpacing: '-0.5px',
           }}>
-            الموقع تحت الصيانة
+            الموقع تحت الصيان
           </h2>
 
           {/* Subtitle */}
@@ -78,9 +78,9 @@ export default function MaintenanceBanner() {
             lineHeight: 1.7,
             margin: '0 0 24px',
           }}>
-            نعمل الآن على تحديث الموقع وإضافة ميزات جديدة.
+            نعمل الآن على تحديث الموقع وإضاف ميزات جديد.
             <br />
-            سنعود غداً <strong>الجمعة</strong> الساعة <strong>1:00 الظهر</strong> 🚀
+            سنعود غداً <strong>الجمع</strong> الساع <strong>1:00 الظهر</strong> 🚀
           </p>
 
           {/* Countdown */}
@@ -91,9 +91,9 @@ export default function MaintenanceBanner() {
             marginBottom: '28px',
           }}>
             {[
-              { label: 'ساعة', val: pad(timeLeft.h) },
-              { label: 'دقيقة', val: pad(timeLeft.m) },
-              { label: 'ثانية', val: pad(timeLeft.s) },
+              { label: 'ساع', val: pad(timeLeft.h) },
+              { label: 'دقيق', val: pad(timeLeft.m) },
+              { label: 'ثاني', val: pad(timeLeft.s) },
             ].map(({ label, val }) => (
               <div key={label} style={{
                 background: 'linear-gradient(135deg, #fff0f0, #ffe0e0)',
@@ -128,7 +128,7 @@ export default function MaintenanceBanner() {
             fontWeight: 700,
             marginBottom: '20px',
           }}>
-            🔧 تحت الصيانة والتحديث
+            🔧 تحت الصيان والتحديث
           </div>
 
           {/* Dismiss button */}

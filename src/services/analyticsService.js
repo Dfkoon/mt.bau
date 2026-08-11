@@ -31,6 +31,11 @@ export const logPageView = async (path, details = {}) => {
 
         if (isAdmin) return;
 
+        const visitKey = `koon_last_visit:${path}`;
+        const lastVisit = Number(sessionStorage.getItem(visitKey) || 0);
+        if (Date.now() - lastVisit < 30_000) return;
+        sessionStorage.setItem(visitKey, String(Date.now()));
+
         const viewData = {
             path,
             timestamp: serverTimestamp(),
@@ -50,7 +55,9 @@ export const logPageView = async (path, details = {}) => {
 
 export const getTotalStudentVisits = async () => {
     try {
-        const snapshot = await getCountFromServer(collection(db, 'page_views'));
+        const snapshot = await getCountFromServer(
+            query(collection(db, 'page_views'), where('type', '==', 'visit'))
+        );
         return Number(snapshot.data().count || 0);
     } catch (error) {
         console.error('Error fetching visitor count:', error);

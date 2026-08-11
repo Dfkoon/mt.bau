@@ -43,11 +43,11 @@ const FAQ = () => {
                     <h1>{language === 'ar' ? 'قريباً' : 'Coming Soon'}</h1>
                     <p>
                         {language === 'ar'
-                            ? 'نعمل حالياً على بناء قاعدة الأسئلة الشائعة لتغطية كافة استفساراتكم.'
+                            ? 'نعمل حالياً على بناء قاعد الأسئل الشائع لتغطي كاف استفساراتكم.'
                             : 'We are building the FAQ database to cover all your questions.'}
                     </p>
                     <div className="coming-soon-badge">
-                        {language === 'ar' ? 'تحت الصيانة' : 'Under Maintenance'}
+                        {language === 'ar' ? 'تحت الصيان' : 'Under Maintenance'}
                     </div>
                 </div>
             </div>
@@ -55,8 +55,8 @@ const FAQ = () => {
             <div className="content-blur-wrapper">
                 <div className="faq-hero" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1454165833767-026cc35a1651?auto=format&fit=crop&q=80')` }}>
                     <div className="hero-overlay"></div>
-                    <h1>{language === 'ar' ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'}</h1>
-                    <p>{language === 'ar' ? 'اعثر على أجوبة لأكثر الأسئلة تكراراً' : 'Find answers to common questions'}</p>
+                    <h1>{language === 'ar' ? 'الأسئل الشائع' : 'Frequently Asked Questions'}</h1>
+                    <p>{language === 'ar' ? 'اعثر على أجوب لأكثر الأسئل تكراراً' : 'Find answers to common questions'}</p>
 
                     <div className="faq-search">
                         <input
@@ -72,7 +72,7 @@ const FAQ = () => {
                 <div className="faq-content">
                     {categories.length === 0 ? (
                         <div className="no-results">
-                            <p>{language === 'ar' ? 'لا توجد نتائج مطابقة لبحثك' : 'No results found matching your search'}</p>
+                            <p>{language === 'ar' ? 'لا توجد نتائج مطابق لبحثك' : 'No results found matching your search'}</p>
                         </div>
                     ) : (
                         categories.map(catKey => {

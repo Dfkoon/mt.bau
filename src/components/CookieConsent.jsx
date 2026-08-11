@@ -34,10 +34,10 @@ const CookieConsent = () => {
                         <span className="cookie-consent-icon">🔒</span>
                     </div>
                     <div className="cookie-consent-text">
-                        <h4>{isAr ? 'نحن نهتم بخصوصيتك' : 'We care about your privacy'}</h4>
+                        <h4>{isAr ? 'نحن نهتم بصوصيتك' : 'We care about your privacy'}</h4>
                         <p>
                             {isAr
-                                ? 'يستخدم موقع "مكانك" ملفات تعريف الارتباط لتوفير تجربة مستخدم ممتازة وحفظ تفضيلاتك (مثل اللغة والمظهر الداكن). باستمرارك في التصفح، فإنك توافق على سياسة الخصوصية الخاصة بنا.'
+                                ? 'يستدم موقع "مكانك" ملفات تعريف الارتباط لتوفير تجرب مستدم ممتاز وحفظ تفضيلاتك (مثل اللغ والمظهر الداكن). باستمرارك في التصفح، فإنك توافق على سياس الصوصي الاص بنا.'
                                 : 'Makanak uses cookies to enhance your browsing experience, analyze site usage, and remember your preferences (like language and dark theme). By continuing to browse, you agree to our privacy policy.'}
                         </p>
                     </div>

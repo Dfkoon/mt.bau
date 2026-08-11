@@ -1,7 +1,7 @@
 {
   "name": "مكانك الجامعي - BAU",
   "short_name": "مكانك",
-  "description": "المساعد الأكاديمي الشامل لطلاب جامعة البلقاء التطبيقية",
+  "description": "المساعد الأكاديمي الشامل لطلاب جامع البلقاء التطبيقي",
   "start_url": "/mt.bau/",
   "scope": "/mt.bau/",
   "display": "standalone",

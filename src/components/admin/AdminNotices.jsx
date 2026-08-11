@@ -7,18 +7,29 @@ import {
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const TYPE_OPTIONS = [
-    { value: 'info',    labelAr: 'معلومات ℹ️',  labelEn: 'Info ℹ️'    },
-    { value: 'warning', labelAr: 'تحذير ⚠️',    labelEn: 'Warning ⚠️' },
-    { value: 'success', labelAr: 'نجاح ✅',      labelEn: 'Success ✅' },
-    { value: 'alert',   labelAr: 'تنبيه 🔔',    labelEn: 'Alert 🔔'   },
+    { value: 'info', labelAr: 'معلومات ℹ️', labelEn: 'Info ℹ️' },
+    { value: 'warning', labelAr: 'تحذير ⚠️', labelEn: 'Warning ⚠️' },
+    { value: 'success', labelAr: 'نجاح ✅', labelEn: 'Success ✅' },
+    { value: 'alert', labelAr: 'تنبيه 🔔', labelEn: 'Alert 🔔' },
 ];
 
 const EMPTY_FORM = {
     titleAr: '', titleEn: '',
-    bodyAr:  '', bodyEn:  '',
-    type: 'info', pinned: false, active: true,
+    bodyAr: '', bodyEn: '',
+    type: 'info', targetPath: '', pinned: false, active: true,
     expiresIn: '', // days from now, optional
 };
+
+const TARGET_OPTIONS = [
+    { value: '/materials', ar: 'المواد الدراسي', en: 'Study Materials' },
+    { value: '/plans', ar: 'الطط الدراسي', en: 'Academic Plans' },
+    { value: '/quiz', ar: 'الاتبارات', en: 'Quizzes' },
+    { value: '/calendar', ar: 'التقويم الأكاديمي', en: 'Academic Calendar' },
+    { value: '/grading', ar: 'نظام العلامات', en: 'Grading System' },
+    { value: '/exchange', ar: 'تبادل المواد', en: 'Material Exchange' },
+    { value: '/faq', ar: 'الأسئل الشائع', en: 'FAQ' },
+    { value: '/about', ar: 'عن الموقع', en: 'About Us' },
+];
 
 const AdminNotices = () => {
     const { language } = useLanguage();
@@ -49,8 +60,8 @@ const AdminNotices = () => {
     const openEdit = (n) => {
         setForm({
             titleAr: n.titleAr || '', titleEn: n.titleEn || '',
-            bodyAr:  n.bodyAr  || '', bodyEn:  n.bodyEn  || '',
-            type: n.type || 'info', pinned: !!n.pinned, active: n.active !== false,
+            bodyAr: n.bodyAr || '', bodyEn: n.bodyEn || '',
+            type: n.type || 'info', targetPath: n.targetPath || '', pinned: !!n.pinned, active: n.active !== false,
             expiresIn: '',
         });
         setEditId(n.id);
@@ -65,11 +76,12 @@ const AdminNotices = () => {
             const payload = {
                 titleAr: form.titleAr,
                 titleEn: form.titleEn,
-                bodyAr:  form.bodyAr,
-                bodyEn:  form.bodyEn,
-                type:    form.type,
-                pinned:  form.pinned,
-                active:  form.active,
+                bodyAr: form.bodyAr,
+                bodyEn: form.bodyEn,
+                type: form.type,
+                targetPath: form.targetPath,
+                pinned: form.pinned,
+                active: form.active,
                 expiresAt: form.expiresIn
                     ? Timestamp.fromDate(new Date(Date.now() + parseInt(form.expiresIn) * 86400000))
                     : null,
@@ -104,7 +116,7 @@ const AdminNotices = () => {
         <div className="admin-panel-section admin-fade-in">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '12px' }}>
                 <h2 className="admin-section-title">
-                    📢 <span>{isAr ? 'لوحة الإعلانات' : 'Notice Board'}</span>
+                    📢 <span>{isAr ? 'لوح الإعلانات' : 'Notice Board'}</span>
                 </h2>
                 <button className="admin-btn-primary" onClick={openNew}>
                     + {isAr ? 'إعلان جديد' : 'New Notice'}
@@ -115,7 +127,7 @@ const AdminNotices = () => {
             {showForm && (
                 <div className="admin-glass-card" style={{ marginBottom: '1.5rem' }}>
                     <h3 style={{ marginBottom: '1rem', fontWeight: 800, fontSize: '1rem' }}>
-                        {editId ? (isAr ? '✏️ تعديل الإعلان' : '✏️ Edit Notice') : (isAr ? '➕ إضافة إعلان جديد' : '➕ Add New Notice')}
+                        {editId ? (isAr ? '✏️ تعديل الإعلان' : '✏️ Edit Notice') : (isAr ? '➕ إضاف إعلان جديد' : '➕ Add New Notice')}
                     </h3>
                     <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -152,10 +164,19 @@ const AdminNotices = () => {
                                 </select>
                             </div>
                             <div>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: 4 }}>{isAr ? 'القسم المستهدف' : 'Target section'}</label>
+                                <select value={form.targetPath} onChange={e => setForm(f => ({ ...f, targetPath: e.target.value }))} className="admin-input" style={{ minWidth: '180px' }}>
+                                    <option value="">{isAr ? 'بدون انتقال' : 'No destination'}</option>
+                                    {TARGET_OPTIONS.map(option => (
+                                        <option key={option.value} value={option.value}>{isAr ? option.ar : option.en}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
                                 <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: 4 }}>{isAr ? 'ينتهي بعد (أيام)' : 'Expires in (days)'}</label>
                                 <input type="number" min="1" max="365" value={form.expiresIn}
                                     onChange={e => setForm(f => ({ ...f, expiresIn: e.target.value }))}
-                                    placeholder={isAr ? 'اختياري' : 'optional'} className="admin-input" style={{ width: '120px' }} />
+                                    placeholder={isAr ? 'اتياري' : 'optional'} className="admin-input" style={{ width: '120px' }} />
                             </div>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 700, fontSize: '0.85rem', marginTop: '18px' }}>
                                 <input type="checkbox" checked={form.pinned} onChange={e => setForm(f => ({ ...f, pinned: e.target.checked }))} />

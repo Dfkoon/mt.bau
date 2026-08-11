@@ -23,7 +23,7 @@ const TargetGPAPlanner = () => {
 
     if (isNaN(cur) || isNaN(hours) || isNaN(target) || isNaN(semHours) || hours <= 0 || semHours <= 0) {
       setResult({
-        error: isAr ? 'يرجى إدخال قيم صحيحة في جميع الحقول' : 'Please enter valid values in all fields'
+        error: isAr ? 'يرجى إدال قيم صحيح في جميع الحقول' : 'Please enter valid values in all fields'
       });
       return;
     }
@@ -94,7 +94,7 @@ const TargetGPAPlanner = () => {
       <div className="target-planner-header">
         <div className="header-icon">🎯</div>
         <div>
-          <h3>{isAr ? 'مخطط ومحدد المعدل المستهدف' : 'Target GPA Planner'}</h3>
+          <h3>{isAr ? 'مطط ومحدد المعدل المستهدف' : 'Target GPA Planner'}</h3>
           <p>{isAr ? 'احسب المعدل الفصلي المطلوب منك في الفصل القادم للوصول لمعدلك التراكمي الحلم' : 'Calculate the semester GPA required to hit your target cumulative GPA'}</p>
         </div>
       </div>
@@ -116,7 +116,7 @@ const TargetGPAPlanner = () => {
           </div>
 
           <div className="planner-field">
-            <label>{isAr ? 'الساعات المقطوعة (المكتسبة) *' : 'Completed Hours *'}</label>
+            <label>{isAr ? 'الساعات المقطوع (المكتسب) *' : 'Completed Hours *'}</label>
             <input
               type="number"
               min="1"
@@ -177,11 +177,11 @@ const TargetGPAPlanner = () => {
               </div>
 
               <div className="result-advice">
-                <h4>💡 {isAr ? 'نصيحة وخطة الحصول عليها:' : 'Strategy Recommendation:'}</h4>
+                <h4>💡 {isAr ? 'نصيح وط الحصول عليها:' : 'Strategy Recommendation:'}</h4>
                 <p>{isAr ? result.recommendationAr : result.recommendationEn}</p>
                 <small>
                   {isAr
-                    ? `إجمالي الساعات الكلية بعد نهاية الفصل ستكون: ${result.totalHours} ساعة.`
+                    ? `إجمالي الساعات الكلي بعد نهاي الفصل ستكون: ${result.totalHours} ساع.`
                     : `Total cumulative hours after this semester will be: ${result.totalHours} hrs.`}
                 </small>
               </div>

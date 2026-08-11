@@ -2,7 +2,7 @@ export const coursesData = {
     mandatoryUniversity: [
         {
             id: 1,
-            name: 'الابتكار والريادة والإبداع',
+            name: 'الابتكار والرياد والإبداع',
             nameEn: 'Innovation, Entrepreneurship and Creativity',
             icon: '💡',
             files: {
@@ -13,7 +13,7 @@ export const coursesData = {
         },
         {
             id: 2,
-            name: 'التربية الوطنية والسلوك الجامعي',
+            name: 'التربي الوطني والسلوك الجامعي',
             nameEn: 'National Education and University Behavior',
             icon: '🏛️',
             files: {
@@ -23,7 +23,7 @@ export const coursesData = {
         },
         {
             id: 3,
-            name: 'لغة إنجليزية تطبيقية (1)',
+            name: 'لغ إنجليزي تطبيقي (1)',
             nameEn: 'Applied English (1)',
             icon: '🇬🇧',
             files: {
@@ -35,7 +35,7 @@ export const coursesData = {
         },
         {
             id: 4,
-            name: 'لغة إنجليزية تطبيقية (2)',
+            name: 'لغ إنجليزي تطبيقي (2)',
             nameEn: 'Applied English (2)',
             icon: '🇬🇧',
             files: {
@@ -47,7 +47,7 @@ export const coursesData = {
         },
         {
             id: 5,
-            name: 'لغة عربية تطبيقية',
+            name: 'لغ عربي تطبيقي',
             nameEn: 'Applied Arabic',
             icon: '📖',
             files: {
@@ -70,7 +70,7 @@ export const coursesData = {
         },
         {
             id: 7,
-            name: 'العلوم العسكرية',
+            name: 'العلوم العسكري',
             nameEn: 'Military Sciences',
             icon: '🎖️',
             files: {
@@ -85,7 +85,7 @@ export const coursesData = {
         },
         {
             id: 8,
-            name: 'المهارات الحياتية والعمل (باللغة الإنجليزية)',
+            name: 'المهارات الحياتي والعمل (باللغ الإنجليزي)',
             nameEn: 'Life Skills and Work (English)',
             icon: '🤝',
             files: {
@@ -94,7 +94,7 @@ export const coursesData = {
         },
         {
             id: 9,
-            name: 'الريادة والابتكار (باللغة الإنجليزية)',
+            name: 'الرياد والابتكار (باللغ الإنجليزي)',
             nameEn: 'Entrepreneurship and Innovation (English)',
             icon: '💡',
             files: {
@@ -107,7 +107,7 @@ export const coursesData = {
     optionalUniversity: [
         {
             id: 1,
-            name: 'البيئة والمجتمع',
+            name: 'البيئ والمجتمع',
             nameEn: 'Environment and Society',
             icon: '🌱',
             files: {
@@ -119,7 +119,7 @@ export const coursesData = {
         },
         {
             id: 2,
-            name: 'المفاهيم الاقتصادية',
+            name: 'المفاهيم الاقتصادي',
             nameEn: 'Economic Concepts',
             icon: '📊',
             files: {
@@ -128,7 +128,7 @@ export const coursesData = {
         },
         {
             id: 3,
-            name: 'الثقافة الإسلامية',
+            name: 'الثقاف الإسلامي',
             nameEn: 'Islamic Culture',
             icon: '🕌',
             files: {
@@ -148,7 +148,7 @@ export const coursesData = {
         },
         {
             id: 5,
-            name: 'مدخل إلى علم النفس',
+            name: 'مدل إلى علم النفس',
             nameEn: 'Introduction to Psychology',
             icon: '🧠',
             files: {}
@@ -175,7 +175,7 @@ export const coursesData = {
         },
         {
             id: 8,
-            name: 'الزراعة في الأردن',
+            name: 'الزراع في الأردن',
             nameEn: 'Agriculture in Jordan',
             icon: '🌾',
             files: {
@@ -186,7 +186,7 @@ export const coursesData = {
         },
         {
             id: 9,
-            name: 'الرياضة والصحة للجميع',
+            name: 'الرياض والصح للجميع',
             nameEn: 'Sports and Health for All',
             icon: '⚽',
             files: {
@@ -198,7 +198,7 @@ export const coursesData = {
         },
         {
             id: 10,
-            name: 'السلامة المرورية',
+            name: 'السلام المروري',
             nameEn: 'Traffic Safety',
             icon: '🚦',
             files: {
@@ -210,7 +210,7 @@ export const coursesData = {
     mandatoryCollege: [
         {
             id: 1,
-            name: 'مهارات حاسوب (2) لطلبة الكليات العلمية',
+            name: 'مهارات حاسوب (2) لطلب الكليات العلمي',
             nameEn: 'Computer Skills (2) for Scientific Colleges',
             icon: '💻',
             files: {
@@ -224,7 +224,7 @@ export const coursesData = {
         },
         {
             id: 2,
-            name: 'برمجة موجهة للكائنات',
+            name: 'برمج موجه للكائنات',
             nameEn: 'Object Oriented Programming',
             icon: '⚙️',
             files: {
@@ -240,7 +240,7 @@ export const coursesData = {
         },
         {
             id: 3,
-            name: 'برمجة الذكاء الاصطناعي',
+            name: 'برمج الذكاء الاصطناعي',
             nameEn: 'AI Programming',
             icon: '🤖',
             files: {
@@ -252,7 +252,7 @@ export const coursesData = {
         },
         {
             id: 4,
-            name: 'مقدمة الذكاء الاصطناعي',
+            name: 'مقدم الذكاء الاصطناعي',
             nameEn: 'Introduction to AI',
             icon: '🧠',
             files: {
@@ -265,7 +265,7 @@ export const coursesData = {
         },
         {
             id: 5,
-            name: 'مقدمة إلى اليونكس',
+            name: 'مقدم إلى اليونكس',
             nameEn: 'Introduction to Unix',
             icon: '🐧',
             files: {
@@ -330,7 +330,7 @@ export const coursesData = {
     ai_df_mandatory: [
         {
             id: 'df_recovery',
-            name: 'استعادة بيانات',
+            name: 'استعاد بيانات',
             nameEn: 'Data Recovery',
             icon: '♻️',
             files: {
@@ -340,7 +340,7 @@ export const coursesData = {
         },
         {
             id: 'df_privacy',
-            name: 'خصوصية وحماية بيانات',
+            name: 'صوصي وحماي بيانات',
             nameEn: 'Privacy and Data Protection',
             icon: '🛡️',
             files: {
@@ -349,7 +349,7 @@ export const coursesData = {
         },
         {
             id: 'df_mobile',
-            name: 'تحقيقات الأجهزة النقالة',
+            name: 'تحقيقات الأجهز النقال',
             nameEn: 'Mobile Forensics',
             icon: '📱',
             files: {
@@ -358,7 +358,7 @@ export const coursesData = {
         },
         {
             id: 'df_justice',
-            name: 'التحقيقات الجنائية الرقمية والعدالة الجنائية',
+            name: 'التحقيقات الجنائي الرقمي والعدال الجنائي',
             nameEn: 'Digital Forensics and Criminal Justice',
             icon: '⚖️',
             files: {
@@ -367,7 +367,7 @@ export const coursesData = {
         },
         {
             id: 'df_scene',
-            name: 'تحقيقات في موقع الجريمة',
+            name: 'تحقيقات في موقع الجريم',
             nameEn: 'Crime Scene Forensics',
             icon: '🚨',
             files: {
@@ -376,7 +376,7 @@ export const coursesData = {
         },
         {
             id: 'df_network',
-            name: 'التحقيقات الجنائية في الشبكات',
+            name: 'التحقيقات الجنائي في الشبكات',
             nameEn: 'Network Forensics',
             icon: '🌐',
             files: {
@@ -385,7 +385,7 @@ export const coursesData = {
         },
         {
             id: 'df_national_cyber_laws',
-            name: 'القوانين الوطنية للجرائم الإلكترونية',
+            name: 'القوانين الوطني للجرائم الإلكتروني',
             nameEn: 'National Cybercrime Laws',
             icon: '⚖️',
             files: {
@@ -394,7 +394,7 @@ export const coursesData = {
         },
         {
             id: 'df_threats',
-            name: 'التهديدات الأمنية ومكافحتها',
+            name: 'التهديدات الأمني ومكافحتها',
             nameEn: 'Security Threats and Countermeasures',
             icon: '⚠️',
             files: {
@@ -403,14 +403,14 @@ export const coursesData = {
         },
         {
             id: 'df_os',
-            name: 'نظم تشغيل للتحقيقات الجنائية',
+            name: 'نظم تشغيل للتحقيقات الجنائي',
             nameEn: 'Operating Systems for Digital Forensics',
             icon: '🖥️',
             files: {
                 slides: 'https://drive.google.com/drive/folders/14u8_FOxuJH7EgyKZs5ticMsUCUnBtjHW?usp=drive_link'
             }
         },
-        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
+        // --- مواد متطلب تصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -456,7 +456,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم خوارزميات',
+            name: 'تحليل وتصميم وارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -470,7 +470,7 @@ export const coursesData = {
         },
         {
             id: 'shared_ml',
-            name: 'تعلم الآلة',
+            name: 'تعلم الآل',
             nameEn: 'Machine Learning',
             icon: '🤖',
             files: {
@@ -513,14 +513,14 @@ export const coursesData = {
         },
         {
             id: 'df_data_sec_forensics',
-            name: 'التحقيقات الجنائية لقواعد أمن البيانات',
+            name: 'التحقيقات الجنائي لقواعد أمن البيانات',
             nameEn: 'Data Security Forensics',
             icon: '🗄️',
             files: {}
         },
         {
             id: 'df_law',
-            name: 'مدخل الى علم القانون',
+            name: 'مدل الى علم القانون',
             nameEn: 'Introduction to Law',
             icon: '📚',
             files: {
@@ -529,7 +529,7 @@ export const coursesData = {
         },
         {
             id: 'biometrics_security',
-            name: 'أمن وقياسات بيولوجية',
+            name: 'أمن وقياسات بيولوجي',
             nameEn: 'Biometrics and Security',
             icon: '👁️',
             files: {
@@ -542,7 +542,7 @@ export const coursesData = {
     ai_cyber_mandatory: [
         {
             id: 'cyber_pen_test',
-            name: 'اختبار الاختراق',
+            name: 'اتبار الاتراق',
             nameEn: 'Penetration Testing',
             icon: '🕵️',
             files: {
@@ -566,7 +566,7 @@ export const coursesData = {
         },
         {
             id: 'cyber_risk_mgmt',
-            name: 'إدارة مخاطر',
+            name: 'إدار ماطر',
             nameEn: 'Risk Management',
             icon: '📉',
             files: {
@@ -589,7 +589,7 @@ export const coursesData = {
         },
         {
             id: 'cyber_forensics',
-            name: 'التحقيقات الجنائية الرقمية',
+            name: 'التحقيقات الجنائي الرقمي',
             nameEn: 'Digital Forensics',
             icon: '🔍',
             files: {
@@ -616,7 +616,7 @@ export const coursesData = {
         { id: 'cyber_networks2', name: 'شبكات حاسوب (2)', nameEn: 'Computer Networks (2)', icon: '🌐', files: {} },
         {
             id: 'cyber_law_ethics',
-            name: 'قانون وأخلاقيات الفضاء الإلكتروني',
+            name: 'قانون وألاقيات الفضاء الإلكتروني',
             nameEn: 'Cyber Law and Ethics',
             icon: '⚖️',
             files: {
@@ -639,7 +639,7 @@ export const coursesData = {
         },
         {
             id: 'cyber_os_eng',
-            name: 'نظم تشغيل الهندسة',
+            name: 'نظم تشغيل الهندس',
             nameEn: 'Operating Systems for Engineering',
             icon: '⚙️',
             files: {
@@ -650,7 +650,7 @@ export const coursesData = {
                 video2: 'https://t.me/introtoai1/95'
             }
         },
-        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
+        // --- مواد متطلب تصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -696,7 +696,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم خوارزميات',
+            name: 'تحليل وتصميم وارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -710,7 +710,7 @@ export const coursesData = {
         },
         {
             id: 'shared_ml',
-            name: 'تعلم الآلة',
+            name: 'تعلم الآل',
             nameEn: 'Machine Learning',
             icon: '🤖',
             files: {
@@ -738,7 +738,7 @@ export const coursesData = {
         },
         {
             id: 'cyber_intel',
-            name: 'استخبارات',
+            name: 'استبارات',
             nameEn: 'Cyber Intelligence',
             icon: 'gf',
             files: {
@@ -748,7 +748,7 @@ export const coursesData = {
         },
         {
             id: 'cyber_cloud',
-            name: 'أمن الحوسبة السحابية',
+            name: 'أمن الحوسب السحابي',
             nameEn: 'Cloud Computing Security',
             icon: 'gf',
             files: {
@@ -802,7 +802,7 @@ export const coursesData = {
 
     // 3. AI & Robotics (AI_Robo)
     ai_robo_mandatory: [
-        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
+        // --- مواد متطلب تصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -848,7 +848,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم خوارزميات',
+            name: 'تحليل وتصميم وارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -862,7 +862,7 @@ export const coursesData = {
         },
         {
             id: 'shared_ml',
-            name: 'تعلم الآلة',
+            name: 'تعلم الآل',
             nameEn: 'Machine Learning',
             icon: '🤖',
             files: {
@@ -880,7 +880,7 @@ export const coursesData = {
     ai_vr_mandatory: [
         {
             id: 'vr_intro',
-            name: 'مقدمة الى واقع افتراضي',
+            name: 'مقدم الى واقع افتراضي',
             nameEn: 'Introduction to Virtual Reality',
             icon: '🥽',
             files: {
@@ -898,14 +898,14 @@ export const coursesData = {
         },
         {
             id: 'vr_image_proc',
-            name: 'معالجة الصور والرؤية الرقمية',
+            name: 'معالج الصور والرؤي الرقمي',
             nameEn: 'Image Processing and Computer Vision',
             icon: '👁️',
             files: {
                 pdf: 'https://drive.google.com/drive/folders/17DxuxkT399lsoqaz44aFqoV5tuU_kO4r?usp=sharing'
             }
         },
-        // --- مواد متطلب تخصص إجبارية لجميع التخصصات (ما عدا تحليل وتصميم خوارزميات) ---
+        // --- مواد متطلب تصص إجباري لجميع التصصات (ما عدا تحليل وتصميم وارزميات) ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -951,7 +951,7 @@ export const coursesData = {
         },
         {
             id: 'shared_ml',
-            name: 'تعلم الآلة',
+            name: 'تعلم الآل',
             nameEn: 'Machine Learning',
             icon: '🤖',
             files: {
@@ -969,28 +969,28 @@ export const coursesData = {
     ai_ds_mandatory: [
         {
             id: 'ds_nlp',
-            name: 'معالجة اللغة الطبيعية (د. عبد الودود)',
+            name: 'معالج اللغ الطبيعي (د. عبد الودود)',
             nameEn: 'Natural Language Processing (Dr. Abdelwadood)',
             icon: '🗣️',
             files: { pdf: 'https://drive.google.com/drive/folders/1-YoCdvVPfLS0YkK8IhOarqpU22F1nKY9?usp=drive_link', slides: 'https://drive.google.com/drive/folders/1-YoCdvVPfLS0YkK8IhOarqpU22F1nKY9?usp=drive_link' }
         },
         {
             id: 'ds_bigdata_trends',
-            name: 'تحليل وميول بيانات ضخمة',
+            name: 'تحليل وميول بيانات ضم',
             nameEn: 'Big Data Analysis & Trends',
             icon: '📈',
             files: { pdf: 'https://drive.google.com/drive/folders/1gRGLEP0A033TDZm6WmrDHpDae2XK3xfT?usp=drive_link', slides: 'https://drive.google.com/drive/folders/1gRGLEP0A033TDZm6WmrDHpDae2XK3xfT?usp=drive_link' }
         },
         {
             id: 'ds_bigdata',
-            name: 'تحليل بيانات ضخمة',
+            name: 'تحليل بيانات ضم',
             nameEn: 'Big Data Analysis',
             icon: '📊',
             files: { pdf: 'https://drive.google.com/drive/folders/1zVd6H6n4_EPOMIvLOOtb6stkRk6mJi4m?usp=drive_link', slides: 'https://drive.google.com/drive/folders/1zVd6H6n4_EPOMIvLOOtb6stkRk6mJi4m?usp=drive_link' }
         },
         {
             id: 'ds_cv',
-            name: 'الرؤية بالحاسوب',
+            name: 'الرؤي بالحاسوب',
             nameEn: 'Computer Vision',
             icon: '👁️',
             files: { pdf: 'https://drive.google.com/drive/folders/1mMkGcqKEuNwb1V5KyByAHaxqNiY6HJW4?usp=drive_link', slides: 'https://drive.google.com/drive/folders/1mMkGcqKEuNwb1V5KyByAHaxqNiY6HJW4?usp=drive_link' }
@@ -1007,10 +1007,10 @@ export const coursesData = {
             id: 'ds_pattern',
             name: 'التعرف على الأنماط (د. وفاء)',
             nameEn: 'Pattern Recognition (Dr. Wafaa)',
-            icon: '🧩',
+            icon: '',
             files: { pdf: 'https://drive.google.com/drive/folders/1anTq3RMi-w6QbNTwBFRbgX-6jLIJ7vtw?usp=drive_link', slides: 'https://drive.google.com/drive/folders/1anTq3RMi-w6QbNTwBFRbgX-6jLIJ7vtw?usp=drive_link' }
         },
-        // --- مواد متطلب تخصص إجبارية لجميع التخصصات ---
+        // --- مواد متطلب تصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -1056,7 +1056,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم خوارزميات',
+            name: 'تحليل وتصميم وارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -1070,7 +1070,7 @@ export const coursesData = {
         },
         {
             id: 'shared_ml',
-            name: 'تعلم الآلة',
+            name: 'تعلم الآل',
             nameEn: 'Machine Learning',
             icon: '🤖',
             files: {
@@ -1083,9 +1083,9 @@ export const coursesData = {
         }
     ],
     ai_ds_elective: [
-        { id: 'ds_cloud', name: 'حوسبة سحابية', nameEn: 'Cloud Computing', icon: 'gf', files: { slides: 'https://drive.google.com/drive/folders/1usq5iAYZkSLOZ1CP-dS-0Mal8a_VpSrZ?usp=share_link' } },
+        { id: 'ds_cloud', name: 'حوسب سحابي', nameEn: 'Cloud Computing', icon: 'gf', files: { slides: 'https://drive.google.com/drive/folders/1usq5iAYZkSLOZ1CP-dS-0Mal8a_VpSrZ?usp=share_link' } },
         { id: 'ds_ir', name: 'نظم استرجاع معلومات', nameEn: 'Information Retrieval Systems', icon: 'gf', files: { slides: 'https://drive.google.com/drive/folders/1-Ai9ihdYjV8GEUyTeRFkrbSY2bsXlBOz?usp=drive_link', video: 'https://www.youtube.com/watch?v=kNkCfaH2rxc&list=PLaZQkZp6WhWwoDuD6pQCmgVyDbUWl_ZUi' } },
-        { id: 'ds_dw', name: 'مخازن بيانات', nameEn: 'Data Warehouses', icon: 'gf', files: { slides: 'https://drive.google.com/drive/folders/1l-aTKhnZr0EBoGR0HnSn5KnFn4yLr1Zl?usp=drive_link', slides2: 'https://drive.google.com/drive/folders/1ybK1XXxWmuX85V7ZwzuLT78WLzT2x27m' } },
+        { id: 'ds_dw', name: 'مازن بيانات', nameEn: 'Data Warehouses', icon: 'gf', files: { slides: 'https://drive.google.com/drive/folders/1l-aTKhnZr0EBoGR0HnSn5KnFn4yLr1Zl?usp=drive_link', slides2: 'https://drive.google.com/drive/folders/1ybK1XXxWmuX85V7ZwzuLT78WLzT2x27m' } },
         { id: 'ds_mining', name: 'تنقيب بيانات', nameEn: 'Data Mining', icon: 'gf', files: { slides: 'https://drive.google.com/drive/folders/1CvJToXy2DPQnLbe-dULiZlIFXTtVam2Q' } },
         { id: 'ds_analysis', name: 'تحليل بيانات', nameEn: 'Data Analysis', icon: 'gf', files: {} }
     ],
@@ -1093,7 +1093,7 @@ export const coursesData = {
     supportingSciences: [
         {
             id: 1,
-            name: 'الرياضيات المنفصلة',
+            name: 'الرياضيات المنفصل',
             nameEn: 'Discrete Mathematics',
             icon: '🔢',
             files: {
@@ -1129,7 +1129,7 @@ export const coursesData = {
         },
         {
             id: 4,
-            name: 'مقدمة في نظرية الأعداد',
+            name: 'مقدم في نظري الأعداد',
             nameEn: 'Introduction to Number Theory',
             icon: '🔢',
             files: {
@@ -1144,7 +1144,7 @@ export const coursesData = {
             id: 5,
             name: 'مبادئ تحليل عددي',
             nameEn: 'Numerical Analysis Principles',
-            icon: '🧮',
+            icon: '',
             files: {
                 book: 'https://drive.google.com/drive/folders/1REa44WPeQ27sD185Xwj5O_O5r0u-Plm-',
                 pdf: 'https://drive.google.com/drive/folders/1GnRbqFcMHOKPyDl-7WWv-DD5ANZrRS6s',
@@ -1158,7 +1158,7 @@ export const coursesData = {
     labs: [
         {
             id: 1,
-            name: 'مختبر شبكات حاسوب (1)',
+            name: 'متبر شبكات حاسوب (1)',
             nameEn: 'Computer Networks Lab (1)',
             icon: '🌐',
             files: {
@@ -1170,7 +1170,7 @@ export const coursesData = {
         },
         {
             id: 2,
-            name: 'مختبر أمن شبكات',
+            name: 'متبر أمن شبكات',
             nameEn: 'Network Security Lab',
             icon: '🔒',
             files: {
@@ -1181,7 +1181,7 @@ export const coursesData = {
         },
         {
             id: 3,
-            name: 'مختبر قواعد بيانات',
+            name: 'متبر قواعد بيانات',
             nameEn: 'Databases Lab',
             icon: '🗃️',
             files: {
@@ -1196,7 +1196,7 @@ export const coursesData = {
         },
         {
             id: 4,
-            name: 'مختبر هياكل بيانات وخوارزميات',
+            name: 'متبر هياكل بيانات ووارزميات',
             nameEn: 'Data Structures and Algorithms Lab',
             icon: '🗄️',
             files: {
@@ -1206,7 +1206,7 @@ export const coursesData = {
         },
         {
             id: 5,
-            name: 'مختبر تعلم الآلة',
+            name: 'متبر تعلم الآل',
             nameEn: 'Machine Learning Lab',
             icon: '🤖',
             files: {
@@ -1218,7 +1218,7 @@ export const coursesData = {
         },
         {
             id: 6,
-            name: 'مختبر استعادة بيانات',
+            name: 'متبر استعاد بيانات',
             nameEn: 'Data Recovery Lab',
             icon: '♻️',
             specialization: 'df',
@@ -1229,7 +1229,7 @@ export const coursesData = {
         },
         {
             id: 7,
-            name: 'مختبر تصميم المنطق الرقمي',
+            name: 'متبر تصميم المنطق الرقمي',
             nameEn: 'Digital Logic Design Lab',
             icon: '🔌',
             files: {
@@ -1242,7 +1242,7 @@ export const coursesData = {
         },
         {
             id: 8,
-            name: 'مختبر برمجة موجهة للكائنات',
+            name: 'متبر برمج موجه للكائنات',
             nameEn: 'Object Oriented Programming Lab',
             icon: '⚙️',
             files: {
@@ -1255,7 +1255,7 @@ export const coursesData = {
         },
         {
             id: 9,
-            name: 'مختبر برمجة ويب',
+            name: 'متبر برمج ويب',
             nameEn: 'Web Programming Lab',
             icon: '🌐',
             specialization: 'ds',
@@ -1304,8 +1304,8 @@ export const coursesData = {
 
     // --- Prince Abdullah bin Ghazi Faculty for ICT (IT) ---
     it_mandatoryCollege: [
-        { id: 101, name: 'برمجة مرئية', nameEn: 'Visual Programming', icon: '🖼️', files: {} },
-        { id: 102, name: 'نظم معلومات إدارية', nameEn: 'Management Information Systems', icon: '📂', files: {} }
+        { id: 101, name: 'برمج مرئي', nameEn: 'Visual Programming', icon: '🖼️', files: {} },
+        { id: 102, name: 'نظم معلومات إداري', nameEn: 'Management Information Systems', icon: '📂', files: {} }
     ],
 
     // Computer Science Mandatory Specialization
@@ -1362,7 +1362,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_compilers', 
-            name: 'تصميم المترجمات ولغات البرمجة', 
+            name: 'تصميم المترجمات ولغات البرمج', 
             nameEn: 'Design compilers and programming languages', 
             icon: '⚙️', 
             files: { 
@@ -1376,7 +1376,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_embedded', 
-            name: 'تصميم وتنظيم الأنظمة المدمجة', 
+            name: 'تصميم وتنظيم الأنظم المدمج', 
             nameEn: 'Embedded Systems Design and Organization', 
             icon: '📟', 
             files: { 
@@ -1403,7 +1403,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_arch', 
-            name: 'معمارية الحاسوب', 
+            name: 'معماري الحاسوب', 
             nameEn: 'Computer Architecture', 
             icon: '🏛️', 
             files: { 
@@ -1417,7 +1417,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_modern_se', 
-            name: 'هندسة برمجيات حديثة', 
+            name: 'هندس برمجيات حديث', 
             nameEn: 'Modern software engineering', 
             icon: '🏗️', 
             files: { 
@@ -1468,7 +1468,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_db2', 
-            name: 'تصميم وإدارة قواعد البيانات ٢', 
+            name: 'تصميم وإدار قواعد البيانات ٢', 
             nameEn: 'DB Design & Management 2', 
             icon: '🗄️', 
             files: { 
@@ -1514,124 +1514,124 @@ export const coursesData = {
     ],
 
     it_common: [
-        { id: 'it_vp', name: 'البرمجية المرئية للأجهزة الذكية (Android)', nameEn: 'Visual Programming for Smart Devices (Android)', icon: '📱', files: { link: 'https://drive.google.com/drive/folders/14xWanFDrv0bzVy5W-JZ5U0826PmmO9mD' } },
-        { id: 'it_seop', name: 'البرمجة الموجهة لهندسة البرمجيات', nameEn: 'Software Engineering Oriented Programming', icon: '💻', files: { link: 'https://drive.google.com/drive/folders/1hqolyGKcWg6A4UQDHsE_h0Pe6MUjnks6' } },
-        { id: 'it_java', name: 'البرمجة بلغة جافا', nameEn: 'Java Programming', icon: '☕', files: { link: 'https://drive.google.com/drive/folders/1JlIgreD_q6FxLpbSwJIth53d9l_lLSLD' } },
+        { id: 'it_vp', name: 'البرمجي المرئي للأجهز الذكي (Android)', nameEn: 'Visual Programming for Smart Devices (Android)', icon: '📱', files: { link: 'https://drive.google.com/drive/folders/14xWanFDrv0bzVy5W-JZ5U0826PmmO9mD' } },
+        { id: 'it_seop', name: 'البرمج الموجه لهندس البرمجيات', nameEn: 'Software Engineering Oriented Programming', icon: '💻', files: { link: 'https://drive.google.com/drive/folders/1hqolyGKcWg6A4UQDHsE_h0Pe6MUjnks6' } },
+        { id: 'it_java', name: 'البرمج بلغ جافا', nameEn: 'Java Programming', icon: '☕', files: { link: 'https://drive.google.com/drive/folders/1JlIgreD_q6FxLpbSwJIth53d9l_lLSLD' } },
         { id: 'it_dig_logic', name: 'المنطق الرقمي', nameEn: 'Digital Logic', icon: '🔢', files: { link: 'https://drive.google.com/drive/folders/1aCH9nAOFgo0_PYWaOLTguM3e_ElKIolC' } },
-        { id: 'it_web', name: 'برمجة تطبيقات الانترنت', nameEn: 'Internet Application Programming (Web)', icon: '🌐', files: { link: 'https://drive.google.com/drive/folders/1XWbawq_YnOXAsnyw_YM5FJigITsq6GgM' } },
-        { id: 'it_algo', name: 'تحليل وتصميم الخوارزميات', nameEn: 'Analysis and Design of Algorithms', icon: '🧮', files: { link: 'https://drive.google.com/drive/folders/1NWyuxqjIuWleQbPRvo2IKG_jG1slGX__' } },
+        { id: 'it_web', name: 'برمج تطبيقات الانترنت', nameEn: 'Internet Application Programming (Web)', icon: '🌐', files: { link: 'https://drive.google.com/drive/folders/1XWbawq_YnOXAsnyw_YM5FJigITsq6GgM' } },
+        { id: 'it_algo', name: 'تحليل وتصميم الوارزميات', nameEn: 'Analysis and Design of Algorithms', icon: '', files: { link: 'https://drive.google.com/drive/folders/1NWyuxqjIuWleQbPRvo2IKG_jG1slGX__' } },
         { id: 'it_cis_dig_logic', name: 'تحليل وتصميم المنطق الرقمي (CIS)', nameEn: 'Digital Logic Analysis and Design (CIS)', icon: '🔧', files: { link: 'https://drive.google.com/drive/folders/1V3HL-CHf9xWQvxNnUueCWDEBjyXDGiGF' } },
-        { id: 'it_db1', name: 'تصميم وإدارة قواعد البيانات ١', nameEn: 'Database Design and Management 1', icon: '🗄️', files: { link: 'https://drive.google.com/drive/folders/1T-9SAFHdRnzaXq0HipJ2d0lmWFNtu3pO' } },
+        { id: 'it_db1', name: 'تصميم وإدار قواعد البيانات ١', nameEn: 'Database Design and Management 1', icon: '🗄️', files: { link: 'https://drive.google.com/drive/folders/1T-9SAFHdRnzaXq0HipJ2d0lmWFNtu3pO' } },
         { id: 'it_net_principles', name: 'مبادئ شبكات الحاسوب', nameEn: 'Computer Networking Principles', icon: '🔗', files: { link: 'https://drive.google.com/drive/folders/16hJ9pIK8M14_aLNMh8KrnIpOqU4wBEW5' } },
         { id: 'it_os_principles', name: 'مبادئ نظم التشغيل', nameEn: 'Operating Systems Principles', icon: '🖥️', files: { link: 'https://drive.google.com/drive/folders/1RFWszBMzvqkEm0Z8bgNDSjMxN1jdB5__' } },
-        { id: 'it_android_lab', name: 'مختبر البرمجة المرئية للأجهزة الذكية (Android Lab)', nameEn: 'Android Programming Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1ZvoA5eGYuH3JyeZNOvc6lFqpyV0Vmr03' } },
-        { id: 'it_java_lab', name: 'مختبر البرمجة بلغة جافا', nameEn: 'Java Programming Lab', icon: '☕', files: { link: 'https://drive.google.com/drive/folders/1z_4Q3jQMAdbltJpBatnqvwxOx1d9Guqd' } },
-        { id: 'it_dig_logic_lab', name: 'مختبر المنطق الرقمي', nameEn: 'Digital Logic Lab', icon: '🔌', files: { link: 'https://drive.google.com/drive/folders/1esQzEGygqYqTcw4RTk6PebdxR4mHzRUU' } },
-        { id: 'it_web_lab', name: 'مختبر برمجة تطبيقات الانترنت', nameEn: 'Web Programming Lab', icon: '🌍', files: { link: 'https://drive.google.com/drive/folders/1v-6RtsU6VnVArbVW2oqH82ntSnGwcBWy' } },
-        { id: 'it_cis_logic_lab', name: 'مختبر تصميم المنطق الرقمي (CIS)', nameEn: 'Digital Logic Design Lab (CIS)', icon: '🛠️', files: { link: 'https://drive.google.com/drive/folders/10a0q_k5DTJQ_fMFnWcThJCwErxygjoof' } },
-        { id: 'it_ds_lab', name: 'مختبر هياكل البيانات', nameEn: 'Data Structure Lab', icon: '📊', files: { link: 'https://drive.google.com/drive/folders/1hvHmlLgHXwjpvoCWau9IhJdG4GO7kLdq' } },
-        { id: 'it_intro_programming', name: 'مقدمة إلى برمجة الحاسوب', nameEn: 'Introduction to Computer Programming', icon: '💻', files: { link: 'https://drive.google.com/drive/folders/1yiCDExz3wk2XKac85HWowdEj-zNIfOtx' } },
+        { id: 'it_android_lab', name: 'متبر البرمج المرئي للأجهز الذكي (Android Lab)', nameEn: 'Android Programming Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1ZvoA5eGYuH3JyeZNOvc6lFqpyV0Vmr03' } },
+        { id: 'it_java_lab', name: 'متبر البرمج بلغ جافا', nameEn: 'Java Programming Lab', icon: '☕', files: { link: 'https://drive.google.com/drive/folders/1z_4Q3jQMAdbltJpBatnqvwxOx1d9Guqd' } },
+        { id: 'it_dig_logic_lab', name: 'متبر المنطق الرقمي', nameEn: 'Digital Logic Lab', icon: '🔌', files: { link: 'https://drive.google.com/drive/folders/1esQzEGygqYqTcw4RTk6PebdxR4mHzRUU' } },
+        { id: 'it_web_lab', name: 'متبر برمج تطبيقات الانترنت', nameEn: 'Web Programming Lab', icon: '🌍', files: { link: 'https://drive.google.com/drive/folders/1v-6RtsU6VnVArbVW2oqH82ntSnGwcBWy' } },
+        { id: 'it_cis_logic_lab', name: 'متبر تصميم المنطق الرقمي (CIS)', nameEn: 'Digital Logic Design Lab (CIS)', icon: '🛠️', files: { link: 'https://drive.google.com/drive/folders/10a0q_k5DTJQ_fMFnWcThJCwErxygjoof' } },
+        { id: 'it_ds_lab', name: 'متبر هياكل البيانات', nameEn: 'Data Structure Lab', icon: '📊', files: { link: 'https://drive.google.com/drive/folders/1hvHmlLgHXwjpvoCWau9IhJdG4GO7kLdq' } },
+        { id: 'it_intro_programming', name: 'مقدم إلى برمج الحاسوب', nameEn: 'Introduction to Computer Programming', icon: '💻', files: { link: 'https://drive.google.com/drive/folders/1yiCDExz3wk2XKac85HWowdEj-zNIfOtx' } },
         { id: 'it_ds', name: 'هياكل البيانات', nameEn: 'Data Structures', icon: '🌳', files: { link: 'https://drive.google.com/drive/folders/1tGkFdvOaHDNV3FxFDrug1lTE9-rfYdjK' } }
     ],
 
     it_labs: [
-        { id: 401, name: 'مختبر بـرمجة الويب', nameEn: 'Web Programming Lab', icon: '🌐', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } },
-        { id: 402, name: 'مختبر بـرمجة الجافا', nameEn: 'Java Programming Lab', icon: '☕', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } },
-        { id: 403, name: 'مختبر قواعد البيانات', nameEn: 'Database Lab', icon: '🗄️', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } },
-        { id: 404, name: 'مختبر أندرويد', nameEn: 'Android Lab', icon: '🤖', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } }
+        { id: 401, name: 'متبر بـرمج الويب', nameEn: 'Web Programming Lab', icon: '🌐', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } },
+        { id: 402, name: 'متبر بـرمج الجافا', nameEn: 'Java Programming Lab', icon: '☕', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } },
+        { id: 403, name: 'متبر قواعد البيانات', nameEn: 'Database Lab', icon: '🗄️', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } },
+        { id: 404, name: 'متبر أندرويد', nameEn: 'Android Lab', icon: '🤖', files: { link: 'https://drive.google.com/drive/folders/10aymiWomVlwfYS2NTT-d0JmFSsr5OaT7' } }
     ],
 
     it_drive: [
-        { id: 301, name: 'جميع ملفات كلية الـ IT', nameEn: 'All IT Faculty Files (Drive)', icon: '📁', files: { link: 'https://drive.google.com/drive/folders/1aEPGZ_NeJDN96k4LgvCdlOILQdIsRGD8' } }
+        { id: 301, name: 'جميع ملفات كلي الـ IT', nameEn: 'All IT Faculty Files (Drive)', icon: '📁', files: { link: 'https://drive.google.com/drive/folders/1aEPGZ_NeJDN96k4LgvCdlOILQdIsRGD8' } }
     ],
 
     // Computer Graphics and Animation Mandatory Specialization
     it_cga_mandatory: [
-        { id: 'cga_2da', name: 'الرسوم المتحركة ثنائية الابعاد', nameEn: '2D Animation', icon: '🎬', files: { link: 'https://drive.google.com/drive/folders/1AVuNf4sIw1PEsOrGrd3ZhqbDr42-lhlO' } },
-        { id: 'cga_ig', name: 'الرسومات التفاعلية', nameEn: 'Interactive Graphics', icon: '🎮', files: { link: 'https://drive.google.com/drive/folders/1ykVFjNnW-avr3q9TJg28FamehK9r3DSo' } },
+        { id: 'cga_2da', name: 'الرسوم المتحرك ثنائي الابعاد', nameEn: '2D Animation', icon: '🎬', files: { link: 'https://drive.google.com/drive/folders/1AVuNf4sIw1PEsOrGrd3ZhqbDr42-lhlO' } },
+        { id: 'cga_ig', name: 'الرسومات التفاعلي', nameEn: 'Interactive Graphics', icon: '', files: { link: 'https://drive.google.com/drive/folders/1ykVFjNnW-avr3q9TJg28FamehK9r3DSo' } },
         { id: 'cga_math', name: 'الرياضيات للرسم الحاسوبي', nameEn: 'Math for Computer Graphics', icon: '📐', files: { link: 'https://drive.google.com/drive/folders/1tmR1jM0Pw0uNU9XD-2P5df0ZDwOdnq18' } },
-        { id: 'cga_mm', name: 'الوسائط المتعددة', nameEn: 'Multimedia', icon: '🎨', files: { link: 'https://drive.google.com/drive/folders/12uSZUnOpIOqRmY9lOIMXa_EX2KdJl6IH' } },
-        { id: 'cga_dfd', name: 'تصميم الافلام الرقمية', nameEn: 'Digital Film Design', icon: '🎥', files: { link: 'https://drive.google.com/drive/folders/1CmWnA_QM92bsw2MOXpNQPPeXI-VUHKFP' } },
-        { id: 'cga_sd', name: 'تصميم القصة المصورة', nameEn: 'Storyboard Design', icon: '📝', files: { link: 'https://drive.google.com/drive/folders/1823hsv8HU93Un9a_D0varqBq5H2TXsVK' } },
-        { id: 'cga_3dm', name: 'تصميم النماذج ثلاثية الابعاد', nameEn: '3D Modeling', icon: '🧊', files: { link: 'https://drive.google.com/drive/folders/1bwM755QzBRiLbiwRcZ7n7ThP1x5oH-Kq' } },
+        { id: 'cga_mm', name: 'الوسائط المتعدد', nameEn: 'Multimedia', icon: '🎨', files: { link: 'https://drive.google.com/drive/folders/12uSZUnOpIOqRmY9lOIMXa_EX2KdJl6IH' } },
+        { id: 'cga_dfd', name: 'تصميم الافلام الرقمي', nameEn: 'Digital Film Design', icon: '🎥', files: { link: 'https://drive.google.com/drive/folders/1CmWnA_QM92bsw2MOXpNQPPeXI-VUHKFP' } },
+        { id: 'cga_sd', name: 'تصميم القص المصور', nameEn: 'Storyboard Design', icon: '📝', files: { link: 'https://drive.google.com/drive/folders/1823hsv8HU93Un9a_D0varqBq5H2TXsVK' } },
+        { id: 'cga_3dm', name: 'تصميم النماذج ثلاثي الابعاد', nameEn: '3D Modeling', icon: '🧊', files: { link: 'https://drive.google.com/drive/folders/1bwM755QzBRiLbiwRcZ7n7ThP1x5oH-Kq' } },
         { id: 'cga_caa', name: 'تطبيقات الحاسوب في الفنون', nameEn: 'Computer Apps in Arts', icon: '🎭', files: { link: 'https://drive.google.com/drive/folders/1NCr-xMFSNAYhuKohRUhGcKPZoHm-QHUn' } },
         { id: 'cga_hci', name: 'تفاعل الانسان والحاسب الالي', nameEn: 'HCI', icon: '🖱️', files: { link: 'https://drive.google.com/drive/folders/108gPkK0AQBlJGtz-FeNJgHgh29G7fA28' } },
         { id: 'cga_cm', name: 'طرق التلوين', nameEn: 'Coloring Methods', icon: '🖌️', files: { link: 'https://drive.google.com/drive/folders/1BjWkHCnIcTe_2CCqQhLq-wrAHwIFG3eT' } },
         { id: 'cga_pcg', name: 'مبادئ الرسم الحاسوبي', nameEn: 'Principles of CG', icon: '🖼️', files: { link: 'https://drive.google.com/drive/folders/17tSVOmXQzQuBVBvU_2iYfW8UJlqNDqiu' } },
-        { id: 'cga_2dal', name: 'مختبر الرسوم المتحركة ثنائية الابعاد', nameEn: '2D Animation Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1d8GjcQY8s6jNflWiAcczOauU_9Ur2MwK' } },
-        { id: 'cga_fdl', name: 'مختبر تصميم افلام', nameEn: 'Film Design Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1cQ4czWvaCSi_yJUzDu-2DfHDEiCjX2ny' } },
-        { id: 'cga_ipdv', name: 'معالجـة الصور و الرؤية الرقمية', nameEn: 'Image Processing & Digital Vision', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/10ZGgs4J1iPPvCh4Xgh-h75JmBDnlJz--' } }
+        { id: 'cga_2dal', name: 'متبر الرسوم المتحرك ثنائي الابعاد', nameEn: '2D Animation Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1d8GjcQY8s6jNflWiAcczOauU_9Ur2MwK' } },
+        { id: 'cga_fdl', name: 'متبر تصميم افلام', nameEn: 'Film Design Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1cQ4czWvaCSi_yJUzDu-2DfHDEiCjX2ny' } },
+        { id: 'cga_ipdv', name: 'معالجـ الصور و الرؤي الرقمي', nameEn: 'Image Processing & Digital Vision', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/10ZGgs4J1iPPvCh4Xgh-h75JmBDnlJz--' } }
     ],
 
     // Computer Graphics and Animation Elective Specialization
     it_cga_elective: [
-        { id: 'cga_pc', name: 'الحوسبة المتوازية للرسم الحاسوبي', nameEn: 'Parallel Computing for CG', icon: '⚡', files: { link: 'https://drive.google.com/drive/folders/1EIY1823LUhbF0ftVmAfBRM0wH3oVVlpa' } },
-        { id: 'cga_gd', name: 'تصميم الالعاب', nameEn: 'Game Design', icon: '🎮', files: { link: 'https://drive.google.com/drive/folders/1bnM4OgMpSC4hbQutU1JzVD8p9MmWmu0G' } },
-        { id: 'cga_ipdv_e', name: 'معالجة الصور والرؤيا الرقمية', nameEn: 'Image Processing & Digital Vision (Elective)', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/1HejjPhYOIajU-WTOShtx6UCpHdSSnVVb' } },
-        { id: 'cga_st', name: 'مواضيع خاصة في الرسم الحاسوبي', nameEn: 'Special Topics in CG', icon: '📚', files: { link: 'https://drive.google.com/drive/folders/1UtEZl5bdBZkZ9SGZIVBleXGTNOWqpcEw' } }
+        { id: 'cga_pc', name: 'الحوسب المتوازي للرسم الحاسوبي', nameEn: 'Parallel Computing for CG', icon: '⚡', files: { link: 'https://drive.google.com/drive/folders/1EIY1823LUhbF0ftVmAfBRM0wH3oVVlpa' } },
+        { id: 'cga_gd', name: 'تصميم الالعاب', nameEn: 'Game Design', icon: '', files: { link: 'https://drive.google.com/drive/folders/1bnM4OgMpSC4hbQutU1JzVD8p9MmWmu0G' } },
+        { id: 'cga_ipdv_e', name: 'معالج الصور والرؤيا الرقمي', nameEn: 'Image Processing & Digital Vision (Elective)', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/1HejjPhYOIajU-WTOShtx6UCpHdSSnVVb' } },
+        { id: 'cga_st', name: 'مواضيع اص في الرسم الحاسوبي', nameEn: 'Special Topics in CG', icon: '📚', files: { link: 'https://drive.google.com/drive/folders/1UtEZl5bdBZkZ9SGZIVBleXGTNOWqpcEw' } }
     ],
 
     // Computer Information Systems Mandatory Specialization
     it_cis_mandatory: [
         { id: 'cis_dw', name: 'مستودعات البيانات', nameEn: 'Data Warehousing', icon: '📊', files: { link: 'https://drive.google.com/drive/folders/1CF2qfDniRS38QDhtkbDD91xvgtOXMuTp' } },
-        { id: 'cis_nm', name: 'إدارة شبكات الحاسوب', nameEn: 'Network Management', icon: '🌐', files: { link: 'https://drive.google.com/drive/folders/1CyRPzQ_EVB6emG1IivUplwGqG6DqTb42' } },
-        { id: 'cis_dbm', name: 'إدارة نظم قواعد البيانات', nameEn: 'Database Systems Management', icon: '🗄️', files: { link: 'https://drive.google.com/drive/folders/1udyBXI88JLGHpRnxbn4yhcyPjibkS_AR' } },
+        { id: 'cis_nm', name: 'إدار شبكات الحاسوب', nameEn: 'Network Management', icon: '🌐', files: { link: 'https://drive.google.com/drive/folders/1CyRPzQ_EVB6emG1IivUplwGqG6DqTb42' } },
+        { id: 'cis_dbm', name: 'إدار نظم قواعد البيانات', nameEn: 'Database Systems Management', icon: '🗄️', files: { link: 'https://drive.google.com/drive/folders/1udyBXI88JLGHpRnxbn4yhcyPjibkS_AR' } },
         { id: 'cis_ir', name: 'استدعاء المعلومات', nameEn: 'Information Retrieval', icon: '🔍', files: { link: 'https://drive.google.com/drive/folders/1_tI6dlaTN9YjcgK4Fb_YzJZ-HMN3dRxx' } },
         { id: 'cis_dm', name: 'التنقيب عن البيانات', nameEn: 'Data Mining', icon: '⛏️', files: { link: 'https://drive.google.com/drive/folders/1WlF0lnsiCac54FU7rir-f0DvO5LjmvCE' } },
         { id: 'cis_is', name: 'أمن المعلومات', nameEn: 'Information Security', icon: '🔒', files: { link: 'https://drive.google.com/drive/folders/1NLkbWSst73Ipk4jOdOmw0TcgrkBh1YlO' } },
         { id: 'cis_cep', name: 'تصنيف وتقييم الأنماط', nameEn: 'Classification and Evaluation of Patterns', icon: '🎯', files: { link: 'https://drive.google.com/drive/folders/1MzXIJcOoIgMJiAl8HN7CUlLdIsCwYDDf' } },
-        { id: 'cis_dml', name: 'مختبر التنقيب عن البيانات', nameEn: 'Data Mining Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1sUX7t0_qql2C8s83RF7vrRdz_UgNkCDG' } }
+        { id: 'cis_dml', name: 'متبر التنقيب عن البيانات', nameEn: 'Data Mining Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1sUX7t0_qql2C8s83RF7vrRdz_UgNkCDG' } }
     ],
 
     // Computer Information Systems Elective Specialization
     it_cis_elective: [
-        { id: 'cis_gis', name: 'نظم المعلومات الجغرافية', nameEn: 'Geographical Information System', icon: '🗺️', files: { link: 'https://drive.google.com/drive/folders/19BQwJx07SgpHDfUnD87HxLCgYPjUGYyf' } }
+        { id: 'cis_gis', name: 'نظم المعلومات الجغرافي', nameEn: 'Geographical Information System', icon: '🗺️', files: { link: 'https://drive.google.com/drive/folders/19BQwJx07SgpHDfUnD87HxLCgYPjUGYyf' } }
     ],
 
     // Software Engineering Mandatory Specialization
     it_se_mandatory: [
-        { id: 'se_tv', name: 'الإختبار والتحقق من البرمجيات', nameEn: 'Software Testing and Verification', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1PderD-1ZNioJ03R2PdukH0D0FnolFHzt' } },
-        { id: 'se_refs', name: 'المتطلبات الهندسية والمواصفات الرسمية', nameEn: 'Requirement Engineering & Formal Specs', icon: '📑', files: { link: 'https://drive.google.com/drive/folders/1jDDLTsqKu-F6AgOMUjgP6_2ITD_vsNix' } },
-        { id: 'se_ppm', name: 'تخطيط وإدارة مشاريع البرمجيات', nameEn: 'Software Project Planning & Mngmt', icon: '📅', files: { link: 'https://drive.google.com/drive/folders/1RkSR8fOWK4NH9qsCgsqL7bWmUsNNW2H0' } },
+        { id: 'se_tv', name: 'الإتبار والتحقق من البرمجيات', nameEn: 'Software Testing and Verification', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1PderD-1ZNioJ03R2PdukH0D0FnolFHzt' } },
+        { id: 'se_refs', name: 'المتطلبات الهندسي والمواصفات الرسمي', nameEn: 'Requirement Engineering & Formal Specs', icon: '📑', files: { link: 'https://drive.google.com/drive/folders/1jDDLTsqKu-F6AgOMUjgP6_2ITD_vsNix' } },
+        { id: 'se_ppm', name: 'تطيط وإدار مشاريع البرمجيات', nameEn: 'Software Project Planning & Mngmt', icon: '📅', files: { link: 'https://drive.google.com/drive/folders/1RkSR8fOWK4NH9qsCgsqL7bWmUsNNW2H0' } },
         { id: 'se_cd', name: 'تطوير مكونات البرمجيات', nameEn: 'Software Component Development', icon: '🧱', files: { link: 'https://drive.google.com/drive/folders/1XglX3HSITlbj_iciAVaSdMNNv9ehXghn' } },
-        { id: 'se_pse', name: 'مبادئ هندسة البرمجيات', nameEn: 'Principles of Software Engineering', icon: '🏗️', files: { link: 'https://drive.google.com/drive/folders/1mlK66pjzJ1RVT5mmv3CNTpMb3nMHmWW3' } },
-        { id: 'se_arch_bh', name: 'معمارية الحاسوب (د. باسم الحديدي)', nameEn: 'Computer Architecture (Dr. Basem)', icon: '🏛️', files: { link: 'https://drive.google.com/drive/folders/1X3N41chCfR4OhWf6LR3SUCTSxFVMuT8n' } },
-        { id: 'se_edrs', name: 'هندسة ووصف متطلبات البرمجيات', nameEn: 'Engineering and Description of Requirements', icon: '🖋️', files: { link: 'https://drive.google.com/drive/folders/1hi3mbiCh19Iqr5P6v674UcLGT2_CC1g9' } },
-        { id: 'se_ose', name: 'هندسة البرمجيات الشيئية', nameEn: 'Objective Software Engineering', icon: '🧩', files: { link: 'https://drive.google.com/drive/folders/1GA_AoZM_nT2qkV8KpbYGjhIuWZA5GzV7' } }
+        { id: 'se_pse', name: 'مبادئ هندس البرمجيات', nameEn: 'Principles of Software Engineering', icon: '🏗️', files: { link: 'https://drive.google.com/drive/folders/1mlK66pjzJ1RVT5mmv3CNTpMb3nMHmWW3' } },
+        { id: 'se_arch_bh', name: 'معماري الحاسوب (د. باسم الحديدي)', nameEn: 'Computer Architecture (Dr. Basem)', icon: '🏛️', files: { link: 'https://drive.google.com/drive/folders/1X3N41chCfR4OhWf6LR3SUCTSxFVMuT8n' } },
+        { id: 'se_edrs', name: 'هندس ووصف متطلبات البرمجيات', nameEn: 'Engineering and Description of Requirements', icon: '🖋️', files: { link: 'https://drive.google.com/drive/folders/1hi3mbiCh19Iqr5P6v674UcLGT2_CC1g9' } },
+        { id: 'se_ose', name: 'هندس البرمجيات الشيئي', nameEn: 'Objective Software Engineering', icon: '', files: { link: 'https://drive.google.com/drive/folders/1GA_AoZM_nT2qkV8KpbYGjhIuWZA5GzV7' } }
     ],
 
     // Software Engineering Elective Specialization
     it_se_elective: [
         { id: 'se_hci', name: 'تفاعل الحاسوب والإنسان', nameEn: 'Human Computer Interaction (HCI)', icon: '🖱️', files: { link: 'https://drive.google.com/drive/folders/1B3zYJIj3QbP7tGuoX0mRg3EKLBGjTIyZ' } },
-        { id: 'se_sme', name: 'صيانة وتطور البرمجيات', nameEn: 'Software Maintenance & Evolution', icon: '🔧', files: { link: 'https://drive.google.com/drive/folders/1uquukTVj9LTLVCEvLdNezlMWeSXloBJw' } }
+        { id: 'se_sme', name: 'صيان وتطور البرمجيات', nameEn: 'Software Maintenance & Evolution', icon: '🔧', files: { link: 'https://drive.google.com/drive/folders/1uquukTVj9LTLVCEvLdNezlMWeSXloBJw' } }
     ]
 };
 
 export const faculties = [
     {
         id: 'ai',
-        name: 'كلية الذكاء الاصطناعي',
+        name: 'كلي الذكاء الاصطناعي',
         nameEn: 'Faculty of Artificial Intelligence',
         bg: 'assets/faculties/ai-faculty.png',
         color: '#1a237e',
         telegramChannels: [
             {
                 id: 'ai_main_channel',
-                name: 'قناة شروحات كلية الذكاء الاصطناعي',
+                name: 'قنا شروحات كلي الذكاء الاصطناعي',
                 nameEn: 'AI Faculty Explanations Channel',
                 url: 'https://t.me/introtoai1',
-                description: 'قناة تحتوي على شروحات للعديد من مواد الكلية',
+                description: 'قنا تحتوي على شروحات للعديد من مواد الكلي',
                 descriptionEn: 'Channel containing explanations for many faculty courses',
                 icon: '📚',
                 courses: [
-                    'مقدمة للذكاء الاصطناعي',
+                    'مقدم للذكاء الاصطناعي',
                     'أمن شبكات',
-                    'مقدمة الى اليونكس',
+                    'مقدم الى اليونكس',
                     'برمجه موجهه للكائنات',
-                    'مختبر شبكات حاسوب',
-                    'تحليل وتصميم خوارزميات',
-                    'تعلم الآلة',
-                    'نظم تشغيل للتحقيقات الجنائية',
+                    'متبر شبكات حاسوب',
+                    'تحليل وتصميم وارزميات',
+                    'تعلم الآل',
+                    'نظم تشغيل للتحقيقات الجنائي',
                     'شبكات حاسوب',
                     'أساسيات تشفير',
                     'هياكل بيانات'
@@ -1639,7 +1639,7 @@ export const faculties = [
             }
         ],
         specializations: [
-            { id: 'df', name: 'التحقيقات الجنائية الرقمية', nameEn: 'Digital Forensics' },
+            { id: 'df', name: 'التحقيقات الجنائي الرقمي', nameEn: 'Digital Forensics' },
             { id: 'cyber', name: 'أمن المعلومات والفضاء الالكتروني', nameEn: 'Cyber Security and Cyberspace' },
             { id: 'ai_robo', name: 'الذكاء الاصطناعي والروبوتات', nameEn: 'AI and Robotics' },
             { id: 'vr', name: 'الواقع الافتراضي', nameEn: 'Virtual Reality' },
@@ -1648,61 +1648,61 @@ export const faculties = [
     },
     {
         id: 'it',
-        name: 'كلية الأمير عبدالله بن غازي للاتصالات وتكنولوجيا المعلومات',
+        name: 'كلي الأمير عبدالله بن غازي للاتصالات وتكنولوجيا المعلومات',
         nameEn: 'Prince Abdullah bin Ghazi Faculty for ICT',
         bg: 'assets/faculties/it-faculty.jpg',
         color: '#004d40',
         specializations: [
             { id: 'cs', name: 'علم الحاسوب', nameEn: 'Computer Science' },
-            { id: 'cga', name: 'الرسم الحاسوبي والرسوم المتحركة', nameEn: 'Computer Graphics and Animation' },
-            { id: 'cis', name: 'نظم المعلومات الحاسوبية', nameEn: 'Computer Information Systems' },
-            { id: 'se', name: 'هندسة البرمجيات', nameEn: 'Software Engineering' }
+            { id: 'cga', name: 'الرسم الحاسوبي والرسوم المتحرك', nameEn: 'Computer Graphics and Animation' },
+            { id: 'cis', name: 'نظم المعلومات الحاسوبي', nameEn: 'Computer Information Systems' },
+            { id: 'se', name: 'هندس البرمجيات', nameEn: 'Software Engineering' }
         ],
         telegramChannels: [
             {
                 id: 'it_main_channel',
-                name: 'قناة شروحات كلية الأمير عبدالله بن غازي',
+                name: 'قنا شروحات كلي الأمير عبدالله بن غازي',
                 nameEn: 'Prince Abdullah bin Ghazi Faculty Channel',
                 url: 'https://t.me/+gnyyMS7vffM3Yjg0',
-                description: 'قناة شاملة تحتوي على شروحات منظمة لجميع تخصصات الكلية',
+                description: 'قنا شامل تحتوي على شروحات منظم لجميع تصصات الكلي',
                 descriptionEn: 'Comprehensive channel with organized explanations for all faculty specializations',
                 icon: '📚',
                 playlists: [
                     {
-                        name: 'المواد المشتركة بين IT و AI',
+                        name: 'المواد المشترك بين IT و AI',
                         nameEn: 'Shared Materials (IT & AI)',
                         url: 'https://t.me/c/1555428522/3149',
-                        description: 'كالكولاس، إحصاء، تحليل عددي، برمجة، مهارات حاسوب'
+                        description: 'كالكولاس، إحصاء، تحليل عددي، برمج، مهارات حاسوب'
                     },
                     {
-                        name: 'مختبرات الكلية المشتركة',
+                        name: 'متبرات الكلي المشترك',
                         nameEn: 'Shared Faculty Labs',
                         url: 'https://t.me/c/1555428522/3150',
-                        description: 'جميع مختبرات الكلية'
+                        description: 'جميع متبرات الكلي'
                     },
                     {
                         name: 'مواد علم الحاسوب',
                         nameEn: 'Computer Science Materials',
                         url: 'https://t.me/c/1555428522/3151',
-                        description: 'شروحات تخصص CS'
+                        description: 'شروحات تصص CS'
                     },
                     {
-                        name: 'مواد الرسم الحاسوبي والرسوم المتحركة',
+                        name: 'مواد الرسم الحاسوبي والرسوم المتحرك',
                         nameEn: 'CGA Materials',
                         url: 'https://t.me/c/1555428522/3152',
-                        description: 'شروحات تخصص CGA'
+                        description: 'شروحات تصص CGA'
                     },
                     {
-                        name: 'مواد نظم المعلومات الحاسوبية',
+                        name: 'مواد نظم المعلومات الحاسوبي',
                         nameEn: 'CIS Materials',
                         url: 'https://t.me/c/1555428522/3153',
-                        description: 'شروحات تخصص CIS'
+                        description: 'شروحات تصص CIS'
                     },
                     {
-                        name: 'مواد هندسة البرمجيات',
+                        name: 'مواد هندس البرمجيات',
                         nameEn: 'Software Engineering Materials',
                         url: 'https://t.me/c/1555428522/3154',
-                        description: 'شروحات تخصص SE'
+                        description: 'شروحات تصص SE'
                     }
                 ]
             }
@@ -1711,41 +1711,41 @@ export const faculties = [
 ];
 
 export const categories = [
-    { id: 'mandatoryUniversity', name: 'متطلبات الجامعة الإجبارية', nameEn: 'University Mandatory Requirements', color: '#d32f2f', faculty: 'all' },
-    { id: 'optionalUniversity', name: 'متطلبات الجامعة الاختيارية', nameEn: 'University Optional Requirements', color: '#1976d2', faculty: 'all' },
-    { id: 'mandatoryCollege', name: 'متطلبات الكلية الإجبارية', nameEn: 'College Mandatory Requirements', color: '#388e3c', faculty: 'ai' },
+    { id: 'mandatoryUniversity', name: 'متطلبات الجامع الإجباري', nameEn: 'University Mandatory Requirements', color: '#d32f2f', faculty: 'all' },
+    { id: 'optionalUniversity', name: 'متطلبات الجامع الاتياري', nameEn: 'University Optional Requirements', color: '#1976d2', faculty: 'all' },
+    { id: 'mandatoryCollege', name: 'متطلبات الكلي الإجباري', nameEn: 'College Mandatory Requirements', color: '#388e3c', faculty: 'ai' },
 
     // AI Specializations
     // DF
-    { id: 'ai_df_mandatory', name: 'متطلبات التخصص الإجبارية (DF)', nameEn: 'DF Mandatory Requirements', color: '#f57c00', faculty: 'ai', specialization: 'df' },
-    { id: 'ai_df_elective', name: 'متطلبات التخصص الاختيارية (DF)', nameEn: 'DF Elective Requirements', color: '#7b1fa2', faculty: 'ai', specialization: 'df' },
+    { id: 'ai_df_mandatory', name: 'متطلبات التصص الإجباري (DF)', nameEn: 'DF Mandatory Requirements', color: '#f57c00', faculty: 'ai', specialization: 'df' },
+    { id: 'ai_df_elective', name: 'متطلبات التصص الاتياري (DF)', nameEn: 'DF Elective Requirements', color: '#7b1fa2', faculty: 'ai', specialization: 'df' },
     // Cyber
-    { id: 'ai_cyber_mandatory', name: 'متطلبات التخصص الإجبارية (Cyber)', nameEn: 'Cyber Mandatory Requirements', color: '#d84315', faculty: 'ai', specialization: 'cyber' },
-    { id: 'ai_cyber_elective', name: 'متطلبات التخصص الاختيارية (Cyber)', nameEn: 'Cyber Elective Requirements', color: '#ad1457', faculty: 'ai', specialization: 'cyber' },
+    { id: 'ai_cyber_mandatory', name: 'متطلبات التصص الإجباري (Cyber)', nameEn: 'Cyber Mandatory Requirements', color: '#d84315', faculty: 'ai', specialization: 'cyber' },
+    { id: 'ai_cyber_elective', name: 'متطلبات التصص الاتياري (Cyber)', nameEn: 'Cyber Elective Requirements', color: '#ad1457', faculty: 'ai', specialization: 'cyber' },
     // AI & Robo
-    { id: 'ai_robo_mandatory', name: 'متطلبات التخصص الإجبارية (AI)', nameEn: 'AI Mandatory Requirements', color: '#f9a825', faculty: 'ai', specialization: 'ai_robo' },
-    { id: 'ai_robo_elective', name: 'متطلبات التخصص الاختيارية (AI)', nameEn: 'AI Elective Requirements', color: '#6a1b9a', faculty: 'ai', specialization: 'ai_robo' },
+    { id: 'ai_robo_mandatory', name: 'متطلبات التصص الإجباري (AI)', nameEn: 'AI Mandatory Requirements', color: '#f9a825', faculty: 'ai', specialization: 'ai_robo' },
+    { id: 'ai_robo_elective', name: 'متطلبات التصص الاتياري (AI)', nameEn: 'AI Elective Requirements', color: '#6a1b9a', faculty: 'ai', specialization: 'ai_robo' },
     // VR
-    { id: 'ai_vr_mandatory', name: 'متطلبات التخصص الإجبارية (VR)', nameEn: 'VR Mandatory Requirements', color: '#00838f', faculty: 'ai', specialization: 'vr' },
-    { id: 'ai_vr_elective', name: 'متطلبات التخصص الاختيارية (VR)', nameEn: 'VR Elective Requirements', color: '#00695c', faculty: 'ai', specialization: 'vr' },
+    { id: 'ai_vr_mandatory', name: 'متطلبات التصص الإجباري (VR)', nameEn: 'VR Mandatory Requirements', color: '#00838f', faculty: 'ai', specialization: 'vr' },
+    { id: 'ai_vr_elective', name: 'متطلبات التصص الاتياري (VR)', nameEn: 'VR Elective Requirements', color: '#00695c', faculty: 'ai', specialization: 'vr' },
     // DS
-    { id: 'ai_ds_mandatory', name: 'متطلبات التخصص الإجبارية (DS)', nameEn: 'DS Mandatory Requirements', color: '#1565c0', faculty: 'ai', specialization: 'ds' },
-    { id: 'ai_ds_elective', name: 'متطلبات التخصص الاختيارية (DS)', nameEn: 'DS Elective Requirements', color: '#283593', faculty: 'ai', specialization: 'ds' },
+    { id: 'ai_ds_mandatory', name: 'متطلبات التصص الإجباري (DS)', nameEn: 'DS Mandatory Requirements', color: '#1565c0', faculty: 'ai', specialization: 'ds' },
+    { id: 'ai_ds_elective', name: 'متطلبات التصص الاتياري (DS)', nameEn: 'DS Elective Requirements', color: '#283593', faculty: 'ai', specialization: 'ds' },
 
-    { id: 'supportingSciences', name: 'علوم مساندة', nameEn: 'Supporting Sciences', color: '#0097a7', faculty: 'ai' },
-    { id: 'labs', name: 'المختبرات', nameEn: 'Labs', color: '#5d4037', faculty: 'ai' },
+    { id: 'supportingSciences', name: 'علوم مساند', nameEn: 'Supporting Sciences', color: '#0097a7', faculty: 'ai' },
+    { id: 'labs', name: 'المتبرات', nameEn: 'Labs', color: '#5d4037', faculty: 'ai' },
     { id: 'remedial', name: 'مواد الاستدراكي', nameEn: 'Remedial Courses', color: '#616161', faculty: 'all' },
     // IT Faculty Categories
-    { id: 'it_mandatoryCollege', name: 'متطلبات الكلية (IT)', nameEn: 'IT College Requirements', color: '#00695c', faculty: 'it' },
-    { id: 'it_cs_mandatory', name: 'متطلبات التخصص الإجبارية (CS)', nameEn: 'CS Mandatory Requirements', color: '#2e7d32', faculty: 'it', specialization: 'cs' },
-    { id: 'it_cs_elective', name: 'متطلبات التخصص الاختيارية (CS)', nameEn: 'CS Elective Requirements', color: '#1b5e20', faculty: 'it', specialization: 'cs' },
-    { id: 'it_cga_mandatory', name: 'متطلبات التخصص الإجبارية (CGA)', nameEn: 'CGA Mandatory Requirements', color: '#6a1b9a', faculty: 'it', specialization: 'cga' },
-    { id: 'it_cga_elective', name: 'متطلبات التخصص الاختيارية (CGA)', nameEn: 'CGA Elective Requirements', color: '#4a148c', faculty: 'it', specialization: 'cga' },
-    { id: 'it_cis_mandatory', name: 'متطلبات التخصص الإجبارية (CIS)', nameEn: 'CIS Mandatory Requirements', color: '#01579b', faculty: 'it', specialization: 'cis' },
-    { id: 'it_cis_elective', name: 'متطلبات التخصص الاختيارية (CIS)', nameEn: 'CIS Elective Requirements', color: '#01579b', faculty: 'it', specialization: 'cis' },
-    { id: 'it_se_mandatory', name: 'متطلبات التخصص الإجبارية (SE)', nameEn: 'SE Mandatory Requirements', color: '#0288d1', faculty: 'it', specialization: 'se' },
-    { id: 'it_se_elective', name: 'متطلبات التخصص الاختيارية (SE)', nameEn: 'SE Elective Requirements', color: '#0288d1', faculty: 'it', specialization: 'se' },
-    { id: 'it_common', name: 'مواد مشتركة بين التخصصات', nameEn: 'Common IT Specialization Materials', color: '#ff9800', faculty: 'it' },
-    { id: 'it_labs', name: 'مختبرات الـ IT', nameEn: 'IT Labs', color: '#455a64', faculty: 'it' },
-    { id: 'it_drive', name: 'حقيبة كلية الـ IT', nameEn: 'IT Faculty Folder', color: '#0277bd', faculty: 'it' }
+    { id: 'it_mandatoryCollege', name: 'متطلبات الكلي (IT)', nameEn: 'IT College Requirements', color: '#00695c', faculty: 'it' },
+    { id: 'it_cs_mandatory', name: 'متطلبات التصص الإجباري (CS)', nameEn: 'CS Mandatory Requirements', color: '#2e7d32', faculty: 'it', specialization: 'cs' },
+    { id: 'it_cs_elective', name: 'متطلبات التصص الاتياري (CS)', nameEn: 'CS Elective Requirements', color: '#1b5e20', faculty: 'it', specialization: 'cs' },
+    { id: 'it_cga_mandatory', name: 'متطلبات التصص الإجباري (CGA)', nameEn: 'CGA Mandatory Requirements', color: '#6a1b9a', faculty: 'it', specialization: 'cga' },
+    { id: 'it_cga_elective', name: 'متطلبات التصص الاتياري (CGA)', nameEn: 'CGA Elective Requirements', color: '#4a148c', faculty: 'it', specialization: 'cga' },
+    { id: 'it_cis_mandatory', name: 'متطلبات التصص الإجباري (CIS)', nameEn: 'CIS Mandatory Requirements', color: '#01579b', faculty: 'it', specialization: 'cis' },
+    { id: 'it_cis_elective', name: 'متطلبات التصص الاتياري (CIS)', nameEn: 'CIS Elective Requirements', color: '#01579b', faculty: 'it', specialization: 'cis' },
+    { id: 'it_se_mandatory', name: 'متطلبات التصص الإجباري (SE)', nameEn: 'SE Mandatory Requirements', color: '#0288d1', faculty: 'it', specialization: 'se' },
+    { id: 'it_se_elective', name: 'متطلبات التصص الاتياري (SE)', nameEn: 'SE Elective Requirements', color: '#0288d1', faculty: 'it', specialization: 'se' },
+    { id: 'it_common', name: 'مواد مشترك بين التصصات', nameEn: 'Common IT Specialization Materials', color: '#ff9800', faculty: 'it' },
+    { id: 'it_labs', name: 'متبرات الـ IT', nameEn: 'IT Labs', color: '#455a64', faculty: 'it' },
+    { id: 'it_drive', name: 'حقيب كلي الـ IT', nameEn: 'IT Faculty Folder', color: '#0277bd', faculty: 'it' }
 ];

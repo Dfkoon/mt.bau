@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
-import Ballpit from '../components/Ballpit';
 import CountUp from '../components/CountUp';
 import { getTotalStudentVisits } from '../services/analyticsService';
+import { coursesData, categories } from '../data/coursesData';
+import { quizCategories } from '../data/quizData';
+import { db } from '../config/firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 import heroVideo from '../assets/video/video1.mp4';
 import './HeroSection.css';
 
@@ -11,9 +14,9 @@ const HeroSection = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
     const [ballCount, setBallCount] = useState(75);
-    const BASE_VISITORS = 4350;
-    const [heroVisitorsCount, setHeroVisitorsCount] = useState(Number(import.meta.env.VITE_HERO_VISITORS_COUNT ?? BASE_VISITORS));
-    const heroMaterialsCount = Number(import.meta.env.VITE_HERO_MATERIALS_COUNT ?? 100);
+    const [heroVisitorsCount, setHeroVisitorsCount] = useState(0);
+    const [heroMaterialsCount, setHeroMaterialsCount] = useState(0);
+    const [heroQuizzesCount, setHeroQuizzesCount] = useState(0);
 
     useEffect(() => {
         const handleResize = () => {
@@ -22,14 +25,81 @@ const HeroSection = () => {
 
         const loadVisitorCount = async () => {
             const count = await getTotalStudentVisits();
-            setHeroVisitorsCount(BASE_VISITORS + (count || 0));
+            setHeroVisitorsCount(count || 0);
         };
+
+        const updateMaterialCount = (snapshot) => {
+            const mergedCourses = {};
+            Object.keys(coursesData).forEach(categoryId => {
+                mergedCourses[categoryId] = [...(coursesData[categoryId] || [])];
+            });
+
+            snapshot.forEach(courseDoc => {
+                const course = { id: courseDoc.id, ...courseDoc.data() };
+                const categoryId = course.category;
+                if (!categoryId) return;
+                if (!mergedCourses[categoryId]) mergedCourses[categoryId] = [];
+
+                const existingIndex = mergedCourses[categoryId].findIndex(
+                    item => String(item.id) === String(course.id)
+                );
+                if (course.deleted) {
+                    if (existingIndex >= 0) mergedCourses[categoryId].splice(existingIndex, 1);
+                } else if (course.custom) {
+                    const mappedCourse = {
+                        id: course.id,
+                        name: course.name,
+                        nameEn: course.nameEn,
+                        files: course.files || {},
+                    };
+                    if (existingIndex >= 0) mergedCourses[categoryId][existingIndex] = mappedCourse;
+                    else mergedCourses[categoryId].push(mappedCourse);
+                }
+            });
+
+            const facultyCategoryIds = new Set(
+                categories
+                    .filter(category => category.faculty === 'ai' || category.faculty === 'it')
+                    .map(category => category.id)
+            );
+            const courseIds = new Set();
+            facultyCategoryIds.forEach(categoryId => {
+                (mergedCourses[categoryId] || []).forEach(course => courseIds.add(`${categoryId}:${course.id}`));
+            });
+            setHeroMaterialsCount(courseIds.size);
+        };
+
+        const updateQuizCount = (snapshot) => {
+            const dynamicSubjects = snapshot.docs.map(quizDoc => quizDoc.id);
+            let localParts = [];
+            try {
+                localParts = Object.keys(JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}'));
+            } catch { /* Ignore malformed local quiz data. */ }
+
+            const subjectIds = new Set([
+                ...quizCategories.map(category => category.id),
+                ...dynamicSubjects,
+                ...localParts,
+            ]);
+            setHeroQuizzesCount(subjectIds.size);
+        };
+
+        const unsubscribeCourses = onSnapshot(collection(db, 'academic_courses'), updateMaterialCount, () => {
+            updateMaterialCount({ forEach: () => { } });
+        });
+        const unsubscribeQuizzes = onSnapshot(collection(db, 'quiz_subjects'), updateQuizCount, () => {
+            updateQuizCount({ docs: [] });
+        });
 
         loadVisitorCount();
         handleResize();
 
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            unsubscribeCourses();
+            unsubscribeQuizzes();
+        };
     }, []);
 
     return (
@@ -97,6 +167,12 @@ const HeroSection = () => {
                             +<CountUp to={heroVisitorsCount} duration={2.5} className="count-up-text" />
                         </span>
                         <span className="stat-label">{t('hero.stat.students')}</span>
+                    </div>
+                    <div className="stat-item">
+                        <span className="stat-value">
+                            +<CountUp to={heroQuizzesCount} duration={2.5} className="count-up-text" />
+                        </span>
+                        <span className="stat-label">{t('hero.stat.quizzes')}</span>
                     </div>
                     <div className="stat-item">
                         <span className="stat-value">24/7</span>

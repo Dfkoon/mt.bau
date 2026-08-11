@@ -42,7 +42,7 @@ const FloatingActionMenu = () => {
             <button
                 className={`fab-main-btn ${open ? 'active' : ''}`}
                 onClick={() => setOpen(!open)}
-                aria-label={isAr ? 'قائمة سريعة' : 'Quick menu'}
+                aria-label={isAr ? 'قائم سريع' : 'Quick menu'}
                 aria-expanded={open}
             >
                 <span className="fab-main-icon">{open ? '✕' : '⚡'}</span>

@@ -5,28 +5,28 @@ import './GlobalSearchModal.css';
 
 const SEARCH_ITEMS = [
   // Pages
-  { id: 'p-materials', titleAr: 'المواد الدراسية والدوسيات', titleEn: 'Study Materials & Handouts', categoryAr: 'صفحة', categoryEn: 'Page', link: '/materials', icon: '📚', keywords: 'مواد خطة دوسية تلخيص اسئلة بكالوريوس دبلوم' },
-  { id: 'p-plans', titleAr: 'الخطط الدراسية التفاعلية', titleEn: 'Interactive Academic Plans', categoryAr: 'صفحة', categoryEn: 'Page', link: '/plans', icon: '🗺️', keywords: 'خطة خطط تخصص ساعات مواد اجبارية اختياري' },
-  { id: 'p-grading', titleAr: 'حاسبة المعدل والنظام الأكاديمي', titleEn: 'GPA Calculator & Grading System', categoryAr: 'أداة', categoryEn: 'Tool', link: '/grading', icon: '🧮', keywords: 'معدل حساب نقاط تقدير فصلي تراكمي علامات' },
-  { id: 'p-quiz', titleAr: 'بنك الأسئلة الشامل والاختبارات', titleEn: 'Question Bank & Quizzes', categoryAr: 'أداة', categoryEn: 'Tool', link: '/quiz', icon: '✍️', keywords: 'اسئلة امتحانات كويز سنوات سنوات سابقة بنك' },
-  { id: 'p-calendar', titleAr: 'التقويم الأكاديمي والمواعيد', titleEn: 'Academic Calendar & Schedule', categoryAr: 'معلومات', categoryEn: 'Info', link: '/calendar', icon: '📅', keywords: 'تقويم مواعيد سحب إضافة نهائي فاينل ميد دبلوم بكالوريوس' },
-  { id: 'p-exchange', titleAr: 'سوق وتبادل المواد والكتب', titleEn: 'Material Exchange & Books Marketplace', categoryAr: 'خدمة', categoryEn: 'Service', link: '/exchange', icon: '🔄', keywords: 'تبادل كتب دوسيات مشاريع تبرع شراء بيع سوق' },
-  { id: 'p-faq', titleAr: 'الأسئلة الشائعة والإجابات', titleEn: 'FAQ & Student Answers', categoryAr: 'مساعدة', categoryEn: 'Help', link: '/faq', icon: '❓', keywords: 'اسئلة مساعدة استفسارات نظام تحويل إنذار غياب' },
-  { id: 'p-about', titleAr: 'من نحن - فريق مكانك الجامعي', titleEn: 'About Us - Makanak Al-Jami\'i', categoryAr: 'صفحة', categoryEn: 'Page', link: '/about', icon: '👥', keywords: 'من نحن معلومات فريق رؤية رسالة' },
+  { id: 'p-materials', titleAr: 'المواد الدراسي والدوسيات', titleEn: 'Study Materials & Handouts', categoryAr: 'صفح', categoryEn: 'Page', link: '/materials', icon: '📚', keywords: 'مواد ط دوسي تليص اسئل بكالوريوس دبلوم' },
+  { id: 'p-plans', titleAr: 'الطط الدراسي التفاعلي', titleEn: 'Interactive Academic Plans', categoryAr: 'صفح', categoryEn: 'Page', link: '/plans', icon: '🗺️', keywords: 'ط طط تصص ساعات مواد اجباري اتياري' },
+  { id: 'p-grading', titleAr: 'حاسب المعدل والنظام الأكاديمي', titleEn: 'GPA Calculator & Grading System', categoryAr: 'أدا', categoryEn: 'Tool', link: '/grading', icon: '', keywords: 'معدل حساب نقاط تقدير فصلي تراكمي علامات' },
+  { id: 'p-quiz', titleAr: 'بنك الأسئل الشامل والاتبارات', titleEn: 'Question Bank & Quizzes', categoryAr: 'أدا', categoryEn: 'Tool', link: '/quiz', icon: '✍️', keywords: 'اسئل امتحانات كويز سنوات سنوات سابق بنك' },
+  { id: 'p-calendar', titleAr: 'التقويم الأكاديمي والمواعيد', titleEn: 'Academic Calendar & Schedule', categoryAr: 'معلومات', categoryEn: 'Info', link: '/calendar', icon: '📅', keywords: 'تقويم مواعيد سحب إضاف نهائي فاينل ميد دبلوم بكالوريوس' },
+  { id: 'p-exchange', titleAr: 'سوق وتبادل المواد والكتب', titleEn: 'Material Exchange & Books Marketplace', categoryAr: 'دم', categoryEn: 'Service', link: '/exchange', icon: '🔄', keywords: 'تبادل كتب دوسيات مشاريع تبرع شراء بيع سوق' },
+  { id: 'p-faq', titleAr: 'الأسئل الشائع والإجابات', titleEn: 'FAQ & Student Answers', categoryAr: 'مساعد', categoryEn: 'Help', link: '/faq', icon: '❓', keywords: 'اسئل مساعد استفسارات نظام تحويل إنذار غياب' },
+  { id: 'p-about', titleAr: 'من نحن - فريق مكانك الجامعي', titleEn: 'About Us - Makanak Al-Jami\'i', categoryAr: 'صفح', categoryEn: 'Page', link: '/about', icon: '👥', keywords: 'من نحن معلومات فريق رؤي رسال' },
 
   // Tools & Sections
   { id: 't-nashmi', titleAr: 'المرشد الذكي "نشمي" (AI)', titleEn: 'Nashmi AI Student Advisor', categoryAr: 'ذكاء اصطناعي', categoryEn: 'AI', link: '/#lemon-chat', icon: '🤖', keywords: 'نشمي ذكاء اصطناعي مساعد استفسار ذكي ai bot' },
-  { id: 't-tip', titleAr: 'نصيحة الأسبوع الأكاديمية', titleEn: 'Weekly Academic Tip', categoryAr: 'نصائح', categoryEn: 'Tips', link: '/#weekly-tip', icon: '💡', keywords: 'نصيحة دراسة تنظيم وقت امتحانات ذاكرة' },
-  { id: 't-events', titleAr: 'الفعاليات والأحداث القادمة', titleEn: 'Upcoming Events & Deadlines', categoryAr: 'أحداث', categoryEn: 'Events', link: '/#events', icon: '📢', keywords: 'فعاليات ورشات مواعيد مهمة اعلانات' },
-  { id: 't-gpa-calc', titleAr: 'حاسبة المعدل الفصلي والتراكمي', titleEn: 'Semester & Cumulative GPA Calculator', categoryAr: 'أداة', categoryEn: 'Tool', link: '/grading#gpa-calculator', icon: '⚖️', keywords: 'حساب معدل تراكمي فصلي خريج نقاط' },
+  { id: 't-tip', titleAr: 'نصيح الأسبوع الأكاديمي', titleEn: 'Weekly Academic Tip', categoryAr: 'نصائح', categoryEn: 'Tips', link: '/#weekly-tip', icon: '💡', keywords: 'نصيح دراس تنظيم وقت امتحانات ذاكر' },
+  { id: 't-events', titleAr: 'الفعاليات والأحداث القادم', titleEn: 'Upcoming Events & Deadlines', categoryAr: 'أحداث', categoryEn: 'Events', link: '/#events', icon: '📢', keywords: 'فعاليات ورشات مواعيد مهم اعلانات' },
+  { id: 't-gpa-calc', titleAr: 'حاسب المعدل الفصلي والتراكمي', titleEn: 'Semester & Cumulative GPA Calculator', categoryAr: 'أدا', categoryEn: 'Tool', link: '/grading#gpa-calculator', icon: '⚖️', keywords: 'حساب معدل تراكمي فصلي ريج نقاط' },
 
   // Common Subjects
-  { id: 's-math1', titleAr: 'تفاضل وتكامل (1 & 2)', titleEn: 'Calculus (1 & 2)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=تفاضل', icon: '📐', keywords: 'تفاضل رياضيات مادتين حساب دبلوم بكالوريوس' },
-  { id: 's-phys1', titleAr: 'فيزياء عامة (1 & 2)', titleEn: 'General Physics (1 & 2)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=فيزياء', icon: '⚛️', keywords: 'فيزياء علوم تجارب معمل' },
-  { id: 's-prog', titleAr: 'أساسيات البرمجة (C++ / Python)', titleEn: 'Programming Fundamentals (C++ / Python)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=برمجة', icon: '💻', keywords: 'برمجة كود حاسوب it c++ python سي بلس بلس' },
-  { id: 's-arabic', titleAr: 'اللغة العربية (المهارات اللغوية)', titleEn: 'Arabic Language Skills', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=عربي', icon: '📖', keywords: 'عربي لغة عربية متطلب اجباري جامعة' },
-  { id: 's-english', titleAr: 'اللغة الإنجليزية (101 & 102)', titleEn: 'English Language Skills', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=انجليزي', icon: '🌐', keywords: 'انجليزي انجليزي 101 english grammar' },
-  { id: 's-national', titleAr: 'التربية الوطنية والثقافة الإسلامية', titleEn: 'National Education & Islamic Culture', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=وطنية', icon: '🏛️', keywords: 'تربية وطنية اسلامية ثقافة متطلبات جامعة' }
+  { id: 's-math1', titleAr: 'تفاضل وتكامل (1 & 2)', titleEn: 'Calculus (1 & 2)', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=تفاضل', icon: '📐', keywords: 'تفاضل رياضيات مادتين حساب دبلوم بكالوريوس' },
+  { id: 's-phys1', titleAr: 'فيزياء عام (1 & 2)', titleEn: 'General Physics (1 & 2)', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=فيزياء', icon: '⚛️', keywords: 'فيزياء علوم تجارب معمل' },
+  { id: 's-prog', titleAr: 'أساسيات البرمج (C++ / Python)', titleEn: 'Programming Fundamentals (C++ / Python)', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=برمج', icon: '💻', keywords: 'برمج كود حاسوب it c++ python سي بلس بلس' },
+  { id: 's-arabic', titleAr: 'اللغ العربي (المهارات اللغوي)', titleEn: 'Arabic Language Skills', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=عربي', icon: '📖', keywords: 'عربي لغ عربي متطلب اجباري جامع' },
+  { id: 's-english', titleAr: 'اللغ الإنجليزي (101 & 102)', titleEn: 'English Language Skills', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=انجليزي', icon: '🌐', keywords: 'انجليزي انجليزي 101 english grammar' },
+  { id: 's-national', titleAr: 'التربي الوطني والثقاف الإسلامي', titleEn: 'National Education & Islamic Culture', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=وطني', icon: '🏛️', keywords: 'تربي وطني اسلامي ثقاف متطلبات جامع' }
 ];
 
 const GlobalSearchModal = ({ isOpen, onClose }) => {
@@ -127,7 +127,7 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
             ref={inputRef}
             type="text"
             className="global-search-input"
-            placeholder={isAr ? 'ابحث عن مادة، حساب معدل، أسئلة، خدمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
+            placeholder={isAr ? 'ابحث عن ماد، حساب معدل، أسئل، دمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -146,8 +146,8 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
           {filteredItems.length === 0 ? (
             <div className="no-search-results">
               <span className="no-results-icon">🔎</span>
-              <p>{isAr ? 'لم نجد نتائج مطابقة لبحثك' : 'No matching results found'}</p>
-              <small>{isAr ? 'جرب البحث عن اسم مادة، حساب معدل، أو أسئلة' : 'Try searching for subject name, GPA, or quiz'}</small>
+              <p>{isAr ? 'لم نجد نتائج مطابق لبحثك' : 'No matching results found'}</p>
+              <small>{isAr ? 'جرب البحث عن اسم ماد، حساب معدل، أو أسئل' : 'Try searching for subject name, GPA, or quiz'}</small>
             </div>
           ) : (
             filteredItems.map((item, index) => (

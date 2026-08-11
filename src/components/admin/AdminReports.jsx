@@ -128,7 +128,7 @@ const AdminReports = () => {
             closeEditModal();
         } catch (e) {
             console.error(e);
-            toast.error(isAr ? 'خطأ في الحفظ' : 'Save failed');
+            toast.error(isAr ? 'طأ في الحفظ' : 'Save failed');
         } finally {
             setEditSaving(false);
         }
@@ -138,19 +138,19 @@ const AdminReports = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل بلاغات الأسئلة...' : 'Loading flagged reports...'}</p>
+                <p>{isAr ? 'جاري تحميل بلاغات الأسئل...' : 'Loading flagged reports...'}</p>
             </div>
         );
     }
 
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
-            <h3 className="admin-section-title">🚩 <span>{isAr ? 'بلاغات الأخطاء في الأسئلة' : 'Flagged Questions Reports'}</span></h3>
+            <h3 className="admin-section-title"> <span>{isAr ? 'بلاغات الأطاء في الأسئل' : 'Flagged Questions Reports'}</span></h3>
 
             {reports.length === 0 ? (
                 <div className="admin-empty-state">
-                    <div className="empty-icon">🚩</div>
-                    <p>{isAr ? 'لا توجد بلاغات معلقة حالياً' : 'No flagged questions reports'}</p>
+                    <div className="empty-icon"></div>
+                    <p>{isAr ? 'لا توجد بلاغات معلق حالياً' : 'No flagged questions reports'}</p>
                 </div>
             ) : (
                 <div className="reports-list-container">
@@ -190,7 +190,7 @@ const AdminReports = () => {
                                     marginBottom: '12px'
                                 }}>
                                     <strong style={{ color: '#7b1fa2', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', marginBottom: '4px' }}>
-                                        💡 {isAr ? 'ملاحظة الطالب المكتوبة:' : 'Student Note:'}
+                                        💡 {isAr ? 'ملاحظ الطالب المكتوب:' : 'Student Note:'}
                                     </strong>
                                     <span style={{ fontSize: '0.92rem', color: '#2c3e50', fontWeight: 600, display: 'block', lineHeight: 1.5 }}>
                                         {r.studentNote || r.note || r.userComment || r.comment}
@@ -246,7 +246,7 @@ const AdminReports = () => {
 
                             {/* Options */}
                             <div className="qedit-options-section" style={{ marginTop: '1.5rem' }}>
-                                <label className="qedit-label" style={{ fontWeight: 'bold' }}>🎯 {isAr ? 'الخيارات المتاحة:' : 'Options:'}</label>
+                                <label className="qedit-label" style={{ fontWeight: 'bold' }}>🎯 {isAr ? 'اليارات المتاح:' : 'Options:'}</label>
                                 <div className="qedit-options-list">
                                     {editForm.options.map((opt, idx) => (
                                         <div key={opt.id} className="qedit-option-row">
@@ -255,14 +255,14 @@ const AdminReports = () => {
                                                 name="correctAnswer"
                                                 checked={editForm.correctAnswer === opt.id}
                                                 onChange={() => setEditForm({ ...editForm, correctAnswer: opt.id })}
-                                                title={isAr ? 'تحديد كإجابة صحيحة' : 'Mark as correct'}
+                                                title={isAr ? 'تحديد كإجاب صحيح' : 'Mark as correct'}
                                             />
                                             <input
                                                 type="text"
                                                 className="admin-input-field option-input"
                                                 value={opt.textAr || ''}
                                                 onChange={e => updateOption(idx, 'textAr', e.target.value)}
-                                                placeholder={isAr ? 'الخيار بالعربي' : 'Option (AR)'}
+                                                placeholder={isAr ? 'اليار بالعربي' : 'Option (AR)'}
                                             />
                                             <input
                                                 type="text"
@@ -277,13 +277,13 @@ const AdminReports = () => {
                                     ))}
                                 </div>
                                 <button type="button" className="admin-action-btn approve" style={{ marginTop: '0.8rem', fontSize: '0.82rem' }} onClick={addOption}>
-                                    + {isAr ? 'إضافة خيار جديد' : 'Add Option'}
+                                    + {isAr ? 'إضاف يار جديد' : 'Add Option'}
                                 </button>
                             </div>
 
                             {/* Image Upload Zone */}
                             <div className="qedit-field" style={{ marginTop: '1.5rem' }}>
-                                <label className="qedit-label">🖼️ {isAr ? 'صورة السؤال (اختياري):' : 'Question Image (optional):'}</label>
+                                <label className="qedit-label">🖼️ {isAr ? 'صور السؤال (اتياري):' : 'Question Image (optional):'}</label>
                                 <input
                                     ref={imageInputRef}
                                     type="file"
@@ -293,7 +293,7 @@ const AdminReports = () => {
                                         const file = e.target.files?.[0];
                                         if (!file) return;
                                         if (file.size > 10 * 1024 * 1024) {
-                                            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                                            toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                                             return;
                                         }
                                         setImageUploading(true);
@@ -319,7 +319,7 @@ const AdminReports = () => {
                                             setEditForm(prev => ({ ...prev, image: compressed }));
                                         } catch (err) {
                                             console.error(err);
-                                            toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
+                                            toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
                                         } finally {
                                             setImageUploading(false);
                                             setImageUploadProgress(0);
@@ -330,7 +330,7 @@ const AdminReports = () => {
                                 {!editForm.image && !imageUploading && (
                                     <div className="image-dropzone" onClick={() => imageInputRef.current?.click()}>
                                         <span>📷</span>
-                                        <p>{isAr ? 'اضغط لاختيار صورة من جهازك' : 'Click to select image'}</p>
+                                        <p>{isAr ? 'اضغط لاتيار صور من جهازك' : 'Click to select image'}</p>
                                     </div>
                                 )}
 
@@ -345,7 +345,7 @@ const AdminReports = () => {
                                     <div className="image-preview-container">
                                         <img src={editForm.image} alt="Question preview" />
                                         <button type="button" className="admin-action-btn reject" onClick={() => setEditForm({ ...editForm, image: '' })}>
-                                            {isAr ? 'حذف الصورة' : 'Remove Image'}
+                                            {isAr ? 'حذف الصور' : 'Remove Image'}
                                         </button>
                                     </div>
                                 )}

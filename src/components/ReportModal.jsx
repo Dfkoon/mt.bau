@@ -131,17 +131,17 @@ const ReportModal = () => {
                                     donatedCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'مادة متبرع بها',
+                                        classification: 'ماد متبرع بها',
                                         actionDate: actionDate,
                                         deliveryDate: '—',
-                                        statusText: 'متاحة',
+                                        statusText: 'متاح',
                                         badgeClass: 'donated'
                                     });
                                 } else if (status === 'reserved') {
                                     reservedCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'مادة متبرع بها',
+                                        classification: 'ماد متبرع بها',
                                         actionDate: m.takerInfo?.bookedAt || donation.lastUpdated || actionDate,
                                         deliveryDate: '—',
                                         statusText: 'بانتظار التسليم',
@@ -151,7 +151,7 @@ const ReportModal = () => {
                                     deliveredCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'مادة متبرع بها',
+                                        classification: 'ماد متبرع بها',
                                         actionDate: m.takerInfo?.bookedAt || actionDate,
                                         deliveryDate: m.takerInfo?.deliveredAt || donation.lastUpdated || actionDate,
                                         statusText: 'تم التسليم',
@@ -183,7 +183,7 @@ const ReportModal = () => {
                                     hasActiveBooking = true;
                                     items.push({
                                         name: m.name,
-                                        classification: 'مادة محجوزة',
+                                        classification: 'ماد محجوز',
                                         actionDate: bookedDate,
                                         deliveryDate: '—',
                                         statusText: 'بانتظار التسليم',
@@ -193,7 +193,7 @@ const ReportModal = () => {
                                     deliveredCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'مادة مسلَّمة',
+                                        classification: 'ماد مسلَّم',
                                         actionDate: bookedDate,
                                         deliveryDate: m.takerInfo.deliveredAt || donation.lastUpdated || donation.createdAt,
                                         statusText: 'تم التسليم',
@@ -256,7 +256,7 @@ const ReportModal = () => {
             : phone.startsWith('962')
             ? phone
             : '962' + phone;
-        const msg = `مرحباً ${details.studentName}، معك فريق مكانك الجامعي 🎓\nنتواصل معك بخصوص حملة تبادل المواد\nليك كشف بالمواد 📋\nشكراً لتعاملك معنا 💙`;
+        const msg = `مرحباً ${details.studentName}، معك فريق مكانك الجامعي 🎓\nنتواصل معك بصوص حمل تبادل المواد\nليك كشف بالمواد 📋\nشكراً لتعاملك معنا 💙`;
         return `https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`;
     };
 
@@ -276,7 +276,7 @@ const ReportModal = () => {
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#F6F4EE', fontFamily: 'Tajawal, sans-serif' }}>
                 <div style={{ textAlign: 'center', color: '#1B2A3C' }}>
                     <div style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 12 }}>عذراً، لم يتم العثور على بيانات الكشف</div>
-                    <button className="btn primary" onClick={handleClose} style={{ marginTop: 16 }}>العودة</button>
+                    <button className="btn primary" onClick={handleClose} style={{ marginTop: 16 }}>العود</button>
                 </div>
             </div>
         );
@@ -646,12 +646,12 @@ const ReportModal = () => {
 
                 <header>
                     <div className="title-block">
-                        <h1>كشف حركة المواد</h1>
-                        <p>تقرير تفصيلي بالمواد المتبرع بها والمحجوزة والمسلمة لهذا الحاجز</p>
+                        <h1>كشف حرك المواد</h1>
+                        <p>تقرير تفصيلي بالمواد المتبرع بها والمحجوز والمسلم لهذا الحاجز</p>
                     </div>
                     <div className="meta">
                         <div>رقم الكشف&nbsp; <span className="report-no">{reportDetails.reportNo}</span></div>
-                        <div>تاريخ الإصدار: &nbsp;<b>{formatReportDateTime(new Date())}</b></div>
+                        <div>تاري الإصدار: &nbsp;<b>{formatReportDateTime(new Date())}</b></div>
                         <div>المنسق: &nbsp;<b>فريق مكاتك</b></div>
                     </div>
                 </header>
@@ -677,11 +677,11 @@ const ReportModal = () => {
                         </b>
                     </div>
                     <div className="pilgrim-field">
-                        <span>تاريخ التسجيل</span>
+                        <span>تاري التسجيل</span>
                         <b>{reportDetails.registrationDate}</b>
                     </div>
                     <div className="pilgrim-field">
-                        <span>حالة الحاجز</span>
+                        <span>حال الحاجز</span>
                         <b style={{ color: reportDetails.reservedCount > 0 ? '#8A5E14' : '#1B2A3C' }}>{reportDetails.statusText}</b>
                     </div>
                 </div>
@@ -689,15 +689,15 @@ const ReportModal = () => {
                 <div className="stats">
                     <div className="stat-card donated">
                         <div className="num">{reportDetails.donatedCount}</div>
-                        <div className="lbl">مواد متبرع بها متاحة</div>
+                        <div className="lbl">مواد متبرع بها متاح</div>
                     </div>
                     <div className="stat-card reserved">
                         <div className="num">{reportDetails.reservedCount}</div>
-                        <div className="lbl">مواد محجوزة</div>
+                        <div className="lbl">مواد محجوز</div>
                     </div>
                     <div className="stat-card delivered">
                         <div className="num">{reportDetails.deliveredCount}</div>
-                        <div className="lbl">مواد مسلَّمة</div>
+                        <div className="lbl">مواد مسلَّم</div>
                     </div>
                 </div>
 
@@ -707,11 +707,11 @@ const ReportModal = () => {
                     <thead>
                         <tr>
                             <th>م</th>
-                            <th>اسم المادة</th>
+                            <th>اسم الماد</th>
                             <th>التصنيف</th>
-                            <th>تاريخ الإجراء</th>
-                            <th>تاريخ التسليم</th>
-                            <th>الحالة</th>
+                            <th>تاري الإجراء</th>
+                            <th>تاري التسليم</th>
+                            <th>الحال</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -730,14 +730,14 @@ const ReportModal = () => {
                             ))
                         ) : (
                             <tr className="empty-row">
-                                <td colSpan="6">لا توجد مواد مسجلة على هذا الرقم حتى الآن</td>
+                                <td colSpan="6">لا توجد مواد مسجل على هذا الرقم حتى الآن</td>
                             </tr>
                         )}
 
                         {/* Extra informational row if there are no donated available or delivered materials */}
                         {reportDetails.items.length > 0 && reportDetails.donatedCount === 0 && reportDetails.deliveredCount === 0 && (
                             <tr className="empty-row">
-                                <td colSpan="6">لا توجد مواد متبرع بها أو مسلَّمة مسجّلة على هذا الرقم حتى الآن</td>
+                                <td colSpan="6">لا توجد مواد متبرع بها أو مسلَّم مسجّل على هذا الرقم حتى الآن</td>
                             </tr>
                         )}
                     </tbody>
@@ -748,17 +748,17 @@ const ReportModal = () => {
                 <footer>
                     <div className="note">
                         يرجى الاحتفاظ بهذا الكشف ومشاركته عند التواصل مع فريق التنسيق.
-                        هذا المستند صادر إلكترونيًا من نظام مكاتك، ولا يحتاج إلى ختم أو توقيع لاعتماده.
+                        هذا المستند صادر إلكترونيًا من نظام مكاتك، ولا يحتاج إلى تم أو توقيع لاعتماده.
                     </div>
                     <div className="system">
                         <div><b>نظام مكاتك</b></div>
-                        <div>تقرير آلي — لا يُعتد به كوثيقة رسمية بديلة عن السجل الأصلي</div>
+                        <div>تقرير آلي — لا يُعتد به كوثيق رسمي بديل عن السجل الأصلي</div>
                     </div>
                 </footer>
             </div>
 
             <div className="actions">
-                <button className="btn primary" onClick={handlePrint}>🖶 طباعة / حفظ PDF</button>
+                <button className="btn primary" onClick={handlePrint}>🖶 طباع / حفظ PDF</button>
                 <button className="btn" onClick={handleClose}>إغلاق</button>
             </div>
         </div>

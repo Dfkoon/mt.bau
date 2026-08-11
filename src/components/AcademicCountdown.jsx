@@ -5,7 +5,7 @@ import './AcademicCountdown.css';
 const EVENTS = [
   {
     id: 'drop-add',
-    titleAr: 'فترة السحب والإضافة الفصلية',
+    titleAr: 'فتر السحب والإضاف الفصلي',
     titleEn: 'Drop & Add Period',
     date: '2026-08-25T08:30:00',
     icon: '🔄',
@@ -25,7 +25,7 @@ const EVENTS = [
   },
   {
     id: 'finals',
-    titleAr: 'الامتحانات النهائية (الفاينل)',
+    titleAr: 'الامتحانات النهائي (الفاينل)',
     titleEn: 'Final Examinations',
     date: '2026-11-10T09:00:00',
     icon: '🎓',
@@ -124,9 +124,9 @@ const AcademicCountdown = () => {
         <div className="countdown-timer-grid">
           {[
             { val: timeLeft.days, labelAr: 'يوم', labelEn: 'Days' },
-            { val: timeLeft.hours, labelAr: 'ساعة', labelEn: 'Hours' },
-            { val: timeLeft.minutes, labelAr: 'دقيقة', labelEn: 'Min' },
-            { val: timeLeft.seconds, labelAr: 'ثانية', labelEn: 'Sec' },
+            { val: timeLeft.hours, labelAr: 'ساع', labelEn: 'Hours' },
+            { val: timeLeft.minutes, labelAr: 'دقيق', labelEn: 'Min' },
+            { val: timeLeft.seconds, labelAr: 'ثاني', labelEn: 'Sec' },
           ].map(({ val, labelAr, labelEn }) => (
             <div className="timer-box" key={labelEn}>
               <span className="number">{String(val).padStart(2, '0')}</span>

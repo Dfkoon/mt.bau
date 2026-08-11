@@ -105,6 +105,19 @@ const StudyProgressSection = () => (
   </div>
 );
 
+const LegacyAdminRedirect = () => {
+  React.useEffect(() => {
+    const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const adminPath = `${basePath}/admin`;
+
+    if (window.location.pathname.replace(/\/$/, '') === adminPath && !window.location.hash) {
+      window.location.replace(`${basePath}/#/admin`);
+    }
+  }, []);
+
+  return null;
+};
+
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
@@ -162,6 +175,7 @@ function App() {
     <>
       <MaintenanceBanner />
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+      <LegacyAdminRedirect />
       <Router>
         <InstallPWAButton isAr={true} />
         <ScrollToTop />

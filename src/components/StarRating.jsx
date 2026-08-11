@@ -102,7 +102,7 @@ const StarRating = ({ itemId, itemTitle = '', maxStars = 5, compact = false }) =
                     </div>
                     {showAvg && (
                         <span className="avg-display">
-                            {isAr ? `تقييم المستخدمين: ${avgRating.toFixed(1)}/5 (${totalVotes} تقييم)` : `Avg: ${avgRating.toFixed(1)}/5 (${totalVotes} ratings)`}
+                            {isAr ? `تقييم المستدمين: ${avgRating.toFixed(1)}/5 (${totalVotes} تقييم)` : `Avg: ${avgRating.toFixed(1)}/5 (${totalVotes} ratings)`}
                         </span>
                     )}
                 </div>

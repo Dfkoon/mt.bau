@@ -327,7 +327,7 @@
     color: white;
 }
 
-/* Expandable parts inside a category (e.g., مادة -> أجزاء قابلة للفتح) */
+/* Expandable parts inside a category (e.g., ماد -> أجزاء قابل للفتح) */
 .quiz-category-card .parts {
     display: block;
     max-height: 0;
@@ -3840,7 +3840,7 @@ body:has(.moodle-theme-wrapper) {
         break-inside: avoid !important;
     }
 
-    /* 8. Info box (سؤال N / صحيح / العلامة) — horizontal strip at top */
+    /* 8. Info box (سؤال N / صحيح / العلام) — horizontal strip at top */
     .moodle-q-info-box {
         display: flex !important;
         flex-direction: row !important;

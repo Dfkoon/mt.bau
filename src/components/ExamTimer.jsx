@@ -7,9 +7,9 @@ import './ExamTimer.css';
  * Modes: Study (25 min), Short Break (5 min), Custom
  */
 const MODES = [
-    { id: 'study', labelAr: 'جلسة دراسة', labelEn: 'Study Session', minutes: 25, color: '#e02b20' },
-    { id: 'short', labelAr: 'استراحة قصيرة', labelEn: 'Short Break', minutes: 5, color: '#10b981' },
-    { id: 'long', labelAr: 'استراحة طويلة', labelEn: 'Long Break', minutes: 15, color: '#3b82f6' },
+    { id: 'study', labelAr: 'جلس دراس', labelEn: 'Study Session', minutes: 25, color: '#e02b20' },
+    { id: 'short', labelAr: 'استراح قصير', labelEn: 'Short Break', minutes: 5, color: '#10b981' },
+    { id: 'long', labelAr: 'استراح طويل', labelEn: 'Long Break', minutes: 15, color: '#3b82f6' },
 ];
 
 const ExamTimer = () => {
@@ -94,11 +94,11 @@ const ExamTimer = () => {
             <div className="exam-timer-card glass-card" style={{ '--timer-color': mode.color }}>
                 <div className="timer-card-header">
                     <h3 className="timer-title">
-                        ⏱️ {isAr ? 'مؤقت الدراسة' : 'Study Timer'}
+                        ⏱️ {isAr ? 'مؤقت الدراس' : 'Study Timer'}
                     </h3>
                     {completed > 0 && (
                         <span className="sessions-completed">
-                            🍅 ×{completed} {isAr ? 'جلسة' : 'sessions'}
+                            🍅 ×{completed} {isAr ? 'جلس' : 'sessions'}
                         </span>
                     )}
                 </div>
@@ -120,7 +120,7 @@ const ExamTimer = () => {
                         onClick={() => { setShowCustom(!showCustom); setRunning(false); }}
                         style={showCustom ? { '--tab-clr': '#8b5cf6' } : {}}
                     >
-                        {isAr ? 'مخصص' : 'Custom'}
+                        {isAr ? 'مصص' : 'Custom'}
                     </button>
                 </div>
 
@@ -169,13 +169,13 @@ const ExamTimer = () => {
                         {running ? (isAr ? '⏸ إيقاف مؤقت' : '⏸ Pause') : (isAr ? '▶ ابدأ' : '▶ Start')}
                     </button>
                     <button className="timer-btn reset-btn" onClick={handleReset}>
-                        {isAr ? '🔄 إعادة' : '🔄 Reset'}
+                        {isAr ? '🔄 إعاد' : '🔄 Reset'}
                     </button>
                 </div>
 
                 {secondsLeft === 0 && (
                     <div className="timer-done-msg">
-                        🎉 {isAr ? 'انتهى الوقت! خذ استراحة تستحقها.' : "Time's up! You deserve a break."}
+                        🎉 {isAr ? 'انتهى الوقت! ذ استراح تستحقها.' : "Time's up! You deserve a break."}
                     </div>
                 )}
             </div>

@@ -19,7 +19,7 @@ export const uploadToCloudinary = (file, options = {}) => {
             const err = new Error('CLOUDINARY_CONFIG_MISSING');
             err.code = 'CLOUDINARY_CONFIG_MISSING';
             err.friendly = {
-                ar: 'إعدادات Cloudinary غير مضبوطة على الخادم. تواصل مع الإدارة.',
+                ar: 'إعدادات Cloudinary غير مضبوط على الادم. تواصل مع الإدار.',
                 en: 'Cloudinary settings are not configured. Contact the admin.'
             };
             return reject(err);
@@ -76,12 +76,12 @@ export const uploadToCloudinary = (file, options = {}) => {
                     err.code = 'CLOUDINARY_UPLOAD_ERROR';
                     if (/unknown api key/i.test(remoteMsg) || /invalid api key/i.test(remoteMsg)) {
                         err.friendly = {
-                            ar: 'مفتاح Cloudinary غير صحيح أو غير معروف. تحقق من إعدادات البيئة وأعد تشغيل السيرفر.',
+                            ar: 'مفتاح Cloudinary غير صحيح أو غير معروف. تحقق من إعدادات البيئ وأعد تشغيل السيرفر.',
                             en: 'Cloudinary API key is invalid or unknown. Check your environment settings.'
                         };
                     } else if (/upload preset/i.test(remoteMsg) || /invalid preset/i.test(remoteMsg)) {
                         err.friendly = {
-                            ar: 'قالب التحميل (Upload Preset) غير صحيح أو غير موجود. تحقق من إعدادات لوحة التحكم.',
+                            ar: 'قالب التحميل (Upload Preset) غير صحيح أو غير موجود. تحقق من إعدادات لوح التحكم.',
                             en: 'Upload preset is invalid or missing.'
                         };
                     } else {
@@ -130,7 +130,7 @@ export const validateFile = (file, options = {}) => {
     }
 
     if (!allowedTypes.includes(file.type)) {
-        errors.push(`نوع الملف يجب أن يكون: صورة أو PDF`);
+        errors.push(`نوع الملف يجب أن يكون: صور أو PDF`);
     }
 
     return {

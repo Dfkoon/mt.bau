@@ -54,7 +54,7 @@ const MaterialFiltersSection = ({
                     <input
                         type="text"
                         className="search-input"
-                        placeholder={isAr ? 'ابحث عن مادة، كتاب، أو وصف...' : 'Search for material, book, or description...'}
+                        placeholder={isAr ? 'ابحث عن ماد، كتاب، أو وصف...' : 'Search for material, book, or description...'}
                         value={searchQuery}
                         onChange={handleSearchChange}
                     />
@@ -73,7 +73,7 @@ const MaterialFiltersSection = ({
             {/* Filter Pills */}
             <div className="filters-row">
                 <div className="filter-group">
-                    <span className="filter-label">{isAr ? 'الحالة:' : 'Status:'}</span>
+                    <span className="filter-label">{isAr ? 'الحال:' : 'Status:'}</span>
                     <div className="filter-buttons">
                         <button
                             className={`filter-pill ${statusFilter === 'all' ? 'active' : ''}`}
@@ -85,7 +85,7 @@ const MaterialFiltersSection = ({
                             className={`filter-pill ${statusFilter === 'pending' ? 'active' : ''}`}
                             onClick={() => handleStatusChange('pending')}
                         >
-                            ⏳ {isAr ? 'قيد المراجعة' : 'Pending'}
+                            ⏳ {isAr ? 'قيد المراجع' : 'Pending'}
                         </button>
                         <button
                             className={`filter-pill ${statusFilter === 'approved' ? 'active' : ''}`}

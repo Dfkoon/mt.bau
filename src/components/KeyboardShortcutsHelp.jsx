@@ -4,10 +4,10 @@ import './KeyboardShortcutsHelp.css';
 
 const SHORTCUTS = [
     { keys: ['Ctrl', 'K'], keysAr: ['Ctrl', 'K'], labelAr: 'فتح البحث العام', labelEn: 'Open global search' },
-    { keys: ['?'], keysAr: ['?'], labelAr: 'عرض اختصارات لوحة المفاتيح', labelEn: 'Show keyboard shortcuts' },
-    { keys: ['Esc'], keysAr: ['Esc'], labelAr: 'إغلاق أي نافذة مفتوحة', labelEn: 'Close any open modal' },
-    { keys: ['Alt', '←'], keysAr: ['Alt', '→'], labelAr: 'العودة للصفحة السابقة', labelEn: 'Go back to previous page' },
-    { keys: ['Alt', '→'], keysAr: ['Alt', '←'], labelAr: 'الذهاب للصفحة التالية', labelEn: 'Go forward to next page' },
+    { keys: ['?'], keysAr: ['?'], labelAr: 'عرض اتصارات لوح المفاتيح', labelEn: 'Show keyboard shortcuts' },
+    { keys: ['Esc'], keysAr: ['Esc'], labelAr: 'إغلاق أي نافذ مفتوح', labelEn: 'Close any open modal' },
+    { keys: ['Alt', '←'], keysAr: ['Alt', '→'], labelAr: 'العود للصفح السابق', labelEn: 'Go back to previous page' },
+    { keys: ['Alt', '→'], keysAr: ['Alt', '←'], labelAr: 'الذهاب للصفح التالي', labelEn: 'Go forward to next page' },
 ];
 
 const KeyboardShortcutsHelp = () => {
@@ -36,7 +36,7 @@ const KeyboardShortcutsHelp = () => {
         <div className="kb-shortcuts-overlay" onClick={() => setOpen(false)} role="dialog" aria-modal="true">
             <div className="kb-shortcuts-modal glass-card" onClick={e => e.stopPropagation()}>
                 <div className="kb-header">
-                    <h2 className="kb-title">⌨️ {isAr ? 'اختصارات لوحة المفاتيح' : 'Keyboard Shortcuts'}</h2>
+                    <h2 className="kb-title">⌨️ {isAr ? 'اتصارات لوح المفاتيح' : 'Keyboard Shortcuts'}</h2>
                     <button className="kb-close-btn" onClick={() => setOpen(false)} aria-label="Close">×</button>
                 </div>
                 <div className="kb-list">

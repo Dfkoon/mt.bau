@@ -55,9 +55,9 @@ const SmartAdvisor = () => {
             <div className="advisor-header">
                 <h3>
                     {language === 'ar' ? 'مستشار طلابي ✨' : 'Student Advisor ✨'}
-                    <span className="beta-badge">{language === 'ar' ? '(نسخة تجريبية)' : '(Beta Version)'}</span>
+                    <span className="beta-badge">{language === 'ar' ? '(نس تجريبي)' : '(Beta Version)'}</span>
                 </h3>
-                <p>{language === 'ar' ? 'ساعدنا في معرفة وضعك الأكاديمي لنقترح عليك أفضل المواد للفصل القادم' : 'Tell us your progress so we can suggest the best courses for your next semester'}</p>
+                <p>{language === 'ar' ? 'ساعدنا في معرف وضعك الأكاديمي لنقترح عليك أفضل المواد للفصل القادم' : 'Tell us your progress so we can suggest the best courses for your next semester'}</p>
             </div>
 
             <div className="advisor-steps-indicator">
@@ -72,17 +72,17 @@ const SmartAdvisor = () => {
 
             {step === 0 && (
                 <div className="advisor-step fade-in">
-                    <h4>{language === 'ar' ? 'أهلاً بك! في أي سنة التحقت بالجامعة؟' : 'Welcome! When did you join the university?'}</h4>
+                    <h4>{language === 'ar' ? 'أهلاً بك! في أي سن التحقت بالجامع؟' : 'Welcome! When did you join the university?'}</h4>
                     <div className="plan-type-grid">
                         <div className="plan-option-card" onClick={() => handlePlanTypeSelection('old')}>
                             <div className="plan-badge-icon">📜</div>
-                            <h5>{language === 'ar' ? 'الخطط الدراسية القديمة' : 'Old Academic Plans'}</h5>
+                            <h5>{language === 'ar' ? 'الطط الدراسي القديم' : 'Old Academic Plans'}</h5>
                             <p>{language === 'ar' ? 'تشمل الأجيال: 2003، 2004، 2005، 2006' : 'Generations: 2003, 2004, 2005, 2006'}</p>
                         </div>
                         <div className="plan-option-card">
                             <div className="plan-badge-icon">✨</div>
-                            <h5>{language === 'ar' ? 'الخطط الدراسية الجديدة' : 'New Academic Plans'}</h5>
-                            <p>{language === 'ar' ? 'تشمل جيل 2007 والأجيال القادمة (2008، 2009...)' : 'Generation 2007 and beyond (2008, 2009...)'}</p>
+                            <h5>{language === 'ar' ? 'الطط الدراسي الجديد' : 'New Academic Plans'}</h5>
+                            <p>{language === 'ar' ? 'تشمل جيل 2007 والأجيال القادم (2008، 2009...)' : 'Generation 2007 and beyond (2008, 2009...)'}</p>
                             <div className="under-construction-overlay">
                                 <span>{language === 'ar' ? 'قريباً... (جاري العمل عليها)' : 'Coming Soon... (Under Construction)'}</span>
                             </div>
@@ -94,7 +94,7 @@ const SmartAdvisor = () => {
             {step === 1 && (
                 <div className="advisor-step fade-in">
                     <button className="back-step-btn" onClick={() => setStep(0)}>←</button>
-                    <h4>{language === 'ar' ? 'اختر تخصصك' : 'Select your Major'}</h4>
+                    <h4>{language === 'ar' ? 'اتر تصصك' : 'Select your Major'}</h4>
                     <div className="major-grid">
                         {majors.map(mId => (
                             <button
@@ -110,7 +110,7 @@ const SmartAdvisor = () => {
                                 )}
                             </button>
                         ))}
-                        {majors.length === 0 && <p style={{ textAlign: 'center', gridColumn: '1/-1', color: 'var(--text-muted)' }}>{language === 'ar' ? 'نعتذر، الخطط لهذه الفئة قيد العمل حالياً...' : 'Sorry, plans for this category are currently under development...'}</p>}
+                        {majors.length === 0 && <p style={{ textAlign: 'center', gridColumn: '1/-1', color: 'var(--text-muted)' }}>{language === 'ar' ? 'نعتذر، الطط لهذه الفئ قيد العمل حالياً...' : 'Sorry, plans for this category are currently under development...'}</p>}
                     </div>
 
                     {majors.length > 0 && (
@@ -119,12 +119,12 @@ const SmartAdvisor = () => {
                             disabled={!formData.major}
                             onClick={() => setStep(2)}
                         >
-                            {language === 'ar' ? 'التالي: المواد المقطوعة' : 'Next: Passed Courses'}
+                            {language === 'ar' ? 'التالي: المواد المقطوع' : 'Next: Passed Courses'}
                         </button>
                     )}
                     {majors.length === 0 && (
                         <button className="advisor-reset-btn" onClick={() => setStep(0)}>
-                            {language === 'ar' ? 'رجوع للاختيار' : 'Back to Selection'}
+                            {language === 'ar' ? 'رجوع للاتيار' : 'Back to Selection'}
                         </button>
                     )}
                 </div>
@@ -175,7 +175,7 @@ const SmartAdvisor = () => {
                                     <div className="rec-icon">📖</div>
                                     <div className="rec-info">
                                         <h5>{language === 'ar' ? course.name : course.nameEn}</h5>
-                                        <p>{course.credits} {language === 'ar' ? 'ساعات معتمدة' : 'Credit Hours'}</p>
+                                        <p>{course.credits} {language === 'ar' ? 'ساعات معتمد' : 'Credit Hours'}</p>
                                     </div>
                                     {course.prereq && (
                                         <div className="rec-prereq">
@@ -191,12 +191,12 @@ const SmartAdvisor = () => {
                                 </div>
                             ))
                         ) : (
-                            <p className="no-rec">{language === 'ar' ? 'لا توجد توصيات حالياً، تأكد من اختيار تخصصك وإدخال وضعك الأكاديمي بدقة.' : 'No recommendations available. Please ensure you entered your progress correctly.'}</p>
+                            <p className="no-rec">{language === 'ar' ? 'لا توجد توصيات حالياً، تأكد من اتيار تصصك وإدال وضعك الأكاديمي بدق.' : 'No recommendations available. Please ensure you entered your progress correctly.'}</p>
                         )}
                     </div>
 
                     <button className="advisor-reset-btn" onClick={() => setStep(0)}>
-                        {language === 'ar' ? 'إعادة تعيين 🔄' : 'Reset Advisor 🔄'}
+                        {language === 'ar' ? 'إعاد تعيين 🔄' : 'Reset Advisor 🔄'}
                     </button>
                 </div>
             )}

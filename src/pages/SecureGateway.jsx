@@ -269,9 +269,9 @@ const SecureGateway = () => {
 
         if (newAttempts >= MAX_ATTEMPTS) {
             setLockedUntil(newMeta.lockedUntil);
-            triggerShake('تم تجاوز الحد الأقصى للمحاولات. الوصول مقفل لمدة 5 دقائق.');
+            triggerShake('تم تجاوز الحد الأقصى للمحاولات. الوصول مقفل لمد 5 دقائق.');
         } else {
-            triggerShake(`${msg} (محاولة ${newAttempts} من ${MAX_ATTEMPTS})`);
+            triggerShake(`${msg} (محاول ${newAttempts} من ${MAX_ATTEMPTS})`);
         }
     };
 
@@ -293,7 +293,7 @@ const SecureGateway = () => {
         // Verify CAPTCHA
         if (captchaInput.trim().toUpperCase() !== captchaText) {
             setIsLoading(false);
-            recordFailedAttempt('رمز التحقق غير صحيح. حاول مرة أخرى.');
+            recordFailedAttempt('رمز التحقق غير صحيح. حاول مر أرى.');
             refreshCaptcha();
             return;
         }
@@ -302,7 +302,7 @@ const SecureGateway = () => {
         const liveGatewayCode = systemSettings.secretGatewayCode || 'makanak2025';
         if (accessCode.trim() !== liveGatewayCode) {
             setIsLoading(false);
-            recordFailedAttempt('كود الدخول غير صحيح.');
+            recordFailedAttempt('كود الدول غير صحيح.');
             refreshCaptcha();
             return;
         }
@@ -342,7 +342,7 @@ const SecureGateway = () => {
             ? systemSettings.coordinators
             : [
                 { key: 'ahmad', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', password: systemSettings.ahmadPassword || 'ahmad2024', gender: 'male' },
-                { key: 'sara', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', password: systemSettings.saraPassword || 'sara2024', gender: 'female' }
+                { key: 'sara', nameAr: systemSettings.saraNameAr || 'سار', nameEn: systemSettings.saraNameEn || 'Sara', password: systemSettings.saraPassword || 'sara2024', gender: 'female' }
             ];
 
         // Combined staff lookup
@@ -395,7 +395,7 @@ const SecureGateway = () => {
             setErrorMsg('');
         } else {
             setIsLoading(false);
-            triggerShake('اسم المستخدم أو كلمة المرور غير صحيحة.');
+            triggerShake('اسم المستدم أو كلم المرور غير صحيح.');
             refreshCaptcha();
         }
     };
@@ -412,7 +412,7 @@ const SecureGateway = () => {
             ? systemSettings.coordinators
             : [
                 { key: 'ahmad', nameAr: systemSettings.ahmadNameAr || 'أحمد', nameEn: systemSettings.ahmadNameEn || 'Ahmad', gender: 'male' },
-                { key: 'sara', nameAr: systemSettings.saraNameAr || 'سارة', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
+                { key: 'sara', nameAr: systemSettings.saraNameAr || 'سار', nameEn: systemSettings.saraNameEn || 'Sara', gender: 'female' }
             ];
 
         const staffMap = {
@@ -447,7 +447,7 @@ const SecureGateway = () => {
                 executeLogin(pendingStaffKey, user);
             } else {
                 setIsLoading(false);
-                triggerShake('رمز المصادقة الثنائية (2FA) غير صحيح. حاول مرة أخرى.');
+                triggerShake('رمز المصادق الثنائي (2FA) غير صحيح. حاول مر أرى.');
             }
         } catch (err) {
             console.error("TOTP Verification error:", err);
@@ -500,7 +500,7 @@ const SecureGateway = () => {
         } catch (err) {
             console.error("Login finalization failed:", err);
             setIsLoading(false);
-            triggerShake('حدث خطأ أثناء إتمام عملية تسجيل الدخول.');
+            triggerShake('حدث طأ أثناء إتمام عملي تسجيل الدول.');
         }
     };
 
@@ -523,12 +523,12 @@ const SecureGateway = () => {
                         </div>
                         <h1 className="sgw-title">
                             {isSuccess
-                                ? 'تم الدخول بنجاح'
+                                ? 'تم الدول بنجاح'
                                 : isLocked
-                                    ? `الوصول مقفل — يُرفع بعد ${lockCountdown} ثانية`
+                                    ? `الوصول مقفل — يُرفع بعد ${lockCountdown} ثاني`
                                     : loginStep === 2
-                                        ? 'دخول لوحة التحكم'
-                                        : 'التحقق بخطوتين'}
+                                        ? 'دول لوح التحكم'
+                                        : 'التحقق بطوتين'}
                         </h1>
                     </div>
 
@@ -550,7 +550,7 @@ const SecureGateway = () => {
                             <div className="sgw-lock-icon">🔒</div>
                             <p className="sgw-lock-msg">
                                 تم تجاوز عدد المحاولات المسموح بها.<br />
-                                سيُرفع القفل تلقائياً خلال:
+                                سيُرفع القفل تلقائياً لال:
                             </p>
                             <div className="sgw-countdown">{lockCountdown}s</div>
                         </div>
@@ -563,7 +563,7 @@ const SecureGateway = () => {
                             {loginStep === 2 && (
                                 <form className="sgw-form" onSubmit={handleStep2Submit} autoComplete="off">
                                     <div className="sgw-field">
-                                        <label className="sgw-label">اسم المستخدم</label>
+                                        <label className="sgw-label">اسم المستدم</label>
                                         <div className="sgw-input-wrapper">
                                             <span className="sgw-input-icon">👤</span>
                                             <input
@@ -571,7 +571,7 @@ const SecureGateway = () => {
                                                 className="sgw-input"
                                                 value={usernameInput}
                                                 onChange={e => setUsernameInput(e.target.value)}
-                                                placeholder="اسم المستخدم"
+                                                placeholder="اسم المستدم"
                                                 disabled={isLoading}
                                                 required
                                                 dir="ltr"
@@ -580,7 +580,7 @@ const SecureGateway = () => {
                                     </div>
 
                                     <div className="sgw-field">
-                                        <label className="sgw-label">كلمة المرور</label>
+                                        <label className="sgw-label">كلم المرور</label>
                                         <div className="sgw-input-wrapper">
                                             <span className="sgw-input-icon">🔒</span>
                                             <input
@@ -588,7 +588,7 @@ const SecureGateway = () => {
                                                 className="sgw-input"
                                                 value={passwordInput}
                                                 onChange={e => setPasswordInput(e.target.value)}
-                                                placeholder="كلمة المرور"
+                                                placeholder="كلم المرور"
                                                 disabled={isLoading}
                                                 required
                                                 dir="ltr"
@@ -620,7 +620,7 @@ const SecureGateway = () => {
                                     {errorMsg && <div className="sgw-error">⚠️ {errorMsg}</div>}
 
                                     <button type="submit" className={`sgw-submit-btn ${isLoading ? 'sgw-loading' : ''}`} disabled={isLoading || !usernameInput || !passwordInput || !captchaInput}>
-                                        {isLoading ? <span className="sgw-spinner" /> : 'دخول'}
+                                        {isLoading ? <span className="sgw-spinner" /> : 'دول'}
                                     </button>
                                 </form>
                             )}
@@ -638,15 +638,15 @@ const SecureGateway = () => {
                                     }}>
                                         <div style={{ fontSize: '2.2rem', marginBottom: '0.4rem' }}>🔐</div>
                                         <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff', marginBottom: '0.3rem' }}>
-                                            المصادقة الثنائية (2FA)
+                                            المصادق الثنائي (2FA)
                                         </div>
                                         <div style={{ fontSize: '0.82rem', color: '#a0aec0', lineHeight: 1.4 }}>
-                                            يرجى إدخال رمز الأمان المتغير المكون من 6 أرقام من تطبيق Authenticator الخاص بك
+                                            يرجى إدال رمز الأمان المتغير المكون من 6 أرقام من تطبيق Authenticator الاص بك
                                         </div>
                                     </div>
 
                                     <div className="sgw-field">
-                                        <label className="sgw-label">رمز المصادقة (2FA Code)</label>
+                                        <label className="sgw-label">رمز المصادق (2FA Code)</label>
                                         <div className="sgw-input-wrapper">
                                             <span className="sgw-input-icon">🔑</span>
                                             <input
@@ -678,7 +678,7 @@ const SecureGateway = () => {
                                         className={`sgw-submit-btn ${isLoading ? 'sgw-loading' : ''}`}
                                         disabled={isLoading || totpInput.length < 6}
                                     >
-                                        {isLoading ? <span className="sgw-spinner" /> : 'تحقق ودخول'}
+                                        {isLoading ? <span className="sgw-spinner" /> : 'تحقق ودول'}
                                     </button>
 
                                     <button
@@ -699,7 +699,7 @@ const SecureGateway = () => {
                                             gap: '0.4rem'
                                         }}
                                     >
-                                        ← العودة لشاشة تسجيل الدخول
+                                        ← العود لشاش تسجيل الدول
                                     </button>
                                 </form>
                             )}

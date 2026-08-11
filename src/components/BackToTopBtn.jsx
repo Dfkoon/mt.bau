@@ -21,8 +21,8 @@ const BackToTopBtn = () => {
         <button
             className={`back-to-top-btn ${visible ? 'visible' : ''}`}
             onClick={scrollToTop}
-            aria-label={isAr ? 'العودة للأعلى' : 'Back to top'}
-            title={isAr ? 'العودة للأعلى' : 'Back to top'}
+            aria-label={isAr ? 'العود للأعلى' : 'Back to top'}
+            title={isAr ? 'العود للأعلى' : 'Back to top'}
         >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="18 15 12 9 6 15" />

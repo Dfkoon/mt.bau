@@ -56,17 +56,17 @@ const AdminFeedback = () => {
             await updateDoc(doc(db, 'suggestions', id), { status: 'resolved', read: true });
             toast.success(isAr ? 'تم حل الاقتراح / الشكوى' : 'Marked as resolved');
         } catch { 
-            toast.error(isAr ? 'خطأ في التحديث' : 'Update failed'); 
+            toast.error(isAr ? 'طأ في التحديث' : 'Update failed'); 
         }
     };
 
     const deleteSuggestion = async (id) => {
-        if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسالة؟' : 'Delete this message?')) return;
+        if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسال؟' : 'Delete this message?')) return;
         try { 
             await deleteDoc(doc(db, 'suggestions', id)); 
             toast.success(isAr ? 'تم الحذف' : 'Deleted'); 
         } catch { 
-            toast.error(isAr ? 'خطأ' : 'Error'); 
+            toast.error(isAr ? 'طأ' : 'Error'); 
         }
     };
 
@@ -76,7 +76,7 @@ const AdminFeedback = () => {
             await updateDoc(doc(db, 'testimonials', id), { approved: !current });
             toast.success(isAr ? (!current ? 'تم التفعيل والظهور' : 'تم إلغاء التفعيل') : (!current ? 'Approved' : 'Unapproved'));
         } catch {
-            toast.error(isAr ? 'خطأ في التحديث' : 'Update failed');
+            toast.error(isAr ? 'طأ في التحديث' : 'Update failed');
         }
     };
 
@@ -86,7 +86,7 @@ const AdminFeedback = () => {
             await deleteDoc(doc(db, 'testimonials', id));
             toast.success(isAr ? 'تم الحذف' : 'Deleted');
         } catch {
-            toast.error(isAr ? 'خطأ في الحذف' : 'Error deleting');
+            toast.error(isAr ? 'طأ في الحذف' : 'Error deleting');
         }
     };
 
@@ -138,7 +138,7 @@ const AdminFeedback = () => {
                     
                     <div className="filter-group">
                         <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.3rem' }}>
-                            {isAr ? 'الحالة:' : 'Status:'}
+                            {isAr ? 'الحال:' : 'Status:'}
                         </label>
                         <select className="admin-input-field" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
                             <option value="all">{isAr ? 'كل الحالات' : 'All'}</option>
@@ -178,7 +178,7 @@ const AdminFeedback = () => {
 
                                 {s.contact && (
                                     <p className="suggestion-admin-contact" style={{ fontSize: '0.8rem', color: 'var(--adm-muted)', margin: '0.4rem 0' }}>
-                                        <strong>{isAr ? 'طريقة التواصل:' : 'Contact Info:'}</strong> {s.contact}
+                                        <strong>{isAr ? 'طريق التواصل:' : 'Contact Info:'}</strong> {s.contact}
                                     </p>
                                 )}
 
@@ -189,7 +189,7 @@ const AdminFeedback = () => {
                                         </button>
                                     )}
                                     <button className="admin-action-btn delete" onClick={() => deleteSuggestion(s.id)}>
-                                        {isAr ? 'حذف الرسالة' : 'Delete'}
+                                        {isAr ? 'حذف الرسال' : 'Delete'}
                                     </button>
                                 </div>
                             </div>
@@ -212,7 +212,7 @@ const AdminFeedback = () => {
 
                 {testimonials.length === 0 ? (
                     <div className="admin-empty-state" style={{ padding: '2.5rem 1rem' }}>
-                        <p>{isAr ? 'لا توجد تقييمات مضافة بعد' : 'No testimonials added yet'}</p>
+                        <p>{isAr ? 'لا توجد تقييمات مضاف بعد' : 'No testimonials added yet'}</p>
                     </div>
                 ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -225,7 +225,7 @@ const AdminFeedback = () => {
                                     </span>
                                     <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                                         <span className={`badge ${t.approved ? 'badge-resolved' : 'badge-pending'}`}>
-                                            {t.approved ? (isAr ? 'نشط وظاهر' : 'Approved') : (isAr ? 'معطل ومخفي' : 'Pending')}
+                                            {t.approved ? (isAr ? 'نشط وظاهر' : 'Approved') : (isAr ? 'معطل ومفي' : 'Pending')}
                                         </span>
                                         {t.language && (
                                             <span style={{

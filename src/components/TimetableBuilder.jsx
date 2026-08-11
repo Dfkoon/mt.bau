@@ -7,7 +7,7 @@ const DAYS = [
   { id: 'mon', ar: 'الإثنين', en: 'Monday' },
   { id: 'tue', ar: 'الثلاثاء', en: 'Tuesday' },
   { id: 'wed', ar: 'الأربعاء', en: 'Wednesday' },
-  { id: 'thu', ar: 'الخميس', en: 'Thursday' },
+  { id: 'thu', ar: 'الميس', en: 'Thursday' },
 ];
 
 const TIME_SLOTS = [
@@ -66,7 +66,7 @@ const TimetableBuilder = () => {
     if (hasCollision) {
       setCollisionError(
         isAr
-          ? '⚠️ يوجد تعارض في الوقت مع محاضرة أخرى بنفس اليوم!'
+          ? '⚠️ يوجد تعارض في الوقت مع محاضر أرى بنفس اليوم!'
           : '⚠️ Time collision detected with another lecture on the same day!'
       );
       return;
@@ -110,14 +110,14 @@ const TimetableBuilder = () => {
       <div className="timetable-header">
         <div className="title-area">
           <h2>🗓️ {isAr ? 'مولد ومنظّم الجدول الدراسي الأسبوعي' : 'Weekly Timetable Builder'}</h2>
-          <p>{isAr ? 'قم بإضافة محاضراتك وتأكد من عدم وجود تعارض في الأوقات بكل سهولة' : 'Add your lectures and verify there are no time conflicts easily'}</p>
+          <p>{isAr ? 'قم بإضاف محاضراتك وتأكد من عدم وجود تعارض في الأوقات بكل سهول' : 'Add your lectures and verify there are no time conflicts easily'}</p>
         </div>
 
         <div className="actions-area">
           {courses.length > 0 && (
             <>
               <button className="btn-print" onClick={handlePrint}>
-                🖨️ {isAr ? 'طباعة / حفظ PDF' : 'Print / Save PDF'}
+                🖨️ {isAr ? 'طباع / حفظ PDF' : 'Print / Save PDF'}
               </button>
               <button className="btn-clear" onClick={handleClearAll}>
                 🗑️ {isAr ? 'مسح الجدول' : 'Clear All'}
@@ -130,12 +130,12 @@ const TimetableBuilder = () => {
       <div className="timetable-grid-layout">
         {/* Form Card */}
         <div className="course-form-card">
-          <h3>➕ {isAr ? 'إضافة محاضرة جديدة' : 'Add New Lecture'}</h3>
+          <h3>➕ {isAr ? 'إضاف محاضر جديد' : 'Add New Lecture'}</h3>
           {collisionError && <div className="collision-alert">{collisionError}</div>}
 
           <form onSubmit={handleAddCourse} className="course-form">
             <div className="form-group">
-              <label>{isAr ? 'اسم المادة *' : 'Subject Name *'}</label>
+              <label>{isAr ? 'اسم الماد *' : 'Subject Name *'}</label>
               <input
                 type="text"
                 required
@@ -147,7 +147,7 @@ const TimetableBuilder = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label>{isAr ? 'رمز المادة' : 'Course Code'}</label>
+                <label>{isAr ? 'رمز الماد' : 'Course Code'}</label>
                 <input
                   type="text"
                   placeholder={isAr ? 'مثال: 0301101' : 'e.g. 0301101'}
@@ -157,10 +157,10 @@ const TimetableBuilder = () => {
               </div>
 
               <div className="form-group">
-                <label>{isAr ? 'القاعة / المبنى' : 'Room / Building'}</label>
+                <label>{isAr ? 'القاع / المبنى' : 'Room / Building'}</label>
                 <input
                   type="text"
-                  placeholder={isAr ? 'مثال: قاعة 201' : 'e.g. Room 201'}
+                  placeholder={isAr ? 'مثال: قاع 201' : 'e.g. Room 201'}
                   value={newCourse.room}
                   onChange={(e) => setNewCourse({ ...newCourse, room: e.target.value })}
                 />
@@ -208,7 +208,7 @@ const TimetableBuilder = () => {
             </div>
 
             <button type="submit" className="btn-add-course">
-              ✨ {isAr ? 'إضافة للجدول' : 'Add to Timetable'}
+              ✨ {isAr ? 'إضاف للجدول' : 'Add to Timetable'}
             </button>
           </form>
         </div>

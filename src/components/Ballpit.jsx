@@ -717,7 +717,7 @@ function createBallpit(e, t = {}) {
     };
 }
 
-const BallpitComponent = ({ className = '', followCursor = true, ...props }) => {
+export const BallpitComponent = ({ className = '', followCursor = true, ...props }) => {
     const canvasRef = useRef(null);
     const spheresInstanceRef = useRef(null);
 
@@ -738,4 +738,3 @@ const BallpitComponent = ({ className = '', followCursor = true, ...props }) => 
     return <canvas className={`${className} w-full h-full`} ref={canvasRef} />;
 };
 
-export default BallpitComponent;

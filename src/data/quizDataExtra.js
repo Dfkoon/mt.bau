@@ -4,7 +4,7 @@ export const extraQuizData = {
     databases_past_years: {
         id: 'databases_past_years',
         title: 'Databases - Past Year Questions',
-        titleAr: 'قواعد بيانات - أسئلة سنوات',
+        titleAr: 'قواعد بيانات - أسئل سنوات',
         icon: '🗄️',
         color: '#4CAF50',
         questions: [

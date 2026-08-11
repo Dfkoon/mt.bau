@@ -26,26 +26,26 @@ const groq = apiKey ? new Groq({
  */
 const NASHMI_ULTRA_PROMPT = `
 You are "Nashmi Ultra" (نشمي ألترا), the absolute most advanced AI academic advisor for the "Makanak" (مكانك) platform.
-You represent the cutting edge of student support at Al-Balqa Applied University (BAU) - جامعة البلقاء التطبيقية.
+You represent the cutting edge of student support at Al-Balqa Applied University (BAU) - جامع البلقاء التطبيقي.
 
 IDENTITY & LOCATION:
 - Location: Kingdom of Jordan (الأردن), Salt city (السلط).
-- University: Al-Balqa Applied University (BAU) - جامعة البلقاء التطبيقية.
+- University: Al-Balqa Applied University (BAU) - جامع البلقاء التطبيقي.
 - Campus: Main Campus (Salt) and AI Faculty.
-- Project: Makanak (مكانك) - Created by student Hussien Koon (كلية الذكاء الاصطناعي).
+- Project: Makanak (مكانك) - Created by student Hussien Koon (كلي الذكاء الاصطناعي).
 - Goal: Serve as a 24/7 expert mentor, developer, and friend to students.
 
 KNOWLEDGE BASE (Meticulous Details):
 1. AI FACULTY MAJORS:
    - Cyber Security (أمن المعلومات والفضاء الإلكتروني): Focuses on encryption, network security, and digital forensics.
-   - Digital Forensics (تحقيقات جنائية رقمية): Focuses on evidence recovery ( ت ج 440, ت ج 347).
+   - Digital Forensics (تحقيقات جنائي رقمي): Focuses on evidence recovery ( ت ج 440, ت ج 347).
    - VR & AR (واقع افتراضي): Focuses on 3D modeling, game design (وام 111, وام 321).
    - Data Science (علم بيانات): Focuses on big data, machine learning (ع ب 111, ع ب 241).
    - AI & Robotics (الذكاء الاصطناعي والروبوتات): Focuses on neural networks and robotics.
 
 2. KEY SITE SECTIONS:
    - [Materials](/materials): Summaries, past papers (سنوات), and study files for all faculty subjects.
-   - [Academic Plans](/plans): Detailed course trees (شجرة المواد) for all AI faculty majors.
+   - [Academic Plans](/plans): Detailed course trees (شجر المواد) for all AI faculty majors.
    - [Grading](/grading): Dual GPA calculator (New BAU 4.0 system and Old system).
    - [Quiz](/quiz): Interactive test bank for subjects like Digital Logic, IoT, and more.
    - [Exchange](/exchange): Market for students to swap books and academic resources.
@@ -61,7 +61,7 @@ KNOWLEDGE BASE (Meticulous Details):
 
 CORE DIRECTIVES:
 - Use advanced Chain-of-Thought reasoning for complex questions.
-- Dialect: Refined White Jordanian (لهجة بيضاء مهذبة).
+- Dialect: Refined White Jordanian (لهج بيضاء مهذب).
 - Tone: Highly proactive, welcoming (أهلاً يا نشمي!), and deeply encouraging.
 - Precision: Always mention specific site pages using Markdown links.
 - Missing Material / Request Directive: If a student asks for a study material, summary, book, questions, or project help that is NOT available on the site, politely inform them and explicitly direct them to request it directly from the Makanak team via the [اطلب ما تحتاجه](#request-services) section on the homepage!
@@ -149,8 +149,8 @@ export const chatWithNashmi = async (userMessage, pageContext = "", history = []
             success: false,
             error: error.message,
             messageAr: error.message === "AI_TIMEOUT"
-                ? "برضو نشمي مارد؟ يمكن النت ضعيف.. جرب ابعث مرة ثانية!"
-                : "نشمي عم بحدث معلوماته حالياً.. استنى ثواني وجرب كمان مرة! 🤖",
+                ? "برضو نشمي مارد؟ يمكن النت ضعيف.. جرب ابعث مر ثاني!"
+                : "نشمي عم بحدث معلوماته حالياً.. استنى ثواني وجرب كمان مر! 🤖",
             messageEn: error.message === "AI_TIMEOUT"
                 ? "Nashmi is taking too long to respond. Please check your connection and try again."
                 : "Nashmi is updating its knowledge.. please wait seconds and try again!"
@@ -168,7 +168,7 @@ const cleanText = (str) => {
     return str
         .toLowerCase()
         .replace(/[أإآٱ]/g, 'ا')
-        .replace(/ة/g, 'ه')
+        .replace(//g, 'ه')
         .replace(/ى/g, 'ي')
         .replace(/[\u064B-\u0652]/g, '') // remove diacritics
         .replace(/[.,/#!$%^&*;:{}=\-_`~()؟?،"']/g, ' ') // remove punctuation
@@ -178,10 +178,10 @@ const cleanText = (str) => {
 
 export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText = '', maxMarks = 1) => {
     if (!studentAnswer || !studentAnswer.trim()) {
-        return { score: 0, earnedMarks: 0, feedback: 'لم يتم كتابة إجابة.', feedbackEn: 'No answer provided.' };
+        return { score: 0, earnedMarks: 0, feedback: 'لم يتم كتاب إجاب.', feedbackEn: 'No answer provided.' };
     }
     if (!modelAnswer || !modelAnswer.trim()) {
-        return { score: 1, earnedMarks: maxMarks, feedback: 'إجابة مقبولة ✅', feedbackEn: 'Answer accepted ✅' };
+        return { score: 1, earnedMarks: maxMarks, feedback: 'إجاب مقبول ✅', feedbackEn: 'Answer accepted ✅' };
     }
 
     const cleanStud = cleanText(studentAnswer);
@@ -191,7 +191,7 @@ export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText 
     // Fast local concept evaluation (works offline and online)
     const evaluateLocally = () => {
         if (cleanStud === cleanMod) {
-            return { score: 1, earnedMarks: maxMarks, feedback: 'إجابة صحيحة ونموذجية ✅', feedbackEn: 'Perfect answer ✅' };
+            return { score: 1, earnedMarks: maxMarks, feedback: 'إجاب صحيح ونموذجي ✅', feedbackEn: 'Perfect answer ✅' };
         }
 
         // Stopwords to ignore
@@ -200,7 +200,7 @@ export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText 
         const modWords = cleanMod.split(' ').filter(w => w.length >= 2 && !stopWords.has(w));
 
         if (studWords.length === 0) {
-            return { score: 0, earnedMarks: 0, feedback: 'إجابة غير مكتملة ❌', feedbackEn: 'Incomplete answer ❌' };
+            return { score: 0, earnedMarks: 0, feedback: 'إجاب غير مكتمل ❌', feedbackEn: 'Incomplete answer ❌' };
         }
 
         // Count keyword matches (stemmed prefix matching for Arabic words)
@@ -208,7 +208,7 @@ export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText 
         studWords.forEach(sWord => {
             const hasMatch = modWords.some(mWord => {
                 if (sWord === mWord) return true;
-                // Substring prefix/suffix matching (e.g. محاضرات vs المحاضرات vs محاضرة)
+                // Substring prefix/suffix matching (e.g. محاضرات vs المحاضرات vs محاضر)
                 if (sWord.length >= 4 && mWord.length >= 4) {
                     if (sWord.includes(mWord) || mWord.includes(sWord)) return true;
                     // Common prefix match (first 4 letters)
@@ -226,7 +226,7 @@ export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText 
             return {
                 score: 1,
                 earnedMarks: maxMarks,
-                feedback: 'إجابة صحيحة ومقبولة، تعبر عن الفكرة المطلوبة ✅',
+                feedback: 'إجاب صحيح ومقبول، تعبر عن الفكر المطلوب ✅',
                 feedbackEn: 'Correct and acceptable answer conveying the required concept ✅'
             };
         } else if (matches >= 1) {
@@ -234,7 +234,7 @@ export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText 
             return {
                 score: 0.85,
                 earnedMarks: earned,
-                feedback: 'إجابة متقاربة وتحتوي على الفكرة الأساسية 👍',
+                feedback: 'إجاب متقارب وتحتوي على الفكر الأساسي 👍',
                 feedbackEn: 'Close answer containing the main concept 👍'
             };
         }
@@ -247,7 +247,7 @@ export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText 
             return {
                 score: 0.75,
                 earnedMarks: earned,
-                feedback: 'إجابة متصلة بموضوع السؤال ومقبولة 👍',
+                feedback: 'إجاب متصل بموضوع السؤال ومقبول 👍',
                 feedbackEn: 'Relevant and acceptable answer 👍'
             };
         }
@@ -255,7 +255,7 @@ export const gradeEssayAnswer = async (studentAnswer, modelAnswer, questionText 
         return {
             score: 0.4,
             earnedMarks: +(maxMarks * 0.4).toFixed(2),
-            feedback: 'إجابة جزئية — يرجى مراجعة الإجابة النموذجية للفائدة.',
+            feedback: 'إجاب جزئي — يرجى مراجع الإجاب النموذجي للفائد.',
             feedbackEn: 'Partial answer — check model answer for reference.'
         };
     };
@@ -272,13 +272,13 @@ Student Answer: "${studentAnswer}"
 
 GRADING DIRECTIVES:
 1. Be EXTREMELY generous and encouraging!
-2. If the student's answer expresses the same concept, core idea, purpose, or a valid real-world example (e.g. student mentions "محاضرات عن بعد" or "وسيلة تواصل" for a question about video conferencing), award 9/10 or 10/10 FULL MARKS!
+2. If the student's answer expresses the same concept, core idea, purpose, or a valid real-world example (e.g. student mentions "محاضرات عن بعد" or "وسيل تواصل" for a question about video conferencing), award 9/10 or 10/10 FULL MARKS!
 3. Do NOT penalize spelling errors, dialect variations, different phrasing, or brevity if the main idea is correct.
 4. Award at least 7/10 or 8/10 if the answer contains any correct relevant point or keyword.
 5. Only give 0 if the answer is completely blank, gibberish, or 100% wrong.
 
 Respond ONLY with this JSON format:
-{"score": <integer 0-10>, "feedback_ar": "<تشجيع وملاحظة إيجابية ملخصة بالعربية>", "feedback_en": "<positive brief feedback in English>"}`;
+{"score": <integer 0-10>, "feedback_ar": "<تشجيع وملاحظ إيجابي ملص بالعربي>", "feedback_en": "<positive brief feedback in English>"}`;
 
     try {
         const completion = await Promise.race([
@@ -301,7 +301,7 @@ Respond ONLY with this JSON format:
         return {
             score: normalized,
             earnedMarks: +(normalized * maxMarks).toFixed(2),
-            feedback: parsed.feedback_ar || 'إجابة صحيحة ومفصلة ✅',
+            feedback: parsed.feedback_ar || 'إجاب صحيح ومفصل ✅',
             feedbackEn: parsed.feedback_en || 'Correct answer ✅',
         };
     } catch (e) {

@@ -45,7 +45,7 @@ const AdminCourseStatusManager = () => {
             }
         } catch (error) {
             console.error('Error loading pending items:', error);
-            toast.error(isAr ? 'خطأ في تحميل الطلبات' : 'Error loading requests');
+            toast.error(isAr ? 'طأ في تحميل الطلبات' : 'Error loading requests');
         } finally {
             setLoading(false);
         }
@@ -59,13 +59,13 @@ const AdminCourseStatusManager = () => {
             });
 
             if (result.success) {
-                toast.success(isAr ? 'تم الموافقة على الطلب' : 'Request approved');
+                toast.success(isAr ? 'تم الموافق على الطلب' : 'Request approved');
                 setBookings(bookings.filter(b => b.id !== bookingId));
                 setApprovalNotes('');
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'خطأ في الموافقة' : 'Error approving request');
+            toast.error(isAr ? 'طأ في الموافق' : 'Error approving request');
         }
     };
 
@@ -83,7 +83,7 @@ const AdminCourseStatusManager = () => {
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'خطأ في الرفض' : 'Error rejecting request');
+            toast.error(isAr ? 'طأ في الرفض' : 'Error rejecting request');
         }
     };
 
@@ -95,13 +95,13 @@ const AdminCourseStatusManager = () => {
             });
 
             if (result.success) {
-                toast.success(isAr ? 'تم الموافقة على التبرع' : 'Donation approved');
+                toast.success(isAr ? 'تم الموافق على التبرع' : 'Donation approved');
                 setDonations(donations.filter(d => d.id !== donationId));
                 setApprovalNotes('');
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'خطأ في الموافقة' : 'Error approving donation');
+            toast.error(isAr ? 'طأ في الموافق' : 'Error approving donation');
         }
     };
 
@@ -119,7 +119,7 @@ const AdminCourseStatusManager = () => {
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'خطأ في الرفض' : 'Error rejecting donation');
+            toast.error(isAr ? 'طأ في الرفض' : 'Error rejecting donation');
         }
     };
 
@@ -150,13 +150,13 @@ const AdminCourseStatusManager = () => {
 
                 {booking.faculty && (
                     <div className="detail">
-                        <span className="label">🏛️ {isAr ? 'الكلية' : 'Faculty'}</span>
+                        <span className="label">🏛️ {isAr ? 'الكلي' : 'Faculty'}</span>
                         <span className="value">{booking.faculty}</span>
                     </div>
                 )}
 
                 <div className="detail">
-                    <span className="label">📅 {isAr ? 'تاريخ الطلب' : 'Submitted'}</span>
+                    <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted'}</span>
                     <span className="value">
                         {booking.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                     </span>
@@ -173,7 +173,7 @@ const AdminCourseStatusManager = () => {
             {actioningItem === booking.id ? (
                 <div className="approval-section">
                     <textarea
-                        placeholder={isAr ? 'أضف ملاحظاتك (اختياري)' : 'Add your notes (optional)'}
+                        placeholder={isAr ? 'أضف ملاحظاتك (اتياري)' : 'Add your notes (optional)'}
                         value={approvalNotes}
                         onChange={(e) => setApprovalNotes(e.target.value)}
                         maxLength={500}
@@ -207,7 +207,7 @@ const AdminCourseStatusManager = () => {
                     className="btn-review"
                     onClick={() => setActioningItem(booking.id)}
                 >
-                    🔍 {isAr ? 'مراجعة' : 'Review'}
+                    🔍 {isAr ? 'مراجع' : 'Review'}
                 </button>
             )}
         </div>
@@ -218,7 +218,7 @@ const AdminCourseStatusManager = () => {
             <div className="request-header">
                 <div>
                     <h3>
-                        {donation.courseNames?.join(', ') || (isAr ? 'مواد متعددة' : 'Multiple Courses')}
+                        {donation.courseNames?.join(', ') || (isAr ? 'مواد متعدد' : 'Multiple Courses')}
                     </h3>
                     <p className="student-info">
                         👤 {donation.donorName} | 📱 {donation.phoneNumber}
@@ -237,13 +237,13 @@ const AdminCourseStatusManager = () => {
 
                 {donation.faculty && (
                     <div className="detail">
-                        <span className="label">🏛️ {isAr ? 'الكلية' : 'Faculty'}</span>
+                        <span className="label">🏛️ {isAr ? 'الكلي' : 'Faculty'}</span>
                         <span className="value">{donation.faculty}</span>
                     </div>
                 )}
 
                 <div className="detail">
-                    <span className="label">📅 {isAr ? 'تاريخ الطلب' : 'Submitted'}</span>
+                    <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted'}</span>
                     <span className="value">
                         {donation.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                     </span>
@@ -251,7 +251,7 @@ const AdminCourseStatusManager = () => {
 
                 {donation.resourcesOffered && donation.resourcesOffered.length > 0 && (
                     <div className="detail">
-                        <span className="label">📦 {isAr ? 'الموارد المقدمة' : 'Resources'}</span>
+                        <span className="label">📦 {isAr ? 'الموارد المقدم' : 'Resources'}</span>
                         <span className="value">{donation.resourcesOffered.join(', ')}</span>
                     </div>
                 )}
@@ -267,7 +267,7 @@ const AdminCourseStatusManager = () => {
             {actioningItem === donation.id ? (
                 <div className="approval-section">
                     <textarea
-                        placeholder={isAr ? 'أضف ملاحظاتك (اختياري)' : 'Add your notes (optional)'}
+                        placeholder={isAr ? 'أضف ملاحظاتك (اتياري)' : 'Add your notes (optional)'}
                         value={approvalNotes}
                         onChange={(e) => setApprovalNotes(e.target.value)}
                         maxLength={500}
@@ -301,7 +301,7 @@ const AdminCourseStatusManager = () => {
                     className="btn-review"
                     onClick={() => setActioningItem(donation.id)}
                 >
-                    🔍 {isAr ? 'مراجعة' : 'Review'}
+                    🔍 {isAr ? 'مراجع' : 'Review'}
                 </button>
             )}
         </div>
@@ -310,7 +310,7 @@ const AdminCourseStatusManager = () => {
     return (
         <div className="admin-status-manager">
             <div className="manager-header">
-                <h2>⚙️ {isAr ? 'إدارة حالات الطلبات' : 'Manage Request Status'}</h2>
+                <h2>⚙️ {isAr ? 'إدار حالات الطلبات' : 'Manage Request Status'}</h2>
                 <button
                     className="refresh-btn"
                     onClick={loadPendingItems}
@@ -346,7 +346,7 @@ const AdminCourseStatusManager = () => {
                             ))
                         ) : (
                             <div className="empty-message">
-                                ✅ {isAr ? 'لا توجد طلبات معلقة' : 'No pending requests'}
+                                ✅ {isAr ? 'لا توجد طلبات معلق' : 'No pending requests'}
                             </div>
                         )}
                     </div>
@@ -360,7 +360,7 @@ const AdminCourseStatusManager = () => {
                             ))
                         ) : (
                             <div className="empty-message">
-                                ✅ {isAr ? 'لا توجد تبرعات معلقة' : 'No pending donations'}
+                                ✅ {isAr ? 'لا توجد تبرعات معلق' : 'No pending donations'}
                             </div>
                         )}
                     </div>

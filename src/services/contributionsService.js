@@ -6,7 +6,7 @@ import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebas
 const CONTRIBUTIONS_COLLECTION = 'quizContributions';
 
 // Upload file to Cloudinary and save metadata to Firestore
-export const submitContribution = async (file, subjectName = 'General', contributionType = 'unspecified', studentName = 'مساهمة مجهولة', onProgress, onTask) => {
+export const submitContribution = async (file, subjectName = 'General', contributionType = 'unspecified', studentName = 'مساهم مجهول', onProgress, onTask) => {
     try {
         // 1. Validate File
         const validation = validateFile(file);
@@ -31,7 +31,7 @@ export const submitContribution = async (file, subjectName = 'General', contribu
         console.log(`Saving metadata to Firestore for ${file.name}...`);
         const docRef = await addDoc(collection(db, CONTRIBUTIONS_COLLECTION), {
             subjectName: subjectName,
-            studentName: studentName || 'مساهمة مجهولة',
+            studentName: studentName || 'مساهم مجهول',
             fileName: file.name,
             fileUrl: result.url,
             publicId: result.publicId,
@@ -64,7 +64,7 @@ export const submitLinkContribution = async (linkUrl, subjectName = 'General', c
     try {
         const docRef = await addDoc(collection(db, CONTRIBUTIONS_COLLECTION), {
             subjectName: subjectName,
-            studentName: studentName || 'مساهمة مجهولة',
+            studentName: studentName || 'مساهم مجهول',
             fileUrl: linkUrl, // Use fileUrl field to store the link
             contributionType,
             fileType: 'link', // Explicitly mark as a link

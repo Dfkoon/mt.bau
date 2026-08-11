@@ -9,48 +9,48 @@ const SERVICES = [
   {
     id: 'summary',
     icon: '📝',
-    label: 'ملخص مادة',
+    label: 'ملص ماد',
     color: '#d32f2f',
     colorLight: 'rgba(211,47,47,0.08)',
-    description: 'احصل على ملخص احترافي لأي مادة دراسية',
+    description: 'احصل على ملص احترافي لأي ماد دراسي',
     fields: ['studentName', 'studentPhone', 'subject', 'materialLink', 'notes'],
   },
   {
     id: 'quiz',
     icon: '❓',
-    label: 'إنشاء أسئلة',
+    label: 'إنشاء أسئل',
     color: '#1565c0',
     colorLight: 'rgba(21,101,192,0.08)',
-    description: 'نصمم لك أسئلة مناسبة لمادتك ونمطك المطلوب',
+    description: 'نصمم لك أسئل مناسب لمادتك ونمطك المطلوب',
     fields: ['studentName', 'studentPhone', 'subject', 'questionStyle', 'questionCount', 'notes'],
   },
   {
     id: 'idea',
     icon: '💡',
-    label: 'اقتراح فكرة',
+    label: 'اقتراح فكر',
     color: '#e65100',
     colorLight: 'rgba(230,81,0,0.08)',
-    description: 'شارك فكرتك البرمجية ونساعدك على تطويرها',
+    description: 'شارك فكرتك البرمجي ونساعدك على تطويرها',
     fields: ['studentName', 'studentPhone', 'ideaTitle', 'ideaDetails', 'techStack', 'notes'],
   },
   {
     id: 'other',
     icon: '🚀',
-    label: 'طلب آخر',
+    label: 'طلب آر',
     color: '#2e7d32',
     colorLight: 'rgba(46,125,50,0.08)',
-    description: 'أي طلب آخر تريده من فريقنا',
+    description: 'أي طلب آر تريده من فريقنا',
     fields: ['studentName', 'studentPhone', 'requestTitle', 'requestDetails', 'notes'],
   },
 ];
 
 const QUESTION_STYLES = [
-  'اختيار من متعدد (MCQ)',
-  'صح وخطأ',
-  'أسئلة مقالية',
-  'أسئلة قصيرة',
+  'اتيار من متعدد (MCQ)',
+  'صح وطأ',
+  'أسئل مقالي',
+  'أسئل قصير',
   'حل مسائل / تمارين',
-  'مختلطة',
+  'متلط',
 ];
 
 /* ─── Field Helper Component ─────────────────────── */
@@ -87,28 +87,28 @@ export default function RequestServicesSection() {
     e.preventDefault();
 
     if (!form.studentName?.trim()) {
-      toast.error('يرجى كتابة اسمك الكريم');
+      toast.error('يرجى كتاب اسمك الكريم');
       return;
     }
     if (!form.studentPhone?.trim()) {
-      toast.error('يرجى كتابة رقم التواصل (واتساب)');
+      toast.error('يرجى كتاب رقم التواصل (واتساب)');
       return;
     }
 
     if (service.id === 'summary' && !form.subject?.trim()) {
-      toast.error('يرجى تحديد اسم المادة');
+      toast.error('يرجى تحديد اسم الماد');
       return;
     }
     if (service.id === 'quiz' && !form.subject?.trim()) {
-      toast.error('يرجى تحديد اسم المادة');
+      toast.error('يرجى تحديد اسم الماد');
       return;
     }
     if (service.id === 'idea' && (!form.ideaTitle?.trim() || !form.ideaDetails?.trim())) {
-      toast.error('يرجى كتابة عنوان الفكرة وتفاصيلها');
+      toast.error('يرجى كتاب عنوان الفكر وتفاصيلها');
       return;
     }
     if (service.id === 'other' && (!form.requestTitle?.trim() || !form.requestDetails?.trim())) {
-      toast.error('يرجى كتابة عنوان الطلب وتفاصيله');
+      toast.error('يرجى كتاب عنوان الطلب وتفاصيله');
       return;
     }
 
@@ -156,10 +156,10 @@ export default function RequestServicesSection() {
     <section className="rss-section" id="request-services">
       {/* Header */}
       <div className="rss-header">
-        <div className="rss-badge">✨ خدمات الفريق</div>
+        <div className="rss-badge">✨ دمات الفريق</div>
         <h2 className="rss-title">اطلب ما تحتاجه</h2>
         <p className="rss-subtitle">
-          سواء ملخص مادة، إنشاء أسئلة، أو اقتراح فكرة — نحن هنا لمساعدتك
+          سواء ملص ماد، إنشاء أسئل، أو اقتراح فكر — نحن هنا لمساعدتك
         </p>
       </div>
 
@@ -212,7 +212,7 @@ export default function RequestServicesSection() {
 
                 {/* ── Student Basic Info (Always Included) ── */}
                 <div className="rss-form-row">
-                  <Field label="اسم الطالب / الطالبة" required>
+                  <Field label="اسم الطالب / الطالب" required>
                     <input className="rss-input" placeholder="اسمك الثلاثي..." required
                       value={form.studentName || ''} onChange={e => set('studentName', e.target.value)} />
                   </Field>
@@ -224,12 +224,12 @@ export default function RequestServicesSection() {
 
                 {/* ── SUMMARY fields ── */}
                 {service.id === 'summary' && <>
-                  <Field label="اسم المادة" required>
+                  <Field label="اسم الماد" required>
                     <input className="rss-input" placeholder="مثال: تحليل عددي، هياكل بيانات..." required
                       value={form.subject || ''} onChange={e => set('subject', e.target.value)} />
                   </Field>
-                  <Field label="رابط المادة / الكتاب">
-                    <input className="rss-input" placeholder="https://... (اختياري)" dir="ltr"
+                  <Field label="رابط الماد / الكتاب">
+                    <input className="rss-input" placeholder="https://... (اتياري)" dir="ltr"
                       value={form.materialLink || ''} onChange={e => set('materialLink', e.target.value)} />
                   </Field>
                   <Field label="ملاحظات أو نقاط تريد التركيز عليها">
@@ -241,11 +241,11 @@ export default function RequestServicesSection() {
 
                 {/* ── QUIZ fields ── */}
                 {service.id === 'quiz' && <>
-                  <Field label="اسم المادة" required>
-                    <input className="rss-input" placeholder="مثال: قواعد بيانات، برمجة متقدمة..." required
+                  <Field label="اسم الماد" required>
+                    <input className="rss-input" placeholder="مثال: قواعد بيانات، برمج متقدم..." required
                       value={form.subject || ''} onChange={e => set('subject', e.target.value)} />
                   </Field>
-                  <Field label="نمط الأسئلة">
+                  <Field label="نمط الأسئل">
                     <div className="rss-chips">
                       {QUESTION_STYLES.map(style => (
                         <button type="button" key={style}
@@ -256,7 +256,7 @@ export default function RequestServicesSection() {
                       ))}
                     </div>
                   </Field>
-                  <Field label="عدد الأسئلة المطلوبة">
+                  <Field label="عدد الأسئل المطلوب">
                     <div className="rss-count-row">
                       {[5, 10, 15, 20, 25, 30].map(n => (
                         <button type="button" key={n}
@@ -267,31 +267,31 @@ export default function RequestServicesSection() {
                       ))}
                     </div>
                   </Field>
-                  <Field label="ملاحظات إضافية">
+                  <Field label="ملاحظات إضافي">
                     <textarea className="rss-textarea" rows={3}
-                      placeholder="مثال: يوجد كتاب معين أو نقاط محددة أريد الأسئلة منها..."
+                      placeholder="مثال: يوجد كتاب معين أو نقاط محدد أريد الأسئل منها..."
                       value={form.notes || ''} onChange={e => set('notes', e.target.value)} />
                   </Field>
                 </>}
 
                 {/* ── IDEA fields ── */}
                 {service.id === 'idea' && <>
-                  <Field label="عنوان الفكرة" required>
-                    <input className="rss-input" placeholder="مثال: تطبيق لإدارة الجدول الدراسي..." required
+                  <Field label="عنوان الفكر" required>
+                    <input className="rss-input" placeholder="مثال: تطبيق لإدار الجدول الدراسي..." required
                       value={form.ideaTitle || ''} onChange={e => set('ideaTitle', e.target.value)} />
                   </Field>
-                  <Field label="تفاصيل الفكرة" required>
+                  <Field label="تفاصيل الفكر" required>
                     <textarea className="rss-textarea" rows={5} required
-                      placeholder="اشرح فكرتك بالتفصيل: ما المشكلة التي تحلها؟ من هم المستخدمون؟ ما المميزات الأساسية؟"
+                      placeholder="اشرح فكرتك بالتفصيل: ما المشكل التي تحلها؟ من هم المستدمون؟ ما المميزات الأساسي؟"
                       value={form.ideaDetails || ''} onChange={e => set('ideaDetails', e.target.value)} />
                   </Field>
-                  <Field label="التقنيات المفضلة (اختياري)">
+                  <Field label="التقنيات المفضل (اتياري)">
                     <input className="rss-input" placeholder="مثال: React, Firebase, Python..."
                       value={form.techStack || ''} onChange={e => set('techStack', e.target.value)} />
                   </Field>
-                  <Field label="ملاحظات أخرى">
+                  <Field label="ملاحظات أرى">
                     <textarea className="rss-textarea" rows={2}
-                      placeholder="أي معلومات إضافية تريد إضافتها..."
+                      placeholder="أي معلومات إضافي تريد إضافتها..."
                       value={form.notes || ''} onChange={e => set('notes', e.target.value)} />
                   </Field>
                 </>}
@@ -299,7 +299,7 @@ export default function RequestServicesSection() {
                 {/* ── OTHER fields ── */}
                 {service.id === 'other' && <>
                   <Field label="عنوان الطلب" required>
-                    <input className="rss-input" placeholder="اكتب عنواناً مختصراً لطلبك..." required
+                    <input className="rss-input" placeholder="اكتب عنواناً متصراً لطلبك..." required
                       value={form.requestTitle || ''} onChange={e => set('requestTitle', e.target.value)} />
                   </Field>
                   <Field label="تفاصيل الطلب" required>
@@ -307,9 +307,9 @@ export default function RequestServicesSection() {
                       placeholder="اشرح طلبك بالتفصيل قدر الإمكان..."
                       value={form.requestDetails || ''} onChange={e => set('requestDetails', e.target.value)} />
                   </Field>
-                  <Field label="ملاحظات إضافية">
+                  <Field label="ملاحظات إضافي">
                     <textarea className="rss-textarea" rows={2}
-                      placeholder="أي معلومات إضافية..."
+                      placeholder="أي معلومات إضافي..."
                       value={form.notes || ''} onChange={e => set('notes', e.target.value)} />
                   </Field>
                 </>}

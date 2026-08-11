@@ -34,7 +34,10 @@ const PageTitleUpdater = () => {
         document.title = `${pageTitle} | ${siteName}`;
 
         // Log this page visit to Firestore for analytics (skip admin dashboard itself)
-        if (!path.startsWith('/admin-dashboard')) {
+        const isAdminRoute = path.startsWith('/admin-dashboard')
+            || path === '/admin'
+            || location.hash.startsWith('#/admin');
+        if (!isAdminRoute) {
             logPageView(path, { type: 'visit' });
         }
     }, [location, language, t]);

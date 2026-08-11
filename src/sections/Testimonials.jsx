@@ -8,22 +8,22 @@ import './Testimonials.css';
 const fallbackTestimonials = {
     ar: [
         {
-            quote: "الي عامل الموقع هاض فنان! الثيمات (Themes) جد رهيبة والشغل متعوب عليه. تجربة مستخدم فخمة 🚀",
+            quote: "الي عامل الموقع هاض فنان! الثيمات (Themes) جد رهيب والشغل متعوب عليه. تجرب مستدم فم 🚀",
             author: "أحمد إسماعيل",
             gender: "male",
-            major: "هندسة البرمجيات",
+            major: "هندس البرمجيات",
             avatar: "/assets/avatars/flork_cool.png"
         },
         {
-            quote: "الموقع ساعدني كثير في دراستي! المواد منظمة والملخصات واضحة. شكراً للفريق المتطوع 💙",
+            quote: "الموقع ساعدني كثير في دراستي! المواد منظم والملصات واضح. شكراً للفريق المتطوع 💙",
             author: "أحمد محمود",
             gender: "male",
-            major: "التحقيقات الجنائية الرقمية",
+            major: "التحقيقات الجنائي الرقمي",
             avatar: "/assets/avatars/flork_crying.png"
         },
         {
-            quote: "أفضل مصدر للمواد الدراسية! التقويم الأكاديمي والاختبارات التفاعلية سهلت علي الدراسة كثير 🎓",
-            author: "سارة العلي",
+            quote: "أفضل مصدر للمواد الدراسي! التقويم الأكاديمي والاتبارات التفاعلي سهلت علي الدراس كثير 🎓",
+            author: "سار العلي",
             gender: "female",
             major: "علوم الحاسوب",
             avatar: "/assets/avatars/flork_heart.png"
@@ -126,7 +126,7 @@ const Testimonials = () => {
         if (!avatar || !avatar.startsWith('/assets/avatars/flork')) {
             const isFemale = t.gender === 'female' || 
                             (t.role && t.role.toLowerCase().includes('female')) || 
-                            (t.author && t.author.includes('طالبة'));
+                            (t.author && t.author.includes('طالب'));
             const avatarList = isFemale ? florkFemaleAvatars : florkMaleAvatars;
             avatar = avatarList[idx % avatarList.length];
         }

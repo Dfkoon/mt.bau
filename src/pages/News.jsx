@@ -18,7 +18,7 @@ const News = () => {
             'new': { ar: 'جديد ✨', en: 'New' },
             'important': { ar: 'هام ⚠️', en: 'Important' },
             'admission': { ar: 'قبول وتجسيل 🎓', en: 'Admission' },
-            'general': { ar: 'خبر عام 🌐', en: 'General' }
+            'general': { ar: 'بر عام 🌐', en: 'General' }
         };
         return language === 'ar' ? labels[type]?.ar : labels[type]?.en;
     };
@@ -29,10 +29,10 @@ const News = () => {
             <div className="coming-soon-overlay">
                 <div className="coming-soon-box" data-aos="zoom-in">
                     <div className="coming-soon-icon-large">🚧</div>
-                    <h1>{language === 'ar' ? 'تحت الصيانة' : 'Under Maintenance'}</h1>
+                    <h1>{language === 'ar' ? 'تحت الصيان' : 'Under Maintenance'}</h1>
                     <p>
                         {language === 'ar'
-                            ? 'نقوم حالياً بتحديث قسم الأخبار لنوافيكم بآخر المستجدات بشكل أفضل. انتظرونا قريباً!'
+                            ? 'نقوم حالياً بتحديث قسم الأبار لنوافيكم بآر المستجدات بشكل أفضل. انتظرونا قريباً!'
                             : 'We are currently updating the news section to bring you the latest updates more effectively. Stay tuned!'}
                     </p>
                     <div className="coming-soon-badge">
@@ -46,10 +46,10 @@ const News = () => {
                 <section className="news-hero" style={{ backgroundImage: `url(${newsHero})` }}>
                     <div className="hero-overlay"></div>
                     <div className="hero-content">
-                        <h1 className="hero-title">{language === 'ar' ? 'أخبار مكانك' : 'Makanak News'} 📰</h1>
+                        <h1 className="hero-title">{language === 'ar' ? 'أبار مكانك' : 'Makanak News'} 📰</h1>
                         <p className="hero-subtitle">
                             {language === 'ar'
-                                ? 'وجهتك الأولى لمعرفة كل جديد في جامعة البلقاء التطبيقية'
+                                ? 'وجهتك الأولى لمعرف كل جديد في جامع البلقاء التطبيقي'
                                 : 'Your standard source for all updates at Al-Balqa Applied University'}
                         </p>
                     </div>
@@ -108,7 +108,7 @@ const News = () => {
                             {/* Footer */}
                             <div className="news-footer">
                                 <span className="footer-tag" style={{ color: item.color }}>
-                                    {language === 'ar' ? 'رحلة مكانك ❤️' : 'Makanak Journey ❤️'}
+                                    {language === 'ar' ? 'رحل مكانك ❤️' : 'Makanak Journey ❤️'}
                                 </span>
                             </div>
                         </div>

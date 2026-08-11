@@ -22,7 +22,7 @@ const MaterialStatusChecker = ({ isAr }) => {
         e.preventDefault();
 
         if (!phoneInput.trim()) {
-            alert(isAr ? 'الرجاء إدخال رقم الهاتف' : 'Please enter your phone number');
+            alert(isAr ? 'الرجاء إدال رقم الهاتف' : 'Please enter your phone number');
             return;
         }
 
@@ -90,11 +90,11 @@ const MaterialStatusChecker = ({ isAr }) => {
         <div className="material-status-checker-container">
             <div className="status-checker-header">
                 <h2 className="status-checker-title">
-                    {isAr ? '📋 معرفة حالة طلباتك' : '📋 Check Your Requests Status'}
+                    {isAr ? '📋 معرف حال طلباتك' : '📋 Check Your Requests Status'}
                 </h2>
                 <p className="status-checker-subtitle">
                     {isAr
-                        ? 'ابحث عن حالة تبرعاتك والمواد المحجوزة'
+                        ? 'ابحث عن حال تبرعاتك والمواد المحجوز'
                         : 'Search for the status of your donations and bookings'}
                 </p>
             </div>
@@ -119,7 +119,7 @@ const MaterialStatusChecker = ({ isAr }) => {
 
                     <div className="form-group">
                         <label className="form-label">
-                            👤 {isAr ? 'الاسم (اختياري)' : 'Name (Optional)'}
+                            👤 {isAr ? 'الاسم (اتياري)' : 'Name (Optional)'}
                         </label>
                         <input
                             type="text"
@@ -150,7 +150,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                         <h3>{isAr ? 'نتائج البحث' : 'Search Results'}</h3>
                         <p className="results-info">
                             {isAr
-                                ? `تم العثور على ${searchResults.donations.length + searchResults.bookings.length} نتيجة`
+                                ? `تم العثور على ${searchResults.donations.length + searchResults.bookings.length} نتيج`
                                 : `Found ${searchResults.donations.length + searchResults.bookings.length} results`}
                         </p>
                     </div>
@@ -214,7 +214,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     </div>
 
                                                     <div className="info-row">
-                                                        <span className="label">📅 {isAr ? 'التاريخ' : 'Date'}:</span>
+                                                        <span className="label">📅 {isAr ? 'التاري' : 'Date'}:</span>
                                                         <span className="value">{formatDate(donation.submittedAt)}</span>
                                                     </div>
                                                 </div>
@@ -224,7 +224,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                 </div>
                             ) : (
                                 <div className="empty-state">
-                                    <p>{isAr ? 'لا توجد تبرعات مسجلة' : 'No donations found'}</p>
+                                    <p>{isAr ? 'لا توجد تبرعات مسجل' : 'No donations found'}</p>
                                 </div>
                             )}
                         </div>
@@ -256,7 +256,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     </div>
 
                                                     <div className="info-row">
-                                                        <span className="label">📖 {isAr ? 'المادة المحجوزة' : 'Booked Material'}:</span>
+                                                        <span className="label">📖 {isAr ? 'الماد المحجوز' : 'Booked Material'}:</span>
                                                         <span className="value">{booking.materialName}</span>
                                                     </div>
 
@@ -269,7 +269,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     </div>
 
                                                     <div className="info-row">
-                                                        <span className="label">📅 {isAr ? 'تاريخ الحجز' : 'Booking Date'}:</span>
+                                                        <span className="label">📅 {isAr ? 'تاري الحجز' : 'Booking Date'}:</span>
                                                         <span className="value">{formatDate(booking.bookedAt)}</span>
                                                     </div>
                                                 </div>
@@ -279,7 +279,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                 </div>
                             ) : (
                                 <div className="empty-state">
-                                    <p>{isAr ? 'لا توجد حجوزات مسجلة' : 'No bookings found'}</p>
+                                    <p>{isAr ? 'لا توجد حجوزات مسجل' : 'No bookings found'}</p>
                                 </div>
                             )}
                         </div>
@@ -289,7 +289,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                     <div className="results-note">
                         <p>
                             ℹ️ {isAr
-                                ? 'سيتم إخبارك عند تحديث حالة طلبك من قبل الفريق الإداري'
+                                ? 'سيتم إبارك عند تحديث حال طلبك من قبل الفريق الإداري'
                                 : 'You will be notified when your request status is updated by the admin team'}
                         </p>
                     </div>
@@ -303,7 +303,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                     <h3>{isAr ? 'لم يتم العثور على نتائج' : 'No Results Found'}</h3>
                     <p>
                         {isAr
-                            ? 'لا توجد تبرعات أو حجوزات مسجلة برقم الهاتف المدخل'
+                            ? 'لا توجد تبرعات أو حجوزات مسجل برقم الهاتف المدل'
                             : 'No donations or bookings found for the entered phone number'}
                     </p>
                 </div>

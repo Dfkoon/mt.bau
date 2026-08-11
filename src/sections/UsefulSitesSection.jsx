@@ -18,7 +18,7 @@ const UsefulSitesSection = () => {
             id: 2,
             title: t('site.2.title'),
             desc: t('site.2.desc'),
-            icon: '🧮',
+            icon: '',
             link: 'https://www.khanacademy.org'
         },
         {
