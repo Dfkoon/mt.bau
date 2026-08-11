@@ -2551,7 +2551,7 @@ const Quiz = () => {
                                 <input
                                     type="text"
                                     className="quiz-search-input"
-                                    placeholder={language === 'ar' ? 'ابحث عن ماد... (مثلاً: برمج، رياضيات)' : 'Search for a subject... (e.g., Programming, Math)'}
+                                    placeholder={language === 'ar' ? 'ابحث عن مادة... (مثلاً: برمج، رياضيات)' : 'Search for a subject... (e.g., Programming, Math)'}
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -2649,10 +2649,10 @@ const Quiz = () => {
                         ) : (
                             <div className="no-search-results fade-in">
                                 <div className="no-results-icon">😕</div>
-                                <h3>{language === 'ar' ? 'نعتذر، لم يتم العثور على الماد' : 'Sorry, no subject found'}</h3>
+                                <h3>{language === 'ar' ? 'نعتذر، لم يتم العثور على المادة' : 'Sorry, no subject found'}</h3>
                                 <p>
                                     {language === 'ar'
-                                        ? 'نحن نعمل باستمرار على إضاف مواد جديد. إذا كنت تبحث عن ماد محدد، يمكنك مراسلتنا لاقتراحها!'
+                                        ? 'نحن نعمل باستمرار على إضاف مواد جديد. إذا كنت تبحث عن مادة محدد، يمكنك مراسلتنا لاقتراحها!'
                                         : "We are constantly adding new materials. If you're looking for a specific subject, please suggest it to us!"
                                     }
                                 </p>

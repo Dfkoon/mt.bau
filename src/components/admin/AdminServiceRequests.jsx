@@ -15,7 +15,7 @@ const STATUSES = [
 
 const SERVICE_TYPES = [
   { id: 'all', label: 'جميع الدمات' },
-  { id: 'summary', label: '📝 ملص ماد' },
+  { id: 'summary', label: '📝 ملص مادة' },
   { id: 'quiz', label: '❓ إنشاء أسئل' },
   { id: 'idea', label: '💡 اقتراح فكر' },
   { id: 'other', label: '🚀 طلب آر' },
@@ -205,7 +205,7 @@ export default function AdminServiceRequests() {
           <input
             type="text"
             className="asr-search-input"
-            placeholder="ابحث بالاسم، رقم الهاتـف، الماد، أو العنوان..."
+            placeholder="ابحث بالاسم، رقم الهاتـف، المادة، أو العنوان..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -314,12 +314,12 @@ export default function AdminServiceRequests() {
                   {req.serviceId === 'summary' && (
                     <>
                       <div className="asr-info-row">
-                        <span className="asr-info-lbl">📚 الماد:</span>
+                        <span className="asr-info-lbl">📚 المادة:</span>
                         <span className="asr-info-txt highlight">{req.subject}</span>
                       </div>
                       {req.materialLink && (
                         <div className="asr-info-row">
-                          <span className="asr-info-lbl">🔗 رابط الماد:</span>
+                          <span className="asr-info-lbl">🔗 رابط المادة:</span>
                           <a href={req.materialLink} target="_blank" rel="noopener noreferrer" className="asr-link" dir="ltr">
                             {req.materialLink}
                           </a>
@@ -332,7 +332,7 @@ export default function AdminServiceRequests() {
                   {req.serviceId === 'quiz' && (
                     <>
                       <div className="asr-info-row">
-                        <span className="asr-info-lbl">📚 الماد:</span>
+                        <span className="asr-info-lbl">📚 المادة:</span>
                         <span className="asr-info-txt highlight">{req.subject}</span>
                       </div>
                       <div className="asr-tags-row">

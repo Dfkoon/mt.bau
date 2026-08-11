@@ -898,7 +898,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         if (isDonation) {
             detailsText = `المواد المتبرع بها:\n` + (data.materials || []).map((m, i) => `${i + 1}. ${typeof m === 'object' ? m.name : m}`).join('\n');
         } else {
-            detailsText = `الماد المحجوز: ${data.materialName}\nصاحب الماد (المتبرع): ${data.donorName} (${data.donorPhone})`;
+            detailsText = `المادة المحجوز: ${data.materialName}\nصاحب المادة (المتبرع): ${data.donorName} (${data.donorPhone})`;
         }
 
         const templateParams = {
@@ -1009,7 +1009,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const handleAddDeliverySchedule = async () => {
         const { donorName, materialName, pickupDate, assignedCoordinator } = scheduleFormData;
         if (!donorName.trim() || !materialName.trim() || !pickupDate || !assignedCoordinator) {
-            toast.error(isAr ? '⚠️ يرجى ملء الحقول المطلوب (الاسم، الماد، التاري، المنسق)' : '⚠️ Please fill required fields');
+            toast.error(isAr ? '⚠️ يرجى ملء الحقول المطلوب (الاسم، المادة، التاري، المنسق)' : '⚠️ Please fill required fields');
             return;
         }
         setScheduleFormLoading(true);
@@ -1049,7 +1049,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             ? new Date(schedule.pickupDate + 'T00:00:00').toLocaleDateString(isAr ? 'ar-JO' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
             : '';
         const msg = isAr
-            ? `السلام عليكم ${schedule.bookerName || ''}،\n\nنُذكّرك بأن ماد "${schedule.materialName}" ستكون جاهز للاستلام ${dateStr ? `يوم ${dateStr}` : 'قريباً'}.\n\nيرجى الحضور في الوقت المحدد.\n\nشكراً — فريق حمل تبادل المواد 📚`
+            ? `السلام عليكم ${schedule.bookerName || ''}،\n\nنُذكّرك بأن مادة "${schedule.materialName}" ستكون جاهز للاستلام ${dateStr ? `يوم ${dateStr}` : 'قريباً'}.\n\nيرجى الحضور في الوقت المحدد.\n\nشكراً — فريق حمل تبادل المواد 📚`
             : `Hello ${schedule.bookerName || ''},\n\nReminder: "${schedule.materialName}" will be ready for pickup ${dateStr ? `on ${dateStr}` : 'soon'}.\n\nPlease come at the scheduled time.\n\nThank you — Material Exchange Team 📚`;
         return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     };
@@ -1133,7 +1133,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         let msg = schedule.reminderMessage && schedule.reminderMessage.trim()
             ? schedule.reminderMessage.trim()
             : (isAr
-                ? `السلام عليكم ${schedule.donorName}،\n\nنُذكّرك بضرور إحضار ماد "${schedule.materialName}" ${dateStr ? `يوم ${dateStr}` : ''} وتسليمها للمنسق ${coordinator}.\n\nشكراً لتعاونك — فريق حمل تبادل المواد 📚`
+                ? `السلام عليكم ${schedule.donorName}،\n\nنُذكّرك بضرور إحضار مادة "${schedule.materialName}" ${dateStr ? `يوم ${dateStr}` : ''} وتسليمها للمنسق ${coordinator}.\n\nشكراً لتعاونك — فريق حمل تبادل المواد 📚`
                 : `Hello ${schedule.donorName},\n\nThis is a reminder to bring "${schedule.materialName}" ${dateStr ? `on ${dateStr}` : ''} and hand it over to coordinator ${coordinator}.\n\nThank you — Material Exchange Team 📚`);
         return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     };
@@ -1174,7 +1174,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const handlePreRequestSubmit = async (e) => {
         e.preventDefault();
         if (!preRequestForm.studentName.trim() || !preRequestForm.phoneNumber.trim() || !preRequestForm.materialName.trim()) {
-            toast.error(isAr ? 'يرجى تعبئ الاسم والهاتف واسم الماد' : 'Please fill your name, phone, and material name');
+            toast.error(isAr ? 'يرجى تعبئ الاسم والهاتف واسم المادة' : 'Please fill your name, phone, and material name');
             return;
         }
 
@@ -1190,7 +1190,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         }
 
         if (preRequestForm.type === 'need' && !preRequestForm.acknowledgeUrgentNeed) {
-            toast.error(isAr ? 'يرجى التأكيد بأنك بحاج ماس لهذه الماد' : 'Please confirm that you urgently need this material');
+            toast.error(isAr ? 'يرجى التأكيد بأنك بحاج ماس لهذه المادة' : 'Please confirm that you urgently need this material');
             return;
         }
 
@@ -1367,7 +1367,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 notes: '',
                 email: bookingData.email?.trim() || ''
             });
-            toast.success(isAr ? 'تم حجز الماد بنجاح!' : 'Material booked successfully!', { duration: 5000 });
+            toast.success(isAr ? 'تم حجز المادة بنجاح!' : 'Material booked successfully!', { duration: 5000 });
             setShowBookingModal(false);
             setActiveQRModal({
                 bookingId: `BK-${Date.now().toString(36).toUpperCase()}`,
@@ -1382,10 +1382,10 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         } catch (error) {
             console.error('Error booking material:', error);
             if (error.message === 'ALREADY_RESERVED') {
-                toast.error(isAr ? 'عذراً، هذه الماد تم حجزها للتو من قبل شص آر' : 'Sorry, this material was just booked by someone else');
+                toast.error(isAr ? 'عذراً، هذه المادة تم حجزها للتو من قبل شص آر' : 'Sorry, this material was just booked by someone else');
                 fetchDonations();
             } else {
-                toast.error(isAr ? 'فشل حجز الماد' : 'Failed to book material');
+                toast.error(isAr ? 'فشل حجز المادة' : 'Failed to book material');
             }
         } finally {
             setLoading(false);
@@ -2251,7 +2251,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <thead>
                                 <tr>
                                     <th>{isAr ? 'م' : '#'}</th>
-                                    <th>{isAr ? 'اسم الماد' : 'Material Name'}</th>
+                                    <th>{isAr ? 'اسم المادة' : 'Material Name'}</th>
                                     <th>{isAr ? 'التصنيف' : 'Classification'}</th>
                                     <th>{isAr ? 'تاري الإجراء' : 'Action Date'}</th>
                                     <th>{isAr ? 'تاري التسليم' : 'Delivery Date'}</th>
@@ -2261,10 +2261,10 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <tbody>
                                 {items.length > 0 ? items.map((item, index) => {
                                     const classification = item.status === 'completed'
-                                        ? (isAr ? 'ماد مسلّم' : 'Delivered Material')
+                                        ? (isAr ? 'مادة مسلّم' : 'Delivered Material')
                                         : item.status === 'reserved'
-                                            ? (isAr ? 'ماد محجوز' : 'Reserved Material')
-                                            : (isAr ? 'ماد متبرع بها' : 'Donated Material');
+                                            ? (isAr ? 'مادة محجوز' : 'Reserved Material')
+                                            : (isAr ? 'مادة متبرع بها' : 'Donated Material');
 
                                     return (
                                         <tr key={item.id || index}>
@@ -2404,11 +2404,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                 status: overallStatus,
                 lastUpdated: new Date()
             });
-            toast.success(isAr ? 'تم تسليم الماد بنجاح! ✅' : 'Material delivered successfully! ✅');
+            toast.success(isAr ? 'تم تسليم المادة بنجاح! ✅' : 'Material delivered successfully! ✅');
             fetchAllDonations();
 
             addAuditLog(
-                `سلّم الماد (${materials[materialIndex].name}) للحاجز (${materials[materialIndex].takerInfo?.name || 'مجهول'})`,
+                `سلّم المادة (${materials[materialIndex].name}) للحاجز (${materials[materialIndex].takerInfo?.name || 'مجهول'})`,
                 `Delivered material (${materials[materialIndex].name}) to booker (${materials[materialIndex].takerInfo?.name || 'Unknown'})`,
                 { donationId, materialIndex }
             );
@@ -2458,11 +2458,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                 status: overallStatus,
                 lastUpdated: new Date()
             });
-            toast.success(isAr ? 'تم إلغاء الحجز بنجاح وإعاد الماد للمستودع 🔓' : 'Booking cancelled and material returned to pool 🔓');
+            toast.success(isAr ? 'تم إلغاء الحجز بنجاح وإعاد المادة للمستودع 🔓' : 'Booking cancelled and material returned to pool 🔓');
             fetchAllDonations();
 
             addAuditLog(
-                `ألغى حجز الماد (${materials[materialIndex].name})`,
+                `ألغى حجز المادة (${materials[materialIndex].name})`,
                 `Cancelled booking for material (${materials[materialIndex].name})`,
                 { donationId, materialIndex }
             );
@@ -2697,9 +2697,9 @@ Please contact us to coordinate the pickup.Thank you.`;
 
     const getApprovalRequestTypeLabel = (type) => {
         const labels = {
-            editDonation: isAr ? 'طلب تعديل ماد' : 'Edit Request',
-            deleteDonation: isAr ? 'طلب حذف ماد' : 'Delete Request',
-            completeBooking: isAr ? 'طلب تسليم ماد' : 'Delivery Request',
+            editDonation: isAr ? 'طلب تعديل مادة' : 'Edit Request',
+            deleteDonation: isAr ? 'طلب حذف مادة' : 'Delete Request',
+            completeBooking: isAr ? 'طلب تسليم مادة' : 'Delivery Request',
             cancelBooking: isAr ? 'طلب إلغاء حجز' : 'Cancel Booking Request'
         };
         return labels[type] || type;
@@ -3386,7 +3386,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                 <tr>
                     <th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
                     <th>${isAr ? 'الهاتف' : 'Phone'}</th>
-                    <th>${isAr ? 'اسم الماد' : 'Material Name'}</th>
+                    <th>${isAr ? 'اسم المادة' : 'Material Name'}</th>
                     <th>${isAr ? 'الملاحظات' : 'Notes'}</th>
                     <th>${isAr ? 'التصنيف' : 'Classification'}</th>
                     <th>${isAr ? 'المنسق المعني' : 'Coordinator'}</th>
@@ -3415,7 +3415,7 @@ Please contact us to coordinate the pickup.Thank you.`;
     };
 
     const exportBookingsToCSV = (bookings, filename) => {
-        const headersAr = ['اسم الحاجز', 'هاتف الحاجز', 'البريد الإلكتروني', 'الجنس', 'الماد', 'ملاحظات الماد', 'اسم المتبرع', 'بريد المتبرع', 'الحال'];
+        const headersAr = ['اسم الحاجز', 'هاتف الحاجز', 'البريد الإلكتروني', 'الجنس', 'المادة', 'ملاحظات المادة', 'اسم المتبرع', 'بريد المتبرع', 'الحال'];
         const headersEn = ['Booker Name', 'Booker Phone', 'Booker Email', 'Gender', 'Material', 'Material Notes', 'Donor Name', 'Donor Email', 'Status'];
         const headers = isAr ? headersAr : headersEn;
         const statusMap = {
@@ -3602,8 +3602,8 @@ Please contact us to coordinate the pickup.Thank you.`;
                     <th>${isAr ? 'الهاتف' : 'Phone'}</th>
                     <th>${isAr ? 'البريد' : 'Email'}</th>
                     <th>${isAr ? 'الجنس' : 'Gender'}</th>
-                    <th>${isAr ? 'الماد' : 'Material'}</th>
-                    <th>${isAr ? 'ملاحظات الماد' : 'Material Notes'}</th>
+                    <th>${isAr ? 'المادة' : 'Material'}</th>
+                    <th>${isAr ? 'ملاحظات المادة' : 'Material Notes'}</th>
                     <th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
                     <th>${isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
                     <th>${isAr ? 'الحال' : 'Status'}</th>
@@ -3794,7 +3794,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                 <thead>
                     <tr>
                         <th style="width:40px; text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">#</th>
-                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'الماد' : 'Material'}</th>
+                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'المادة' : 'Material'}</th>
                         <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'المتبرع وهاتفه' : 'Donor & Phone'}</th>
                         <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'الحاجز وهاتفه' : 'Booker & Phone'}</th>
                         <th style="text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">${isAr ? 'المنسق المعني' : 'Coordinator'}</th>
@@ -3989,7 +3989,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     <section className="pre-request-section glass-card">
                         <div className="section-header">
                             <h2>{isAr ? 'طلبات مسبق' : 'Pre-Requests'}</h2>
-                            <p>{isAr ? 'إذا كنت ترغب في التبرع بماد أو تحتاج ماد معين، أرسل طلباً مسبقاً. الطلبات تظهر فقط للطاقم الإداري في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are visible only to administrative staff in the control panel.'}</p>
+                            <p>{isAr ? 'إذا كنت ترغب في التبرع بماد أو تحتاج مادة معين، أرسل طلباً مسبقاً. الطلبات تظهر فقط للطاقم الإداري في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are visible only to administrative staff in the control panel.'}</p>
                         </div>
 
                         <form className="pre-request-form" onSubmit={handlePreRequestSubmit}>
@@ -4006,7 +4006,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     className={`pre-request-type-btn ${preRequestForm.type === 'need' ? 'active' : ''}`}
                                     onClick={() => setPreRequestForm(prev => ({ ...prev, type: 'need' }))}
                                 >
-                                    {isAr ? 'أحتاج ماد' : 'I need a material'}
+                                    {isAr ? 'أحتاج مادة' : 'I need a material'}
                                 </button>
                             </div>
 
@@ -4034,7 +4034,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     className="form-input"
                                     value={preRequestForm.materialName}
                                     onChange={(e) => setPreRequestForm(prev => ({ ...prev, materialName: e.target.value }))}
-                                    placeholder={isAr ? 'اسم الماد' : 'Material name'}
+                                    placeholder={isAr ? 'اسم المادة' : 'Material name'}
                                     required
                                 />
                             </div>
@@ -4069,7 +4069,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 <div className="quick-item"><strong>الإراد الكامل:</strong> تقديم الطلب بمحض إرادتك</div>
                                                 <div className="quick-item"><strong>الجدي:</strong> لا توجد طلبات وهمي أو متكرر</div>
                                                 <div className="quick-item"><strong>الإلغاء:</strong> يجب إبلاغ الفريق قبل التسليم بـ 24 ساع على الأقل</div>
-                                                <div className="quick-item"><strong>المسؤولي:</strong> أنت مسؤول عن الماد بعد التسليم</div>
+                                                <div className="quick-item"><strong>المسؤولي:</strong> أنت مسؤول عن المادة بعد التسليم</div>
                                                 <div className="quick-item"><strong>التواصل:</strong> فقط من لال المنسق الرسمي (الواتس أب)</div>
                                                 <div className="quick-item"><strong>الصوصي:</strong> لن يتم نشر بياناتك الشصي</div>
                                             </>
@@ -4665,7 +4665,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         type="search"
                                                         value={staffSearchQuery}
                                                         onChange={(e) => setStaffSearchQuery(e.target.value)}
-                                                        placeholder={isAr ? 'ابحث باسم الطالب، الماد، الهاتف أو البريد' : 'Search donor, material, phone, or email'}
+                                                        placeholder={isAr ? 'ابحث باسم الطالب، المادة، الهاتف أو البريد' : 'Search donor, material, phone, or email'}
                                                         className="staff-search-input"
                                                     />
                                                 </div>
@@ -4827,9 +4827,9 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                             <th>{isAr ? 'رقم الهاتف' : 'Phone'}</th>
                                                                             <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                             <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                            <th>{isAr ? 'اسم الماد' : 'Material Name'}</th>
-                                                                            <th>{isAr ? 'وصف الماد' : 'Description'}</th>
-                                                                            <th>{isAr ? 'حال الماد' : 'Material Status'}</th>
+                                                                            <th>{isAr ? 'اسم المادة' : 'Material Name'}</th>
+                                                                            <th>{isAr ? 'وصف المادة' : 'Description'}</th>
+                                                                            <th>{isAr ? 'حال المادة' : 'Material Status'}</th>
                                                                             <th>{isAr ? 'اسم الحاجز' : 'Booker (if reserved)'}</th>
                                                                             <th>{isAr ? 'هاتف الحاجز' : 'Booker Phone'}</th>
                                                                             <th>{isAr ? 'حال الحجز' : 'Booking Status'}</th>
@@ -5061,7 +5061,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                             <th>{isAr ? 'هاتف الحاجز' : 'Booker Phone'}</th>
                                                                             <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                             <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                            <th>{isAr ? 'الماد المحجوز' : 'Booked Material'}</th>
+                                                                            <th>{isAr ? 'المادة المحجوز' : 'Booked Material'}</th>
                                                                             <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
                                                                             <th>{isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
                                                                             <th>{isAr ? 'حال الحجز' : 'Booking Status'}</th>
@@ -5172,7 +5172,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                 <th>{isAr ? 'النوع' : 'Type'}</th>
                                                                                 <th>{isAr ? 'اسم الطالب' : 'Student Name'}</th>
                                                                                 <th>{isAr ? 'الهاتف' : 'Phone'}</th>
-                                                                                <th>{isAr ? 'اسم الماد' : 'Material'}</th>
+                                                                                <th>{isAr ? 'اسم المادة' : 'Material'}</th>
                                                                                 <th>{isAr ? 'الملاحظات' : 'Notes'}</th>
                                                                                 <th>{isAr ? 'تاري الإرسال' : 'Submitted At'}</th>
                                                                                 <th>{isAr ? 'حال الطلب' : 'Status'}</th>
@@ -5229,7 +5229,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         <div className="formal-table-wrapper">
                                                             <div className="formal-table-header">
                                                                 <span className="formal-table-title">🤝 {isAr ? 'جدول المواد التي تم تسليمها' : 'Delivered Materials Table'}</span>
-                                                                <span className="formal-table-count">{isAr ? `إجمالي: ${allDelivered.length} ماد` : `Total: ${allDelivered.length} materials`}</span>
+                                                                <span className="formal-table-count">{isAr ? `إجمالي: ${allDelivered.length} مادة` : `Total: ${allDelivered.length} materials`}</span>
                                                             </div>
                                                             {allDelivered.length === 0 ? (
                                                                 <div className="empty-state">📭 {isAr ? 'لا توجد مواد مسلم بعد' : 'No delivered materials yet'}</div>
@@ -5243,7 +5243,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                 <th>{isAr ? 'هاتف المستلم' : 'Recipient Phone'}</th>
                                                                                 <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                                 <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                                <th>{isAr ? 'الماد المسلم' : 'Delivered Material'}</th>
+                                                                                <th>{isAr ? 'المادة المسلم' : 'Delivered Material'}</th>
                                                                                 <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
                                                                                 <th>{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</th>
                                                                                 <th>{isAr ? 'حال التسليم' : 'Delivery Status'}</th>
@@ -5402,7 +5402,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                 <th>{isAr ? 'المتبرع (الجه الأولى)' : 'Donor (First Party)'}</th>
                                                                                 <th>{isAr ? 'جنس المتبرع' : "Donor's Gender"}</th>
                                                                                 <th>{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</th>
-                                                                                <th>{isAr ? 'الماد' : 'Material'}</th>
+                                                                                <th>{isAr ? 'المادة' : 'Material'}</th>
                                                                                 <th>{isAr ? 'حال التسليم' : 'Delivery Status'}</th>
                                                                                 <th>{isAr ? 'الحاجز (الجه الثاني)' : 'Taker (Second Party)'}</th>
                                                                                 <th>{isAr ? 'جنس الحاجز' : "Taker's Gender"}</th>
@@ -5807,7 +5807,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     </div>
                                                     {/* Material */}
                                                     <div>
-                                                        <label className="schedule-form-label">{isAr ? '* الماد' : '* Material'}</label>
+                                                        <label className="schedule-form-label">{isAr ? '* المادة' : '* Material'}</label>
                                                         <input type="text" value={scheduleFormData.materialName} onChange={e => setScheduleFormData(p => ({ ...p, materialName: e.target.value }))} placeholder={isAr ? 'كيمياء عضوي...' : 'Organic Chemistry...'} className="schedule-form-input" />
                                                     </div>
                                                     {/* Pickup Date */}
@@ -5945,7 +5945,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                             <table className="formal-table compact-delivery-table" style={{ width: '100%', minWidth: '450px', borderCollapse: 'collapse' }}>
                                                                 <thead>
                                                                     <tr style={{ borderBottom: '1.5px solid rgba(255,255,255,0.1)' }}>
-                                                                        <th style={{ padding: '8px 4px', fontSize: '0.8rem', textAlign: 'start' }}>{isAr ? 'الماد / التفاصيل' : 'Material / Details'}</th>
+                                                                        <th style={{ padding: '8px 4px', fontSize: '0.8rem', textAlign: 'start' }}>{isAr ? 'المادة / التفاصيل' : 'Material / Details'}</th>
                                                                         <th style={{ padding: '8px 4px', fontSize: '0.8rem', textAlign: 'start' }}>{isAr ? 'الأطراف والتواصل' : 'Parties / Contacts'}</th>
                                                                         <th style={{ padding: '8px 4px', fontSize: '0.8rem', textAlign: 'start' }}>{isAr ? 'الحال' : 'Status'}</th>
                                                                         <th style={{ padding: '8px 4px', fontSize: '0.8rem', textAlign: 'center', width: '70px' }}>{isAr ? 'إجراءات' : 'Actions'}</th>
@@ -6132,7 +6132,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         { key: 'donorPhone', label: isAr ? 'هاتف المتبرع' : 'Donor Phone', type: 'tel', dir: 'ltr' },
                                                         { key: 'bookerName', label: isAr ? 'اسم الحاجز' : 'Booker Name', type: 'text' },
                                                         { key: 'bookerPhone', label: isAr ? 'هاتف الحاجز' : 'Booker Phone', type: 'tel', dir: 'ltr' },
-                                                        { key: 'materialName', label: isAr ? 'اسم الماد' : 'Material Name', type: 'text' },
+                                                        { key: 'materialName', label: isAr ? 'اسم المادة' : 'Material Name', type: 'text' },
                                                         { key: 'pickupDate', label: isAr ? 'تاري الإحضار' : 'Pickup Date', type: 'date' },
                                                         { key: 'pickupTime', label: isAr ? 'وقت الإحضار' : 'Pickup Time', type: 'time' },
                                                     ].map(({ key, label, type, dir }) => (
@@ -6860,7 +6860,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                             <p><strong>{isAr ? 'معرّف التبرع' : 'Donation ID'}:</strong> {item.donationId}</p>
                                                             <p><strong>{isAr ? 'اسم المتبرع' : 'Donor'}:</strong> {item.donation?.studentName || '—'}</p>
                                                             {item.materialIndex !== null && item.materialIndex !== undefined && (
-                                                                <p><strong>{isAr ? 'رقم الماد' : 'Material #'}:</strong> {item.materialIndex + 1} {materialName ? `- ${materialName}` : ''}</p>
+                                                                <p><strong>{isAr ? 'رقم المادة' : 'Material #'}:</strong> {item.materialIndex + 1} {materialName ? `- ${materialName}` : ''}</p>
                                                             )}
                                                             <p><strong>{isAr ? 'الحال الحالي' : 'Current Status'}:</strong> {item.donation?.status || '—'}</p>
                                                             <p><strong>{isAr ? 'تاري الطلب' : 'Requested at'}:</strong> {requestDate.toLocaleString(isAr ? 'ar-JO' : 'en-US')}</p>
@@ -7075,7 +7075,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>#</th>
-                                                                                <th>{isAr ? 'الماد' : 'Material'}</th>
+                                                                                <th>{isAr ? 'المادة' : 'Material'}</th>
                                                                                 <th>{isAr ? 'المتبرع' : 'Donor'}</th>
                                                                                 <th>{isAr ? 'الحاجز' : 'Booker'}</th>
                                                                                 <th>{isAr ? 'موعد التسليم' : 'Pickup Date & Time'}</th>
@@ -7406,7 +7406,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         <p>{isAr ? `المنسق: ${req.requestedByName}` : `Coordinator: ${req.requestedByName}`}</p>
                                                         <p>{isAr ? `الحدث: ${getApprovalRequestTypeLabel(req.type)}` : `Action: ${getApprovalRequestTypeLabel(req.type)}`}</p>
                                                         {req.materialIndex !== null && req.materialIndex !== undefined && (
-                                                            <p>{isAr ? `رقم الماد: ${req.materialIndex + 1}` : `Material #${req.materialIndex + 1}`}</p>
+                                                            <p>{isAr ? `رقم المادة: ${req.materialIndex + 1}` : `Material #${req.materialIndex + 1}`}</p>
                                                         )}
                                                         <p>{isAr ? `تاري الطلب: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('ar-JO')}` : `Requested at: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('en-US')}`}</p>
                                                     </div>
@@ -7621,7 +7621,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                             value={name}
                                                             onChange={e => updateMaterialField('name', e.target.value)}
                                                             className="form-input material-name-input"
-                                                            placeholder={isAr ? 'اسم الماد' : 'Material name'}
+                                                            placeholder={isAr ? 'اسم المادة' : 'Material name'}
                                                             style={{ flex: 1 }}
                                                             required
                                                         />
@@ -7645,7 +7645,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                     setSelectedDonationForEdit({ ...selectedDonationForEdit, materials: updatedMats });
                                                                 }}
                                                                 style={{ padding: '0 12px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '40px' }}
-                                                                title={isAr ? 'حذف هذه الماد' : 'Delete this material'}
+                                                                title={isAr ? 'حذف هذه المادة' : 'Delete this material'}
                                                             >
                                                                 🗑️
                                                             </button>
@@ -7656,7 +7656,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         value={description}
                                                         onChange={e => updateMaterialField('description', e.target.value)}
                                                         className="form-input material-desc-input"
-                                                        placeholder={isAr ? 'وصف الماد (اتياري)' : 'Description (optional)'}
+                                                        placeholder={isAr ? 'وصف المادة (اتياري)' : 'Description (optional)'}
                                                     />
                                                     {['reserved', 'completed'].includes(status) && (
                                                         <div className="taker-info-fields" style={{ marginTop: '10px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>
@@ -8202,11 +8202,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 <div className="form-group full-width">
                                     <label>{isAr ? 'المواد المتوفر' : 'Available Materials'}</label>
                                     <div className="material-input-container">
-                                        <input type="text" value={currentMaterial.name} onChange={e => setCurrentMaterial(prev => ({ ...prev, name: e.target.value }))} placeholder={isAr ? 'اسم الماد (مثال: كتاب الفيزياء 1)' : 'Material name (e.g. Physics 1 Book)'} className="form-input" />
-                                        <textarea value={currentMaterial.description} onChange={e => setCurrentMaterial(prev => ({ ...prev, description: e.target.value }))} placeholder={isAr ? 'وصف الماد (اتياري): مثال: سلايدات كامل، سلايدات الميد فقط، كتاب + شرح، إل...' : 'Material description (optional): e.g. Complete slides, Midterm only, Book + notes, etc.'} className="form-input material-description" rows="2" />
+                                        <input type="text" value={currentMaterial.name} onChange={e => setCurrentMaterial(prev => ({ ...prev, name: e.target.value }))} placeholder={isAr ? 'اسم المادة (مثال: كتاب الفيزياء 1)' : 'Material name (e.g. Physics 1 Book)'} className="form-input" />
+                                        <textarea value={currentMaterial.description} onChange={e => setCurrentMaterial(prev => ({ ...prev, description: e.target.value }))} placeholder={isAr ? 'وصف المادة (اتياري): مثال: سلايدات كامل، سلايدات الميد فقط، كتاب + شرح، إل...' : 'Material description (optional): e.g. Complete slides, Midterm only, Book + notes, etc.'} className="form-input material-description" rows="2" />
                                         <button type="button" onClick={handleAddMaterial} className="add-btn">{isAr ? 'إضاف' : 'Add'}</button>
                                     </div>
-                                    <small className="form-hint">{isAr ? 'يمكنك إضاف أكثر من ماد بالنقر على "إضاف" عد مرات' : 'You can add multiple materials by clicking "Add" multiple times'}</small>
+                                    <small className="form-hint">{isAr ? 'يمكنك إضاف أكثر من مادة بالنقر على "إضاف" عد مرات' : 'You can add multiple materials by clicking "Add" multiple times'}</small>
                                     {formData.materials.length > 0 && (
                                         <div className="added-materials-list">
                                             {formData.materials.map((material, index) => (
@@ -8234,7 +8234,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </p>
                                     <p className="disclaimer-content" style={{ marginTop: '0.6rem', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '0.6rem', fontWeight: 600 }}>
                                         {isAr
-                                            ? 'موعد تسليم المواد متوقع يكون لال الأسبوع الأول أو الثاني من بداي الدوام الرسمي. على كل من يرغب في حجز ماد أن يكون على إدراك تام بأنه بحاج إليها فعلاً — لا يُقبل إلغاء التسليم بحج عدم الرغب في الماد بعد تأكيد الحجز.'
+                                            ? 'موعد تسليم المواد متوقع يكون لال الأسبوع الأول أو الثاني من بداي الدوام الرسمي. على كل من يرغب في حجز مادة أن يكون على إدراك تام بأنه بحاج إليها فعلاً — لا يُقبل إلغاء التسليم بحج عدم الرغب في المادة بعد تأكيد الحجز.'
                                             : 'Material delivery is expected during the first or second week of the official semester. Anyone wishing to book a material must be fully aware that they genuinely need it — cancellation of delivery will not be accepted after booking confirmation on the grounds of no longer wanting the material.'}
                                     </p>
                                 </div>
@@ -8294,7 +8294,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <h2>
                                 📝 {isAr ? 'طلبات مسبق' : 'Pre-Requests'}
                             </h2>
-                            <p>{isAr ? 'إذا كنت ترغب في التبرع بماد أو تحتاج ماد معين، أرسل طلباً مسبقاً. الطلبات لا تُعرض للجمهور، بل تظهر للطاقم فقط في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are not shown publicly and are visible only to staff in the control panel.'}</p>
+                            <p>{isAr ? 'إذا كنت ترغب في التبرع بماد أو تحتاج مادة معين، أرسل طلباً مسبقاً. الطلبات لا تُعرض للجمهور، بل تظهر للطاقم فقط في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are not shown publicly and are visible only to staff in the control panel.'}</p>
                         </div>
 
                         <form className="pre-request-form" onSubmit={handlePreRequestSubmit}>
@@ -8311,7 +8311,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     className={`pre-request-type-btn ${preRequestForm.type === 'need' ? 'active' : ''}`}
                                     onClick={() => setPreRequestForm(prev => ({ ...prev, type: 'need' }))}
                                 >
-                                    {isAr ? 'أحتاج ماد' : 'I need a material'}
+                                    {isAr ? 'أحتاج مادة' : 'I need a material'}
                                 </button>
                             </div>
 
@@ -8338,7 +8338,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     className="form-input"
                                     value={preRequestForm.materialName}
                                     onChange={(e) => setPreRequestForm(prev => ({ ...prev, materialName: e.target.value }))}
-                                    placeholder={isAr ? 'اسم الماد' : 'Material name'}
+                                    placeholder={isAr ? 'اسم المادة' : 'Material name'}
                                     required
                                 />
                             </div>
@@ -8367,7 +8367,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             checked={preRequestForm.acknowledgeUrgentNeed}
                                             onChange={(e) => setPreRequestForm(prev => ({ ...prev, acknowledgeUrgentNeed: e.target.checked }))}
                                         />
-                                        {isAr ? 'أقر بأنني بحاج ماس لهذه الماد' : 'I confirm that I urgently need this material'}
+                                        {isAr ? 'أقر بأنني بحاج ماس لهذه المادة' : 'I confirm that I urgently need this material'}
                                     </label>
                                 )}
                             </div>
@@ -8379,7 +8379,7 @@ Please contact us to coordinate the pickup.Thank you.`;
 
                         <div className="pre-request-note">
                             {isAr
-                                ? 'بإمكانك متابع طلبك، في حال تم العثور على ماد تحتاجها سيتم التواصل معك عبر واتساب لتأكيد حجزها.'
+                                ? 'بإمكانك متابع طلبك، في حال تم العثور على مادة تحتاجها سيتم التواصل معك عبر واتساب لتأكيد حجزها.'
                                 : 'You can follow up on your request. If a needed material is found, we will contact you via WhatsApp to confirm the reservation.'}
                         </div>
                     </section>
@@ -8446,7 +8446,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 disabled={!bookingOpen}
                                                 title={!bookingOpen ? (isAr ? 'حمل الحجز مغلق حالياً' : 'Booking campaign is currently closed') : ''}
                                             >
-                                                {isAr ? 'حجز الماد' : 'Book Material'}
+                                                {isAr ? 'حجز المادة' : 'Book Material'}
                                             </button>
                                         </div>
                                     ))}
@@ -8521,8 +8521,8 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <div className="booking-modal glass-card">
                                 <button className="close-modal" onClick={() => setShowBookingModal(false)}>×</button>
                                 <div className="modal-header">
-                                    <h2>{isAr ? 'حجز الماد' : 'Book Material'}</h2>
-                                    <p>{isAr ? 'يرجى ملء معلوماتك لحجز الماد وسنتواصل معك قريباً' : 'Please fill in your details to book the material'}</p>
+                                    <h2>{isAr ? 'حجز المادة' : 'Book Material'}</h2>
+                                    <p>{isAr ? 'يرجى ملء معلوماتك لحجز المادة وسنتواصل معك قريباً' : 'Please fill in your details to book the material'}</p>
                                     <div className="material-to-book"><span>📖</span><strong>{selectedMaterial?.materialName}</strong></div>
                                 </div>
                                 <form className="booking-form" onSubmit={handleBookingSubmit}>
@@ -8531,7 +8531,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         <input type="text" required value={bookingData.name} onChange={e => setBookingData({ ...bookingData, name: e.target.value })} placeholder={isAr ? 'مثال: محمد أحمد' : 'e.g. Mohammad Ahmad'} className="form-input" />
                                     </div>
                                     <div className="form-group">
-                                        <label>{isAr ? 'رقم الهاتف للتواصل واستلام الماد' : 'Contact Number'}</label>
+                                        <label>{isAr ? 'رقم الهاتف للتواصل واستلام المادة' : 'Contact Number'}</label>
                                         <input type="tel" required value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: toEnglishNumerals(e.target.value) })} placeholder="07xxxxxxxx" className="form-input" dir="ltr" />
                                     </div>
                                     {/* ── Gender Selection ── */}
@@ -8566,7 +8566,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         </div>
                                         <small className="gender-field-hint">
                                             {isAr
-                                                ? 'يُستدم لتحديد المنسق المتص الذي سيتواصل معك لتسليمك الماد'
+                                                ? 'يُستدم لتحديد المنسق المتص الذي سيتواصل معك لتسليمك المادة'
                                                 : 'Used to identify the right coordinator who will contact you for material pickup'}
                                         </small>
                                     </div>
@@ -8614,7 +8614,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         </h4>
                                         <p className="disclaimer-content">
                                             {isAr
-                                                ? 'موعد تسليم المواد متوقع يكون لال الأسبوع الأول أو الثاني من بداي الدوام الرسمي. بتأكيدك للحجز أنت تُقر بأنك بحاج فعلي لهذه الماد وعلى إدراك تام بذلك — لا يُقبل إلغاء التسليم بحج عدم الرغب في الماد بعد تأكيد الحجز.'
+                                                ? 'موعد تسليم المواد متوقع يكون لال الأسبوع الأول أو الثاني من بداي الدوام الرسمي. بتأكيدك للحجز أنت تُقر بأنك بحاج فعلي لهذه المادة وعلى إدراك تام بذلك — لا يُقبل إلغاء التسليم بحج عدم الرغب في المادة بعد تأكيد الحجز.'
                                                 : 'Material delivery is expected during the first or second week of the official semester. By confirming your booking, you acknowledge that you genuinely need this material — cancellation of delivery will not be accepted after booking confirmation on the grounds of no longer wanting it.'}
                                         </p>
                                     </div>
@@ -8723,7 +8723,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                             value={name}
                                                             onChange={e => updateMaterialField('name', e.target.value)}
                                                             className="form-input material-name-input"
-                                                            placeholder={isAr ? 'اسم الماد' : 'Material name'}
+                                                            placeholder={isAr ? 'اسم المادة' : 'Material name'}
                                                             style={{ flex: 1 }}
                                                             required
                                                         />
@@ -8744,7 +8744,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         value={description}
                                                         onChange={e => updateMaterialField('description', e.target.value)}
                                                         className="form-input material-desc-input"
-                                                        placeholder={isAr ? 'وصف الماد (اتياري)' : 'Description (optional)'}
+                                                        placeholder={isAr ? 'وصف المادة (اتياري)' : 'Description (optional)'}
                                                     />
                                                     {/* Taker Info (Booker) */}
                                                     {['reserved', 'completed'].includes(status) && (
@@ -8897,7 +8897,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         className="form-input"
                                         value={adminResponseData.adminNotes}
                                         onChange={e => setAdminResponseData({ ...adminResponseData, adminNotes: e.target.value })}
-                                        placeholder={isAr ? 'مثال: الطلب نظيف وآمن، الماد صحيح...' : 'Example: Request is clean, material is valid...'}
+                                        placeholder={isAr ? 'مثال: الطلب نظيف وآمن، المادة صحيح...' : 'Example: Request is clean, material is valid...'}
                                         style={{
                                             minHeight: '100px',
                                             fontFamily: 'inherit',
@@ -9007,15 +9007,15 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 <td style={{ padding: '8px' }}>
                                                     {actionRequestData.actionType === 'editDonation' && (isAr ? '✏️ تعديل التبرع' : '✏️ Edit Donation')}
                                                     {actionRequestData.actionType === 'deleteDonation' && (isAr ? '🗑️ حذف التبرع' : '🗑️ Delete Donation')}
-                                                    {actionRequestData.actionType === 'completeBooking' && (isAr ? '✅ إتمام تسليم الماد' : '✅ Complete Material Delivery')}
-                                                    {actionRequestData.actionType === 'cancelBooking' && (isAr ? '❌ إلغاء حجز الماد' : '❌ Cancel Material Booking')}
+                                                    {actionRequestData.actionType === 'completeBooking' && (isAr ? '✅ إتمام تسليم المادة' : '✅ Complete Material Delivery')}
+                                                    {actionRequestData.actionType === 'cancelBooking' && (isAr ? '❌ إلغاء حجز المادة' : '❌ Cancel Material Booking')}
                                                 </td>
                                             </tr>
                                             {actionRequestData.donationDetails && (
                                                 <>
                                                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                                                         <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                            {isAr ? 'الماد المتأثر:' : 'Affected Material:'}
+                                                            {isAr ? 'المادة المتأثر:' : 'Affected Material:'}
                                                         </td>
                                                         <td style={{ padding: '8px' }}>
                                                             {actionRequestData.donationDetails.materials && actionRequestData.donationDetails.materials[actionRequestData.materialIndex || 0]?.name}
@@ -9047,7 +9047,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         className="form-input"
                                         value={actionRequestData.coordinatorNotes}
                                         onChange={e => setActionRequestData({ ...actionRequestData, coordinatorNotes: e.target.value })}
-                                        placeholder={isAr ? 'مثال: الماد تالف، تحتاج تحديث معلومات...' : 'Example: Material damaged, needs info update...'}
+                                        placeholder={isAr ? 'مثال: المادة تالف، تحتاج تحديث معلومات...' : 'Example: Material damaged, needs info update...'}
                                         style={{
                                             minHeight: '100px',
                                             fontFamily: 'inherit',
@@ -9290,7 +9290,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <p className="terms-item-content">
                                         {isAr
-                                            ? 'أتعهد بعدم تقديم طلبات وهمي أو متكرر بغرض الحجز دون حاج، وأدرك أن هذا الطلب سيُعتبر ملزماً لي في حال توفر الماد المطلوب.'
+                                            ? 'أتعهد بعدم تقديم طلبات وهمي أو متكرر بغرض الحجز دون حاج، وأدرك أن هذا الطلب سيُعتبر ملزماً لي في حال توفر المادة المطلوب.'
                                             : 'I commit to not submitting fake or duplicate requests for the purpose of booking without genuine need. I understand that this request will be considered binding if the requested material becomes available.'}
                                     </p>
                                 </div>
@@ -9303,7 +9303,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <p className="terms-item-content">
                                         {isAr
-                                            ? '• في حال رغبتي في إلغاء الطلب أو الحجز، أتعهد بالتواصل مع فريق الحمل عبر منسق العام (0782934685) في أقرب فرص ممكن، وقبل موعد استلام الماد بوقت كافٍ.\n\n• لا يجوز إلغاء الاستلام في يوم التسليم المحدد، إلا بموافق طي أو تواصل مباشر مع الفريق، وفي حالات طارئ مع قبول الفريق لذلك.'
+                                            ? '• في حال رغبتي في إلغاء الطلب أو الحجز، أتعهد بالتواصل مع فريق الحمل عبر منسق العام (0782934685) في أقرب فرص ممكن، وقبل موعد استلام المادة بوقت كافٍ.\n\n• لا يجوز إلغاء الاستلام في يوم التسليم المحدد، إلا بموافق طي أو تواصل مباشر مع الفريق، وفي حالات طارئ مع قبول الفريق لذلك.'
                                             : '• If I wish to cancel my request or booking, I commit to contacting the campaign team through the general coordinator (0782934685) as soon as possible and before the scheduled material pickup date.\n\n• Cancellation on the designated delivery day is not permitted unless approved in writing or via direct communication with the team, and only in emergencies with the team\'s acceptance.'}
                                     </p>
                                 </div>
@@ -9316,7 +9316,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <p className="terms-item-content">
                                         {isAr
-                                            ? 'إذا تم تحديد يوم لتسليم الماد، يجب أن يتم الإبلاغ عن أي رغب في الإلغاء أو التأجيل قبل يوم التسليم على الأقل، وإلا يُعتبر الطلب نافذاً ويتم المضي قدماً في عملي التسليم.'
+                                            ? 'إذا تم تحديد يوم لتسليم المادة، يجب أن يتم الإبلاغ عن أي رغب في الإلغاء أو التأجيل قبل يوم التسليم على الأقل، وإلا يُعتبر الطلب نافذاً ويتم المضي قدماً في عملي التسليم.'
                                             : 'If a delivery date is set, any cancellation or postponement request must be notified at least one day before the scheduled delivery date. Otherwise, the request will be considered confirmed and the delivery process will proceed.'}
                                     </p>
                                 </div>
@@ -9325,11 +9325,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 <div className="terms-item">
                                     <div className="terms-item-header">
                                         <span className="terms-item-number">5.</span>
-                                        <h3>{isAr ? 'المسؤولي تجاه الماد المتبرع بها' : 'Responsibility Toward Donated Material'}</h3>
+                                        <h3>{isAr ? 'المسؤولي تجاه المادة المتبرع بها' : 'Responsibility Toward Donated Material'}</h3>
                                     </div>
                                     <p className="terms-item-content">
                                         {isAr
-                                            ? '• أتعهد بعدم التصرف بالماد (بيعاً، أو إهداءً، أو إتلافاً) دون الرجوع إلى الفريق المنظم، وفي حال عدم رغبتي فيها بعد تسلمها، يجب إعادتها إلى الفريق أو التنسيق معهم بشأنها.\n\n• لا يجوز إلغاء ماد تم التبرع بها فعلياً من قبل متبرع، دون إبلاغ الفريق بشكل رسمي، وإلا أتحمل أنا (الطالب) مسؤولي تعويض الفريق أو المتبرع عن أي ضرر ينتج عن ذلك.'
+                                            ? '• أتعهد بعدم التصرف بالماد (بيعاً، أو إهداءً، أو إتلافاً) دون الرجوع إلى الفريق المنظم، وفي حال عدم رغبتي فيها بعد تسلمها، يجب إعادتها إلى الفريق أو التنسيق معهم بشأنها.\n\n• لا يجوز إلغاء مادة تم التبرع بها فعلياً من قبل متبرع، دون إبلاغ الفريق بشكل رسمي، وإلا أتحمل أنا (الطالب) مسؤولي تعويض الفريق أو المتبرع عن أي ضرر ينتج عن ذلك.'
                                             : '• I commit to not selling, gifting, or disposing of the material without consulting the organizing team. If I do not want it after receiving it, I must return it to the team or coordinate with them regarding it.\n\n• I cannot reject a material that has been genuinely donated without formally notifying the team. Otherwise, I (the student) assume responsibility for compensating the team or donor for any resulting damage.'}
                                     </p>
                                 </div>
@@ -9364,11 +9364,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 <div className="terms-item">
                                     <div className="terms-item-header">
                                         <span className="terms-item-number">8.</span>
-                                        <h3>{isAr ? 'الالتزام بقوانين الجامع والقوانين المحلي' : 'Compliance with University and Local Laws'}</h3>
+                                        <h3>{isAr ? 'الالتزام بقوانين الجامعة والقوانين المحلي' : 'Compliance with University and Local Laws'}</h3>
                                     </div>
                                     <p className="terms-item-content">
                                         {isAr
-                                            ? 'أتعهد بالالتزام بجميع قوانين الجامع وأنظمتها، وكذلك القوانين المحلي المعمول بها. أفهم أن أي تجاوز أو مالف قد يؤدي إلى اتاذ إجراءات تأديبي ضدي. الحمل غير مسؤول عن أي قوانين قد أنتهكها المتبرع أو الحاجز.'
+                                            ? 'أتعهد بالالتزام بجميع قوانين الجامعة وأنظمتها، وكذلك القوانين المحلي المعمول بها. أفهم أن أي تجاوز أو مالف قد يؤدي إلى اتاذ إجراءات تأديبي ضدي. الحمل غير مسؤول عن أي قوانين قد أنتهكها المتبرع أو الحاجز.'
                                             : 'I commit to complying with all university regulations and laws, as well as applicable local laws. I understand that any violation may result in disciplinary action against me. The campaign is not responsible for any laws violated by donors or recipients.'}
                                     </p>
                                 </div>

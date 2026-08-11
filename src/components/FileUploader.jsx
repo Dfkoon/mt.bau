@@ -164,7 +164,7 @@ const FileUploader = ({ onClose }) => {
         if (!contributionType) return;
 
         if (!subjectName || subjectName.trim().length < 2) {
-            toast.error(language === 'ar' ? 'يرجى إدال اسم الماد بشكل صحيح' : 'Please enter a valid subject name');
+            toast.error(language === 'ar' ? 'يرجى إدال اسم المادة بشكل صحيح' : 'Please enter a valid subject name');
             return;
         }
 
@@ -331,12 +331,12 @@ const FileUploader = ({ onClose }) => {
                                     <option value="past_papers">{language === 'ar' ? 'أسئل سنوات' : 'Past Papers'}</option>
                                     <option value="quizzes">{language === 'ar' ? 'كويزات' : 'Quizzes'}</option>
                                     <option value="summaries">{language === 'ar' ? 'ملصات' : 'Summaries'}</option>
-                                    <option value="material_pdf">{language === 'ar' ? 'ماد PDF' : 'PDF Material'}</option>
+                                    <option value="material_pdf">{language === 'ar' ? 'مادة PDF' : 'PDF Material'}</option>
                                 </select>
                             </div>
 
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'اسم الماد (إجباري)' : 'Subject Name (Mandatory)'}</label>
+                                <label>{language === 'ar' ? 'اسم المادة (إجباري)' : 'Subject Name (Mandatory)'}</label>
                                 <input
                                     type="text"
                                     placeholder={language === 'ar' ? 'مثال: حاسوب، فيزياء...' : 'e.g. CS, Physics...'}

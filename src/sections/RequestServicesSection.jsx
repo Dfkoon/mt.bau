@@ -9,10 +9,10 @@ const SERVICES = [
   {
     id: 'summary',
     icon: '📝',
-    label: 'ملص ماد',
+    label: 'ملص مادة',
     color: '#d32f2f',
     colorLight: 'rgba(211,47,47,0.08)',
-    description: 'احصل على ملص احترافي لأي ماد دراسي',
+    description: 'احصل على ملص احترافي لأي مادة دراسي',
     fields: ['studentName', 'studentPhone', 'subject', 'materialLink', 'notes'],
   },
   {
@@ -96,11 +96,11 @@ export default function RequestServicesSection() {
     }
 
     if (service.id === 'summary' && !form.subject?.trim()) {
-      toast.error('يرجى تحديد اسم الماد');
+      toast.error('يرجى تحديد اسم المادة');
       return;
     }
     if (service.id === 'quiz' && !form.subject?.trim()) {
-      toast.error('يرجى تحديد اسم الماد');
+      toast.error('يرجى تحديد اسم المادة');
       return;
     }
     if (service.id === 'idea' && (!form.ideaTitle?.trim() || !form.ideaDetails?.trim())) {
@@ -159,7 +159,7 @@ export default function RequestServicesSection() {
         <div className="rss-badge">✨ دمات الفريق</div>
         <h2 className="rss-title">اطلب ما تحتاجه</h2>
         <p className="rss-subtitle">
-          سواء ملص ماد، إنشاء أسئل، أو اقتراح فكر — نحن هنا لمساعدتك
+          سواء ملص مادة، إنشاء أسئل، أو اقتراح فكر — نحن هنا لمساعدتك
         </p>
       </div>
 
@@ -224,11 +224,11 @@ export default function RequestServicesSection() {
 
                 {/* ── SUMMARY fields ── */}
                 {service.id === 'summary' && <>
-                  <Field label="اسم الماد" required>
+                  <Field label="اسم المادة" required>
                     <input className="rss-input" placeholder="مثال: تحليل عددي، هياكل بيانات..." required
                       value={form.subject || ''} onChange={e => set('subject', e.target.value)} />
                   </Field>
-                  <Field label="رابط الماد / الكتاب">
+                  <Field label="رابط المادة / الكتاب">
                     <input className="rss-input" placeholder="https://... (اتياري)" dir="ltr"
                       value={form.materialLink || ''} onChange={e => set('materialLink', e.target.value)} />
                   </Field>
@@ -241,7 +241,7 @@ export default function RequestServicesSection() {
 
                 {/* ── QUIZ fields ── */}
                 {service.id === 'quiz' && <>
-                  <Field label="اسم الماد" required>
+                  <Field label="اسم المادة" required>
                     <input className="rss-input" placeholder="مثال: قواعد بيانات، برمج متقدم..." required
                       value={form.subject || ''} onChange={e => set('subject', e.target.value)} />
                   </Field>

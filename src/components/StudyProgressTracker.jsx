@@ -148,7 +148,7 @@ const StudyProgressTracker = () => {
                 <form onSubmit={handleAddSubject} className="add-subject-form">
                     <input
                         type="text"
-                        placeholder={isAr ? 'اسم الماد (عربي)' : 'Subject name (EN)'}
+                        placeholder={isAr ? 'اسم المادة (عربي)' : 'Subject name (EN)'}
                         value={isAr ? newSubject.nameAr : newSubject.nameEn}
                         onChange={e => isAr
                             ? setNewSubject({ ...newSubject, nameAr: e.target.value })
@@ -169,7 +169,7 @@ const StudyProgressTracker = () => {
                 </form>
             ) : (
                 <button className="btn-add-tracker-subject" onClick={() => setAddMode(true)}>
-                    ＋ {isAr ? 'إضاف ماد جديد' : 'Add New Subject'}
+                    ＋ {isAr ? 'إضاف مادة جديد' : 'Add New Subject'}
                 </button>
             )}
         </div>

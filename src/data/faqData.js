@@ -15,7 +15,7 @@ export const faqData = {
             {
                 id: 'm3',
                 q: { ar: 'هل تغطي المكرم مواد الإعاد؟', en: 'Does the grant cover repeated courses?' },
-                a: { ar: 'لا، المكرم تغطي الماد لأول مر فقط. عند الإعاد، يدفع الطالب رسوم الماد كامل.', en: 'No, the grant covers the course only the first time. If repeated, the student pays full fees.' }
+                a: { ar: 'لا، المكرم تغطي المادة لأول مر فقط. عند الإعاد، يدفع الطالب رسوم المادة كامل.', en: 'No, the grant covers the course only the first time. If repeated, the student pays full fees.' }
             }
         ]
     },

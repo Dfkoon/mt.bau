@@ -135,7 +135,7 @@ const TimetableBuilder = () => {
 
           <form onSubmit={handleAddCourse} className="course-form">
             <div className="form-group">
-              <label>{isAr ? 'اسم الماد *' : 'Subject Name *'}</label>
+              <label>{isAr ? 'اسم المادة *' : 'Subject Name *'}</label>
               <input
                 type="text"
                 required
@@ -147,7 +147,7 @@ const TimetableBuilder = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label>{isAr ? 'رمز الماد' : 'Course Code'}</label>
+                <label>{isAr ? 'رمز المادة' : 'Course Code'}</label>
                 <input
                   type="text"
                   placeholder={isAr ? 'مثال: 0301101' : 'e.g. 0301101'}

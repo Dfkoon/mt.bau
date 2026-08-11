@@ -273,7 +273,7 @@ const LoadingState = ({ lang }) => (
   <div className="ast-loading">
     <div className="ast-loading-brain">🤖</div>
     <div className="ast-loading-text">
-      {lang === 'ar' ? 'نشمي يحلل الماد...' : 'AI is analyzing your text...'}
+      {lang === 'ar' ? 'نشمي يحلل المادة...' : 'AI is analyzing your text...'}
     </div>
     <div className="ast-loading-dots"><span /><span /><span /></div>
     <div className="ast-loading-bars">
@@ -354,7 +354,7 @@ const AIStudyTools = () => {
           </h1>
           <p className="ast-hero-sub">
             {isRtl
-              ? 'الصق نص الماد وسيقوم الذكاء الاصطناعي بتحويله إلى اتبار، ملص، مطط ذهني أو ط دراس!'
+              ? 'الصق نص المادة وسيقوم الذكاء الاصطناعي بتحويله إلى اتبار، ملص، مطط ذهني أو ط دراس!'
               : 'Paste your study material and AI will transform it into a quiz, summary, mind map, or study plan!'}
           </p>
           <div className="ast-hero-stats">
@@ -377,7 +377,7 @@ const AIStudyTools = () => {
           <div className="ast-step">
             <div className="ast-step-header">
               <div className="ast-step-num">1</div>
-              <h2>{isRtl ? 'أدل نص الماد' : 'Enter Study Material'}</h2>
+              <h2>{isRtl ? 'أدل نص المادة' : 'Enter Study Material'}</h2>
             </div>
             <div className="ast-textarea-wrapper">
               <textarea

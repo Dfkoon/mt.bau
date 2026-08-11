@@ -1916,7 +1916,7 @@ export const quizData = {
     os_mid: {
         id: 'os_mid',
         title: 'Operating Systems - Mid Exam',
-        titleAr: 'نظم تشغيل للهندس - ماد الميد',
+        titleAr: 'نظم تشغيل للهندس - مادة الميد',
         icon: '⚙️',
         color: '#FF5722',
         forceEnglish: true,
@@ -2017,7 +2017,7 @@ export const quizData = {
     os_final: {
         id: 'os_final',
         title: 'Operating Systems - Final Exam',
-        titleAr: 'نظم تشغيل للهندس - ماد الفاينل',
+        titleAr: 'نظم تشغيل للهندس - مادة الفاينل',
         icon: '⚙️',
         color: '#FF5722',
         forceEnglish: true,
@@ -2286,7 +2286,7 @@ export const quizData = {
     military_science_mid: {
         id: 'military_science_mid',
         title: 'Mid Exam',
-        titleAr: 'ماد الميد',
+        titleAr: 'مادة الميد',
         icon: '🎖️',
         color: '#5D4037',
         parts: [
@@ -2300,7 +2300,7 @@ export const quizData = {
     military_science_final: {
         id: 'military_science_final',
         title: 'Final Exam',
-        titleAr: 'ماد الفاينل',
+        titleAr: 'مادة الفاينل',
         icon: '🎖️',
         color: '#5D4037',
         questions: []
@@ -2308,7 +2308,7 @@ export const quizData = {
     military_science_mid_p1: {
         id: 'military_science_mid_p1',
         title: 'Mid Exam - Part 1',
-        titleAr: 'ماد الميد - الجزء الأول',
+        titleAr: 'مادة الميد - الجزء الأول',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
@@ -2318,7 +2318,7 @@ export const quizData = {
             { id: 4, type: 'mcq', questionAr: 'تم تشكيل نوا سلاح الجو الملكي في عهد جلال:', options: [{ id: 'a', textAr: 'الملك المؤسس' }, { id: 'b', textAr: 'الملك طلال' }, { id: 'c', textAr: 'الملك حسين' }, { id: 'd', textAr: 'الملك عبدالله الثاني' }], correctAnswer: 'a', marks: 1 },
             { id: 5, type: 'mcq', questionAr: 'من أنواع الدفاع الجوي:', options: [{ id: 'a', textAr: 'الدفاع الجوي المركزي (سلاح الجو)' }, { id: 'b', textAr: 'راجمات الصواري' }, { id: 'c', textAr: 'قوات المظليين' }, { id: 'd', textAr: 'الذائر' }], correctAnswer: 'a', marks: 1 },
             { id: 6, type: 'mcq', questionAr: 'يرأس دائر المابرات العام مدير عام يتم تعيينه وعزله من قبل:', options: [{ id: 'a', textAr: 'جلال الملك المعظم' }, { id: 'b', textAr: 'رئيس الوزراء بأوامر طي' }, { id: 'c', textAr: 'مجلس الأعيان' }, { id: 'd', textAr: 'رئيس الوزراء ورئيس مجلس النواب' }], correctAnswer: 'a', marks: 1 },
-            { id: 7, type: 'mcq', questionAr: 'من مصادر تجنيد الأفراد (الرتب الأرى) في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'المتطوعون عن طريق مديري شؤون الضباط' }, { id: 'b', textAr: 'المتطوعون عن طريق مديري شؤون الأفراد' }, { id: 'c', textAr: 'جامع مؤت' }, { id: 'd', textAr: 'كلي الأمير حسن للعلوم الإسلامي' }], correctAnswer: 'b', marks: 1 },
+            { id: 7, type: 'mcq', questionAr: 'من مصادر تجنيد الأفراد (الرتب الأرى) في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'المتطوعون عن طريق مديري شؤون الضباط' }, { id: 'b', textAr: 'المتطوعون عن طريق مديري شؤون الأفراد' }, { id: 'c', textAr: 'جامع مؤت' }, { id: 'd', textAr: 'كلية الأمير حسن للعلوم الإسلامي' }], correctAnswer: 'b', marks: 1 },
             { id: 8, type: 'mcq', questionAr: 'من أبرز ملامح مرحل التميز الوطني والدور الإقليمي في مسير الدمات الطبي الملكي:', options: [{ id: 'a', textAr: 'إنشاء مركز الملك علياء لأمراض وجراح القلب' }, { id: 'b', textAr: 'إقرار مشروع معالج العائلات' }, { id: 'c', textAr: 'افتتاح مدين الحسين الطبي' }, { id: 'd', textAr: 'افتتاح مستشفى اللطرون العسكري' }], correctAnswer: 'a', marks: 1 },
             { id: 9, type: 'mcq', questionAr: 'ترمز الكر الأرضي في شعار المملك الأردني الهاشمي إلى:', options: [{ id: 'a', textAr: 'النظام الملكي' }, { id: 'b', textAr: 'راي الثور العربي الكبرى' }, { id: 'c', textAr: 'انتشار الإسلام وحضارته في العالم' }, { id: 'd', textAr: 'الفداء والتضحي' }], correctAnswer: 'c', marks: 1 },
             { id: 10, type: 'mcq', questionAr: 'بدأ استدام العلم الأردني بصورته الحالي منذ:', options: [{ id: 'a', textAr: 'استقلال المملك عام 1946' }, { id: 'b', textAr: 'تأسيس إمار شرق الأردن عام 1921' }, { id: 'c', textAr: 'تشكيل أول حكوم أردني' }, { id: 'd', textAr: 'إعلان الثور العربي الكبرى' }], correctAnswer: 'b', marks: 1 },
@@ -2337,7 +2337,7 @@ export const quizData = {
     military_science_mid_p2: {
         id: 'military_science_mid_p2',
         title: 'Mid Exam - Part 2',
-        titleAr: 'ماد الميد - الجزء الثاني',
+        titleAr: 'مادة الميد - الجزء الثاني',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
@@ -2366,7 +2366,7 @@ export const quizData = {
     military_science_mid_p3: {
         id: 'military_science_mid_p3',
         title: 'Mid Exam - Part 3',
-        titleAr: 'ماد الميد - الجزء الثالث',
+        titleAr: 'مادة الميد - الجزء الثالث',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
@@ -2395,7 +2395,7 @@ export const quizData = {
     military_science_mid_p4: {
         id: 'military_science_mid_p4',
         title: 'Mid Exam - Part 4',
-        titleAr: 'ماد الميد - الجزء الرابع',
+        titleAr: 'مادة الميد - الجزء الرابع',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
@@ -2424,7 +2424,7 @@ export const quizData = {
     military_science_mid_p5: {
         id: 'military_science_mid_p5',
         title: 'Mid Exam - Part 5',
-        titleAr: 'ماد الميد - الجزء الامس',
+        titleAr: 'مادة الميد - الجزء الامس',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
@@ -8691,7 +8691,7 @@ export const quizData = {
                 explanationAr: 'التجاوز بحسن ني في الدفاع الشرعي يرج الفعل من الإباح الكامل، ولكنه يمنح عذراً مففاً أو إعفاءً طبقاً لأحكام القانون.',
                 options: [
                     { id: 'a', textAr: 'تعاقب الفاعل بعقوب الجريم كامل دون أي تفيف' },
-                    { id: 'b', textAr: 'يمكنها إعفاء فاعل الجريم كلياً من العقاب أو تفيفها إذا توافرت شروط الماد 89 من قانون العقوبات' },
+                    { id: 'b', textAr: 'يمكنها إعفاء فاعل الجريم كلياً من العقاب أو تفيفها إذا توافرت شروط المادة 89 من قانون العقوبات' },
                     { id: 'c', textAr: 'تعتبر الفعل جريم مقصود مشدد' },
                     { id: 'd', textAr: 'تحكم ببراء الفاعل لتوفر سبب التبرير كاملاً دون قيد' }
                 ],
@@ -8945,8 +8945,8 @@ export const quizCategories = [
         color: '#FF5722',
         isNew: true,
         parts: [
-            { id: 'os_mid', title: 'Mid Exam', titleAr: 'ماد الميد' },
-            { id: 'os_final', title: 'Final Exam', titleAr: 'ماد الفاينل' }
+            { id: 'os_mid', title: 'Mid Exam', titleAr: 'مادة الميد' },
+            { id: 'os_final', title: 'Final Exam', titleAr: 'مادة الفاينل' }
         ]
     },
     {
@@ -9155,8 +9155,8 @@ export const quizCategories = [
         color: '#5D4037',
         isNew: true,
         parts: [
-            { id: 'military_science_mid', title: 'Mid Exam', titleAr: 'ماد الميد' },
-            { id: 'military_science_final', title: 'Final Exam', titleAr: 'ماد الفاينل' }
+            { id: 'military_science_mid', title: 'Mid Exam', titleAr: 'مادة الميد' },
+            { id: 'military_science_final', title: 'Final Exam', titleAr: 'مادة الفاينل' }
         ]
     },
     {
@@ -9168,7 +9168,7 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'prob_stats_mid', title: 'Quiz questions', titleAr: 'أسئل كويزات' },
-            { id: 'prob_stats_final', title: 'Final Exam', titleAr: 'ماد الفاينل' }
+            { id: 'prob_stats_final', title: 'Final Exam', titleAr: 'مادة الفاينل' }
         ]
     },
     {

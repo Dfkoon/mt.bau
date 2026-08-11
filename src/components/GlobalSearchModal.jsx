@@ -21,12 +21,12 @@ const SEARCH_ITEMS = [
   { id: 't-gpa-calc', titleAr: 'حاسب المعدل الفصلي والتراكمي', titleEn: 'Semester & Cumulative GPA Calculator', categoryAr: 'أدا', categoryEn: 'Tool', link: '/grading#gpa-calculator', icon: '⚖️', keywords: 'حساب معدل تراكمي فصلي ريج نقاط' },
 
   // Common Subjects
-  { id: 's-math1', titleAr: 'تفاضل وتكامل (1 & 2)', titleEn: 'Calculus (1 & 2)', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=تفاضل', icon: '📐', keywords: 'تفاضل رياضيات مادتين حساب دبلوم بكالوريوس' },
-  { id: 's-phys1', titleAr: 'فيزياء عام (1 & 2)', titleEn: 'General Physics (1 & 2)', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=فيزياء', icon: '⚛️', keywords: 'فيزياء علوم تجارب معمل' },
-  { id: 's-prog', titleAr: 'أساسيات البرمج (C++ / Python)', titleEn: 'Programming Fundamentals (C++ / Python)', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=برمج', icon: '💻', keywords: 'برمج كود حاسوب it c++ python سي بلس بلس' },
-  { id: 's-arabic', titleAr: 'اللغ العربي (المهارات اللغوي)', titleEn: 'Arabic Language Skills', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=عربي', icon: '📖', keywords: 'عربي لغ عربي متطلب اجباري جامع' },
-  { id: 's-english', titleAr: 'اللغ الإنجليزي (101 & 102)', titleEn: 'English Language Skills', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=انجليزي', icon: '🌐', keywords: 'انجليزي انجليزي 101 english grammar' },
-  { id: 's-national', titleAr: 'التربي الوطني والثقاف الإسلامي', titleEn: 'National Education & Islamic Culture', categoryAr: 'ماد', categoryEn: 'Subject', link: '/materials?search=وطني', icon: '🏛️', keywords: 'تربي وطني اسلامي ثقاف متطلبات جامع' }
+  { id: 's-math1', titleAr: 'تفاضل وتكامل (1 & 2)', titleEn: 'Calculus (1 & 2)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=تفاضل', icon: '📐', keywords: 'تفاضل رياضيات مادتين حساب دبلوم بكالوريوس' },
+  { id: 's-phys1', titleAr: 'فيزياء عام (1 & 2)', titleEn: 'General Physics (1 & 2)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=فيزياء', icon: '⚛️', keywords: 'فيزياء علوم تجارب معمل' },
+  { id: 's-prog', titleAr: 'أساسيات البرمج (C++ / Python)', titleEn: 'Programming Fundamentals (C++ / Python)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=برمج', icon: '💻', keywords: 'برمج كود حاسوب it c++ python سي بلس بلس' },
+  { id: 's-arabic', titleAr: 'اللغ العربي (المهارات اللغوي)', titleEn: 'Arabic Language Skills', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=عربي', icon: '📖', keywords: 'عربي لغ عربي متطلب اجباري جامع' },
+  { id: 's-english', titleAr: 'اللغ الإنجليزي (101 & 102)', titleEn: 'English Language Skills', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=انجليزي', icon: '🌐', keywords: 'انجليزي انجليزي 101 english grammar' },
+  { id: 's-national', titleAr: 'التربي الوطني والثقاف الإسلامي', titleEn: 'National Education & Islamic Culture', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=وطني', icon: '🏛️', keywords: 'تربي وطني اسلامي ثقاف متطلبات جامع' }
 ];
 
 const GlobalSearchModal = ({ isOpen, onClose }) => {
@@ -127,7 +127,7 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
             ref={inputRef}
             type="text"
             className="global-search-input"
-            placeholder={isAr ? 'ابحث عن ماد، حساب معدل، أسئل، دمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
+            placeholder={isAr ? 'ابحث عن مادة، حساب معدل، أسئل، دمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -147,7 +147,7 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
             <div className="no-search-results">
               <span className="no-results-icon">🔎</span>
               <p>{isAr ? 'لم نجد نتائج مطابق لبحثك' : 'No matching results found'}</p>
-              <small>{isAr ? 'جرب البحث عن اسم ماد، حساب معدل، أو أسئل' : 'Try searching for subject name, GPA, or quiz'}</small>
+              <small>{isAr ? 'جرب البحث عن اسم مادة، حساب معدل، أو أسئل' : 'Try searching for subject name, GPA, or quiz'}</small>
             </div>
           ) : (
             filteredItems.map((item, index) => (

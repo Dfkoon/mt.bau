@@ -246,7 +246,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                                         <strong>{isAr ? 'الهاتف:' : 'Phone:'}</strong> {booking.phoneNumber}
                                                     </p>
                                                     <p>
-                                                        <strong>{isAr ? 'الماد المحجوز:' : 'Booked Material:'}</strong> {booking.materialName}
+                                                        <strong>{isAr ? 'المادة المحجوز:' : 'Booked Material:'}</strong> {booking.materialName}
                                                     </p>
                                                     <p>
                                                         <strong>{isAr ? 'المتبرع:' : 'Donor:'}</strong> {booking.donorName} ({booking.donorPhone})

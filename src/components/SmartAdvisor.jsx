@@ -72,7 +72,7 @@ const SmartAdvisor = () => {
 
             {step === 0 && (
                 <div className="advisor-step fade-in">
-                    <h4>{language === 'ar' ? 'أهلاً بك! في أي سن التحقت بالجامع؟' : 'Welcome! When did you join the university?'}</h4>
+                    <h4>{language === 'ar' ? 'أهلاً بك! في أي سن التحقت بالجامعة؟' : 'Welcome! When did you join the university?'}</h4>
                     <div className="plan-type-grid">
                         <div className="plan-option-card" onClick={() => handlePlanTypeSelection('old')}>
                             <div className="plan-badge-icon">📜</div>

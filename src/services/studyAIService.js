@@ -153,7 +153,7 @@ const buildStudyPlanPrompt = (text, lang) => {
 
 أرجع النتيج بصيغ JSON فقط:
 {
-  "subject": "اسم الماد أو الموضوع",
+  "subject": "اسم المادة أو الموضوع",
   "totalDays": عدد الأيام المقترح,
   "difficulty": "سهل" | "متوسط" | "صعب",
   "days": [

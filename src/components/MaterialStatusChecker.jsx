@@ -256,7 +256,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     </div>
 
                                                     <div className="info-row">
-                                                        <span className="label">📖 {isAr ? 'الماد المحجوز' : 'Booked Material'}:</span>
+                                                        <span className="label">📖 {isAr ? 'المادة المحجوز' : 'Booked Material'}:</span>
                                                         <span className="value">{booking.materialName}</span>
                                                     </div>
 

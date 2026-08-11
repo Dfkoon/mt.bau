@@ -54,7 +54,7 @@ const MaterialFiltersSection = ({
                     <input
                         type="text"
                         className="search-input"
-                        placeholder={isAr ? 'ابحث عن ماد، كتاب، أو وصف...' : 'Search for material, book, or description...'}
+                        placeholder={isAr ? 'ابحث عن مادة، كتاب، أو وصف...' : 'Search for material, book, or description...'}
                         value={searchQuery}
                         onChange={handleSearchChange}
                     />

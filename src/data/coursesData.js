@@ -1542,7 +1542,7 @@ export const coursesData = {
     ],
 
     it_drive: [
-        { id: 301, name: 'جميع ملفات كلي الـ IT', nameEn: 'All IT Faculty Files (Drive)', icon: '📁', files: { link: 'https://drive.google.com/drive/folders/1aEPGZ_NeJDN96k4LgvCdlOILQdIsRGD8' } }
+        { id: 301, name: 'جميع ملفات كلية الـ IT', nameEn: 'All IT Faculty Files (Drive)', icon: '📁', files: { link: 'https://drive.google.com/drive/folders/1aEPGZ_NeJDN96k4LgvCdlOILQdIsRGD8' } }
     ],
 
     // Computer Graphics and Animation Mandatory Specialization
@@ -1610,14 +1610,14 @@ export const coursesData = {
 export const faculties = [
     {
         id: 'ai',
-        name: 'كلي الذكاء الاصطناعي',
+        name: 'كلية الذكاء الاصطناعي',
         nameEn: 'Faculty of Artificial Intelligence',
         bg: 'assets/faculties/ai-faculty.png',
         color: '#1a237e',
         telegramChannels: [
             {
                 id: 'ai_main_channel',
-                name: 'قنا شروحات كلي الذكاء الاصطناعي',
+                name: 'قنا شروحات كلية الذكاء الاصطناعي',
                 nameEn: 'AI Faculty Explanations Channel',
                 url: 'https://t.me/introtoai1',
                 description: 'قنا تحتوي على شروحات للعديد من مواد الكلي',
@@ -1648,7 +1648,7 @@ export const faculties = [
     },
     {
         id: 'it',
-        name: 'كلي الأمير عبدالله بن غازي للاتصالات وتكنولوجيا المعلومات',
+        name: 'كلية الأمير عبدالله بن غازي للاتصالات وتكنولوجيا المعلومات',
         nameEn: 'Prince Abdullah bin Ghazi Faculty for ICT',
         bg: 'assets/faculties/it-faculty.jpg',
         color: '#004d40',
@@ -1661,7 +1661,7 @@ export const faculties = [
         telegramChannels: [
             {
                 id: 'it_main_channel',
-                name: 'قنا شروحات كلي الأمير عبدالله بن غازي',
+                name: 'قنا شروحات كلية الأمير عبدالله بن غازي',
                 nameEn: 'Prince Abdullah bin Ghazi Faculty Channel',
                 url: 'https://t.me/+gnyyMS7vffM3Yjg0',
                 description: 'قنا شامل تحتوي على شروحات منظم لجميع تصصات الكلي',
@@ -1711,8 +1711,8 @@ export const faculties = [
 ];
 
 export const categories = [
-    { id: 'mandatoryUniversity', name: 'متطلبات الجامع الإجباري', nameEn: 'University Mandatory Requirements', color: '#d32f2f', faculty: 'all' },
-    { id: 'optionalUniversity', name: 'متطلبات الجامع الاتياري', nameEn: 'University Optional Requirements', color: '#1976d2', faculty: 'all' },
+    { id: 'mandatoryUniversity', name: 'متطلبات الجامعة الإجباري', nameEn: 'University Mandatory Requirements', color: '#d32f2f', faculty: 'all' },
+    { id: 'optionalUniversity', name: 'متطلبات الجامعة الاتياري', nameEn: 'University Optional Requirements', color: '#1976d2', faculty: 'all' },
     { id: 'mandatoryCollege', name: 'متطلبات الكلي الإجباري', nameEn: 'College Mandatory Requirements', color: '#388e3c', faculty: 'ai' },
 
     // AI Specializations
@@ -1747,5 +1747,5 @@ export const categories = [
     { id: 'it_se_elective', name: 'متطلبات التصص الاتياري (SE)', nameEn: 'SE Elective Requirements', color: '#0288d1', faculty: 'it', specialization: 'se' },
     { id: 'it_common', name: 'مواد مشترك بين التصصات', nameEn: 'Common IT Specialization Materials', color: '#ff9800', faculty: 'it' },
     { id: 'it_labs', name: 'متبرات الـ IT', nameEn: 'IT Labs', color: '#455a64', faculty: 'it' },
-    { id: 'it_drive', name: 'حقيب كلي الـ IT', nameEn: 'IT Faculty Folder', color: '#0277bd', faculty: 'it' }
+    { id: 'it_drive', name: 'حقيب كلية الـ IT', nameEn: 'IT Faculty Folder', color: '#0277bd', faculty: 'it' }
 ];

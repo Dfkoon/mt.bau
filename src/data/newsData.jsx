@@ -8,14 +8,14 @@ export const announcements = [
         icon: 'fas fa-lightbulb',
         color: '#1565c0',
         title: {
-            ar: 'كلي الذكاء الاصطناعي تطلق مجل "CHAIN"',
+            ar: 'كلية الذكاء الاصطناعي تطلق مجل "CHAIN"',
             en: 'AI Faculty Launches "CHAIN" Magazine'
         },
         content: {
             ar: (
                 <>
                     <p>
-                        أطلقت كلي الذكاء الاصطناعي في جامع البلقاء التطبيقي مجل <strong>"CHAIN"</strong>، في مكتب رئيس الجامع الأستاذ الدكتور أحمد فري العجلوني...
+                        أطلقت كلية الذكاء الاصطناعي في جامع البلقاء التطبيقي مجل <strong>"CHAIN"</strong>، في مكتب رئيس الجامعة الأستاذ الدكتور أحمد فري العجلوني...
                     </p>
                     <div className="img-placeholder" style={{ background: '#e3f2fd', color: '#1565c0', padding: '2rem', borderRadius: '12px', textAlign: 'center', margin: '1rem 0' }}>
                         <i className="fas fa-image" style={{ fontSize: '3rem', display: 'block', marginBottom: '10px' }}></i>
@@ -251,7 +251,7 @@ export const announcements = [
         content: {
             ar: (
                 <p>
-                    نود لفت انتباه طلب "دفع 2007-2025" لوجود تغييرات جذري على متطلبات الجامع الإجباري والاتياري في الط الجديد.
+                    نود لفت انتباه طلب "دفع 2007-2025" لوجود تغييرات جذري على متطلبات الجامعة الإجباري والاتياري في الط الجديد.
                 </p>
             ),
             en: (
@@ -316,7 +316,7 @@ export const announcements = [
                         علمٌ حملنا تحته أجمل الذكريات وأعمق الانتماء. في يوم العلم الأردني، نرفع رأسنا عالياً ونقول:
                     </p>
                     <p style={{ color: '#ce1126', fontWeight: 'bold', fontSize: '1.1rem' }}>
-                        هذا وطني وهذا علمي — من الجامع لكل ركن أردني.
+                        هذا وطني وهذا علمي — من الجامعة لكل ركن أردني.
                     </p>
                 </>
             ),

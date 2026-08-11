@@ -32,7 +32,7 @@ const BookmarksModal = ({ isOpen, onClose }) => {
               <p>{isAr ? 'زانتك فارغ حالياً' : 'Your saved locker is currently empty'}</p>
               <small>
                 {isAr
-                  ? 'انقر على يار الحفظ (📌) بجانب أي ماد أو ملص للوصول إليه بسرع هنا'
+                  ? 'انقر على يار الحفظ (📌) بجانب أي مادة أو ملص للوصول إليه بسرع هنا'
                   : 'Click the save icon (📌) next to any material to access it here quickly'}
               </small>
             </div>

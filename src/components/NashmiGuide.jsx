@@ -69,7 +69,7 @@ const NashmiGuide = () => {
             hint: 'User is in the book exchange area. Explain how to list or find items.'
         },
         '/news': {
-            ar: 'آر الأبار والإعلانات الرسمي؛ ليك دائماً مطلع على شو بصير بالجامع والكلي.',
+            ar: 'آر الأبار والإعلانات الرسمي؛ ليك دائماً مطلع على شو بصير بالجامعة والكلي.',
             en: 'Latest news and official announcements; stay updated with everything happening at BAU.',
             hint: 'User is checking news. Highlight recent faculty announcements.'
         },

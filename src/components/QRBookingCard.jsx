@@ -110,7 +110,7 @@ const QRBookingCard = ({
                     textAlign: 'right'
                 }}>
                     {[
-                        { label: isAr ? '📦 الماد:' : '📦 Material:', value: materialName },
+                        { label: isAr ? '📦 المادة:' : '📦 Material:', value: materialName },
                         { label: isAr ? '👤 الاسم:' : '👤 Student:', value: studentName },
                         { label: isAr ? '🎁 المتبرع:' : '🎁 Donor:', value: donorName },
                         { label: isAr ? '🧑‍💼 المنسق:' : '🧑‍💼 Coordinator:', value: coordinatorName },

@@ -67,7 +67,7 @@ const LemonChat = () => {
         queryWords.forEach(word => {
             if (word.length < 3) return;
             // Ignore common query lead words when matching target title
-            if (['ملص', 'دوسي', 'ماد', 'اسئل', 'شرح', 'كتاب', 'سلايدات', 'بدي', 'اريد'].includes(word)) return;
+            if (['ملص', 'دوسي', 'مادة', 'اسئل', 'شرح', 'كتاب', 'سلايدات', 'بدي', 'اريد'].includes(word)) return;
             if (normTarget.includes(word)) {
                 score += 20;
             } else if (word.length >= 4 && normTarget.includes(word.substring(0, 4))) {
@@ -94,7 +94,7 @@ const LemonChat = () => {
                     bestMatch = {
                         type: 'course_card',
                         data: { ...course },
-                        textAr: `تفضل، هي مصادر ماد **${nameAr}** موجود هون! 👇`,
+                        textAr: `تفضل، هي مصادر مادة **${nameAr}** موجود هون! 👇`,
                         textEn: `Here are the resources for **${nameEn}**! 👇`
                     };
                 }
@@ -112,13 +112,13 @@ const LemonChat = () => {
 
         // 1. Pages Navigation (Very High Confidence Actions)
         const pages = [
-            { id: 'request', keywords: ['اطلب ما تحتاجه', 'طلب دم', 'دمات', 'اطلب ملص', 'طلب ماد', 'انشاء اسئل', 'اقتراح فكر', 'طلب جديد'], path: '#request-services', titleAr: 'قسم اطلب ما تحتاجه', titleEn: 'Request Services', icon: '✨' },
+            { id: 'request', keywords: ['اطلب ما تحتاجه', 'طلب دم', 'دمات', 'اطلب ملص', 'طلب مادة', 'انشاء اسئل', 'اقتراح فكر', 'طلب جديد'], path: '#request-services', titleAr: 'قسم اطلب ما تحتاجه', titleEn: 'Request Services', icon: '✨' },
             { id: 'grading', keywords: ['معدل', 'احسب', 'علامات', 'ترج', 'grade', 'grading', 'marks'], path: '/grading', titleAr: 'نظام العلامات', titleEn: 'Grading System', icon: '📊' },
             { id: 'calendar', keywords: ['تقويم', 'موعد', 'متى', 'calendar', 'date', 'schedule'], path: '/calendar', titleAr: 'التقويم الجامعي', titleEn: 'Academic Calendar', icon: '📅' },
             { id: 'materials', keywords: ['مواد', 'دراسه', 'كتب', 'materials', 'study', 'courses'], path: '/materials', titleAr: 'المواد الدراسي', titleEn: 'Study Materials', icon: '📚' },
             { id: 'plans', keywords: ['ط', 'طط', 'ساعات', 'plans', 'tree', 'map'], path: '/plans', titleAr: 'الطط الدراسي', titleEn: 'Academic Plans', icon: '🗺️' },
             { id: 'quiz', keywords: ['كويز', 'اسئل', 'بنك', 'quiz', 'bank', 'questions'], path: '/quiz', titleAr: 'بنك الأسئل', titleEn: 'Question Bank', icon: '📝' },
-            { id: 'news', keywords: ['ابار', 'اعلان', 'جديد', 'news', 'announcement', 'update'], path: '/news', titleAr: 'أبار الجامع', titleEn: 'University News', icon: '📰' }
+            { id: 'news', keywords: ['ابار', 'اعلان', 'جديد', 'news', 'announcement', 'update'], path: '/news', titleAr: 'أبار الجامعة', titleEn: 'University News', icon: '📰' }
         ];
 
         pages.forEach(page => {
@@ -145,12 +145,12 @@ const LemonChat = () => {
         }
 
         // 3. Fallback for material / summary / quiz requests when not found in database
-        const isMaterialQuery = ['ملص', 'دوسي', 'كتاب', 'سلايدات', 'شرح', 'ماد', 'امتحان', 'امتحانات'].some(w => normQuery.includes(w));
+        const isMaterialQuery = ['ملص', 'دوسي', 'كتاب', 'سلايدات', 'شرح', 'مادة', 'امتحان', 'امتحانات'].some(w => normQuery.includes(w));
         if (!materialResult && isMaterialQuery && maxScore < 90) {
             maxScore = 95;
             bestMatch = {
                 type: 'text_response',
-                textAr: `عذراً يا نشمي، الماد أو الملص اللي بتدور عليه غير متوفر حالياً بالموقع 💔.\n\nبس ولا يهمك! بإمكانك طلب توفيرها فوراً من فريق مكانك عبر قسم **[اطلب ما تحتاجه](#request-services)** وسنقوم بإعدادها وإضافتها لك في أقرب وقت! 🚀`,
+                textAr: `عذراً يا نشمي، المادة أو الملص اللي بتدور عليه غير متوفر حالياً بالموقع 💔.\n\nبس ولا يهمك! بإمكانك طلب توفيرها فوراً من فريق مكانك عبر قسم **[اطلب ما تحتاجه](#request-services)** وسنقوم بإعدادها وإضافتها لك في أقرب وقت! 🚀`,
                 textEn: `Sorry! The requested material is not available yet 💔.\n\nYou can request it directly from our team via the **[Request Services](#request-services)** section!`
             };
         }
@@ -250,7 +250,7 @@ const LemonChat = () => {
                             <span className="chat-card-icon">{course.icon || '📘'}</span>
                             <div>
                                 <h4>{isAr ? course.name : course.nameEn}</h4>
-                                <span className="chat-card-badge">{isAr ? 'ماد دراسي' : 'Course'}</span>
+                                <span className="chat-card-badge">{isAr ? 'مادة دراسي' : 'Course'}</span>
                             </div>
                         </div>
 

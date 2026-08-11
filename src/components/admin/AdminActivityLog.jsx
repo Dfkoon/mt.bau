@@ -63,7 +63,7 @@ const TypeBadge = ({ type, lang }) => {
     const isAr = lang === 'ar';
     const map = {
         visit: { label: isAr ? 'زيار صفح' : 'Page Visit', icon: '🌐', cls: 'log-badge-visit' },
-        material_view: { label: isAr ? 'ماد دراسي' : 'Study Material', icon: '📂', cls: 'log-badge-material' },
+        material_view: { label: isAr ? 'مادة دراسي' : 'Study Material', icon: '📂', cls: 'log-badge-material' },
         quiz_completed: { label: isAr ? 'إتمام اتبار' : 'Quiz Result', icon: '🎯', cls: 'log-badge-quiz' },
         download: { label: isAr ? 'تنزيل ملف' : 'Download', icon: '📥', cls: 'log-badge-download' },
     };
@@ -231,7 +231,7 @@ const AdminActivityLog = () => {
                     <span className="search-icon">🔍</span>
                     <input
                         type="text"
-                        placeholder={isAr ? 'ابحث باسم الطالب، رقم الهاتف، اسم الماد...' : 'Search student, phone, or course...'}
+                        placeholder={isAr ? 'ابحث باسم الطالب، رقم الهاتف، اسم المادة...' : 'Search student, phone, or course...'}
                         value={searchQuery}
                         onChange={e => setSearchQuery(e.target.value)}
                         className="log-search-input"
@@ -320,7 +320,7 @@ const AdminActivityLog = () => {
                                                             fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.04em',
                                                             color: 'var(--adm-muted)', textTransform: 'uppercase',
                                                         }}>
-                                                            {isAr ? 'الماد:' : 'Course:'}
+                                                            {isAr ? 'المادة:' : 'Course:'}
                                                         </span>
                                                         <span style={{
                                                             background: 'rgba(99,102,241,0.14)', color: '#a5b4fc',

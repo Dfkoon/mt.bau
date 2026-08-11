@@ -116,7 +116,7 @@ const AdminCourses = () => {
 
             try {
                 await setDoc(courseRef, payload, { merge: true });
-                toast.success(isAr ? 'تم حفظ الماد ونشرها في السحاب بنجاح!' : 'Course saved and published to cloud successfully!');
+                toast.success(isAr ? 'تم حفظ المادة ونشرها في السحاب بنجاح!' : 'Course saved and published to cloud successfully!');
             } catch (cloudErr) {
                 console.error('Cloud save fallback for academic_courses:', cloudErr);
                 toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! فشل حفظ السحاب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud save failed: ${cloudErr?.message || cloudErr}`);
@@ -131,7 +131,7 @@ const AdminCourses = () => {
     };
 
     const handleDeleteCourse = async (course) => {
-        if (!window.confirm(isAr ? `هل أنت متأكد من حذف ماد "${course.name}"؟` : `Delete course "${course.name}"?`)) return;
+        if (!window.confirm(isAr ? `هل أنت متأكد من حذف مادة "${course.name}"؟` : `Delete course "${course.name}"?`)) return;
 
         try {
             const courseId = String(course.id);
@@ -143,7 +143,7 @@ const AdminCourses = () => {
                 deleted: true
             }, { merge: true });
             
-            toast.success(isAr ? 'تم حذف الماد بنجاح' : 'Course deleted successfully');
+            toast.success(isAr ? 'تم حذف المادة بنجاح' : 'Course deleted successfully');
         } catch (err) {
             console.error("Error deleting course:", err);
             toast.error(isAr ? 'فشل الحذف' : 'Failed to delete');
@@ -274,7 +274,7 @@ const AdminCourses = () => {
                     {/* Add button */}
                     <div style={{ flex: '0 0 auto' }}>
                         <button className="admin-action-btn approve" style={{ padding: '0.6rem 1.4rem' }} onClick={openAddModal}>
-                            {isAr ? 'اضاف ماد جديد' : 'Add New Course'}
+                            {isAr ? 'اضاف مادة جديد' : 'Add New Course'}
                         </button>
                     </div>
                 </div>
@@ -321,7 +321,7 @@ const AdminCourses = () => {
                                         )}
                                         {course.files?.book && (
                                             <span style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--adm-success)', border: '1px solid rgba(16,185,129,0.2)', padding: '2px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-                                                {isAr ? 'كتاب الماد' : 'Book'}
+                                                {isAr ? 'كتاب المادة' : 'Book'}
                                             </span>
                                         )}
                                         {course.files?.summary && (
@@ -386,7 +386,7 @@ const AdminCourses = () => {
                             paddingBottom: '0.75rem',
                             borderBottom: '1px solid var(--adm-divider)'
                         }}>
-                            {editingCourse ? (isAr ? 'تعديل ماد' : 'Edit Course') : (isAr ? 'إضاف ماد جديد' : 'Add New Course')}
+                            {editingCourse ? (isAr ? 'تعديل مادة' : 'Edit Course') : (isAr ? 'إضاف مادة جديد' : 'Add New Course')}
                         </h4>
 
                         <form onSubmit={handleSaveCourse} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -394,7 +394,7 @@ const AdminCourses = () => {
                             {/* Course ID */}
                             <div>
                                 <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                    {isAr ? 'معرف الماد الفريد (ID):' : 'Unique Course ID:'}
+                                    {isAr ? 'معرف المادة الفريد (ID):' : 'Unique Course ID:'}
                                 </label>
                                 <input 
                                     type="text" 
@@ -411,7 +411,7 @@ const AdminCourses = () => {
                             {/* Name Ar */}
                             <div>
                                 <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                    {isAr ? 'اسم الماد بالعربي:' : 'Course Name (Arabic):'}
+                                    {isAr ? 'اسم المادة بالعربي:' : 'Course Name (Arabic):'}
                                 </label>
                                 <input 
                                     type="text" 
@@ -426,7 +426,7 @@ const AdminCourses = () => {
                             {/* Name En */}
                             <div>
                                 <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                    {isAr ? 'اسم الماد بالإنجليزي:' : 'Course Name (English):'}
+                                    {isAr ? 'اسم المادة بالإنجليزي:' : 'Course Name (English):'}
                                 </label>
                                 <input 
                                     type="text" 
@@ -479,7 +479,7 @@ const AdminCourses = () => {
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                                     {[
                                         { key: 'pdf', label: isAr ? 'رابط ملف PDF الاساسي:' : 'PDF File Link:' },
-                                        { key: 'book', label: isAr ? 'رابط كتاب الماد:' : 'Textbook Link:' },
+                                        { key: 'book', label: isAr ? 'رابط كتاب المادة:' : 'Textbook Link:' },
                                         { key: 'summary', label: isAr ? 'رابط التلايص والشروحات:' : 'Summaries Link:' },
                                         { key: 'questions', label: isAr ? 'رابط اسئل السنوات السابق:' : 'Past Papers Link:' },
                                         { key: 'solutions', label: isAr ? 'رابط الحلول والاجابات:' : 'Solutions Link:' },

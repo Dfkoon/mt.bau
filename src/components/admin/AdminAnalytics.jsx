@@ -14,7 +14,7 @@ const PATH_LABELS = {
   '/exchange': 'تبادل المواد',
   '/about': 'من نحن',
   '/faq': 'الأسئل الشائع',
-  '/materials/click': 'تحميل ماد',
+  '/materials/click': 'تحميل مادة',
   '/quiz/complete': 'إتمام اتبار',
 };
 
@@ -121,7 +121,7 @@ export default function AdminAnalytics() {
   const sortedStarItems = useMemo(() => {
     const map = {};
     starRatings.forEach(r => {
-      const key = r.itemTitle || r.itemId || 'ماد بدون عنوان';
+      const key = r.itemTitle || r.itemId || 'مادة بدون عنوان';
       if (!map[key]) map[key] = { sum: 0, count: 0 };
       map[key].sum += r.rating;
       map[key].count += 1;
@@ -137,7 +137,7 @@ export default function AdminAnalytics() {
       ...pageViews.slice(0, 15).map(v => ({
         id: `pv-${v.id}`,
         type: v.type === 'material_view' ? 'material' : v.type === 'quiz_completed' ? 'quiz' : 'visit',
-        title: v.type === 'material_view' ? `فتح ماد: ${v.courseName || 'ماد دراسي'}` : v.type === 'quiz_completed' ? `إتمام اتبار: ${v.quizTitle || 'اتبار'}` : `زيار صفح: ${getPathLabel(v.path, language)}`,
+        title: v.type === 'material_view' ? `فتح مادة: ${v.courseName || 'مادة دراسي'}` : v.type === 'quiz_completed' ? `إتمام اتبار: ${v.quizTitle || 'اتبار'}` : `زيار صفح: ${getPathLabel(v.path, language)}`,
         timestamp: v.timestamp,
         icon: v.type === 'material_view' ? '📂' : v.type === 'quiz_completed' ? '🎯' : '🌐',
         color: v.type === 'material_view' ? '#ec4899' : v.type === 'quiz_completed' ? '#3b82f6' : '#8b5cf6',
@@ -153,7 +153,7 @@ export default function AdminAnalytics() {
       ...ratings.slice(0, 10).map(r => ({
         id: `rat-${r.id}`,
         type: 'rating',
-        title: `تقييم ماد: ${r.itemTitle || 'ماد'} (${r.rating} نجوم)`,
+        title: `تقييم مادة: ${r.itemTitle || 'مادة'} (${r.rating} نجوم)`,
         timestamp: r.timestamp,
         icon: '⭐',
         color: '#eab308',
@@ -403,7 +403,7 @@ export default function AdminAnalytics() {
           </div>
           <div className="anv-vc-body">
             <h3 className="anv-vc-num">{totalMaterialOpens.toLocaleString('ar-JO')}</h3>
-            <span className="anv-vc-tag">أكثر ماد: {courseCounts[0]?.[0] || 'الذكاء الاصطناعي'}</span>
+            <span className="anv-vc-tag">أكثر مادة: {courseCounts[0]?.[0] || 'الذكاء الاصطناعي'}</span>
           </div>
           <svg viewBox="0 0 120 30" className="anv-vc-spark">
             <path d="M0 20 L25 25 L50 12 L75 18 L100 8 L120 2" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
@@ -498,7 +498,7 @@ export default function AdminAnalytics() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>اسم الماد الدراسي</th>
+                  <th>اسم المادة الدراسي</th>
                   <th>عدد التقييمات</th>
                   <th>{ratingsTab === 'star' ? 'متوسط النجوم' : 'المستوى السائد'}</th>
                   <th>الحال</th>

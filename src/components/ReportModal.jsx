@@ -131,7 +131,7 @@ const ReportModal = () => {
                                     donatedCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'ماد متبرع بها',
+                                        classification: 'مادة متبرع بها',
                                         actionDate: actionDate,
                                         deliveryDate: '—',
                                         statusText: 'متاح',
@@ -141,7 +141,7 @@ const ReportModal = () => {
                                     reservedCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'ماد متبرع بها',
+                                        classification: 'مادة متبرع بها',
                                         actionDate: m.takerInfo?.bookedAt || donation.lastUpdated || actionDate,
                                         deliveryDate: '—',
                                         statusText: 'بانتظار التسليم',
@@ -151,7 +151,7 @@ const ReportModal = () => {
                                     deliveredCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'ماد متبرع بها',
+                                        classification: 'مادة متبرع بها',
                                         actionDate: m.takerInfo?.bookedAt || actionDate,
                                         deliveryDate: m.takerInfo?.deliveredAt || donation.lastUpdated || actionDate,
                                         statusText: 'تم التسليم',
@@ -183,7 +183,7 @@ const ReportModal = () => {
                                     hasActiveBooking = true;
                                     items.push({
                                         name: m.name,
-                                        classification: 'ماد محجوز',
+                                        classification: 'مادة محجوز',
                                         actionDate: bookedDate,
                                         deliveryDate: '—',
                                         statusText: 'بانتظار التسليم',
@@ -193,7 +193,7 @@ const ReportModal = () => {
                                     deliveredCount++;
                                     items.push({
                                         name: m.name,
-                                        classification: 'ماد مسلَّم',
+                                        classification: 'مادة مسلَّم',
                                         actionDate: bookedDate,
                                         deliveryDate: m.takerInfo.deliveredAt || donation.lastUpdated || donation.createdAt,
                                         statusText: 'تم التسليم',
@@ -707,7 +707,7 @@ const ReportModal = () => {
                     <thead>
                         <tr>
                             <th>م</th>
-                            <th>اسم الماد</th>
+                            <th>اسم المادة</th>
                             <th>التصنيف</th>
                             <th>تاري الإجراء</th>
                             <th>تاري التسليم</th>

@@ -106,7 +106,7 @@ const getPathLabel = (path, lang) => {
 function TypeBadge({ type }) {
   const map = {
     visit: { label: 'زيار', cls: 'badge-visit', en: 'Visit' },
-    material_view: { label: 'ماد', cls: 'badge-material', en: 'Material' },
+    material_view: { label: 'مادة', cls: 'badge-material', en: 'Material' },
     quiz_completed: { label: 'اتبار', cls: 'badge-quiz', en: 'Quiz' },
   };
   const b = map[type] || { label: type, cls: 'badge-visit', en: type };
@@ -687,7 +687,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     // Cloud Save to Firestore (awaited)
     try {
       await setDoc(doc(db, 'quiz_subjects', subId), payload);
-      toast.success(isAr ? 'تم حفظ الماد ونشرها في السحاب بنجاح!' : 'Subject saved and published to cloud successfully!');
+      toast.success(isAr ? 'تم حفظ المادة ونشرها في السحاب بنجاح!' : 'Subject saved and published to cloud successfully!');
     } catch (cloudErr) {
       console.error('Cloud save failed for quiz_subjects:', cloudErr);
       toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم تحفظ بالسحاب بسبب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
@@ -695,7 +695,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   };
 
   const deleteSubject = async (subId) => {
-    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه الماد؟ سيتم حذف كاف الأجزاء والأسئل التابع لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
+    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه المادة؟ سيتم حذف كاف الأجزاء والأسئل التابع لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
 
     setQManageSubjects(prev => prev.filter(s => s.id !== subId));
     if (selectedSubjectId === subId) setSelectedSubjectId('');
@@ -721,7 +721,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   const savePart = async () => {
     if (!selectedSubjectId) {
-      toast.error(isAr ? ' يرجى اتيار الماد أولاً' : ' Please select a subject first');
+      toast.error(isAr ? ' يرجى اتيار المادة أولاً' : ' Please select a subject first');
       return;
     }
     if (!partForm.id || !partForm.title || !partForm.titleAr) {
@@ -1727,7 +1727,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   <div className="qmanage-col-header">
                     <h4> {isAr ? 'المواد الدراسي' : 'Subjects'}</h4>
                     <button className="qmanage-add-btn" onClick={() => setShowAddSubjectModal(true)}>
-                      {isAr ? 'ماد جديد' : 'New Subject'}
+                      {isAr ? 'مادة جديد' : 'New Subject'}
                     </button>
                   </div>
                   <div className="qmanage-list">
@@ -1749,7 +1749,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                           <button
                             className="qmanage-item-delete-btn"
                             onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
-                            title={isAr ? 'حذف الماد بالكامل' : 'Delete entire subject'}
+                            title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
                           >
 
                           </button>
@@ -1769,7 +1769,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       </button>
                     ) : (
                       <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {isAr ? 'اتر ماد أولاً' : 'Select a subject first'}
+                        {isAr ? 'اتر مادة أولاً' : 'Select a subject first'}
                       </span>
                     )}
                   </div>
@@ -1801,7 +1801,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         ))
                       )
                     ) : (
-                      <div className="qmanage-empty">{isAr ? 'يرجى اتيار ماد من اليمين' : 'Please select a subject from left'}</div>
+                      <div className="qmanage-empty">{isAr ? 'يرجى اتيار مادة من اليمين' : 'Please select a subject from left'}</div>
                     )}
                   </div>
                 </div>
@@ -2265,12 +2265,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         <div className="qedit-overlay" onClick={() => setShowAddSubjectModal(false)}>
           <div className="qedit-modal" onClick={e => e.stopPropagation()}>
             <div className="qedit-header">
-              <span className="qedit-badge-quiz">{isAr ? 'إضاف ماد جديد' : 'Add New Subject'}</span>
+              <span className="qedit-badge-quiz">{isAr ? 'إضاف مادة جديد' : 'Add New Subject'}</span>
               <button className="qedit-close" onClick={() => setShowAddSubjectModal(false)}></button>
             </div>
             <div className="qedit-body">
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'رمز الماد (ID فريد بالإنجليزي)' : 'Subject ID (unique, e.g. networks_2)'}</label>
+                <label className="qedit-label">{isAr ? 'رمز المادة (ID فريد بالإنجليزي)' : 'Subject ID (unique, e.g. networks_2)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.id}
@@ -2279,7 +2279,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'اسم الماد باللغ العربي' : 'Subject Name (Arabic)'}</label>
+                <label className="qedit-label">{isAr ? 'اسم المادة باللغ العربي' : 'Subject Name (Arabic)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.nameAr}
@@ -2289,7 +2289,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'اسم الماد باللغ الإنجليزي' : 'Subject Name (English)'}</label>
+                <label className="qedit-label">{isAr ? 'اسم المادة باللغ الإنجليزي' : 'Subject Name (English)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.name}
@@ -2333,7 +2333,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             </div>
             <div className="qedit-footer">
               <button className="qedit-btn-cancel" onClick={() => setShowAddSubjectModal(false)}>{isAr ? 'إلغاء' : 'Cancel'}</button>
-              <button className="qedit-btn-save" onClick={saveSubject}> {isAr ? 'حفظ الماد' : 'Save Subject'}</button>
+              <button className="qedit-btn-save" onClick={saveSubject}> {isAr ? 'حفظ المادة' : 'Save Subject'}</button>
             </div>
           </div>
         </div>
