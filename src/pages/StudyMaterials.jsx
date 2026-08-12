@@ -216,7 +216,7 @@ const StudyMaterials = () => {
                 <div className="specialization-switcher fade-in">
                     <div className="major-selection-alert fade-in">
                         <div className="alert-icon">💡</div>
-                        <div className="alert-text">{language === 'ar' ? 'يرجى اتيار تصصك أولاً' : 'Please select your major first'}</div>
+                        <div className="alert-text">{language === 'ar' ? 'يرجى اتيار تخصصك أولاً' : 'Please select your major first'}</div>
                     </div>
                     <div className="spec-options-grid">
                         {faculty.specializations.map(spec => (
@@ -430,7 +430,7 @@ const StudyMaterials = () => {
                                     <h3>{language === 'ar' ? 'ساهم في إثراء محتوى مكانك ✨' : 'Share & Enrich Makanak Content ✨'}</h3>
                                     <p>
                                         {language === 'ar'
-                                            ? 'نرحب بمساهماتكم سواء كانت أسئل سنوات، كويزات، ملصات، أو روابط مفيد. ساعد زملائك وكن جزءاً من مسير الير.'
+                                            ? 'نرحب بمساهماتكم سواء كانت أسئلة سنوات، كويزات، ملخصات، أو روابط مفيدة. ساعد زملائك وكن جزءاً من مسيرة الخير.'
                                             : 'We welcome your contributions! Share past papers, quizzes, summaries, or helpful links to benefit all students.'}
                                     </p>
                                 </div>

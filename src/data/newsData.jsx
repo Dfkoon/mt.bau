@@ -15,7 +15,7 @@ export const announcements = [
             ar: (
                 <>
                     <p>
-                        أطلقت كلية الذكاء الاصطناعي في جامع البلقاء التطبيقي مجل <strong>"CHAIN"</strong>، في مكتب رئيس الجامعة الأستاذ الدكتور أحمد فري العجلوني...
+                        أطلقت كلية الذكاء الاصطناعي في جامعة البلقاء التطبيقي مجل <strong>"CHAIN"</strong>، في مكتب رئيس الجامعة الأستاذ الدكتور أحمد فري العجلوني...
                     </p>
                     <div className="img-placeholder" style={{ background: '#e3f2fd', color: '#1565c0', padding: '2rem', borderRadius: '12px', textAlign: 'center', margin: '1rem 0' }}>
                         <i className="fas fa-image" style={{ fontSize: '3rem', display: 'block', marginBottom: '10px' }}></i>
@@ -205,7 +205,7 @@ export const announcements = [
         content: {
             ar: (
                 <p>
-                    جامع البلقاء التطبيقي تفر باتيار 17 من أعضاء هيئتها التدريسي ضمن قائم أفضل 2% من الباحثين الأكثر تأثيراً في العالم.
+                    جامعة البلقاء التطبيقي تفر باتيار 17 من أعضاء هيئتها التدريسي ضمن قائم أفضل 2% من الباحثين الأكثر تأثيراً في العالم.
                 </p>
             ),
             en: (

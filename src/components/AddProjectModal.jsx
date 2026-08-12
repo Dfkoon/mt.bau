@@ -50,7 +50,7 @@ const AddProjectModal = ({ onClose }) => {
             toast.success(t('student.projects.success'));
             setTimeout(onClose, 2000);
         } else {
-            toast.error(language === 'ar' ? 'حدث طأ أثناء الإرسال' : 'Error submitting project');
+            toast.error(language === 'ar' ? 'حدث خطأ أثناء الإرسال' : 'Error submitting project');
             setIsSubmitting(false);
         }
     };

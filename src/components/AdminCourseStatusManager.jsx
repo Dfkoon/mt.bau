@@ -45,7 +45,7 @@ const AdminCourseStatusManager = () => {
             }
         } catch (error) {
             console.error('Error loading pending items:', error);
-            toast.error(isAr ? 'طأ في تحميل الطلبات' : 'Error loading requests');
+            toast.error(isAr ? 'خطأ في تحميل الطلبات' : 'Error loading requests');
         } finally {
             setLoading(false);
         }
@@ -65,7 +65,7 @@ const AdminCourseStatusManager = () => {
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'طأ في الموافق' : 'Error approving request');
+            toast.error(isAr ? 'خطأ في الموافق' : 'Error approving request');
         }
     };
 
@@ -83,7 +83,7 @@ const AdminCourseStatusManager = () => {
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'طأ في الرفض' : 'Error rejecting request');
+            toast.error(isAr ? 'خطأ في الرفض' : 'Error rejecting request');
         }
     };
 
@@ -101,7 +101,7 @@ const AdminCourseStatusManager = () => {
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'طأ في الموافق' : 'Error approving donation');
+            toast.error(isAr ? 'خطأ في الموافق' : 'Error approving donation');
         }
     };
 
@@ -119,7 +119,7 @@ const AdminCourseStatusManager = () => {
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'طأ في الرفض' : 'Error rejecting donation');
+            toast.error(isAr ? 'خطأ في الرفض' : 'Error rejecting donation');
         }
     };
 

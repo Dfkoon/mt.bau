@@ -94,7 +94,7 @@ const SmartAdvisor = () => {
             {step === 1 && (
                 <div className="advisor-step fade-in">
                     <button className="back-step-btn" onClick={() => setStep(0)}>←</button>
-                    <h4>{language === 'ar' ? 'اتر تصصك' : 'Select your Major'}</h4>
+                    <h4>{language === 'ar' ? 'اتر تخصصك' : 'Select your Major'}</h4>
                     <div className="major-grid">
                         {majors.map(mId => (
                             <button
@@ -191,7 +191,7 @@ const SmartAdvisor = () => {
                                 </div>
                             ))
                         ) : (
-                            <p className="no-rec">{language === 'ar' ? 'لا توجد توصيات حالياً، تأكد من اتيار تصصك وإدال وضعك الأكاديمي بدق.' : 'No recommendations available. Please ensure you entered your progress correctly.'}</p>
+                            <p className="no-rec">{language === 'ar' ? 'لا توجد توصيات حالياً، تأكد من اتيار تخصصك وإدال وضعك الأكاديمي بدق.' : 'No recommendations available. Please ensure you entered your progress correctly.'}</p>
                         )}
                     </div>
 

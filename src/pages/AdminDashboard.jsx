@@ -1639,7 +1639,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
               <div className="admin-kpi-card">
                 <div className="kpi-icon"></div>
                 <div className="kpi-value">{materialViews}</div>
-                <div className="kpi-label">{isAr ? 'فتح مواد دراسي' : 'Material Opens'}</div>
+                <div className="kpi-label">{isAr ? 'فتح مواد دراسية' : 'Material Opens'}</div>
               </div>
               <div className="admin-kpi-card">
                 <div className="kpi-icon"></div>
@@ -1853,7 +1853,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {/* Column 3: Questions List */}
                 <div className="qmanage-column questions-col">
                   <div className="qmanage-col-header">
-                    <h4> {isAr ? 'أسئل الاختبار' : 'Questions List'}</h4>
+                    <h4> {isAr ? 'أسئلة الاختبار' : 'Questions List'}</h4>
                     {selectedPartId ? (
                       <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
                         {isAr ? 'إضافة سؤال' : 'New Question'}
@@ -1867,7 +1867,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   <div className="qmanage-list">
                     {selectedPartId ? (
                       allQuestions.length === 0 ? (
-                        <div className="qmanage-empty">{isAr ? 'لا توجد أسئل في هذا الجزء بعد' : 'No questions in this part yet'}</div>
+                        <div className="qmanage-empty">{isAr ? 'لا توجد أسئلة في هذا الجزء بعد' : 'No questions in this part yet'}</div>
                       ) : (
                         allQuestions.map((q, idx) => (
                           <div key={q.id || idx} className="qmanage-question-card">
@@ -2407,7 +2407,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   className="qedit-opt-input"
                   value={partForm.titleAr}
                   onChange={e => setPartForm(prev => ({ ...prev, titleAr: e.target.value }))}
-                  placeholder="مثال: أسئل سنوات ميد"
+                  placeholder="مثال: أسئلة سنوات ميد"
                   dir="rtl"
                 />
               </div>

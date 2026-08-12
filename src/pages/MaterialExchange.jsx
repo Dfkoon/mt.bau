@@ -899,7 +899,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         }
 
         const isDonation = type === 'donation';
-        const actionText = isDonation ? 'تبرع جديد بمواد دراسي' : 'حجز جديد لماد دراسي';
+        const actionText = isDonation ? 'تبرع جديد بمواد دراسية' : 'حجز جديد لماد دراسي';
 
         let detailsText = '';
         if (isDonation) {
@@ -961,7 +961,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         } catch (error) {
             console.error('Error fetching donations:', error);
             if (error.code === 'permission-denied') {
-                toast.error(isAr ? 'طأ في الصلاحيات' : 'Permission Error');
+                toast.error(isAr ? 'خطأ في الصلاحيات' : 'Permission Error');
             } else {
                 toast.error(isAr ? 'فشل في تحميل البيانات' : 'Failed to fetch donations');
             }
@@ -1043,7 +1043,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             await fetchDeliverySchedules();
         } catch (error) {
             console.error('Error adding schedule:', error);
-            toast.error(isAr ? '❌ حدث طأ أثناء الإضاف' : '❌ Error adding schedule');
+            toast.error(isAr ? '❌ حدث خطأ أثناء الإضاف' : '❌ Error adding schedule');
         } finally {
             setScheduleFormLoading(false);
         }
@@ -1086,7 +1086,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             setEditingSchedule(null);
         } catch (error) {
             console.error('Error updating schedule:', error);
-            toast.error(isAr ? '❌ طأ في التحديث' : '❌ Error updating schedule');
+            toast.error(isAr ? '❌ خطأ في التحديث' : '❌ Error updating schedule');
         } finally {
             setEditScheduleLoading(false);
         }
@@ -1111,7 +1111,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             toast.success(isAr ? `✅ تم تغيير الحال إلى: ${labels[newStatus] || newStatus}` : `✅ Status updated to: ${labels[newStatus] || newStatus}`);
         } catch (error) {
             console.error('Error updating schedule status:', error);
-            toast.error(isAr ? '❌ طأ في تحديث الحال' : '❌ Error updating status');
+            toast.error(isAr ? '❌ خطأ في تحديث الحال' : '❌ Error updating status');
         }
     };
 
@@ -1124,7 +1124,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             toast.success(isAr ? '✅ تم حذف الموعد' : '✅ Schedule deleted');
         } catch (error) {
             console.error('Error deleting schedule:', error);
-            toast.error(isAr ? '❌ طأ في الحذف' : '❌ Error deleting');
+            toast.error(isAr ? '❌ خطأ في الحذف' : '❌ Error deleting');
         }
     };
 
@@ -1213,7 +1213,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             setPreRequestForm({ type: 'donate', studentName: '', phoneNumber: '', materialName: '', notes: '', agreedToPreRequestTerms: false });
         } catch (error) {
             console.error('Error saving pre-request:', error);
-            toast.error(isAr ? 'حدث طأ أثناء إرسال الطلب المسبق، حاول مر أرى' : 'An error occurred while submitting your pre-request. Please try again.');
+            toast.error(isAr ? 'حدث خطأ أثناء إرسال الطلب المسبق، حاول مرة أخرى' : 'An error occurred while submitting your pre-request. Please try again.');
         } finally {
             setPreRequestLoading(false);
         }
@@ -1254,7 +1254,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             setCoordinatorApplicationForm({ name: '', phoneNumber: '', email: '', motivation: '', agreedToCoordinatorTerms: false });
         } catch (error) {
             console.error('Error saving coordinator application:', error);
-            toast.error(isAr ? 'حدث طأ أثناء إرسال طلب الانضمام، حاول مر أرى' : 'An error occurred while submitting your application. Please try again.');
+            toast.error(isAr ? 'حدث خطأ أثناء إرسال طلب الانضمام، حاول مرة أخرى' : 'An error occurred while submitting your application. Please try again.');
         } finally {
             setCoordinatorApplicationLoading(false);
         }
@@ -2346,7 +2346,7 @@ Please contact us to coordinate the pickup.Thank you.`;
             fetchAllDonations();
         } catch (err) {
             console.error(err);
-            toast.error(isAr ? 'حدث طأ أثناء تحديث جنس الحاجز' : 'Error updating taker gender');
+            toast.error(isAr ? 'حدث خطأ أثناء تحديث جنس الحاجز' : 'Error updating taker gender');
         }
     };
 
@@ -2569,7 +2569,7 @@ Please contact us to coordinate the pickup.Thank you.`;
             );
         } catch (error) {
             console.error('Error saving edited donation:', error);
-            toast.error(isAr ? `حدث طأ أثناء حفظ التعديلات: ${error.message}` : `Error saving changes: ${error.message}`);
+            toast.error(isAr ? `حدث خطأ أثناء حفظ التعديلات: ${error.message}` : `Error saving changes: ${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -3941,7 +3941,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     <div className="hero-overlay"></div>
                     <div className="hero-content">
                         <h1>{isAr ? 'تبادل المواد الدراسي' : 'Material Exchange'}</h1>
-                        <p>{isAr ? 'منص رسمي لتبادل المواد التعليمي بين الطلاب بطريق منظم.' : 'A formal platform for organized academic material exchange among students.'}</p>
+                        <p>{isAr ? 'منصة رسمي لتبادل المواد التعليمي بين الطلاب بطريق منظم.' : 'A formal platform for organized academic material exchange among students.'}</p>
                     </div>
                 </section>
 
@@ -8046,7 +8046,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     style={{ textAlign: 'center', letterSpacing: '8px', fontSize: '1.4rem', fontWeight: 'bold' }}
                                                 />
                                                 {totpError && (
-                                                    <div className="login-error">⚠️ {isAr ? 'رمز التحقق غير صحيح، يرجى المحاول مجدداً' : 'Incorrect 2FA code, please try again'}</div>
+                                                    <div className="login-error">⚠️ {isAr ? 'رمز التحقق غير صحيح، يرجى المحاولة مجدداً' : 'Incorrect 2FA code, please try again'}</div>
                                                 )}
                                             </div>
                                             <div className="login-action-row">
@@ -8113,7 +8113,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                         <h1>
                             {isAr ? 'تبادل المواد الدراسي 📚' : 'Material Exchange 📚'}
                         </h1>
-                        <p>{isAr ? 'منص لتبادل الكتب والدوسيات بين الطلاب.. فيد واستفيد!' : 'A platform to exchange books and notes between students.. Give and Take!'}</p>
+                        <p>{isAr ? 'منصة لتبادل الكتب والدوسيات بين الطلاب.. فيد واستفيد!' : 'A platform to exchange books and notes between students.. Give and Take!'}</p>
                     </div>
                 </section>
 
@@ -8275,7 +8275,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         />
                                     </div>
                                     {donationCaptchaError && (
-                                        <div className="captcha-error-msg">⚠️ {isAr ? 'رمز التحقق غير صحيح — حاول مر أرى' : 'Incorrect code — please try again'}</div>
+                                        <div className="captcha-error-msg">⚠️ {isAr ? 'رمز التحقق غير صحيح — حاول مرة أخرى' : 'Incorrect code — please try again'}</div>
                                     )}
                                 </div>
                                 <div className="terms-checkbox-container">

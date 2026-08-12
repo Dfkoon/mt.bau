@@ -13,7 +13,7 @@ const PATH_LABELS = {
     '/exchange': 'سوق تبادل المواد',
     '/about': 'من نحن',
     '/faq': 'الأسئلة الشائعة',
-    '/materials/click': 'مواد دراسي (تحميل)',
+    '/materials/click': 'مواد دراسية (تحميل)',
     '/quiz/complete': 'اختبار (إتمام)',
 };
 

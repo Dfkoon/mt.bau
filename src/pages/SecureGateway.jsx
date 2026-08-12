@@ -293,7 +293,7 @@ const SecureGateway = () => {
         // Verify CAPTCHA
         if (captchaInput.trim().toUpperCase() !== captchaText) {
             setIsLoading(false);
-            recordFailedAttempt('رمز التحقق غير صحيح. حاول مر أرى.');
+            recordFailedAttempt('رمز التحقق غير صحيح. حاول مرة أخرى.');
             refreshCaptcha();
             return;
         }
@@ -447,7 +447,7 @@ const SecureGateway = () => {
                 executeLogin(pendingStaffKey, user);
             } else {
                 setIsLoading(false);
-                triggerShake('رمز المصادق الثنائي (2FA) غير صحيح. حاول مر أرى.');
+                triggerShake('رمز المصادق الثنائي (2FA) غير صحيح. حاول مرة أخرى.');
             }
         } catch (err) {
             console.error("TOTP Verification error:", err);
@@ -500,7 +500,7 @@ const SecureGateway = () => {
         } catch (err) {
             console.error("Login finalization failed:", err);
             setIsLoading(false);
-            triggerShake('حدث طأ أثناء إتمام عملي تسجيل الدول.');
+            triggerShake('حدث خطأ أثناء إتمام عملي تسجيل الدول.');
         }
     };
 

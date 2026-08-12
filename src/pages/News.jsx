@@ -49,7 +49,7 @@ const News = () => {
                         <h1 className="hero-title">{language === 'ar' ? 'أبار مكانك' : 'Makanak News'} 📰</h1>
                         <p className="hero-subtitle">
                             {language === 'ar'
-                                ? 'وجهتك الأولى لمعرف كل جديد في جامع البلقاء التطبيقي'
+                                ? 'وجهتك الأولى لمعرف كل جديد في جامعة البلقاء التطبيقي'
                                 : 'Your standard source for all updates at Al-Balqa Applied University'}
                         </p>
                     </div>

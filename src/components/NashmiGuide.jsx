@@ -39,17 +39,17 @@ const NashmiGuide = () => {
             hint: 'User is on Homepage. Focus on general navigation and the new Resources Showcase/Services loop.'
         },
         '/materials': {
-            ar: 'هون بنك الموارد! بدك ملصات أو أسئل سنوات؟ بس حدد تصصك والماد ورح تلاقي كل اشي جاهز.',
+            ar: 'هون بنك الموارد! بدك ملخصات أو أسئلة سنوات؟ بس حدد تخصصك والماد ورح تلاقي كل اشي جاهز.',
             en: 'This is the Resources Bank! Looking for summaries or past papers? Just select your major and course.',
             hint: 'User is looking for study materials. Help them find specific subjects or summaries.'
         },
         '/plans': {
-            ar: 'وصلت لصفح الخطط الدراسي؛ هون "شجر المواد" لكل تصص عشان تعرف شو تسجل وتوزع موادك صح.',
+            ar: 'وصلت لصفح الخطط الدراسي؛ هون "شجر المواد" لكل تخصص عشان تعرف شو تسجل وتوزع موادك صح.',
             en: 'You are at the Academic Plans page; see the "Course Tree" for each major to plan your registration correctly.',
             hint: 'User is planning their semester. Guide them through the course tree and prerequisites.'
         },
         '/quiz': {
-            ar: 'قاعد بتدرس؟ هون بتقدر تتبر معلوماتك بكويزات تفاعلي وتعرف نتيجتك فوراً! جرب كويز بماد تصصك هسا.',
+            ar: 'قاعد بتدرس؟ هون بتقدر تختبر معلوماتك بكويزات تفاعلي وتعرف نتيجتك فوراً! جرب كويز بماد تخصصك هسا.',
             en: 'Studying? Here you can test your knowledge with interactive quizzes and get instant results! Try a quiz for your major now.',
             hint: 'User is in the Quiz/Testing section. Encourage them to try a specific quiz (Calculus, AI, etc.).'
         },
@@ -59,7 +59,7 @@ const NashmiGuide = () => {
             hint: 'User is checking dates. Provide info on holidays or exam schedules.'
         },
         '/grading': {
-            ar: 'بدك تحسب معدلك؟ هون حاسب المعدل الفصلي والتراكمي حسب نظام جامع البلقاء الجديد (4 نقاط).',
+            ar: 'بدك تحسب معدلك؟ هون حاسب المعدل الفصلي والتراكمي حسب نظام جامعة البلقاء الجديد (4 نقاط).',
             en: 'Calculating GPS? Here is the Semester and Cumulative GPA calculator based on the new BAU 4.0 system.',
             hint: 'User is calculating grades. Explain the difference between New/Old system or Semester/Cumulative.'
         },
@@ -74,7 +74,7 @@ const NashmiGuide = () => {
             hint: 'User is checking news. Highlight recent faculty announcements.'
         },
         '/faq': {
-            ar: 'عندك سؤال محيرك؟ جمعنالك أكثر الأسئل الشائع اللي بتهم الطلاب مع إجاباتها.',
+            ar: 'عندك سؤال محيرك؟ جمعنالك أكثر الأسئلة الشائعة اللي بتهم الطلاب مع إجاباتها.',
             en: 'Got a question? We collected the most common student FAQs with detailed answers here.',
             hint: 'User is looking for help. Suggest common topics like registration or health insurance.'
         },
@@ -143,10 +143,10 @@ const NashmiGuide = () => {
         // 1. Navigation Commands (High Confidence)
         const navTargets = [
             { path: '/grading', keywords: isAr ? ['معدل', 'احسب', 'علامات', 'ترج'] : ['gpa', 'calculate', 'grade', 'grading'] },
-            { path: '/materials', keywords: isAr ? ['مواد', 'ملصات', 'دوسيات', 'دراسه'] : ['materials', 'study', 'summary', 'files'] },
+            { path: '/materials', keywords: isAr ? ['مواد', 'ملخصات', 'دوسيات', 'دراسه'] : ['materials', 'study', 'summary', 'files'] },
             { path: '/plans', keywords: isAr ? ['طه', 'ط', 'شجره', 'مواد قسم'] : ['plan', 'map', 'tree'] },
             { path: '/calendar', keywords: isAr ? ['تقويم', 'موعد', 'متى', 'عطله'] : ['calendar', 'date', 'holiday'] },
-            { path: '/quiz', keywords: isAr ? ['كويز', 'امتحان', 'اتبر'] : ['quiz', 'test', 'exam'] },
+            { path: '/quiz', keywords: isAr ? ['كويز', 'امتحان', 'اختبر'] : ['quiz', 'test', 'exam'] },
 
             { path: '/', keywords: isAr ? ['رئيسيه', 'بدايه'] : ['home', 'start'] }
         ];
@@ -331,7 +331,7 @@ const NashmiGuide = () => {
 
                     <div className="quick-chips">
                         {(isAr
-                            ? ['احسب معدلي', 'وين ملصات؟', 'التقويم الأكاديمي', 'طتي الدراسي']
+                            ? ['احسب معدلي', 'وين ملخصات؟', 'التقويم الأكاديمي', 'خطتي الدراسي']
                             : ['Calculate GPA', 'Where are materials?', 'Academic Calendar', 'My study plan']
                         ).map(chip => (
                             <button

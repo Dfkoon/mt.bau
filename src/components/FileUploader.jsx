@@ -253,7 +253,7 @@ const FileUploader = ({ onClose }) => {
                 setErrorDetails(failedResult.messageAr || failedResult.error || 'Unknown error');
                 setStatusMessage(language === 'ar' ? 'فشل رفع بعض الملفات' : 'Some files failed to upload');
                 toast.error(language === 'ar'
-                    ? (failedResult.messageAr || `فشل رفع ${failedCount} ملفات، يرجى المحاول لاحقاً`)
+                    ? (failedResult.messageAr || `فشل رفع ${failedCount} ملفات، يرجى المحاولة لاحقاً`)
                     : (failedResult.messageEn || `Failed to upload ${failedCount} files, please try again`));
                 setIsUploading(false);
             }
@@ -262,8 +262,8 @@ const FileUploader = ({ onClose }) => {
             activeTasks.current.forEach(t => t.cancel?.());
             setStatus('error');
             setErrorDetails(error.friendly?.ar || error.message || 'Upload failed');
-            setStatusMessage(language === 'ar' ? 'حدث طأ أثناء الرفع' : 'Upload failed');
-            toast.error(language === 'ar' ? (error.friendly?.ar || 'حدث طأ أثناء الرفع') : (error.friendly?.en || 'Upload failed'));
+            setStatusMessage(language === 'ar' ? 'حدث خطأ أثناء الرفع' : 'Upload failed');
+            toast.error(language === 'ar' ? (error.friendly?.ar || 'حدث خطأ أثناء الرفع') : (error.friendly?.en || 'Upload failed'));
             setIsUploading(false);
             setUploadProgress(0);
         }
@@ -304,7 +304,7 @@ const FileUploader = ({ onClose }) => {
                             <p className="status-desc-large">
                                 {status === 'success'
                                     ? (language === 'ar' ? 'شكراً لمساهمتك القيم! ✨' : 'Thank you for your valuable contribution! ✨')
-                                    : (errorDetails || (language === 'ar' ? 'حدث طأ، يرجى المحاول لاحقاً' : 'An error occurred, please try again later'))
+                                    : (errorDetails || (language === 'ar' ? 'حدث خطأ، يرجى المحاولة لاحقاً' : 'An error occurred, please try again later'))
                                 }
                             </p>
                             {status === 'error' && (
@@ -313,24 +313,24 @@ const FileUploader = ({ onClose }) => {
                                     setIsUploading(false);
                                     setErrorDetails('');
                                 }}>
-                                    {language === 'ar' ? 'إعاد المحاول 🔄' : 'Try Again 🔄'}
+                                    {language === 'ar' ? 'إعاد المحاولة 🔄' : 'Try Again 🔄'}
                                 </button>
                             )}
                         </div>
                     ) : (
                         <>
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'نوع المساهم (إجباري)' : 'Contribution Type (Mandatory)'}</label>
+                                <label>{language === 'ar' ? 'نوع المساهمة (إجباري)' : 'Contribution Type (Mandatory)'}</label>
                                 <select
                                     className="type-select"
                                     value={contributionType}
                                     onChange={(e) => setContributionType(e.target.value)}
                                     disabled={isUploading}
                                 >
-                                    <option value="">{language === 'ar' ? '-- اتر نوع المرفق --' : '-- Select Type --'}</option>
-                                    <option value="past_papers">{language === 'ar' ? 'أسئل سنوات' : 'Past Papers'}</option>
-                                    <option value="quizzes">{language === 'ar' ? 'كويزات' : 'Quizzes'}</option>
-                                    <option value="summaries">{language === 'ar' ? 'ملصات' : 'Summaries'}</option>
+                                    <option value="">{language === 'ar' ? '-- اختر نوع المرفق --' : '-- Select Type --'}</option>
+                                    <option value="past_papers">{language === 'ar' ? 'أسئلة سنوات' : 'Past Papers'}</option>
+                                    <option value="quizzes">{language === 'ar' ? 'اختبارات قصيرة' : 'Quizzes'}</option>
+                                    <option value="summaries">{language === 'ar' ? 'ملخصات' : 'Summaries'}</option>
                                     <option value="material_pdf">{language === 'ar' ? 'مادة PDF' : 'PDF Material'}</option>
                                 </select>
                             </div>

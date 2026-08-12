@@ -330,7 +330,7 @@ export default function AdminAnalytics() {
         {/* Right Donut / Traffic Chart Card */}
         <div className="anv-card anv-donut-card">
           <h3 className="anv-card-title">توزيع التفاعلات والزيارات</h3>
-          <p className="anv-card-desc">نسب توزيع الأنشط الأكاديمي على المنص</p>
+          <p className="anv-card-desc">نسب توزيع الأنشط الأكاديمي على المنصة</p>
 
           <div className="anv-donut-wrapper">
             <svg viewBox="0 0 100 100" className="anv-donut-svg">

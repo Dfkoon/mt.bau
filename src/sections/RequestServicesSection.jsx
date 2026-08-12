@@ -18,10 +18,10 @@ const SERVICES = [
   {
     id: 'quiz',
     icon: '❓',
-    label: 'إنشاء أسئل',
+    label: 'إنشاء أسئلة',
     color: '#1565c0',
     colorLight: 'rgba(21,101,192,0.08)',
-    description: 'نصمم لك أسئل مناسب لمادتك ونمطك المطلوب',
+    description: 'نصمم لك أسئلة مناسب لمادتك ونمطك المطلوب',
     fields: ['studentName', 'studentPhone', 'subject', 'questionStyle', 'questionCount', 'notes'],
   },
   {
@@ -47,8 +47,8 @@ const SERVICES = [
 const QUESTION_STYLES = [
   'اتيار من متعدد (MCQ)',
   'صح وطأ',
-  'أسئل مقالي',
-  'أسئل قصير',
+  'أسئلة مقالي',
+  'أسئلة قصير',
   'حل مسائل / تمارين',
   'متلط',
 ];
@@ -159,7 +159,7 @@ export default function RequestServicesSection() {
         <div className="rss-badge">✨ خدمات الفريق</div>
         <h2 className="rss-title">اطلب ما تحتاجه</h2>
         <p className="rss-subtitle">
-          سواء ملص مادة، إنشاء أسئل، أو اقتراح فكر — نحن هنا لمساعدتك
+          سواء ملص مادة، إنشاء أسئلة، أو اقتراح فكر — نحن هنا لمساعدتك
         </p>
       </div>
 
@@ -245,7 +245,7 @@ export default function RequestServicesSection() {
                     <input className="rss-input" placeholder="مثال: قواعد بيانات، برمج متقدم..." required
                       value={form.subject || ''} onChange={e => set('subject', e.target.value)} />
                   </Field>
-                  <Field label="نمط الأسئل">
+                  <Field label="نمط الأسئلة">
                     <div className="rss-chips">
                       {QUESTION_STYLES.map(style => (
                         <button type="button" key={style}
@@ -256,7 +256,7 @@ export default function RequestServicesSection() {
                       ))}
                     </div>
                   </Field>
-                  <Field label="عدد الأسئل المطلوب">
+                  <Field label="عدد الأسئلة المطلوب">
                     <div className="rss-count-row">
                       {[5, 10, 15, 20, 25, 30].map(n => (
                         <button type="button" key={n}
@@ -269,7 +269,7 @@ export default function RequestServicesSection() {
                   </Field>
                   <Field label="ملاحظات إضافي">
                     <textarea className="rss-textarea" rows={3}
-                      placeholder="مثال: يوجد كتاب معين أو نقاط محدد أريد الأسئل منها..."
+                      placeholder="مثال: يوجد كتاب معين أو نقاط محدد أريد الأسئلة منها..."
                       value={form.notes || ''} onChange={e => set('notes', e.target.value)} />
                   </Field>
                 </>}

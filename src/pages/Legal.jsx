@@ -16,7 +16,7 @@ const Legal = () => {
                 <div className="legal-hero-overlay"></div>
                 <div className="legal-hero-content">
                     <h1>{isAr ? 'حقوق الملكي والصوصي' : 'Copyright & Privacy'} ⚖️</h1>
-                    <p>{isAr ? 'المعلومات القانوني وسياس استدام منص مكانك الجامعي' : 'Legal information and usage policy for Makanak Al-Jami\'i'}</p>
+                    <p>{isAr ? 'المعلومات القانوني وسياس استدام منصة مكانك الجامعي' : 'Legal information and usage policy for Makanak Al-Jami\'i'}</p>
                 </div>
             </div>
 
@@ -25,7 +25,7 @@ const Legal = () => {
                     <h2>{isAr ? '🛡️ الملكي الفكري' : '🛡️ Intellectual Property'}</h2>
                     <p>
                         {isAr
-                            ? 'جميع المحتويات المتوفر على منص "مكانك الجامعي"، بما في ذلك التصاميم، النصوص، البرمجيات، الصور، والشعارات، هي ملكي حصري للمطور "حسين Koon" وفريق العمل، ومحمي بموجب قوانين الملكي الفكري المعمول بها.'
+                            ? 'جميع المحتويات المتوفر على منصة "مكانك الجامعي"، بما في ذلك التصاميم، النصوص، البرمجيات، الصور، والشعارات، هي ملكي حصري للمطور "حسين Koon" وفريق العمل، ومحمي بموجب قوانين الملكي الفكري المعمول بها.'
                             : 'All content available on the "Makanak Al-Jami\'i" platform, including designs, text, software, images, and logos, is the exclusive property of developer "Hussien Koon" and the team, protected under applicable intellectual property laws.'}
                     </p>
                     <p>
@@ -69,7 +69,7 @@ const Legal = () => {
                     <h2>{isAr ? '⚖️ إلاء المسؤولي' : '⚖️ Disclaimer'}</h2>
                     <p>
                         {isAr
-                            ? 'مشروع "مكانك الجامعي" هو مبادر طلابي تطوعي غير رسمي، ولا يمثل جامع البلقاء التطبيقي بشكل رسمي. جميع المعلومات الوارد هي اجتهادات شصي لمساعد الطلاب.'
+                            ? 'مشروع "مكانك الجامعي" هو مبادرة طلابي تطوعي غير رسمي، ولا يمثل جامعة البلقاء التطبيقي بشكل رسمي. جميع المعلومات الوارد هي اجتهادات شصي لمساعد الطلاب.'
                             : '"Makanak Al-Jami\'i" project is an unofficial voluntary student initiative and does not officially represent Al-Balqa Applied University. All information provided consists of personal efforts to help students.'}
                     </p>
                 </section>

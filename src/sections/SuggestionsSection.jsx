@@ -61,7 +61,7 @@ const SuggestionsSection = () => {
             if (err.message === 'timeout') {
                 setError('تعذر الإرسال. يرجى التحقق من اتصالك بالإنترنت والمحاول مجدداً.');
             } else {
-                setError('حدث طأ أثناء الإرسال. يرجى المحاول مر أرى.');
+                setError('حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى.');
             }
         } finally {
             setIsLoading(false);

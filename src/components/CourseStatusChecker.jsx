@@ -78,11 +78,11 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
             setDonationResults(donationsRes.success ? donationsRes.data : []);
 
             if (!bookingsRes.success && !donationsRes.success) {
-                toast.error(isAr ? 'طأ في البحث' : 'Error searching');
+                toast.error(isAr ? 'خطأ في البحث' : 'Error searching');
             }
         } catch (error) {
             console.error('Search error:', error);
-            toast.error(isAr ? 'حدث طأ أثناء البحث' : 'An error occurred during search');
+            toast.error(isAr ? 'حدث خطأ أثناء البحث' : 'An error occurred during search');
         } finally {
             setLoading(false);
         }

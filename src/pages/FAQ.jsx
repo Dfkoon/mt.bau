@@ -43,7 +43,7 @@ const FAQ = () => {
                     <h1>{language === 'ar' ? 'قريباً' : 'Coming Soon'}</h1>
                     <p>
                         {language === 'ar'
-                            ? 'نعمل حالياً على بناء قاعد الأسئل الشائع لتغطي كاف استفساراتكم.'
+                            ? 'نعمل حالياً على بناء قاعد الأسئلة الشائعة لتغطي كاف استفساراتكم.'
                             : 'We are building the FAQ database to cover all your questions.'}
                     </p>
                     <div className="coming-soon-badge">
@@ -55,8 +55,8 @@ const FAQ = () => {
             <div className="content-blur-wrapper">
                 <div className="faq-hero" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1454165833767-026cc35a1651?auto=format&fit=crop&q=80')` }}>
                     <div className="hero-overlay"></div>
-                    <h1>{language === 'ar' ? 'الأسئل الشائع' : 'Frequently Asked Questions'}</h1>
-                    <p>{language === 'ar' ? 'اعثر على أجوب لأكثر الأسئل تكراراً' : 'Find answers to common questions'}</p>
+                    <h1>{language === 'ar' ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'}</h1>
+                    <p>{language === 'ar' ? 'اعثر على أجوب لأكثر الأسئلة تكراراً' : 'Find answers to common questions'}</p>
 
                     <div className="faq-search">
                         <input

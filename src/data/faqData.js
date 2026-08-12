@@ -35,7 +35,7 @@ export const faqData = {
         ]
     },
     general: {
-        title: { ar: 'أسئل عام', en: 'General Questions' },
+        title: { ar: 'أسئلة عام', en: 'General Questions' },
         questions: [
             {
                 id: 'g1',
@@ -50,7 +50,7 @@ export const faqData = {
             {
                 id: 'g3',
                 q: { ar: 'ما هي الخدمات التي يقدمها "مكانك"؟', en: 'What services does "Makanak" offer?' },
-                a: { ar: 'نوفر لك مواد دراسي، ملصات، أسئل سنوات، حساب معدل، تقويم أكاديمي، وتبادل كتب بين الطلاب.', en: 'We provide study materials, summaries, past papers, GPA calculator, academic calendar, and book exchange.' }
+                a: { ar: 'نوفر لك مواد دراسية، ملخصات، أسئلة سنوات، حساب معدل، تقويم أكاديمي، وتبادل كتب بين الطلاب.', en: 'We provide study materials, summaries, past papers, GPA calculator, academic calendar, and book exchange.' }
             }
         ]
     }

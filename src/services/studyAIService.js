@@ -16,7 +16,7 @@ const MODEL = "llama-3.3-70b-versatile";
 
 const buildQuizPrompt = (text, lang, count, type) => {
     const langNote = lang === 'ar'
-        ? 'اكتب الأسئل والإجابات باللغ العربي الفصحى.'
+        ? 'اكتب الأسئلة والإجابات باللغ العربي الفصحى.'
         : 'Write all questions and answers in English.';
 
     const typeInstructions = {
@@ -24,13 +24,13 @@ const buildQuizPrompt = (text, lang, count, type) => {
             ? `أنشئ ${count} سؤال اتيار متعدد (MCQ). لكل سؤال: نص السؤال، 4 يارات (A/B/C/D)، والإجاب الصحيح.`
             : `Generate ${count} multiple choice questions (MCQ). For each: question text, 4 options (A/B/C/D), correct answer.`,
         tf: lang === 'ar'
-            ? `أنشئ ${count} سؤال صح أو طأ. لكل سؤال: عبار وإجاب (صح/طأ) مع شرح قصير.`
+            ? `أنشئ ${count} سؤال صح أو خطأ. لكل سؤال: عبار وإجاب (صح/خطأ) مع شرح قصير.`
             : `Generate ${count} True/False questions. For each: statement, answer (True/False), brief explanation.`,
         essay: lang === 'ar'
             ? `أنشئ ${count} سؤال مقالي. لكل سؤال: نص السؤال ونموذج إجاب كامل.`
             : `Generate ${count} essay questions. For each: question text and a complete model answer.`,
         mixed: lang === 'ar'
-            ? `أنشئ ${count} سؤال متنوع (مزيج من MCQ وصح/طأ ومقالي). وضح نوع كل سؤال.`
+            ? `أنشئ ${count} سؤال متنوع (مزيج من MCQ وصح/خطأ ومقالي). وضح نوع كل سؤال.`
             : `Generate ${count} mixed questions (mix of MCQ, True/False, Essay). Label each type.`,
     };
 
@@ -60,7 +60,7 @@ ${text.slice(0, 6000)}
 
 const buildSummaryPrompt = (text, lang) => {
     if (lang === 'ar') {
-        return `أنت بير أكاديمي متصص في تليص المواد الجامعي.
+        return `أنت بير أكاديمي متصص في تلخيص المواد الجامعي.
 قم بتليص النص التالي باللغ العربي الفصحى بشكل منظم وشامل.
 
 أرجع النتيج بصيغ JSON فقط:
@@ -149,7 +149,7 @@ ${text.slice(0, 6000)}
 const buildStudyPlanPrompt = (text, lang) => {
     if (lang === 'ar') {
         return `أنت مرشد أكاديمي بير في تطيط الدراس الجامعي.
-بناءً على النص التالي، أنشئ ط دراس مصص وعملي باللغ العربي.
+بناءً على النص التالي، أنشئ خطة دراسية مصص وعملي باللغ العربي.
 
 أرجع النتيج بصيغ JSON فقط:
 {

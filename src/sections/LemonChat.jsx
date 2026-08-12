@@ -117,7 +117,7 @@ const LemonChat = () => {
             { id: 'calendar', keywords: ['تقويم', 'موعد', 'متى', 'calendar', 'date', 'schedule'], path: '/calendar', titleAr: 'التقويم الجامعي', titleEn: 'Academic Calendar', icon: '📅' },
             { id: 'materials', keywords: ['مواد', 'دراسه', 'كتب', 'materials', 'study', 'courses'], path: '/materials', titleAr: 'المواد الدراسي', titleEn: 'Study Materials', icon: '📚' },
             { id: 'plans', keywords: ['ط', 'خطط', 'ساعات', 'plans', 'tree', 'map'], path: '/plans', titleAr: 'الخطط الدراسي', titleEn: 'Academic Plans', icon: '🗺️' },
-            { id: 'quiz', keywords: ['كويز', 'اسئل', 'بنك', 'quiz', 'bank', 'questions'], path: '/quiz', titleAr: 'بنك الأسئل', titleEn: 'Question Bank', icon: '📝' },
+            { id: 'quiz', keywords: ['كويز', 'اسئل', 'بنك', 'quiz', 'bank', 'questions'], path: '/quiz', titleAr: 'بنك الأسئلة', titleEn: 'Question Bank', icon: '📝' },
             { id: 'news', keywords: ['ابار', 'اعلان', 'جديد', 'news', 'announcement', 'update'], path: '/news', titleAr: 'أبار الجامعة', titleEn: 'University News', icon: '📰' }
         ];
 

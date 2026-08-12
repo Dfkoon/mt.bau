@@ -5,69 +5,62 @@ import './GlobalSearchModal.css';
 
 const SEARCH_ITEMS = [
   // Pages
-  { id: 'p-materials', titleAr: 'المواد الدراسي والدوسيات', titleEn: 'Study Materials & Handouts', categoryAr: 'صفح', categoryEn: 'Page', link: '/materials', icon: '📚', keywords: 'مواد ط دوسي تليص اسئل بكالوريوس دبلوم' },
-  { id: 'p-plans', titleAr: 'الخطط الدراسي التفاعلي', titleEn: 'Interactive Academic Plans', categoryAr: 'صفح', categoryEn: 'Page', link: '/plans', icon: '🗺️', keywords: 'ط خطط تصص ساعات مواد اجباري اتياري' },
-  { id: 'p-grading', titleAr: 'حاسب المعدل والنظام الأكاديمي', titleEn: 'GPA Calculator & Grading System', categoryAr: 'أدا', categoryEn: 'Tool', link: '/grading', icon: '', keywords: 'معدل حساب نقاط تقدير فصلي تراكمي علامات' },
-  { id: 'p-quiz', titleAr: 'بنك الأسئل الشامل والاتبارات', titleEn: 'Question Bank & Quizzes', categoryAr: 'أدا', categoryEn: 'Tool', link: '/quiz', icon: '✍️', keywords: 'اسئل امتحانات كويز سنوات سنوات سابق بنك' },
-  { id: 'p-calendar', titleAr: 'التقويم الأكاديمي والمواعيد', titleEn: 'Academic Calendar & Schedule', categoryAr: 'معلومات', categoryEn: 'Info', link: '/calendar', icon: '📅', keywords: 'تقويم مواعيد سحب إضاف نهائي فاينل ميد دبلوم بكالوريوس' },
-  { id: 'p-exchange', titleAr: 'سوق وتبادل المواد والكتب', titleEn: 'Material Exchange & Books Marketplace', categoryAr: 'دم', categoryEn: 'Service', link: '/exchange', icon: '🔄', keywords: 'تبادل كتب دوسيات مشاريع تبرع شراء بيع سوق' },
-  { id: 'p-faq', titleAr: 'الأسئل الشائع والإجابات', titleEn: 'FAQ & Student Answers', categoryAr: 'مساعد', categoryEn: 'Help', link: '/faq', icon: '❓', keywords: 'اسئل مساعد استفسارات نظام تحويل إنذار غياب' },
-  { id: 'p-about', titleAr: 'من نحن - فريق مكانك الجامعي', titleEn: 'About Us - Makanak Al-Jami\'i', categoryAr: 'صفح', categoryEn: 'Page', link: '/about', icon: '👥', keywords: 'من نحن معلومات فريق رؤي رسال' },
+  { id: 'p-materials', titleAr: 'المواد الدراسية والدوسيات', titleEn: 'Study Materials & Handouts', categoryAr: 'صفحة', categoryEn: 'Page', link: '/materials', icon: '📚', keywords: 'مواد خطة دوسية تلخيص أسئلة بكالوريوس دبلوم' },
+  { id: 'p-plans', titleAr: 'الخطط الدراسية التفاعلية', titleEn: 'Interactive Academic Plans', categoryAr: 'صفحة', categoryEn: 'Page', link: '/plans', icon: '🗺️', keywords: 'خطة خطط تخصص ساعات مواد إجباري اختياري' },
+  { id: 'p-grading', titleAr: 'حاسبة المعدل والنظام الأكاديمي', titleEn: 'GPA Calculator & Grading System', categoryAr: 'أداة', categoryEn: 'Tool', link: '/grading', icon: '⚖️', keywords: 'معدل حساب نقاط تقدير فصلي تراكمي علامات' },
+  { id: 'p-quiz', titleAr: 'بنك الأسئلة الشامل والاختبارات', titleEn: 'Question Bank & Quizzes', categoryAr: 'أداة', categoryEn: 'Tool', link: '/quiz', icon: '✍️', keywords: 'أسئلة امتحانات كويز سنوات سنوات سابقة بنك' },
+  { id: 'p-calendar', titleAr: 'التقويم الأكاديمي والمواعيد', titleEn: 'Academic Calendar & Schedule', categoryAr: 'معلومات', categoryEn: 'Info', link: '/calendar', icon: '📅', keywords: 'تقويم مواعيد سحب وإضافة نهائي فاينل ميد دبلوم بكالوريوس' },
+  { id: 'p-exchange', titleAr: 'سوق وتبادل المواد والكتب', titleEn: 'Material Exchange & Books Marketplace', categoryAr: 'خدمة', categoryEn: 'Service', link: '/exchange', icon: '🔄', keywords: 'تبادل كتب دوسيات مشاريع تبرع شراء بيع سوق' },
+  { id: 'p-faq', titleAr: 'الأسئلة الشائعة والإجابات', titleEn: 'FAQ & Student Answers', categoryAr: 'مساعدة', categoryEn: 'Help', link: '/faq', icon: '❓', keywords: 'أسئلة مساعدة استفسارات نظام تحويل إنذار غياب' },
+  { id: 'p-about', titleAr: 'من نحن - فريق مكانك الجامعي', titleEn: 'About Us - Makanak Al-Jami\'i', categoryAr: 'صفحة', categoryEn: 'Page', link: '/about', icon: '👥', keywords: 'من نحن معلومات فريق رؤية رسالة' },
 
   // Tools & Sections
   { id: 't-nashmi', titleAr: 'المرشد الذكي "نشمي" (AI)', titleEn: 'Nashmi AI Student Advisor', categoryAr: 'ذكاء اصطناعي', categoryEn: 'AI', link: '/#lemon-chat', icon: '🤖', keywords: 'نشمي ذكاء اصطناعي مساعد استفسار ذكي ai bot' },
-  { id: 't-tip', titleAr: 'نصيح الأسبوع الأكاديمي', titleEn: 'Weekly Academic Tip', categoryAr: 'نصائح', categoryEn: 'Tips', link: '/#weekly-tip', icon: '💡', keywords: 'نصيح دراس تنظيم وقت امتحانات ذاكر' },
-  { id: 't-events', titleAr: 'الفعاليات والأحداث القادم', titleEn: 'Upcoming Events & Deadlines', categoryAr: 'أحداث', categoryEn: 'Events', link: '/#events', icon: '📢', keywords: 'فعاليات ورشات مواعيد مهم اعلانات' },
-  { id: 't-gpa-calc', titleAr: 'حاسب المعدل الفصلي والتراكمي', titleEn: 'Semester & Cumulative GPA Calculator', categoryAr: 'أدا', categoryEn: 'Tool', link: '/grading#gpa-calculator', icon: '⚖️', keywords: 'حساب معدل تراكمي فصلي ريج نقاط' },
+  { id: 't-tip', titleAr: 'نصيحة الأسبوع الأكاديمي', titleEn: 'Weekly Academic Tip', categoryAr: 'نصائح', categoryEn: 'Tips', link: '/#weekly-tip', icon: '💡', keywords: 'نصيحة دراسة تنظيم وقت امتحانات مذاكرة' },
+  { id: 't-events', titleAr: 'الفعاليات والأحداث القادمة', titleEn: 'Upcoming Events & Deadlines', categoryAr: 'أحداث', categoryEn: 'Events', link: '/#events', icon: '📢', keywords: 'فعاليات ورشات مواعيد مهمة إعلانات' },
+  { id: 't-gpa-calc', titleAr: 'حاسبة المعدل الفصلي والتراكمي', titleEn: 'Semester & Cumulative GPA Calculator', categoryAr: 'أداة', categoryEn: 'Tool', link: '/grading#gpa-calculator', icon: '⚖️', keywords: 'حساب معدل تراكمي فصلي خريج نقاط' },
 
   // Common Subjects
   { id: 's-math1', titleAr: 'تفاضل وتكامل (1 & 2)', titleEn: 'Calculus (1 & 2)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=تفاضل', icon: '📐', keywords: 'تفاضل رياضيات مادتين حساب دبلوم بكالوريوس' },
-  { id: 's-phys1', titleAr: 'فيزياء عام (1 & 2)', titleEn: 'General Physics (1 & 2)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=فيزياء', icon: '⚛️', keywords: 'فيزياء علوم تجارب معمل' },
-  { id: 's-prog', titleAr: 'أساسيات البرمج (C++ / Python)', titleEn: 'Programming Fundamentals (C++ / Python)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=برمج', icon: '💻', keywords: 'برمج كود حاسوب it c++ python سي بلس بلس' },
-  { id: 's-arabic', titleAr: 'اللغ العربي (المهارات اللغوي)', titleEn: 'Arabic Language Skills', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=عربي', icon: '📖', keywords: 'عربي لغ عربي متطلب اجباري جامع' },
-  { id: 's-english', titleAr: 'اللغ الإنجليزي (101 & 102)', titleEn: 'English Language Skills', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=انجليزي', icon: '🌐', keywords: 'انجليزي انجليزي 101 english grammar' },
-  { id: 's-national', titleAr: 'التربي الوطني والثقاف الإسلامي', titleEn: 'National Education & Islamic Culture', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=وطني', icon: '🏛️', keywords: 'تربي وطني اسلامي ثقاف متطلبات جامع' }
+  { id: 's-phys1', titleAr: 'فيزياء عامة (1 & 2)', titleEn: 'General Physics (1 & 2)', categoryAr: 'مادة', categoryEn: 'Subject', link: '/materials?search=فيزياء', icon: '⚛️', keywords: 'فيزياء علوم تجارب معمل' },
 ];
 
 const GlobalSearchModal = ({ isOpen, onClose }) => {
-  const [query, setQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const { language } = useLanguage();
   const isAr = language === 'ar';
   const navigate = useNavigate();
+
+  const [query, setQuery] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
   const listRef = useRef(null);
 
-  // Focus input when opened
+  // Filter items based on query
+  const filteredItems = SEARCH_ITEMS.filter(item => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase().trim();
+    const titleAr = (item.titleAr || '').toLowerCase();
+    const titleEn = (item.titleEn || '').toLowerCase();
+    const keywords = (item.keywords || '').toLowerCase();
+    return titleAr.includes(q) || titleEn.includes(q) || keywords.includes(q);
+  });
+
+  // Focus input when modal opens
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 50);
-    } else {
+      setTimeout(() => inputRef.current?.focus(), 50);
       setQuery('');
       setSelectedIndex(0);
     }
   }, [isOpen]);
 
-  // Filter items
-  const filteredItems = SEARCH_ITEMS.filter((item) => {
-    if (!query.trim()) return true;
-    const q = query.toLowerCase().trim();
-    const title = (isAr ? item.titleAr : item.titleEn).toLowerCase();
-    const keywords = (item.keywords || '').toLowerCase();
-    return title.includes(q) || keywords.includes(q);
-  });
-
-  // Handle keyboard shortcuts
+  // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Toggle modal with Ctrl+K or Cmd+K
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        if (isOpen) {
-          onClose();
-        }
+        onClose();
       }
 
       if (!isOpen) return;
@@ -77,10 +70,10 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
         onClose();
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev < filteredItems.length - 1 ? prev + 1 : 0));
+        setSelectedIndex(prev => (prev < filteredItems.length - 1 ? prev + 1 : 0));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : filteredItems.length - 1));
+        setSelectedIndex(prev => (prev > 0 ? prev - 1 : filteredItems.length - 1));
       } else if (e.key === 'Enter') {
         e.preventDefault();
         if (filteredItems[selectedIndex]) {
@@ -106,11 +99,16 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
   const handleSelect = (item) => {
     onClose();
     if (item.link.startsWith('/#')) {
-      navigate('/');
-      setTimeout(() => {
-        const hash = item.link.replace('/#', '#');
-        window.location.hash = hash;
-      }, 100);
+      const elementId = item.link.replace('/#', '');
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        navigate('/');
+        setTimeout(() => {
+          document.getElementById(elementId)?.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
     } else {
       navigate(item.link);
     }
@@ -127,7 +125,7 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
             ref={inputRef}
             type="text"
             className="global-search-input"
-            placeholder={isAr ? 'ابحث عن مادة، حساب معدل، أسئل، خدمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
+            placeholder={isAr ? 'ابحث عن مادة، حساب معدل، أسئلة، خدمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -147,7 +145,7 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
             <div className="no-search-results">
               <span className="no-results-icon">🔎</span>
               <p>{isAr ? 'لم نجد نتائج مطابق لبحثك' : 'No matching results found'}</p>
-              <small>{isAr ? 'جرب البحث عن اسم مادة، حساب معدل، أو أسئل' : 'Try searching for subject name, GPA, or quiz'}</small>
+              <small>{isAr ? 'جرب البحث عن اسم مادة، حساب معدل، أو أسئلة' : 'Try searching for subject name, GPA, or quiz'}</small>
             </div>
           ) : (
             filteredItems.map((item, index) => (

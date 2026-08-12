@@ -486,6 +486,7 @@ const Quiz = () => {
         } else if (dbPartInfo) {
             // It's a DB-created quiz part (leaf quiz with questions)
             baseQuiz = {
+                ...dbPartInfo,
                 id: quizId,
                 title: dbPartInfo.title,
                 titleAr: dbPartInfo.titleAr,
@@ -493,7 +494,7 @@ const Quiz = () => {
             };
         } else if (quizData[quizId]) {
             // It's a static quiz from quizData
-            baseQuiz = quizData[quizId];
+            baseQuiz = { ...quizData[quizId] };
         } else {
             // Check if it matches a part inside any category of mergedCategories (e.g. static part with no static questions but has dynamic questions)
             let foundPart = null;
@@ -509,6 +510,7 @@ const Quiz = () => {
 
             if (foundPart) {
                 baseQuiz = {
+                    ...foundPart,
                     id: quizId,
                     title: foundPart.title,
                     titleAr: foundPart.titleAr,
@@ -521,6 +523,7 @@ const Quiz = () => {
                         const subPart = p.subParts.find(sp => sp.id === quizId);
                         if (subPart) {
                             baseQuiz = {
+                                ...subPart,
                                 id: quizId,
                                 title: subPart.title,
                                 titleAr: subPart.titleAr,
@@ -825,7 +828,7 @@ const Quiz = () => {
         } else if (timeLeft === 0 && timerActive && !showResults) {
             toast.error(
                 language === 'ar'
-                    ? 'انتهى الوقت! تم إنهاء الاتبار وتصحيح إجاباتك تلقائياً.'
+                    ? 'انتهى الوقت! تم إنهاء الاختبار وتصحيح إجاباتك تلقائياً.'
                     : 'Time is up! Your quiz has been automatically submitted.',
                 { duration: 5000, icon: '⏰' }
             );
@@ -1022,7 +1025,7 @@ const Quiz = () => {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '1rem' }}>
                 <div style={{ width: 52, height: 52, border: '5px solid #e0e0e0', borderTop: '5px solid #9c27b0', borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
                 <p style={{ color: '#9c27b0', fontWeight: 600, fontSize: '1.1rem' }}>
-                    {language === 'ar' ? 'جارٍ تحميل الاتبار…' : 'Loading quiz…'}
+                    {language === 'ar' ? 'جارٍ تحميل الاختبار…' : 'Loading quiz…'}
                 </p>
             </div>
         );
@@ -1121,7 +1124,7 @@ const Quiz = () => {
 
                         {/* Moodle Breadcrumbs */}
                         <div className="moodle-breadcrumbs no-print">
-                            <Link to="/quiz" state={{ selectedCategoryId: currentSubject?.id }} className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاتبارات القصير' : 'Quizzes'}</Link>
+                            <Link to="/quiz" state={{ selectedCategoryId: currentSubject?.id }} className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاختبارات القصيرة' : 'Quizzes'}</Link>
                             {currentSubjectName && currentSubject && currentSubject.id !== quizId && (
                                 <>
                                     <span className="moodle-breadcrumb-separator">/</span>
@@ -1159,12 +1162,12 @@ const Quiz = () => {
                             </div>
                             <div className="moodle-meta-row">
                                 <span className="moodle-meta-label">{language === 'ar' ? '📅 وقت الغلق:' : '📅 Closed:'}</span>
-                                <span className="moodle-meta-value">{language === 'ar' ? 'يعتمد على انتهاء المحاول' : 'Depends on attempt completion'}</span>
+                                <span className="moodle-meta-value">{language === 'ar' ? 'يعتمد على انتهاء المحاولة' : 'Depends on attempt completion'}</span>
                             </div>
                             <hr className="moodle-meta-divider" />
                             <p className="moodle-meta-instruction">
                                 {language === 'ar'
-                                    ? 'أجب على الأسئل في دفتر ملاحظاتك وارفع صور لإجاباتك.'
+                                    ? 'أجب على الأسئلة في دفتر ملاحظاتك وارفع صوراً لإجاباتك.'
                                     : 'Answer the short-answer questions in your notebook and upload a picture of your answers.'}
                             </p>
                         </div>
@@ -1187,12 +1190,12 @@ const Quiz = () => {
                             <table className="moodle-attempts-table">
                                 <thead>
                                     <tr>
-                                        <th colSpan="2">{language === 'ar' ? 'المحاول 1' : 'Attempt 1'}</th>
+                                        <th colSpan="2">{language === 'ar' ? 'المحاولة 1' : 'Attempt 1'}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="moodle-label">{language === 'ar' ? 'الحال' : 'Status'}</td>
+                                        <td className="moodle-label">{language === 'ar' ? 'الحالة' : 'Status'}</td>
                                         <td>{language === 'ar' ? 'منتهي' : 'Finished'}</td>
                                     </tr>
                                     <tr>
@@ -1204,18 +1207,18 @@ const Quiz = () => {
                                         <td>{new Date().toLocaleString(language === 'ar' ? 'ar-EG' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })}</td>
                                     </tr>
                                     <tr>
-                                        <td className="moodle-label">{language === 'ar' ? 'المد' : 'Duration'}</td>
+                                        <td className="moodle-label">{language === 'ar' ? 'المدة' : 'Duration'}</td>
                                         <td>{Math.floor(((totalQuestions * 90) - timeLeft) / 60)} {language === 'ar' ? 'دقائق' : 'mins'} {((totalQuestions * 90) - timeLeft) % 60} {language === 'ar' ? 'ثواني' : 'secs'}</td>
                                     </tr>
                                     <tr>
-                                        <td className="moodle-label">{language === 'ar' ? 'العلام' : 'Grade'}</td>
+                                        <td className="moodle-label">{language === 'ar' ? 'العلامة' : 'Grade'}</td>
                                         <td><strong>{score.toFixed(2)}</strong> {language === 'ar' ? 'من' : 'out of'} {totalQuestions.toFixed(2)} (<strong>{Math.round(percentage)}</strong>%)</td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td colSpan="2" className="moodle-review-link">
-                                            <a href="#quiz-review-section" onClick={(e) => { e.preventDefault(); document.getElementById('quiz-review-section').scrollIntoView({ behavior: 'smooth' }); }}>{language === 'ar' ? 'مراجع' : 'Review'}</a>
+                                            <a href="#quiz-review-section" onClick={(e) => { e.preventDefault(); document.getElementById('quiz-review-section').scrollIntoView({ behavior: 'smooth' }); }}>{language === 'ar' ? 'مراجعة' : 'Review'}</a>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -1232,16 +1235,16 @@ const Quiz = () => {
                                     }}
                                     className="moodle-back-btn"
                                 >
-                                    {language === 'ar' ? 'العود إلى المقرر الدراسي' : 'Back to the course'}
+                                    {language === 'ar' ? 'العودة إلى المقرر الدراسي' : 'Back to the course'}
                                 </button>
                                 <button onClick={restartQuiz} className="moodle-back-btn" style={{ backgroundColor: '#0f6cbf', color: 'white', borderColor: '#0a4a84' }}>
-                                    🔄 {language === 'ar' ? 'إعاد الاتبار' : 'Restart Quiz'}
+                                    🔄 {language === 'ar' ? 'إعادة الاختبار' : 'Restart Quiz'}
                                 </button>
                                 <button onClick={() => handlePrint('student')} className="moodle-back-btn" style={{ backgroundColor: '#f8f9fa' }}>
-                                    🖨️ {language === 'ar' ? 'طباع إجاباتي' : 'Print my answers'}
+                                    🖨️ {language === 'ar' ? 'طباعة إجاباتي' : 'Print my answers'}
                                 </button>
                                 <button onClick={() => handlePrint('model')} className="moodle-back-btn" style={{ backgroundColor: '#e7f3f5', borderColor: '#c8e1e5', color: '#0f6cbf' }}>
-                                    🖨️ {language === 'ar' ? 'طباع الإجابات النموذجي' : 'Print model answers'}
+                                    🖨️ {language === 'ar' ? 'طباعة الإجابات النموذجية' : 'Print model answers'}
                                 </button>
                             </div>
                         </div>
@@ -1257,8 +1260,8 @@ const Quiz = () => {
                             const pct     = Math.round(percentage);
                             const msgAr   = pct >= 90 ? '🏆 ممتاز! أداء رائع جداً — استمر بهذا المستوى!'
                                           : pct >= 75 ? '🌟 جيد جداً! أنت على المسار الصحيح.'
-                                          : pct >= 50 ? '💪 جيد! قليل من المراجع ورح توصل للقم.'
-                                          : '📚 لا تستسلم! راجع الأسئل الاطئ وحاول مجدداً.';
+                                          : pct >= 50 ? '💪 جيد! قليل من المراجعة وسوف تصل للقمة.'
+                                          : '📚 لا تستسلم! راجع الأسئلة الخاطئة وحاول مجدداً.';
                             const msgEn   = pct >= 90 ? '🏆 Excellent! Outstanding performance — keep it up!'
                                           : pct >= 75 ? '🌟 Very Good! You are on the right track.'
                                           : pct >= 50 ? "💪 Good! A bit more review and you'll reach the top."
@@ -1271,7 +1274,7 @@ const Quiz = () => {
                                     </h4>
                                     <div style={{ marginBottom:'16px' }}>
                                         <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.8rem', fontWeight:700, marginBottom:'6px', opacity:0.7 }}>
-                                            <span>{language === 'ar' ? 'النتيج الإجمالي' : 'Overall Score'}</span>
+                                            <span>{language === 'ar' ? 'النتيجة الإجمالية' : 'Overall Score'}</span>
                                             <span style={{ color:barColor, fontWeight:900 }}>{pct}%</span>
                                         </div>
                                         <div style={{ height:'10px', borderRadius:'50px', background:'rgba(0,0,0,0.08)', overflow:'hidden' }}>
@@ -1281,7 +1284,7 @@ const Quiz = () => {
                                     <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'16px' }}>
                                         {[
                                             { label: language==='ar'?'✅ صحيح':'✅ Correct',  val:correct, color:'#10b981', bg:'rgba(16,185,129,0.08)'   },
-                                            { label: language==='ar'?'❌ اطئ':'❌ Wrong',    val:wrong,   color:'#e02b20', bg:'rgba(224,43,32,0.08)'    },
+                                            { label: language==='ar'?'❌ خاطئ':'❌ Wrong',    val:wrong,   color:'#e02b20', bg:'rgba(224,43,32,0.08)'    },
                                             { label: language==='ar'?'⏭️ متروك':'⏭️ Skipped',val:skipped, color:'#9ca3af', bg:'rgba(156,163,175,0.08)'  },
                                         ].map((s,i) => (
                                             <div key={i} style={{ textAlign:'center', padding:'10px 6px', borderRadius:'10px', background:s.bg, border:`1px solid ${s.color}22` }}>
@@ -1390,7 +1393,7 @@ const Quiz = () => {
                                                 <div className="moodle-q-info-box">
                                                     <div className="moodle-q-num"><strong>{language === 'ar' ? 'سؤال ' : 'Question '} {idx + 1}</strong></div>
                                                     <div className="moodle-q-status">{statusText}</div>
-                                                    <div className="moodle-q-mark">{language === 'ar' ? `العلام ${earnedMarks.toFixed(2)} من ${(q.marks || 1.00).toFixed(2)}` : `Mark ${earnedMarks.toFixed(2)} out of ${(q.marks || 1.00).toFixed(2)}`}</div>
+                                                    <div className="moodle-q-mark">{language === 'ar' ? `العلامة ${earnedMarks.toFixed(2)} من ${(q.marks || 1.00).toFixed(2)}` : `Mark ${earnedMarks.toFixed(2)} out of ${(q.marks || 1.00).toFixed(2)}`}</div>
                                                     <div className="moodle-q-flag">
                                                         <span className="flag-icon">⚑</span> {language === 'ar' ? 'تعليم السؤال' : 'Flag question'}
                                                     </div>
@@ -1587,7 +1590,7 @@ const Quiz = () => {
                                                             {(q.type === 'tf' || q.type === 'true_false') && (
                                                                 (q.options && q.options.length >= 2 ? q.options : [
                                                                     { id: 'a', textAr: 'صح', textEn: 'True' },
-                                                                    { id: 'b', textAr: 'طأ', textEn: 'False' }
+                                                                    { id: 'b', textAr: 'خطأ', textEn: 'False' }
                                                                 ]).map((opt, oIdx) => {
                                                                     const letter = String.fromCharCode(97 + oIdx); // a, b
                                                                     const isSelected = userAnswer === opt.id;
@@ -1616,7 +1619,7 @@ const Quiz = () => {
                                                                 const userSubAns = userAnswer?.[sub.id];
                                                                 const isSubCorrect = userSubAns === sub.correctAnswer;
                                                                 const correctOptText = q.options.find(o => o.id === sub.correctAnswer)?.textEn || q.options.find(o => o.id === sub.correctAnswer)?.textAr || sub.correctAnswer;
-                                                                const userOptText = q.options.find(o => o.id === userSubAns)?.textEn || q.options.find(o => o.id === userSubAns)?.textAr || userSubAns || (language === 'ar' ? 'لم يتم الاتيار' : 'Not chosen');
+                                                                const userOptText = q.options.find(o => o.id === userSubAns)?.textEn || q.options.find(o => o.id === userSubAns)?.textAr || userSubAns || (language === 'ar' ? 'لم يتم الاختيار' : 'Not chosen');
 
                                                                 return (
                                                                     <div key={sub.id} className="moodle-matching-review-row" style={{ display: 'flex', gap: '1rem', margin: '0.5rem 0', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -1624,7 +1627,7 @@ const Quiz = () => {
                                                                         <span style={{ margin: '0 10px' }}>➔</span>
                                                                         <span className={isSubCorrect ? 'moodle-correct-text' : 'moodle-wrong-text'} style={{ padding: '2px 8px', borderRadius: '4px', background: isSubCorrect ? 'rgba(40, 167, 69, 0.1)' : 'rgba(220, 53, 69, 0.1)', color: isSubCorrect ? '#28a745' : '#dc3545' }}>
                                                                             {userOptText}
-                                                                            {isSubCorrect ? ' ✔' : ` ❌ (${language === 'ar' ? 'الإجاب الصحيح هي' : 'Correct is'}: ${correctOptText})`}
+                                                                            {isSubCorrect ? ' ✔' : ` ❌ (${language === 'ar' ? 'الإجابة الصحيحة هي' : 'Correct is'}: ${correctOptText})`}
                                                                         </span>
                                                                     </div>
                                                                 );
@@ -1633,10 +1636,10 @@ const Quiz = () => {
                                                                 <div className="moodle-essay-review-wrapper" style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                                                                     <div style={{ padding: '0.85rem 1.2rem', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.03)' }}>
                                                                         <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', marginBottom: '0.25rem' }}>
-                                                                            {language === 'ar' ? 'إجابتك المكتوب:' : 'Your written response:'}
+                                                                            {language === 'ar' ? 'إجابتك المكتوبة:' : 'Your written response:'}
                                                                         </span>
                                                                         <div style={{ fontSize: '1rem', fontStyle: 'italic', color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>
-                                                                            {userAnswer || (language === 'ar' ? 'لم يتم كتاب إجاب' : 'No answer provided')}
+                                                                            {userAnswer || (language === 'ar' ? 'لم يتم كتابة إجابة' : 'No answer provided')}
                                                                         </div>
                                                                     </div>
                                                                     {aiGradingResults[q.id] && (
@@ -1646,7 +1649,7 @@ const Quiz = () => {
                                                                                     🤖 {language === 'ar' ? 'تقييم نشمي الذكي:' : 'Nashmi AI Assessment:'}
                                                                                 </span>
                                                                                 <span style={{ fontWeight: 'bold', color: '#10b981', fontSize: '0.95rem' }}>
-                                                                                    {aiGradingResults[q.id].earnedMarks} / {(q.marks || 1).toFixed(2)} {language === 'ar' ? 'علام' : 'marks'}
+                                                                                    {aiGradingResults[q.id].earnedMarks} / {(q.marks || 1).toFixed(2)} {language === 'ar' ? 'علامة' : 'marks'}
                                                                                 </span>
                                                                             </div>
                                                                             <p style={{ margin: 0, fontSize: '0.88rem', color: '#d1d5db', lineHeight: '1.4' }}>
@@ -1664,19 +1667,19 @@ const Quiz = () => {
                                                             {q.type === 'text' || q.type === 'short_answer' || q.type === 'fill' ? (
                                                                 aiGradingResults[q.id] ? (
                                                                     aiGradingResults[q.id].score === 1
-                                                                        ? (language === 'ar' ? 'إجابتك صحيح تماماً.' : 'Your answer is fully correct.')
+                                                                        ? (language === 'ar' ? 'إجابتك صحيحة تماماً.' : 'Your answer is fully correct.')
                                                                         : aiGradingResults[q.id].score > 0
-                                                                            ? (language === 'ar' ? 'إجابتك صحيح جزئياً.' : 'Your answer is partially correct.')
-                                                                            : (language === 'ar' ? 'إجابتك غير صحيح.' : 'Your answer is incorrect.')
+                                                                            ? (language === 'ar' ? 'إجابتك صحيحة جزئياً.' : 'Your answer is partially correct.')
+                                                                            : (language === 'ar' ? 'إجابتك غير صحيحة.' : 'Your answer is incorrect.')
                                                                 ) : (
                                                                     language === 'ar' ? 'بانتظار تقييم نشمي...' : 'Waiting for Nashmi assessment...'
                                                                 )
                                                             ) : (
-                                                                (language === 'ar' ? 'إجابتك ' : 'Your answer is ') + (isCorrect ? (language === 'ar' ? 'صحيح.' : 'correct.') : (language === 'ar' ? 'غير صحيح.' : 'incorrect.'))
+                                                                (language === 'ar' ? 'إجابتك ' : 'Your answer is ') + (isCorrect ? (language === 'ar' ? 'صحيحة.' : 'correct.') : (language === 'ar' ? 'غير صحيحة.' : 'incorrect.'))
                                                             )}
                                                         </div>
                                                         <div className="feedback-correct-answer">
-                                                            {language === 'ar' ? 'الإجاب النموذجي هي: ' : 'The correct answer is: '}
+                                                            {language === 'ar' ? 'الإجابة النموذجية هي: ' : 'The correct answer is: '}
                                                             {q.type === 'mcq' ? (() => {
                                                                 const correctOpt = q.options.find(o => o.id === q.correctAnswer);
                                                                 if (!correctOpt) return null;
@@ -1705,10 +1708,10 @@ const Quiz = () => {
                                                                     </div>
                                                                 );
                                                             })() : q.type === 'matching'
-                                                                ? (language === 'ar' ? 'موضح باللون الأضر أعلاه' : 'indicated in green above')
+                                                                ? (language === 'ar' ? 'موضح باللون الأخضر أعلاه' : 'indicated in green above')
                                                                 : q.type === 'text' || q.type === 'short_answer' || q.type === 'fill'
-                                                                    ? (q.correctAnswer || (language === 'ar' ? 'لا توجد إجاب نموذجي محدد' : 'No model answer defined'))
-                                                                    : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'طأ' : 'False'))}
+                                                                    ? (q.correctAnswer || (language === 'ar' ? 'لا توجد إجابة نموذجية محددة' : 'No model answer defined'))
+                                                                    : ((q.correctAnswer === 'a' || q.correctAnswer === true) ? (displayLang === 'ar' ? 'صح' : 'True') : (displayLang === 'ar' ? 'خطأ' : 'False'))}
                                                         </div>
                                                         {(q.explanation || q.explanationAr) && (
                                                             <div className="explanation" style={{ marginTop: '1rem', borderLeft: language === 'en' ? '4px solid #FFC107' : 'none', borderRight: language === 'ar' ? '4px solid #FFC107' : 'none' }}>
@@ -1728,9 +1731,9 @@ const Quiz = () => {
                                     <div className="moodle-nav-block">
                                         <div className="moodle-close-drawer-row">
                                             <button className="moodle-close-drawer-btn" style={{ visibility: 'hidden' }}>✕</button>
-                                            <span>{language === 'ar' ? 'إغلاق درج الكتل' : 'Close block drawer'}</span>
+                                            <span>{language === 'ar' ? 'إغلاق قائمة التصفح' : 'Close block drawer'}</span>
                                         </div>
-                                        <h3 className="moodle-nav-title">{language === 'ar' ? 'التنقل عبر الاتبار' : 'Quiz navigation'}</h3>
+                                        <h3 className="moodle-nav-title">{language === 'ar' ? 'التنقل عبر الاختبار' : 'Quiz navigation'}</h3>
                                         <div className="moodle-nav-grid">
                                             {currentQuiz.questions.map((q, idx) => {
                                                 const originalUserAnswer = userAnswers[q.id];
@@ -1802,8 +1805,8 @@ const Quiz = () => {
                                             })}
                                         </div>
                                         <div className="moodle-nav-links">
-                                            <a href="#show-one" onClick={(e) => e.preventDefault()}>{language === 'ar' ? 'إظهار صفح واحد في كل مر' : 'Show one page at a time'}</a>
-                                            <a href="#finish-review" onClick={(e) => { e.preventDefault(); window.scrollTo(0, 0); }}>{language === 'ar' ? 'إنهاء المراجع' : 'Finish review'}</a>
+                                            <a href="#show-one" onClick={(e) => e.preventDefault()}>{language === 'ar' ? 'إظهار صفحة واحدة في كل مرة' : 'Show one page at a time'}</a>
+                                            <a href="#finish-review" onClick={(e) => { e.preventDefault(); window.scrollTo(0, 0); }}>{language === 'ar' ? 'إنهاء المراجعة' : 'Finish review'}</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1826,7 +1829,7 @@ const Quiz = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '1rem' }}>
                     <div className="loading-spinner" style={{ width: 48, height: 48, border: '4px solid #e0e0e0', borderTop: '4px solid #9c27b0', borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
                     <p style={{ color: '#9c27b0', fontWeight: 600, fontSize: '1.1rem' }}>
-                        {language === 'ar' ? 'جارٍ تحميل الأسئل…' : 'Loading questions…'}
+                        {language === 'ar' ? 'جارٍ تحميل الأسئلة…' : 'Loading questions…'}
                     </p>
                 </div>
             );
@@ -1845,7 +1848,7 @@ const Quiz = () => {
 
                 {/* Moodle Breadcrumbs */}
                 <div className="moodle-breadcrumbs no-print">
-                    <Link to="/quiz" state={{ selectedCategoryId: currentSubject?.id }} className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاتبارات القصير' : 'Quizzes'}</Link>
+                    <Link to="/quiz" state={{ selectedCategoryId: currentSubject?.id }} className="moodle-breadcrumb-item moodle-breadcrumb-link" style={{ textDecoration: 'none', color: '#0f6cbf' }}>{language === 'ar' ? 'الاختبارات القصير' : 'Quizzes'}</Link>
                     {currentSubjectName && currentSubject && currentSubject.id !== quizId && (
                         <>
                             <span className="moodle-breadcrumb-separator">/</span>
@@ -1928,7 +1931,7 @@ const Quiz = () => {
                             <div className="banner-icon">💡</div>
                             <div className="banner-text">
                                 {language === 'ar'
-                                    ? 'عند مواجهتك سؤالاً تعتقد أن به طأً، يرجى تعليم السؤال لنقوم بمراجعته.'
+                                    ? 'عند مواجهتك سؤالاً تعتقد أن به خطأً، يرجى تعليم السؤال لنقوم بمراجعته.'
                                     : 'If you encounter a question you believe has an error, please "Flag" it for immediate review.'}
                             </div>
                         </div>
@@ -1961,7 +1964,7 @@ const Quiz = () => {
                                 >
                                     <span className="flag-icon">⚑</span>{' '}
                                     {flaggedQuestions.has(question.id)
-                                        ? (language === 'ar' ? 'إزال العلام' : 'Remove flag')
+                                        ? (language === 'ar' ? 'إزال العلامة' : 'Remove flag')
                                         : (language === 'ar' ? 'تعليم السؤال' : 'Flag question')}
                                 </button>
 
@@ -2188,7 +2191,7 @@ const Quiz = () => {
                                         ) : (question.type !== 'multi_select' && question.type !== 'text' && question.type !== 'short_answer' && question.type !== 'fill' && question.type !== 'matching') ? (
                                             (question.options && question.options.length >= 2 ? question.options : [
                                                 { id: 'a', textAr: 'صح', textEn: 'True' },
-                                                { id: 'b', textAr: 'طأ', textEn: 'False' }
+                                                { id: 'b', textAr: 'خطأ', textEn: 'False' }
                                             ]).map((opt, oIdx) => {
                                                 const letter = String.fromCharCode(97 + oIdx); // a, b, c, d
                                                 const isSelected = userAnswers[question.id] === opt.id;
@@ -2240,7 +2243,7 @@ const Quiz = () => {
                                                     </div>
                                                 );
                                             })
-                                        ) : question.type === 'text' || question.type === 'short_answer' || question.type === 'fill' ? (
+                                        ) : (question.type === 'text' || question.type === 'short_answer' || question.type === 'fill') ? (
                                             <div className="moodle-text-answer-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
                                                 <input
                                                     type="text"
@@ -2257,11 +2260,11 @@ const Quiz = () => {
                                                         background: '#fff',
                                                         color: '#212529',
                                                         fontSize: '0.95rem'
-                                                    }}
+                                                     }}
                                                 />
                                                 {question.correctAnswer && showResults && (
                                                     <div style={{ color: '#495057', fontSize: '0.95rem' }}>
-                                                        <strong>{language === 'ar' ? 'الإجاب الصحيح:' : 'Correct answer:'}</strong> {question.correctAnswer}
+                                                        <strong>{language === 'ar' ? 'الإجابة الصحيحة:' : 'Correct answer:'}</strong> {question.correctAnswer}
                                                     </div>
                                                 )}
                                             </div>
@@ -2290,8 +2293,8 @@ const Quiz = () => {
                                                                         }));
                                                                     }}
                                                                 >
-                                                                    <option value="">{language === 'ar' ? 'اتر...' : 'Choose...'}</option>
-                                                                    {question.options.map(opt => (
+                                                                    <option value="">{language === 'ar' ? 'اختر...' : 'Choose...'}</option>
+                                                                    {(question.options || []).map(opt => (
                                                                         <option key={opt.id} value={opt.id}>
                                                                             {displayLang === 'ar' ? (opt.textAr || opt.id) : (opt.textEn || opt.id)}
                                                                         </option>
@@ -2308,13 +2311,12 @@ const Quiz = () => {
                             </div>
                         </div>
 
-                        {/* Footer Controls / Navigation buttons inside main column */}
-                        <div className="quiz-footer moodle-quiz-footer no-print">
+                                                 <div className="quiz-footer moodle-quiz-footer no-print">
                             <div className="footer-controls">
                                 <button
                                     className="nav-btn exit-quiz-btn"
                                     onClick={() => {
-                                        if (window.confirm(language === 'ar' ? 'هل أنت متأكد من الروج؟ سيتم فقدان تقدمك.' : 'Are you sure you want to exit? Your progress will be lost.')) {
+                                        if (window.confirm(language === 'ar' ? 'هل أنت متأكد من الخروج؟ سيتم فقدان تقدمك.' : 'Are you sure you want to exit? Your progress will be lost.')) {
                                             setUserAnswers({});
                                             setCurrentQuestionIndex(0);
                                             setFlaggedQuestions(new Set());
@@ -2323,7 +2325,7 @@ const Quiz = () => {
                                         }
                                     }}
                                 >
-                                    {language === 'ar' ? 'العود للقائم' : 'Back to List'}
+                                    {language === 'ar' ? 'العودة للقائمة' : 'Back to List'}
                                 </button>
 
                                 <button
@@ -2331,7 +2333,7 @@ const Quiz = () => {
                                     onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
                                     disabled={currentQuestionIndex === 0}
                                 >
-                                    {language === 'ar' ? 'الصفحة السابق' : 'Previous page'}
+                                    {language === 'ar' ? 'الصفحة السابقة' : 'Previous page'}
                                 </button>
 
                                 <span className="question-counter">
@@ -2344,7 +2346,7 @@ const Quiz = () => {
                                         onClick={finishQuiz}
                                         style={{ backgroundColor: '#0f6cbf', color: '#fff' }}
                                     >
-                                        {language === 'ar' ? 'إنهاء المحاول...' : 'Finish attempt...'}
+                                        {language === 'ar' ? 'إنهاء المحاولة...' : 'Finish attempt...'}
                                     </button>
                                 ) : (
                                     <button
@@ -2352,7 +2354,7 @@ const Quiz = () => {
                                         onClick={() => setCurrentQuestionIndex(prev => Math.min(currentQuiz.questions.length - 1, prev + 1))}
                                         style={{ backgroundColor: '#0f6cbf', color: '#fff' }}
                                     >
-                                        {language === 'ar' ? 'الصفحة التالي' : 'Next page'}
+                                        {language === 'ar' ? 'الصفحة التالية' : 'Next page'}
                                     </button>
                                 )}
                             </div>
@@ -2368,9 +2370,9 @@ const Quiz = () => {
                             </div>
                             <div className="moodle-close-drawer-row">
                                 <button className="moodle-close-drawer-btn" style={{ visibility: 'hidden' }}>✕</button>
-                                <span>{language === 'ar' ? 'إغلاق درج الكتل' : 'Close block drawer'}</span>
+                                <span>{language === 'ar' ? 'إغلاق قائمة التصفح' : 'Close block drawer'}</span>
                             </div>
-                            <h3 className="moodle-nav-title">{language === 'ar' ? 'التنقل عبر الاتبار' : 'Quiz navigation'}</h3>
+                            <h3 className="moodle-nav-title">{language === 'ar' ? 'التنقل عبر الاختبار' : 'Quiz navigation'}</h3>
                             <div className="moodle-nav-grid">
                                 {currentQuiz.questions.map((q, idx) => {
                                     const isAnswered = userAnswers[q.id] !== undefined;
@@ -2392,7 +2394,7 @@ const Quiz = () => {
                             </div>
                             <div className="moodle-nav-links">
                                 <a href="#finish-attempt" onClick={(e) => { e.preventDefault(); finishQuiz(); }}>
-                                    {language === 'ar' ? 'إنهاء المحاول...' : 'Finish attempt...'}
+                                    {language === 'ar' ? 'إنهاء المحاولة...' : 'Finish attempt...'}
                                 </a>
                             </div>
                         </div>
@@ -2430,7 +2432,7 @@ const Quiz = () => {
                                 <div className="drawer-handle" onClick={() => setIsMobileDrawerOpen(false)} />
                                 <div className="drawer-header">
                                     <span className="drawer-icon">🧭</span>
-                                    <h3>{language === 'ar' ? 'ريط الأسئل والتنقل' : 'Question Map & Navigation'}</h3>
+                                    <h3>{language === 'ar' ? 'خريطة الأسئلة والتنقل' : 'Question Map & Navigation'}</h3>
                                     <button className="close-drawer-btn" onClick={() => setIsMobileDrawerOpen(false)}>✕</button>
                                 </div>
 
@@ -2467,7 +2469,7 @@ const Quiz = () => {
                                         finishQuiz();
                                     }} style={{ backgroundColor: '#0f6cbf' }}>
                                         <span className="btn-icon">🏁</span>
-                                        {language === 'ar' ? 'إنهاء المحاول وتصحيح الاتبار' : 'Finish Attempt & Score'}
+                                        {language === 'ar' ? 'إنهاء المحاولة وتصحيح الاختبار' : 'Finish Attempt & Score'}
                                     </button>
                                 </div>
                             </motion.div>
@@ -2496,7 +2498,7 @@ const Quiz = () => {
                 {selectedCategory ? (
                     <div className="parts-selection fade-in">
                         <button className="back-btn" onClick={() => setSelectedCategory(null)}>
-                            {language === 'ar' ? '← العود للمواد' : '← Back to Subjects'}
+                            {language === 'ar' ? '← العودة للمواد' : '← Back to Subjects'}
                         </button>
                         <h2 className="selection-title">
                             {language === 'ar' ? selectedCategory.nameAr : selectedCategory.name}
@@ -2521,9 +2523,9 @@ const Quiz = () => {
                                             >
                                                 <div className="category-icon">{selectedCategory.icon}</div>
                                                 <h3>{language === 'ar' ? subPart.titleAr : subPart.title}</h3>
-                                                <p>{totalCount} {language === 'ar' ? 'أسئل' : 'Questions'}</p>
+                                                <p>{totalCount} {language === 'ar' ? 'أسئلة' : 'Questions'}</p>
                                                 <span className="start-btn">
-                                                    {hasQuestions ? (language === 'ar' ? 'ابدأ الاتبار' : 'Start') : (language === 'ar' ? 'لم تتوفر بعد' : 'Not available')}
+                                                    {hasQuestions ? (language === 'ar' ? 'ابدأ الاختبار' : 'Start') : (language === 'ar' ? 'لم تتوفر بعد' : 'Not available')}
                                                 </span>
                                             </Link>
                                         );
@@ -2575,7 +2577,7 @@ const Quiz = () => {
                             <span className="disclaimer-icon">💡</span>
                             <p>
                                 {language === 'ar'
-                                    ? 'تنويه: الأسئل الموجود هنا هي عبار عن أسئل سنوات سابق تم تحويلها لنمط اتبار تفاعلي'
+                                    ? 'تنويه: الأسئلة الموجود هنا هي عبار عن أسئلة سنوات سابق تم تحويلها لنمط اختبار تفاعلي'
                                     : 'Note: The questions provided here are past paper questions adapted into an interactive test format'
                                 }
                             </p>
@@ -2696,7 +2698,7 @@ const Quiz = () => {
                                     }
                                 </p>
                                 <button className="clear-results-btn" onClick={() => setSearchTerm('')}>
-                                    {language === 'ar' ? 'عرض كاف المواد' : 'View all subjects'}
+                                    {language === 'ar' ? 'عرض كافة المواد' : 'View all subjects'}
                                 </button>
                             </div>
                         )}
@@ -2721,7 +2723,7 @@ const Quiz = () => {
                                     <h3>{language === 'ar' ? 'ساهم في إثراء محتوى مكانك ✨' : 'Share & Enrich Makanak Content ✨'}</h3>
                                     <p>
                                         {language === 'ar'
-                                            ? 'نرحب بمساهماتكم سواء كانت أسئل سنوات، كويزات، ملصات، أو روابط مفيد. ساعد زملائك وكن جزءاً من مسير الير.'
+                                            ? 'نرحب بمساهماتكم سواء كانت أسئلة سنوات، اختبارات قصيرة، ملخصات، أو روابط مفيدة. ساعد زملائك وكن جزءاً من مسيرة الخير.'
                                             : 'We welcome your contributions! Share past papers, quizzes, summaries, or helpful links to benefit all students.'}
                                     </p>
                                 </div>

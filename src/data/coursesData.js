@@ -410,7 +410,7 @@ export const coursesData = {
                 slides: 'https://drive.google.com/drive/folders/14u8_FOxuJH7EgyKZs5ticMsUCUnBtjHW?usp=drive_link'
             }
         },
-        // --- مواد متطلب تصص إجباري لجميع التصصات ---
+        // --- مواد متطلب تخصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -542,7 +542,7 @@ export const coursesData = {
     ai_cyber_mandatory: [
         {
             id: 'cyber_pen_test',
-            name: 'اتبار الاتراق',
+            name: 'اختبار الاختراق',
             nameEn: 'Penetration Testing',
             icon: '🕵️',
             files: {
@@ -650,7 +650,7 @@ export const coursesData = {
                 video2: 'https://t.me/introtoai1/95'
             }
         },
-        // --- مواد متطلب تصص إجباري لجميع التصصات ---
+        // --- مواد متطلب تخصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -802,7 +802,7 @@ export const coursesData = {
 
     // 3. AI & Robotics (AI_Robo)
     ai_robo_mandatory: [
-        // --- مواد متطلب تصص إجباري لجميع التصصات ---
+        // --- مواد متطلب تخصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -905,7 +905,7 @@ export const coursesData = {
                 pdf: 'https://drive.google.com/drive/folders/17DxuxkT399lsoqaz44aFqoV5tuU_kO4r?usp=sharing'
             }
         },
-        // --- مواد متطلب تصص إجباري لجميع التصصات (ما عدا تحليل وتصميم وارزميات) ---
+        // --- مواد متطلب تخصص إجباري لجميع التصصات (ما عدا تحليل وتصميم وارزميات) ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -1010,7 +1010,7 @@ export const coursesData = {
             icon: '',
             files: { pdf: 'https://drive.google.com/drive/folders/1anTq3RMi-w6QbNTwBFRbgX-6jLIJ7vtw?usp=drive_link', slides: 'https://drive.google.com/drive/folders/1anTq3RMi-w6QbNTwBFRbgX-6jLIJ7vtw?usp=drive_link' }
         },
-        // --- مواد متطلب تصص إجباري لجميع التصصات ---
+        // --- مواد متطلب تخصص إجباري لجميع التصصات ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -1684,25 +1684,25 @@ export const faculties = [
                         name: 'مواد علم الحاسوب',
                         nameEn: 'Computer Science Materials',
                         url: 'https://t.me/c/1555428522/3151',
-                        description: 'شروحات تصص CS'
+                        description: 'شروحات تخصص CS'
                     },
                     {
                         name: 'مواد الرسم الحاسوبي والرسوم المتحرك',
                         nameEn: 'CGA Materials',
                         url: 'https://t.me/c/1555428522/3152',
-                        description: 'شروحات تصص CGA'
+                        description: 'شروحات تخصص CGA'
                     },
                     {
                         name: 'مواد نظم المعلومات الحاسوبي',
                         nameEn: 'CIS Materials',
                         url: 'https://t.me/c/1555428522/3153',
-                        description: 'شروحات تصص CIS'
+                        description: 'شروحات تخصص CIS'
                     },
                     {
                         name: 'مواد هندس البرمجيات',
                         nameEn: 'Software Engineering Materials',
                         url: 'https://t.me/c/1555428522/3154',
-                        description: 'شروحات تصص SE'
+                        description: 'شروحات تخصص SE'
                     }
                 ]
             }

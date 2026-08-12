@@ -6,7 +6,7 @@ export const quizData = {
     oop_midterm: {
         id: 'oop_midterm',
         title: 'Midterm Past Papers',
-        titleAr: 'أسئل سنوات ميد',
+        titleAr: 'أسئلة سنوات ميد',
         icon: '💻',
         color: '#2196F3',
         forceEnglish: true,
@@ -282,7 +282,7 @@ export const quizData = {
     oop_final: {
         id: 'oop_final',
         title: 'Final Past Papers',
-        titleAr: 'أسئل فاينل',
+        titleAr: 'أسئلة فاينل',
         icon: '💻',
         color: '#2196F3',
         forceEnglish: true,
@@ -857,7 +857,7 @@ export const quizData = {
                     { id: 'a', textEn: 'Encryption', textAr: 'التشفير' },
                     { id: 'b', textEn: 'Decryption', textAr: 'فك التشفير' },
                     { id: 'c', textEn: 'Cracking', textAr: 'الكسر' },
-                    { id: 'd', textEn: 'Ethical Hacking', textAr: 'القرصن الألاقي' }
+                    { id: 'd', textEn: 'Ethical Hacking', textAr: 'القرصن الأخلاقي' }
                 ],
                 correctAnswer: 'b',
                 marks: 2.0
@@ -1649,7 +1649,7 @@ export const quizData = {
         icon: '🕵️‍♂️',
         color: '#FF7043',
         forceEnglish: true,
-        noteAr: 'أسئل من المقرر الماده للدكتور نسرين ثلجي لعام الدراسي 2026 الفصل الدراسي الاول',
+        noteAr: 'أسئلة من المقرر الماده للدكتور نسرين ثلجي لعام الدراسي 2026 الفصل الدراسي الاول',
         questions: [
             {
                 id: 1,
@@ -2294,7 +2294,7 @@ export const quizData = {
             { id: 'military_science_mid_p2', title: 'Part 2', titleAr: 'الجزء الثاني (20 سؤال)' },
             { id: 'military_science_mid_p3', title: 'Part 3', titleAr: 'الجزء الثالث (20 سؤال)' },
             { id: 'military_science_mid_p4', title: 'Part 4', titleAr: 'الجزء الرابع (20 سؤال)' },
-            { id: 'military_science_mid_p5', title: 'Part 5', titleAr: 'الجزء الامس (الأسئل المتبقي)' }
+            { id: 'military_science_mid_p5', title: 'Part 5', titleAr: 'الجزء الخامس (الأسئلة المتبقي)' }
         ]
     },
     military_science_final: {
@@ -2322,7 +2322,7 @@ export const quizData = {
             { id: 8, type: 'mcq', questionAr: 'من أبرز ملامح مرحل التميز الوطني والدور الإقليمي في مسير الخدمات الطبي الملكي:', options: [{ id: 'a', textAr: 'إنشاء مركز الملك علياء لأمراض وجراح القلب' }, { id: 'b', textAr: 'إقرار مشروع معالج العائلات' }, { id: 'c', textAr: 'افتتاح مدين الحسين الطبي' }, { id: 'd', textAr: 'افتتاح مستشفى اللطرون العسكري' }], correctAnswer: 'a', marks: 1 },
             { id: 9, type: 'mcq', questionAr: 'ترمز الكر الأرضي في شعار المملك الأردني الهاشمي إلى:', options: [{ id: 'a', textAr: 'النظام الملكي' }, { id: 'b', textAr: 'راي الثور العربي الكبرى' }, { id: 'c', textAr: 'انتشار الإسلام وحضارته في العالم' }, { id: 'd', textAr: 'الفداء والتضحي' }], correctAnswer: 'c', marks: 1 },
             { id: 10, type: 'mcq', questionAr: 'بدأ استدام العلم الأردني بصورته الحالي منذ:', options: [{ id: 'a', textAr: 'استقلال المملك عام 1946' }, { id: 'b', textAr: 'تأسيس إمار شرق الأردن عام 1921' }, { id: 'c', textAr: 'تشكيل أول حكوم أردني' }, { id: 'd', textAr: 'إعلان الثور العربي الكبرى' }], correctAnswer: 'b', marks: 1 },
-            { id: 11, type: 'mcq', questionAr: 'من أدوار المواطن في الحفاظ على أمن الوطن:', options: [{ id: 'a', textAr: 'التعاون مع التنظيمات المحظور' }, { id: 'b', textAr: 'إذاع الشائع' }, { id: 'c', textAr: 'رفض التطرف مهما كان مصدره' }, { id: 'd', textAr: 'البوح بأسرار البلد' }], correctAnswer: 'c', marks: 1 },
+            { id: 11, type: 'mcq', questionAr: 'من أدوار المواطن في الحفاظ على أمن الوطن:', options: [{ id: 'a', textAr: 'التعاون مع التنظيمات المحظور' }, { id: 'b', textAr: 'إذاع الشائعة' }, { id: 'c', textAr: 'رفض التطرف مهما كان مصدره' }, { id: 'd', textAr: 'البوح بأسرار البلد' }], correctAnswer: 'c', marks: 1 },
             { id: 12, type: 'mcq', questionAr: 'أصدر جلال الملك الحسين بن طلال بعد حرب الليج الثاني كتاب بعنوان:', options: [{ id: 'a', textAr: 'مهنتي كملك' }, { id: 'b', textAr: 'أحاديث ملكي' }, { id: 'c', textAr: 'الكتاب الأبيض' }, { id: 'd', textAr: 'الحرب العراقي الإيراني' }], correctAnswer: 'c', marks: 1 },
             { id: 13, type: 'mcq', questionAr: 'إدام الاتصالات اللازم لنقل الصوت والصور والمعلومات من واجبات:', options: [{ id: 'a', textAr: 'أسلح المناور' }, { id: 'b', textAr: 'أسلح الإسناد' }, { id: 'c', textAr: 'سلاح اللاسلكي الملكي' }, { id: 'd', textAr: 'سلاح الهندس الملكي' }], correctAnswer: 'c', marks: 1 },
             { id: 14, type: 'mcq', questionAr: 'أطلق الشريف الحسين بن علي رصاص الثور العربي الكبرى من:', options: [{ id: 'a', textAr: 'مك المكرم 1916' }, { id: 'b', textAr: 'مك المكرم 1917' }, { id: 'c', textAr: 'المدين المنور 1917' }, { id: 'd', textAr: 'عمان 1916' }], correctAnswer: 'a', marks: 1 },
@@ -2342,7 +2342,7 @@ export const quizData = {
         color: '#5D4037',
         questions: [
             { id: 21, type: 'mcq', questionAr: 'الوحد المعني بتأمين المواد والحاجات اليومي للوحدات هي:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'وحدات الخدمات' }, { id: 'c', textAr: 'سلاح اللاسلكي' }, { id: 'd', textAr: 'المشا والدروع' }], correctAnswer: 'b', marks: 1 },
-            { id: 22, type: 'mcq', questionAr: 'أهمي مشارك الأردن في حرب 1973 تمثلت بـ:', options: [{ id: 'a', textAr: 'إشغال جزء من القوات الإسرائيلي' }, { id: 'b', textAr: 'اتراق دفاعات العدو في العراق' }, { id: 'c', textAr: 'حرمان العدو من الالتفاف على القوات المصري' }, { id: 'd', textAr: 'استدام الأراضي المصري' }], correctAnswer: 'a', marks: 1 },
+            { id: 22, type: 'mcq', questionAr: 'أهمي مشارك الأردن في حرب 1973 تمثلت بـ:', options: [{ id: 'a', textAr: 'إشغال جزء من القوات الإسرائيلي' }, { id: 'b', textAr: 'اختراق دفاعات العدو في العراق' }, { id: 'c', textAr: 'حرمان العدو من الالتفاف على القوات المصري' }, { id: 'd', textAr: 'استدام الأراضي المصري' }], correctAnswer: 'a', marks: 1 },
             { id: 23, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثور العربي الكبرى عام:', options: [{ id: 'a', textAr: '1948' }, { id: 'b', textAr: '1916' }, { id: 'c', textAr: '1918' }, { id: 'd', textAr: '1999' }], correctAnswer: 'b', marks: 1 },
             { id: 24, type: 'mcq', questionAr: 'بناء قوات مسلح نظامي حديث هدف من أهداف الثور العربي الكبرى:', options: [{ id: 'a', textAr: 'العسكري' }, { id: 'b', textAr: 'السياسي' }, { id: 'c', textAr: 'النفسي والمعنوي' }, { id: 'd', textAr: 'الاقتصادي' }], correctAnswer: 'a', marks: 1 },
             { id: 25, type: 'mcq', questionAr: 'السيطر على اللجوء غير الشرعي من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندس الملكي' }, { id: 'c', textAr: 'سلاح المشا' }, { id: 'd', textAr: 'سلاح الجو' }], correctAnswer: 'a', marks: 1 },
@@ -2424,7 +2424,7 @@ export const quizData = {
     military_science_mid_p5: {
         id: 'military_science_mid_p5',
         title: 'Mid Exam - Part 5',
-        titleAr: 'مادة الميد - الجزء الامس',
+        titleAr: 'مادة الميد - الجزء الخامس',
         icon: '🎖️',
         color: '#5D4037',
         questions: [
@@ -2459,7 +2459,7 @@ export const quizData = {
             { id: 1, type: 'mcq', questionAr: 'التزام الألاق الحميد يزيد في إيمان العبد كما أن سوء اللق ينقص من الإيمان، ويدل على هذا المعنى النص الشرعي الآتي:', options: [{ id: 'a', textAr: 'حديث: أكمل المؤمنين إيمانًا أحسنهم لقًا' }, { id: 'b', textAr: 'حديث: الإيمان بضع وسبعون شعب' }, { id: 'c', textAr: 'حديث: لا يزني الزاني حين يزني وهو مؤمن' }, { id: 'd', textAr: 'حديث: إنما بعثت لأتمم مكارم الألاق' }], correctAnswer: 'a', marks: 1 },
             { id: 2, type: 'mcq', questionAr: 'الألاق الطيب أساس لتكوين الشصي الفردي، هذه العبار تعبّر عن أثر من آثار الألاق على:', options: [{ id: 'a', textAr: 'العباد' }, { id: 'b', textAr: 'المؤسسات التعليمي' }, { id: 'c', textAr: 'النفس الإنساني' }, { id: 'd', textAr: 'المجتمع' }], correctAnswer: 'c', marks: 1 },
             { id: 3, type: 'mcq', questionAr: 'الُلُق بضم اللام يتص في معناه اللغوي بـ:', options: [{ id: 'a', textAr: 'الهيئات' }, { id: 'b', textAr: 'الصور المدرك بالبصر' }, { id: 'c', textAr: 'الأشكال' }, { id: 'd', textAr: 'السجي' }], correctAnswer: 'd', marks: 1 },
-            { id: 4, type: 'mcq', questionAr: 'النص الشرعي الذي يدل على أن مفهوم العباد يتسع ليشمل كثيرًا من الممارسات الألاقي الحسي هو:', options: [{ id: 'a', textAr: 'قوله تعالى: إن الصلا تنهى عن الفحشاء والمنكر' }, { id: 'b', textAr: 'حديث: أتدرون ما المفلس؟' }, { id: 'c', textAr: 'حديث: كل سلامى من الناس عليه صدق كل يوم تطلع فيه الشمس' }, { id: 'd', textAr: 'حديث: من لم يدع قول الزور والعمل به فلا حاج أن يدع طعامه وشرابه' }], correctAnswer: 'c', marks: 1 },
+            { id: 4, type: 'mcq', questionAr: 'النص الشرعي الذي يدل على أن مفهوم العباد يتسع ليشمل كثيرًا من الممارسات الأخلاقي الحسي هو:', options: [{ id: 'a', textAr: 'قوله تعالى: إن الصلا تنهى عن الفحشاء والمنكر' }, { id: 'b', textAr: 'حديث: أتدرون ما المفلس؟' }, { id: 'c', textAr: 'حديث: كل سلامى من الناس عليه صدق كل يوم تطلع فيه الشمس' }, { id: 'd', textAr: 'حديث: من لم يدع قول الزور والعمل به فلا حاج أن يدع طعامه وشرابه' }], correctAnswer: 'c', marks: 1 },
             { id: 5, type: 'mcq', questionAr: 'ُلُق يعف به الإنسان عمّا ليس له به حق وإن تهيأت له ظروف العدوان عليه دون أن تلحقه إدان، المقصود هو ُلُق:', options: [{ id: 'a', textAr: 'الأمان' }, { id: 'b', textAr: 'التواضع' }, { id: 'c', textAr: 'الإيثار' }, { id: 'd', textAr: 'الكرم' }], correctAnswer: 'a', marks: 1 },
             { id: 6, type: 'mcq', questionAr: 'إن العناي بحفظ الضرورات في الإسلام يعتبر:', options: [{ id: 'a', textAr: 'دينًا وعباد ووصي من الله يثاب عليها ويعاقب على التفريط بها' }, { id: 'b', textAr: 'مجرد تشريع قانوني' }, { id: 'c', textAr: 'أمرًا مستحبًا لا واجبًا' }, { id: 'd', textAr: 'أمرًا يفرضه واقع الوجود الإنساني' }], correctAnswer: 'a', marks: 1 },
             { id: 7, type: 'mcq', questionAr: 'جاء في الحديث: لا يحل دم امرئ مسلم يشهد أن لا إله إلا الله وأني رسول الله إلا بإحدى ثلاث:', options: [{ id: 'a', textAr: 'الثيب الزاني والنفس بالنفس والتجسس' }, { id: 'b', textAr: 'الثيب الزاني والسحر والتارك لدينه' }, { id: 'c', textAr: 'الثيب الزاني والنفس بالنفس والتارك لدينه المفارق للجماع' }, { id: 'd', textAr: 'الثيب الزاني والنفس بالنفس والسحر' }], correctAnswer: 'c', marks: 1 },
@@ -2956,7 +2956,7 @@ export const quizData = {
     entrepreneurship_quiz5: {
         id: 'entrepreneurship_quiz5',
         title: 'Quiz 5',
-        titleAr: 'الكويز الامس',
+        titleAr: 'الكويز الخامس',
         icon: '📝',
         color: '#FFC107',
         forceEnglish: true,
@@ -3321,7 +3321,7 @@ export const quizData = {
     ml_midterm: {
         id: 'ml_midterm',
         title: 'Midterm Past Papers',
-        titleAr: 'أسئل سنوات ميد',
+        titleAr: 'أسئلة سنوات ميد',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -3459,7 +3459,7 @@ export const quizData = {
     ml_midterm: {
         id: 'ml_midterm',
         title: 'Midterm Past Papers',
-        titleAr: 'أسئل سنوات ميد',
+        titleAr: 'أسئلة سنوات ميد',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -3547,7 +3547,7 @@ export const quizData = {
     ml_final: {
         id: 'ml_final',
         title: 'Final Past Papers',
-        titleAr: 'أسئل فاينل',
+        titleAr: 'أسئلة فاينل',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -4618,7 +4618,7 @@ export const quizData = {
     intro_law_final: {
         id: 'intro_law_final',
         title: 'Introduction to Law Final Exam - Past Papers',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل',
         icon: '⚖️',
         color: '#795548',
         parts: [
@@ -4626,7 +4626,7 @@ export const quizData = {
             { id: 'intro_law_final_p2', title: 'Part 2', titleAr: 'الجزء الثاني' },
             { id: 'intro_law_final_p3', title: 'Part 3', titleAr: 'الجزء الثالث' },
             { id: 'intro_law_final_p4', title: 'Part 4', titleAr: 'الجزء الرابع' },
-            { id: 'intro_law_final_p5', title: 'Part 5', titleAr: 'الجزء الامس' },
+            { id: 'intro_law_final_p5', title: 'Part 5', titleAr: 'الجزء الخامس' },
             { id: 'intro_law_final_p6', title: 'Part 6', titleAr: 'الجزء السادس' },
             { id: 'intro_law_final_p7', title: 'Part 7', titleAr: 'الجزء السابع' },
             { id: 'intro_law_final_p8', title: 'Part 8', titleAr: 'الجزء الثامن' }
@@ -4636,10 +4636,10 @@ export const quizData = {
     intro_law_final_p1: {
         id: 'intro_law_final_p1',
         title: 'Introduction to Law Final - Part 1 (Q1-20)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الأول',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء الأول',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -4648,7 +4648,7 @@ export const quizData = {
                 questionAr: 'يقصد بالقاعد القانوني أنها:',
                 options: [
                     { id: 'a', textAr: 'قاعد سلوكي اجتماعي ملزم' },
-                    { id: 'b', textAr: 'قاعد ألاقي غير ملزم' },
+                    { id: 'b', textAr: 'قاعد أخلاقي غير ملزم' },
                     { id: 'c', textAr: 'قاعد ديني فقط' },
                     { id: 'd', textAr: 'قاعد تنظيمي اتياري' }
                 ],
@@ -4663,7 +4663,7 @@ export const quizData = {
                     { id: 'a', textAr: 'اللوم الاجتماعي' },
                     { id: 'b', textAr: 'الجزاء القانوني' },
                     { id: 'c', textAr: 'الجزاء الديني فقط' },
-                    { id: 'd', textAr: 'الجزاء الألاقي' }
+                    { id: 'd', textAr: 'الجزاء الأخلاقي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -4684,7 +4684,7 @@ export const quizData = {
                 id: 4,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'الفرق الجوهري بين القاعد القانوني والقاعد الألاقي هو:',
+                questionAr: 'الفرق الجوهري بين القاعد القانوني والقاعد الأخلاقي هو:',
                 options: [
                     { id: 'a', textAr: 'الجزاء' },
                     { id: 'b', textAr: 'الغاي' },
@@ -4715,7 +4715,7 @@ export const quizData = {
                     { id: 'a', textAr: 'قاعد تصدر عن السلط المتص' },
                     { id: 'b', textAr: 'قاعد عرفي' },
                     { id: 'c', textAr: 'قاعد ديني' },
-                    { id: 'd', textAr: 'قاعد ألاقي' }
+                    { id: 'd', textAr: 'قاعد أخلاقي' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4728,7 +4728,7 @@ export const quizData = {
                     { id: 'a', textAr: 'الاعتياد والاعتقاد بالإلزام' },
                     { id: 'b', textAr: 'الكتاب' },
                     { id: 'c', textAr: 'صدوره عن البرلمان' },
-                    { id: 'd', textAr: 'الجزاء الألاقي' }
+                    { id: 'd', textAr: 'الجزاء الأخلاقي' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4907,10 +4907,10 @@ export const quizData = {
     intro_law_final_p2: {
         id: 'intro_law_final_p2',
         title: 'Introduction to Law Final - Part 2 (Q21-40)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الثاني',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء الثاني',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -4985,7 +4985,7 @@ export const quizData = {
                 options: [
                     { id: 'a', textAr: 'اتياري' },
                     { id: 'b', textAr: 'عام ومجرد' },
-                    { id: 'c', textAr: 'ألاقي' },
+                    { id: 'c', textAr: 'أخلاقي' },
                     { id: 'd', textAr: 'ديني' }
                 ],
                 correctAnswer: 'b'
@@ -5072,7 +5072,7 @@ export const quizData = {
                 id: 13,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القاعد القانوني تتلف عن القاعد الألاقي من حيث:',
+                questionAr: 'القاعد القانوني تتلف عن القاعد الأخلاقي من حيث:',
                 options: [
                     { id: 'a', textAr: 'الجزاء' },
                     { id: 'b', textAr: 'المصدر' },
@@ -5178,10 +5178,10 @@ export const quizData = {
     intro_law_final_p3: {
         id: 'intro_law_final_p3',
         title: 'Introduction to Law Final - Part 3 (Q41-60)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الثالث',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء الثالث',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -5437,7 +5437,7 @@ export const quizData = {
                 questionAr: 'القاعد القانوني الجزائي تتميز بأنها:',
                 options: [
                     { id: 'a', textAr: 'اتياري' },
-                    { id: 'b', textAr: 'ألاقي' },
+                    { id: 'b', textAr: 'أخلاقي' },
                     { id: 'c', textAr: 'مقرون بجزاء' },
                     { id: 'd', textAr: 'غير ملزم' }
                 ],
@@ -5449,10 +5449,10 @@ export const quizData = {
     intro_law_final_p4: {
         id: 'intro_law_final_p4',
         title: 'Introduction to Law Final - Part 4 (Q61-80)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الرابع',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء الرابع',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -5720,10 +5720,10 @@ export const quizData = {
     intro_law_final_p5: {
         id: 'intro_law_final_p5',
         title: 'Introduction to Law Final - Part 5 (Q81-100)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الامس',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء الخامس',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -5991,10 +5991,10 @@ export const quizData = {
     intro_law_final_p6: {
         id: 'intro_law_final_p6',
         title: 'Introduction to Law Final - Part 6 (Q101-120)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء السادس',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء السادس',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -6262,10 +6262,10 @@ export const quizData = {
     intro_law_final_p7: {
         id: 'intro_law_final_p7',
         title: 'Introduction to Law Final - Part 7 (Q121-140)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء السابع',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء السابع',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -6468,7 +6468,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القانون العام ينظم العلاقات بين الأفراد والأفراد أو بين الأفراد والدول باعتبارها شصاً عادياً لا صاحب سلط وسياد.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذا القانون الاص'
+                explanationAr: 'خطأ. تصحيح: هذا القانون الاص'
             },
             {
                 id: 17,
@@ -6476,7 +6476,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القانون الإداري يبين كيف رُكبت أجزاء الآل الحكومي، بينما القانون الدستوري يبين كيف تسير ميكانيكي عملها اليومي.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: العكس هو الصحيح'
+                explanationAr: 'خطأ. تصحيح: العكس هو الصحيح'
             },
             {
                 id: 18,
@@ -6500,7 +6500,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القواعد الإجرائي (الشكلي) هي القواعد التي تضع تنظيماً موضوعياً للعلاقات كقواعد القانون المدني والتجاري.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذه القواعد الموضوعي'
+                explanationAr: 'خطأ. تصحيح: هذه القواعد الموضوعي'
             }
         ]
     },
@@ -6508,10 +6508,10 @@ export const quizData = {
     intro_law_final_p8: {
         id: 'intro_law_final_p8',
         title: 'Introduction to Law Final - Part 8 (Q141-170)',
-        titleAr: 'مدل إلى علم القانون - أسئل فاينل - الجزء الثامن',
+        titleAr: 'مدل إلى علم القانون - أسئلة فاينل - الجزء الثامن',
         icon: '⚖️',
         color: '#795548',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1,
@@ -6519,7 +6519,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'المعيار الموضوعي للتمييز بين القواعد هو الذي يستند إلى دلال الألفاظ مثل استدام المشرع لفظ "لا يجوز" أو "يقع باطلاً".',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذا المعيار الشكلي/اللفظي'
+                explanationAr: 'خطأ. تصحيح: هذا المعيار الشكلي/اللفظي'
             },
             {
                 id: 2,
@@ -6551,7 +6551,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القسم الاص من قانون العقوبات يتناول الأحكام العام التي تسري على جميع الجرائم كتعريف الجريم وأركانها.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذا القسم العام'
+                explanationAr: 'خطأ. تصحيح: هذا القسم العام'
             },
             {
                 id: 6,
@@ -6575,7 +6575,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'مبدأ إقليمي القانون يعني أن قانون الدول يطبق على جميع المنتمين لها دالها وارجها.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذا مبدأ شصي القانون'
+                explanationAr: 'خطأ. تصحيح: هذا مبدأ شصي القانون'
             },
             {
                 id: 9,
@@ -6583,7 +6583,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الجزاء المدني لا يُقاس بمقدار الحق المعتدى عليه، بل بما ينطوي عليه من إلال بنظام المجتمع لأنه حق عام.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذا وصف الجزاء الجنائي'
+                explanationAr: 'خطأ. تصحيح: هذا وصف الجزاء الجنائي'
             },
             {
                 id: 10,
@@ -6607,7 +6607,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'دائر القانون أوسع شمولاً من دائر الألاق لأن القانون يهتم بالسرائر والبواعث الدالي للنفس.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: دائر الألاق هي الأوسع وتشمل البواطن'
+                explanationAr: 'خطأ. تصحيح: دائر الألاق هي الأوسع وتشمل البواطن'
             },
             {
                 id: 13,
@@ -6623,7 +6623,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القوانين غير المكتوب (مثل الأعراف المستقر في الأذهان) تحتاج دائماً إلى التفسير لاستلاص عباراتها وتصحيح غموضها.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: القوانين المكتوب هي التي تحتاج للتفسير'
+                explanationAr: 'خطأ. تصحيح: القوانين المكتوب هي التي تحتاج للتفسير'
             },
             {
                 id: 15,
@@ -6639,7 +6639,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'تعتبر أموال الدول الاص مصص للمنفع العام مثل الطرق العام والجسور.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: الأموال العام هي المصص للمنفع العام'
+                explanationAr: 'خطأ. تصحيح: الأموال العام هي المصص للمنفع العام'
             },
             {
                 id: 17,
@@ -6647,7 +6647,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'يجوز للموظف العام وفقاً لقواعد القانون الإداري أن يتنازل عن وظيفته أو إجازته المرشي لشص آر بموجب اتفاق اص.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: لا يجوز لأنها من النظام العام'
+                explanationAr: 'خطأ. تصحيح: لا يجوز لأنها من النظام العام'
             },
             {
                 id: 18,
@@ -6663,7 +6663,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الدستور المرن هو الدستور الذي يحتاج تعديله إلى إجراءات اص صعب ومعقد تتلف عن تعديل القوانين العادي.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذا الدستور الجامد'
+                explanationAr: 'خطأ. تصحيح: هذا الدستور الجامد'
             },
             {
                 id: 20,
@@ -6703,7 +6703,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'أهلي الأداء لا علاق لها بإراد الإنسان ولا تتأثر بعوارض الأهلي كالجنون والعته.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: أهلي الوجوب هي التي لا تتأثر، أما الأداء فتتأثر بالعوارض'
+                explanationAr: 'خطأ. تصحيح: أهلي الوجوب هي التي لا تتأثر، أما الأداء فتتأثر بالعوارض'
             },
             {
                 id: 25,
@@ -6719,7 +6719,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الأشياء المثلي هي ما تتفاوت أفرادها في الصفات أو القيم تفاوتاً يعتد به ويندر وجود أفرادها في التعامل.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: هذه الأشياء القيمي'
+                explanationAr: 'خطأ. تصحيح: هذه الأشياء القيمي'
             },
             {
                 id: 27,
@@ -6743,7 +6743,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'في المعاملات المدني بالأردن، يجوز الإثبات بالبين الشصي (الشهاد) مهما بلغت قيم الالتزام التعاقدي دون قيود.',
                 correctAnswer: false,
-                explanationAr: 'طأ. تصحيح: لا يجوز إذا تجاوزت قيم الالتزام عشر دنانير ما لم يوجد دليل كتابي'
+                explanationAr: 'خطأ. تصحيح: لا يجوز إذا تجاوزت قيم الالتزام عشر دنانير ما لم يوجد دليل كتابي'
             },
             {
                 id: 30,
@@ -8264,7 +8264,7 @@ export const quizData = {
     criminal_law_general_final: {
         id: 'criminal_law_general_final',
         title: 'Penal Code Final Exam - Past Papers',
-        titleAr: 'قانون العقوبات - أسئل فاينل',
+        titleAr: 'قانون العقوبات - أسئلة فاينل',
         icon: '📜',
         color: '#F44336',
         parts: [
@@ -8277,10 +8277,10 @@ export const quizData = {
     criminal_law_general_final_p1: {
         id: 'criminal_law_general_final_p1',
         title: 'Penal Code Final - Part 1 (Q1-18)',
-        titleAr: 'قانون العقوبات - أسئل فاينل - الجزء الأول',
+        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الأول',
         icon: '📜',
         color: '#F44336',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 1, type: 'mcq', marks: 1.0,
@@ -8320,7 +8320,7 @@ export const quizData = {
                 questionAr: 'مبدأ إقليمي القوانين يعني أن الأردن يطبق قانونه الجزائي على الجرائم المرتكب على إقليمه، ويطبق القاضي الأردني قانون بلده.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8329,7 +8329,7 @@ export const quizData = {
                 questionAr: 'جريم الاعتياد يشترط لتجريمها وللمعاقب عليها تكرار العمل المادي المكون للجريم، ولا يكتفى بوقوعها مر واحد.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8404,7 +8404,7 @@ export const quizData = {
                 questionAr: 'الدفاع الشرعي ضد اعتداء صادر من شص فاقد الأهلي كالمجنون والصغير:',
                 options: [
                     { id: 'a', textAr: 'صح (لا غبار على نظري الاعتداء لـ فاقد الأهلي)' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8424,7 +8424,7 @@ export const quizData = {
                 questionAr: 'الدفاع الشرعي عن النفس ضد اعتداء صادر من موظف عام يؤدي عمله بصور مشروع ومأذون له بها قانوناً:',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ (لا يجوز الدفاع الشرعي ضد موظف يمارس عمله المشروع)' }
+                    { id: 'b', textAr: 'خطأ (لا يجوز الدفاع الشرعي ضد موظف يمارس عمله المشروع)' }
                 ],
                 correctAnswer: 'b'
             },
@@ -8444,7 +8444,7 @@ export const quizData = {
                 questionAr: 'هل للمعتدي دفاعاً شرعياً ضد من يدافع عن المال في جميع الأحوال؟',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'b'
             },
@@ -8453,7 +8453,7 @@ export const quizData = {
                 questionAr: 'المسؤولي الجنائي لا تتحقق إلا مع وجود الاتيار والإدراك والتمييز المصص لدى مرتكب الجريم.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8474,19 +8474,19 @@ export const quizData = {
     criminal_law_general_final_p2: {
         id: 'criminal_law_general_final_p2',
         title: 'Penal Code Final - Part 2 (Q19-36)',
-        titleAr: 'قانون العقوبات - أسئل فاينل - الجزء الثاني',
+        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الثاني',
         icon: '📜',
         color: '#E53935',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 19, type: 'mcq', marks: 1.0,
-                questionAr: 'المسؤولي الألاقي والالمسؤولي الجنائي تشترك كلاهما مع توافر حري الاتيار، والمسؤولي الجنائي تتطلب الإدراك والتمييز كذلك، لكنهما تتلفان في أن:',
+                questionAr: 'المسؤولي الأخلاقي والالمسؤولي الجنائي تشترك كلاهما مع توافر حري الاتيار، والمسؤولي الجنائي تتطلب الإدراك والتمييز كذلك، لكنهما تتلفان في أن:',
                 options: [
                     { id: 'a', textAr: 'المسؤولي الجنائي تقتصر على الأفراد الراشدين فقط' },
-                    { id: 'b', textAr: 'المسؤولي الألاقي كفيلها الضمير وهي مسؤولي الذات بينما العدال مظهرها القضاء' },
+                    { id: 'b', textAr: 'المسؤولي الأخلاقي كفيلها الضمير وهي مسؤولي الذات بينما العدال مظهرها القضاء' },
                     { id: 'c', textAr: 'المسؤولي الجنائي تتقبل الأشاص المعنوي' },
-                    { id: 'd', textAr: 'المسؤولي الألاقي أشد من الجنائي في العقوب' }
+                    { id: 'd', textAr: 'المسؤولي الأخلاقي أشد من الجنائي في العقوب' }
                 ],
                 correctAnswer: 'b'
             },
@@ -8506,7 +8506,7 @@ export const quizData = {
                 questionAr: 'الغلط في الوقائع يُعد مانعاً من موانع المسؤولي إذا كان غلطاً جوهرياً غير ناتج عن الإهمال.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8515,7 +8515,7 @@ export const quizData = {
                 questionAr: 'الجهل بالقانون الجنائي يعفي من المسؤولي الجنائي.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'b'
             },
@@ -8557,7 +8557,7 @@ export const quizData = {
                 questionAr: 'لا اشتراك ولا تدل في الجرائم غير المقصود.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8621,7 +8621,7 @@ export const quizData = {
                 questionAr: 'سائق سيار تجاوز الإشار الحمراء مالفاً قواعد السير وأدى ذلك إلى إصاب شص بجروح بالغ. هذه الجريم هي:',
                 options: [
                     { id: 'a', textAr: 'جريوم مقصود لأنه علم بطور تجاوز الإشار' },
-                    { id: 'b', textAr: 'جريم غير مقصود (طأ جنائي) لعدم توافر القصد الجرمي رغم وجود الركن المادي' },
+                    { id: 'b', textAr: 'جريم غير مقصود (خطأ جنائي) لعدم توافر القصد الجرمي رغم وجود الركن المادي' },
                     { id: 'c', textAr: 'جريم شروع في القتل' },
                     { id: 'd', textAr: 'ليست جريم لأنها حادث عرضي' }
                 ],
@@ -8680,10 +8680,10 @@ export const quizData = {
     criminal_law_general_final_p3: {
         id: 'criminal_law_general_final_p3',
         title: 'Penal Code Final - Part 3 (Q37-54)',
-        titleAr: 'قانون العقوبات - أسئل فاينل - الجزء الثالث',
+        titleAr: 'قانون العقوبات - أسئلة فاينل - الجزء الثالث',
         icon: '📜',
         color: '#E53935',
-        noteAr: '⚠️ ملاحظ مهم: هذه الأسئل تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
+        noteAr: '⚠️ ملاحظ مهم: هذه الأسئلة تمت كتابتها بواسط الذكاء الاصطناعي (AI). يُرجى مراجع المصادر الأكاديمي الأصلي للتأكد من صح المعلومات.',
         questions: [
             {
                 id: 37, type: 'mcq', marks: 1.0,
@@ -8751,7 +8751,7 @@ export const quizData = {
                 explanationAr: 'الجريم غير عمدي؛ لأن إراد السائق اتجهت للسلوك (تجاوز الإشار) ولكنها لم تتجه إلى تحقيق النتيج (إصاب الشص).',
                 options: [
                     { id: 'a', textAr: 'جريم مقصود؛ لأن السائق علم بطور تجاوز الإشار وتوقع النتيج' },
-                    { id: 'b', textAr: 'جريم غير مقصود (طأ غير عمدي)؛ لتوافر الركن المادي والطأ دون اتجاه إرادته للنتيج' },
+                    { id: 'b', textAr: 'جريم غير مقصود (خطأ غير عمدي)؛ لتوافر الركن المادي والطأ دون اتجاه إرادته للنتيج' },
                     { id: 'c', textAr: 'شروع في القتل العمد' },
                     { id: 'd', textAr: 'لا تعد جريم؛ لأنها حادث عرضي بحت' }
                 ],
@@ -8786,7 +8786,7 @@ export const quizData = {
                 questionAr: 'تتميز أسباب التبرير في قانون العقوبات بأنها ذات طابع موضوعي يزيل الصف الجرمي عن الفعل كلياً، بلاف موانع المسؤولي (كالجنون أو الصغر) التي لها طابع شصي ترفع العقاب عن الشص مع بقاء الفعل جريم.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
                 explanationAr: 'صحيح. أسباب التبرير موضوعي تزيل صف الجريم عن الفعل ذاته، أما موانع المسؤولي فشصي ترفع العقاب عن الشص فقط.'
@@ -8796,17 +8796,17 @@ export const quizData = {
                 questionAr: 'يجوز للمجني عليه المطالب بالتعويض المدني في حال الفعل المبرر (كالطبيب الذي يعالج مريضاً أو المدافع شرعاً) لأن الفعل يظل غير مشروع مدنياً.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'طأ. الفعل المبرر يصبح مباحاً ومشروعاً جنائياً ومدنياً، فلا مسؤولي ولا تعويض عليه.'
+                explanationAr: 'خطأ. الفعل المبرر يصبح مباحاً ومشروعاً جنائياً ومدنياً، فلا مسؤولي ولا تعويض عليه.'
             },
             {
                 id: 47, type: 'mcq', marks: 1.0,
                 questionAr: 'نظم المشرع الأردني أحكام الدفاع الشرعي في المواد 340-343 من قانون العقوبات، وأجازه للشص لرد اعتداء غير مشروع يهدد نفسه أو نفس غيره، أو ماله أو مال غيره.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
                 explanationAr: 'صحيح. الدفاع الشرعي منظم في قانون العقوبات الأردني ويشمل الدفاع عن النفس والمال لصاحبهما ولغيره.'
@@ -8816,37 +8816,37 @@ export const quizData = {
                 questionAr: 'يعتبر الشص في حال دفاع شرعي إذا قام بضرب شص آر انتقاماً منه بعد أن انتهى الاعتداء وتمكن رجال الأمن من القبض على المعتدي.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'طأ. الدفاع الشرعي يهدف لصد طر "حال" أو "وشيك"؛ أما الضرب بعد انتهاء الطر فيعد انتقاماً وجريم مستقل.'
+                explanationAr: 'خطأ. الدفاع الشرعي يهدف لصد طر "حال" أو "وشيك"؛ أما الضرب بعد انتهاء الطر فيعد انتقاماً وجريم مستقل.'
             },
             {
                 id: 49, type: 'mcq', marks: 1.0,
-                questionAr: 'رضاء المجني عليه لا يعتبر سبباً عاماً للتبرير في قانون العقوبات إلا في أحوال ضيق أجازها القانون، فلا يملك الشص التنازل عن حقه في الحيا (كالقتل رحم).',
+                questionAr: 'رضاء المجني عليه لا يعتبر سبباً عاماً للتبرير في قانون العقوبات إلا في أحوال ضيق أجازها القانون، فلا يملك الشص التنازل عن حقه في الحياة (كالقتل رحم).',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. الرضا لا يُبيح القتل أو الإيذاء الجسيم لأن الحق في الحيا وسلام الجسد من الحقوق التي لا يملك الشص التنازل عنها.'
+                explanationAr: 'صحيح. الرضا لا يُبيح القتل أو الإيذاء الجسيم لأن الحق في الحياة وسلام الجسد من الحقوق التي لا يملك الشص التنازل عنها.'
             },
             {
                 id: 50, type: 'mcq', marks: 1.0,
                 questionAr: 'لا يعاقب القانون الأردني على الشروع في الجريم إذا توقف الفاعل قسراً بسبب صرا المجني عليه أو قدوم الشرط.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'طأ. هذا التوقف قسري وارج عن إراد الجاني، وهو صلب تعريف "الشروع" المعاقب عليه قانوناً.'
+                explanationAr: 'خطأ. هذا التوقف قسري وارج عن إراد الجاني، وهو صلب تعريف "الشروع" المعاقب عليه قانوناً.'
             },
             {
                 id: 51, type: 'mcq', marks: 1.0,
                 questionAr: 'تعتبر الجريم مستحيل ويعاقب عليها كشروع إذا استحال تحقيق النتيج بسبب ظروف مادي يجهلها الجاني، مثل محاول سرق زن يظنها مليئ بالنقود وتبين أنها فارغ.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
                 explanationAr: 'صحيح. الجريم المستحيل يُعاقب عليها كشروع لوجود الطور الإجرامي وبدء التنفيذ رغم استحال النتيج.'
@@ -8856,17 +8856,17 @@ export const quizData = {
                 questionAr: 'يتوفر القصد الجرمي دائماً بمجرد حدوث النتيج الضار، حتى لو ثبت أن الجاني كان يجهل تماماً عنصراً أساسياً من عناصر الجريم وقت ارتكابها.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'b',
-                explanationAr: 'طأ. الجهل بالوقائع الجوهري ينفي العلم، وإذا انتفى العلم انتفى القصد الجرمي.'
+                explanationAr: 'خطأ. الجهل بالوقائع الجوهري ينفي العلم، وإذا انتفى العلم انتفى القصد الجرمي.'
             },
             {
                 id: 53, type: 'mcq', marks: 1.0,
                 questionAr: 'في المساهم التبعي (التدل)، يستعير المتدل صفته الإجرامي من الفعل الأصلي؛ فإذا كان فعل الفاعل الأصلي مباحاً بسبب سبب تبرير، فلا يعاقب المتدل أيضاً.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
                 explanationAr: 'صحيح. أسباب التبرير موضوعي تنصرف إلى الفعل، فإذا كان الفعل مباحاً انتفى التجريم عن كل المساهمين.'
@@ -8876,7 +8876,7 @@ export const quizData = {
                 questionAr: 'يتطلب القصد الجرمي في المساهم التبعي علم المتدل بالنشاط الإجرامي للفاعل الأصلي واتجاه إرادته إلى معون الفاعل في تحقيق هذه الجريم.',
                 options: [
                     { id: 'a', textAr: 'صح' },
-                    { id: 'b', textAr: 'طأ' }
+                    { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
                 explanationAr: 'صحيح. لا تقوم المساهم التبعي إلا بتوافر العلم بالجريم وإراد المساعد في تحقيقها.'
@@ -8894,8 +8894,8 @@ export const quizCategories = [
         color: '#2196F3',
         isNew: true,
         parts: [
-            { id: 'oop_midterm', title: 'Midterm Past Papers', titleAr: 'أسئل سنوات ميد' },
-            { id: 'oop_final', title: 'Final Past Papers', titleAr: 'أسئل فاينل' },
+            { id: 'oop_midterm', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' },
+            { id: 'oop_final', title: 'Final Past Papers', titleAr: 'أسئلة فاينل' },
             { id: 'oop_quizzes', title: 'Quizzes', titleAr: 'كويزات' }
         ]
     },
@@ -8997,7 +8997,7 @@ export const quizCategories = [
             { id: 'entrepreneurship_quiz2', title: 'Quiz 2', titleAr: 'الكويز الثاني' },
             { id: 'entrepreneurship_quiz3', title: 'Quiz 3', titleAr: 'الكويز الثالث' },
             { id: 'entrepreneurship_quiz4', title: 'Quiz 4', titleAr: 'الكويز الرابع' },
-            { id: 'entrepreneurship_quiz5', title: 'Quiz 5', titleAr: 'الكويز الامس' },
+            { id: 'entrepreneurship_quiz5', title: 'Quiz 5', titleAr: 'الكويز الخامس' },
             { id: 'entrepreneurship_quiz6', title: 'Quiz 6', titleAr: 'الكويز السادس' },
             { id: 'entrepreneurship_quiz7', title: 'Quiz 7', titleAr: 'الكويز السابع' },
             { id: 'entrepreneurship_quiz8', title: 'Quiz 8', titleAr: 'الكويز الثامن' },
@@ -9035,8 +9035,8 @@ export const quizCategories = [
         forceEnglish: true,
         isNew: true,
         parts: [
-            { id: 'ml_midterm', title: 'Midterm Past Papers', titleAr: 'أسئل سنوات ميد' },
-            { id: 'ml_final', title: 'Final Past Papers', titleAr: 'أسئل فاينل' },
+            { id: 'ml_midterm', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' },
+            { id: 'ml_final', title: 'Final Past Papers', titleAr: 'أسئلة فاينل' },
             { id: 'ml_quizzes', title: 'Quizzes', titleAr: 'كويزات' }
         ]
     },
@@ -9088,7 +9088,7 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'intro_law_quizzes', title: 'Quizzes', titleAr: 'الكويزات' },
-            { id: 'intro_law_final', title: 'Final Exam', titleAr: 'أسئل فاينل' }
+            { id: 'intro_law_final', title: 'Final Exam', titleAr: 'أسئلة فاينل' }
         ]
     },
     {
@@ -9100,7 +9100,7 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'criminal_law_general_quizzes', title: 'Quizzes', titleAr: 'الكويزات' },
-            { id: 'criminal_law_general_final', title: 'Final Exam', titleAr: 'أسئل فاينل' }
+            { id: 'criminal_law_general_final', title: 'Final Exam', titleAr: 'أسئلة فاينل' }
         ]
     },
     {
@@ -9133,7 +9133,7 @@ export const quizCategories = [
         isNew: true,
         parts: [
             { id: 'databases_quiz1', title: 'Quiz 1', titleAr: 'الكويز الأول' },
-            { id: 'databases_past_years', title: 'Past Year Questions', titleAr: 'أسئل سنوات' },
+            { id: 'databases_past_years', title: 'Past Year Questions', titleAr: 'أسئلة سنوات' },
         ]
     },
     {
@@ -9167,7 +9167,7 @@ export const quizCategories = [
         color: '#FF9800',
         isNew: true,
         parts: [
-            { id: 'prob_stats_mid', title: 'Quiz questions', titleAr: 'أسئل كويزات' },
+            { id: 'prob_stats_mid', title: 'Quiz questions', titleAr: 'أسئلة كويزات' },
             { id: 'prob_stats_final', title: 'Final Exam', titleAr: 'مادة الفاينل' }
         ]
     },
@@ -9200,7 +9200,7 @@ export const quizCategories = [
                     { id: 'df_os_quiz2', title: 'Quiz 2', titleAr: 'كويز 2' }
                 ]
             },
-            { id: 'df_operating_systems', title: 'Midterm Past Papers', titleAr: 'أسئل سنوات ميد' }
+            { id: 'df_operating_systems', title: 'Midterm Past Papers', titleAr: 'أسئلة سنوات ميد' }
         ]
     },
 

@@ -130,7 +130,7 @@ const TestimonialForm = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                     >
-                        ❌ {language === 'ar' ? 'حدث طأ، يرجى المحاول مر أرى' : 'An error occurred, please try again'}
+                        ❌ {language === 'ar' ? 'حدث خطأ، يرجى المحاولة مرة أخرى' : 'An error occurred, please try again'}
                     </motion.div>
                 )}
 

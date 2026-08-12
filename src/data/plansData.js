@@ -29,7 +29,7 @@ export const plansData = {
                 },
                 {
                     id: 3,
-                    name: 'المستوى الثالث (تصص)',
+                    name: 'المستوى الثالث (تخصص)',
                     courses: [
                         { id: 'ds', name: 'هياكل بيانات', nameEn: 'Data Structures', credits: 3, prereq: 'oop' },
                         { id: 'discrete', name: 'هياكل ورياضيات منفصل', nameEn: 'Discrete Mathematics', credits: 3, prereq: 'math102' },
@@ -51,7 +51,7 @@ export const plansData = {
                 },
                 {
                     id: 5,
-                    name: 'المستوى الامس (تصص دقيق)',
+                    name: 'المستوى الخامس (تخصص دقيق)',
                     courses: [
                         { id: 'data_recovery', name: 'استعاد البيانات + متبر', nameEn: 'Data Recovery + Lab', credits: 4, prereq: 'os_forensics' },
                         { id: 'db_forensics', name: 'التحقيقات الجنائي لقواعد البيانات', nameEn: 'Database Forensics', credits: 3, prereq: 'db_design' },
@@ -123,7 +123,7 @@ export const plansData = {
                 },
                 {
                     id: 5,
-                    name: 'الفصل الامس',
+                    name: 'الفصل الخامس',
                     courses: [
                         { id: 'algorithms', name: 'تصميم وتحليل الوارزميات + متبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
                         { id: 'crypto_basics', name: 'أساسيات التشفير + متبر', nameEn: 'Cryptography Basics + Lab', credits: 4, prereq: 'num_theory' },
@@ -196,7 +196,7 @@ export const plansData = {
                 },
                 {
                     id: 5,
-                    name: 'الفصل الامس',
+                    name: 'الفصل الخامس',
                     courses: [
                         { id: 'ml', name: 'تعلم الآل + متبر', nameEn: 'Machine Learning + Lab', credits: 4, prereq: 'ai_intro' },
                         { id: 'mobile_dev', name: 'تطوير تطبيقات الهاتف المحمول + متبر', nameEn: 'Mobile App Dev + Lab', credits: 4 },
@@ -268,7 +268,7 @@ export const plansData = {
                 },
                 {
                     id: 5,
-                    name: 'المستوى الامس (متقدم)',
+                    name: 'المستوى الخامس (متقدم)',
                     courses: [
                         { id: 'se', name: 'هندس البرمجيات', nameEn: 'Software Engineering', credits: 3 },
                         { id: 'algorithms', name: 'تصميم وتحليل الوارزميات + متبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
@@ -339,7 +339,7 @@ export const plansData = {
                 },
                 {
                     id: 5,
-                    name: 'المستوى الامس (متقدم)',
+                    name: 'المستوى الخامس (متقدم)',
                     courses: [
                         { id: 'ai_intro', name: 'مقدم في الذكاء الاصطناعي', nameEn: 'Intro to AI', credits: 3 },
                         { id: 'modeling_3d', name: 'تصميم النماذج ثلاثي الابعاد', nameEn: '3D Modeling', credits: 3 },

@@ -16,7 +16,7 @@ const STATUSES = [
 const SERVICE_TYPES = [
   { id: 'all', label: 'جميع الخدمات' },
   { id: 'summary', label: '📝 ملص مادة' },
-  { id: 'quiz', label: '❓ إنشاء أسئل' },
+  { id: 'quiz', label: '❓ إنشاء أسئلة' },
   { id: 'idea', label: '💡 اقتراح فكر' },
   { id: 'other', label: '🚀 طلب آر' },
 ];
