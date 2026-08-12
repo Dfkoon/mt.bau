@@ -49,7 +49,7 @@ export const faqData = {
             },
             {
                 id: 'g3',
-                q: { ar: 'ما هي الدمات التي يقدمها "مكانك"؟', en: 'What services does "Makanak" offer?' },
+                q: { ar: 'ما هي الخدمات التي يقدمها "مكانك"؟', en: 'What services does "Makanak" offer?' },
                 a: { ar: 'نوفر لك مواد دراسي، ملصات، أسئل سنوات، حساب معدل، تقويم أكاديمي، وتبادل كتب بين الطلاب.', en: 'We provide study materials, summaries, past papers, GPA calculator, academic calendar, and book exchange.' }
             }
         ]

@@ -6,7 +6,7 @@ import './GlobalSearchModal.css';
 const SEARCH_ITEMS = [
   // Pages
   { id: 'p-materials', titleAr: 'المواد الدراسي والدوسيات', titleEn: 'Study Materials & Handouts', categoryAr: 'صفح', categoryEn: 'Page', link: '/materials', icon: '📚', keywords: 'مواد ط دوسي تليص اسئل بكالوريوس دبلوم' },
-  { id: 'p-plans', titleAr: 'الطط الدراسي التفاعلي', titleEn: 'Interactive Academic Plans', categoryAr: 'صفح', categoryEn: 'Page', link: '/plans', icon: '🗺️', keywords: 'ط طط تصص ساعات مواد اجباري اتياري' },
+  { id: 'p-plans', titleAr: 'الخطط الدراسي التفاعلي', titleEn: 'Interactive Academic Plans', categoryAr: 'صفح', categoryEn: 'Page', link: '/plans', icon: '🗺️', keywords: 'ط خطط تصص ساعات مواد اجباري اتياري' },
   { id: 'p-grading', titleAr: 'حاسب المعدل والنظام الأكاديمي', titleEn: 'GPA Calculator & Grading System', categoryAr: 'أدا', categoryEn: 'Tool', link: '/grading', icon: '', keywords: 'معدل حساب نقاط تقدير فصلي تراكمي علامات' },
   { id: 'p-quiz', titleAr: 'بنك الأسئل الشامل والاتبارات', titleEn: 'Question Bank & Quizzes', categoryAr: 'أدا', categoryEn: 'Tool', link: '/quiz', icon: '✍️', keywords: 'اسئل امتحانات كويز سنوات سنوات سابق بنك' },
   { id: 'p-calendar', titleAr: 'التقويم الأكاديمي والمواعيد', titleEn: 'Academic Calendar & Schedule', categoryAr: 'معلومات', categoryEn: 'Info', link: '/calendar', icon: '📅', keywords: 'تقويم مواعيد سحب إضاف نهائي فاينل ميد دبلوم بكالوريوس' },
@@ -127,7 +127,7 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
             ref={inputRef}
             type="text"
             className="global-search-input"
-            placeholder={isAr ? 'ابحث عن مادة، حساب معدل، أسئل، دمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
+            placeholder={isAr ? 'ابحث عن مادة، حساب معدل، أسئل، خدمات (Ctrl + K)...' : 'Search subjects, tools, materials (Ctrl + K)...'}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);

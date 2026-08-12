@@ -223,13 +223,13 @@ const AdminCoordinators = () => {
     // Add New Coordinator
     const handleAddCoordinator = async () => {
         if (!addForm.nameAr.trim() || !addForm.password.trim()) {
-            toast.error(isAr ? 'يرجى إدال اسم المنسق وكلم المرور' : 'Please enter coordinator name and password');
+            toast.error(isAr ? 'يرجى إدخال اسم المنسق وكلم المرور' : 'Please enter coordinator name and password');
             return;
         }
 
         const newKey = addForm.key.trim().toLowerCase() || `coord_${Date.now()}`;
         if (coordinatorsList.some(c => c.key === newKey) || newKey === 'admin') {
-            toast.error(isAr ? 'معرف المنسق موجود بالفعل، يرجى اتيار اسم آر' : 'Coordinator ID already exists');
+            toast.error(isAr ? 'معرف المنسق موجود بالفعل، يرجى اختيار اسم آر' : 'Coordinator ID already exists');
             return;
         }
 
@@ -250,7 +250,7 @@ const AdminCoordinators = () => {
             await setDoc(settingsRef, { coordinators: updatedList }, { merge: true });
 
             setCoordinatorsList(updatedList);
-            toast.success(isAr ? `✅ تم إضاف المنسق (${newCoord.nameAr}) بنجاح!` : `✅ Added coordinator (${newCoord.nameAr})!`);
+            toast.success(isAr ? `✅ تم إضافة المنسق (${newCoord.nameAr}) بنجاح!` : `✅ Added coordinator (${newCoord.nameAr})!`);
             setIsAddModalOpen(false);
             setAddForm({
                 key: '',
@@ -263,7 +263,7 @@ const AdminCoordinators = () => {
             });
         } catch (err) {
             console.error('Error adding coordinator:', err);
-            toast.error(isAr ? 'فشلت إضاف المنسق' : 'Failed to add coordinator');
+            toast.error(isAr ? 'فشلت إضافة المنسق' : 'Failed to add coordinator');
         } finally {
             setSaving(false);
         }
@@ -296,7 +296,7 @@ const AdminCoordinators = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل لوح إدار المنسقين...' : 'Loading coordinator panel...'}</p>
+                <p>{isAr ? 'جاري تحميل لوح إدارة المنسقين...' : 'Loading coordinator panel...'}</p>
             </div>
         );
     }
@@ -306,7 +306,7 @@ const AdminCoordinators = () => {
         role: 'admin',
         nameAr: 'الأدمن الرئيسي',
         nameEn: 'Administrator',
-        name: isAr ? 'الأدمن (لوح التحكم)' : 'Administrator',
+        name: isAr ? 'الأدمن (لوحة التحكم)' : 'Administrator',
         email: 'admin@koon.bau.jo',
         totpEnabled: !!settings.admin2faSecret,
         resetRequested: !!settings.adminResetRequest,
@@ -315,13 +315,13 @@ const AdminCoordinators = () => {
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-                <h3 className="admin-section-title" style={{ margin: 0 }}>👥 <span>{isAr ? 'إدار المنسقين والصلاحيات' : 'Coordinators & Permissions'}</span></h3>
+                <h3 className="admin-section-title" style={{ margin: 0 }}>👥 <span>{isAr ? 'إدارة المنسقين والصلاحيات' : 'Coordinators & Permissions'}</span></h3>
                 <button 
                     className="admin-action-btn approve"
                     onClick={() => setIsAddModalOpen(true)}
                     style={{ padding: '0.6rem 1.2rem', fontSize: '0.95rem', fontWeight: 600 }}
                 >
-                    ➕ {isAr ? 'إضاف منسق جديد' : 'Add New Coordinator'}
+                    ➕ {isAr ? 'إضافة منسق جديد' : 'Add New Coordinator'}
                 </button>
             </div>
             
@@ -398,7 +398,7 @@ const AdminCoordinators = () => {
 
                             <div className="profile-body">
                                 <div className="meta-row">
-                                    <span>🔑 {isAr ? 'اسم الدول (ID):' : 'Username (ID):'}</span>
+                                    <span>🔑 {isAr ? 'اسم الدخول (ID):' : 'Username (ID):'}</span>
                                     <strong style={{ color: '#ffeaa7' }}>{coord.key}</strong>
                                 </div>
                                 <div className="meta-row">
@@ -445,7 +445,7 @@ const AdminCoordinators = () => {
 
                             {resetReq && (
                                 <div className="reset-alert-box">
-                                    ⚠️ {isAr ? 'طلب إعاد تعيين رمز 2FA معلق!' : '2FA reset requested!'}
+                                    ⚠️ {isAr ? 'طلب إعادة تعيين رمز 2FA معلق!' : '2FA reset requested!'}
                                 </div>
                             )}
 
@@ -600,12 +600,12 @@ const AdminCoordinators = () => {
                 <div className="admin-modal-overlay">
                     <div className="admin-modal-card" style={{ maxWidth: '540px' }}>
                         <div className="admin-modal-header">
-                            <h4>➕ {isAr ? 'إضاف منسق جديد' : 'Add New Coordinator'}</h4>
+                            <h4>➕ {isAr ? 'إضافة منسق جديد' : 'Add New Coordinator'}</h4>
                             <button className="close-btn" onClick={() => setIsAddModalOpen(false)}>&times;</button>
                         </div>
                         <div className="admin-modal-body">
                             <div className="qedit-field">
-                                <label className="qedit-label">{isAr ? 'اسم المستدم للدول (ID / Username):' : 'Username (ID):'}</label>
+                                <label className="qedit-label">{isAr ? 'اسم المستخدم للدول (ID / Username):' : 'Username (ID):'}</label>
                                 <input
                                     type="text"
                                     className="admin-input-field"
@@ -713,7 +713,7 @@ const AdminCoordinators = () => {
                         </div>
                         <div className="admin-modal-footer">
                             <button type="button" className="admin-action-btn approve" onClick={handleAddCoordinator} disabled={saving}>
-                                {isAr ? 'إضاف المنسق' : 'Add Coordinator'}
+                                {isAr ? 'إضافة المنسق' : 'Add Coordinator'}
                             </button>
                             <button type="button" className="admin-action-btn decline" onClick={() => setIsAddModalOpen(false)} disabled={saving}>
                                 {isAr ? 'إلغاء' : 'Cancel'}

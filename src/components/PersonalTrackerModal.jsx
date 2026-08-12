@@ -28,7 +28,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
 
     const handleSearch = () => {
         if (!phoneInput.trim()) {
-            alert(isAr ? 'الرجاء إدال رقم الهاتف' : 'Please enter your phone number');
+            alert(isAr ? 'الرجاء إدخال رقم الهاتف' : 'Please enter your phone number');
             return;
         }
 

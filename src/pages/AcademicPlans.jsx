@@ -164,14 +164,14 @@ const AcademicPlans = () => {
                     onClick={() => setPlanType('new')}
                 >
                     <span className="toggle-icon">✨</span>
-                    {language === 'ar' ? 'الطط الجديد (2025)' : 'New Plans (2025)'}
+                    {language === 'ar' ? 'الخطط الجديد (2025)' : 'New Plans (2025)'}
                 </button>
                 <button
                     className={`toggle-btn ${planType === 'old' ? 'active' : ''}`}
                     onClick={() => setPlanType('old')}
                 >
                     <span className="toggle-icon">📜</span>
-                    {language === 'ar' ? 'الطط القديم' : 'Old Plans'}
+                    {language === 'ar' ? 'الخطط القديم' : 'Old Plans'}
                 </button>
             </div>
 
@@ -179,12 +179,12 @@ const AcademicPlans = () => {
             <div className="plans-container">
                 <div className="section-header">
                     <h2>
-                        {planType === 'new' ? (language === 'ar' ? 'الطط الشجري الحديث' : 'Modern Tree Plans') : (language === 'ar' ? 'الطط الدراسي السابق' : 'Previous Academic Plans')}
+                        {planType === 'new' ? (language === 'ar' ? 'الخطط الشجري الحديث' : 'Modern Tree Plans') : (language === 'ar' ? 'الخطط الدراسي السابق' : 'Previous Academic Plans')}
                     </h2>
                     <p>
                         {planType === 'new'
-                            ? (language === 'ar' ? 'هذه هي الطط المعتمد للعام الدراسي 2025/2026' : 'These are the approved plans for the 2025/2026 academic year')
-                            : (language === 'ar' ? 'هذه الطط للطلاب المقبولين في الأعوام السابق' : 'These plans are for students admitted in previous years')}
+                            ? (language === 'ar' ? 'هذه هي الخطط المعتمد للعام الدراسي 2025/2026' : 'These are the approved plans for the 2025/2026 academic year')
+                            : (language === 'ar' ? 'هذه الخطط للطلاب المقبولين في الأعوام السابق' : 'These plans are for students admitted in previous years')}
                     </p>
                 </div>
 

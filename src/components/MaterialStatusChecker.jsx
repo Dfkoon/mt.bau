@@ -22,7 +22,7 @@ const MaterialStatusChecker = ({ isAr }) => {
         e.preventDefault();
 
         if (!phoneInput.trim()) {
-            alert(isAr ? 'الرجاء إدال رقم الهاتف' : 'Please enter your phone number');
+            alert(isAr ? 'الرجاء إدخال رقم الهاتف' : 'Please enter your phone number');
             return;
         }
 

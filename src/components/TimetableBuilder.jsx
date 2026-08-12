@@ -7,7 +7,7 @@ const DAYS = [
   { id: 'mon', ar: 'الإثنين', en: 'Monday' },
   { id: 'tue', ar: 'الثلاثاء', en: 'Tuesday' },
   { id: 'wed', ar: 'الأربعاء', en: 'Wednesday' },
-  { id: 'thu', ar: 'الميس', en: 'Thursday' },
+  { id: 'thu', ar: 'الخميس', en: 'Thursday' },
 ];
 
 const TIME_SLOTS = [

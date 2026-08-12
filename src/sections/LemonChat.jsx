@@ -46,7 +46,7 @@ const LemonChat = () => {
         return text.toLowerCase()
             .trim()
             .replace(/[أإآ]/g, 'ا')
-            .replace(//g, 'ه')
+            .replace(/\uFFFD/g, 'ه')
             .replace(/ى/g, 'ي')
             .replace(/ئ/g, 'ي')
             .replace(/ؤ/g, 'و')
@@ -112,11 +112,11 @@ const LemonChat = () => {
 
         // 1. Pages Navigation (Very High Confidence Actions)
         const pages = [
-            { id: 'request', keywords: ['اطلب ما تحتاجه', 'طلب دم', 'دمات', 'اطلب ملص', 'طلب مادة', 'انشاء اسئل', 'اقتراح فكر', 'طلب جديد'], path: '#request-services', titleAr: 'قسم اطلب ما تحتاجه', titleEn: 'Request Services', icon: '✨' },
+            { id: 'request', keywords: ['اطلب ما تحتاجه', 'طلب دم', 'خدمات', 'اطلب ملص', 'طلب مادة', 'انشاء اسئل', 'اقتراح فكر', 'طلب جديد'], path: '#request-services', titleAr: 'قسم اطلب ما تحتاجه', titleEn: 'Request Services', icon: '✨' },
             { id: 'grading', keywords: ['معدل', 'احسب', 'علامات', 'ترج', 'grade', 'grading', 'marks'], path: '/grading', titleAr: 'نظام العلامات', titleEn: 'Grading System', icon: '📊' },
             { id: 'calendar', keywords: ['تقويم', 'موعد', 'متى', 'calendar', 'date', 'schedule'], path: '/calendar', titleAr: 'التقويم الجامعي', titleEn: 'Academic Calendar', icon: '📅' },
             { id: 'materials', keywords: ['مواد', 'دراسه', 'كتب', 'materials', 'study', 'courses'], path: '/materials', titleAr: 'المواد الدراسي', titleEn: 'Study Materials', icon: '📚' },
-            { id: 'plans', keywords: ['ط', 'طط', 'ساعات', 'plans', 'tree', 'map'], path: '/plans', titleAr: 'الطط الدراسي', titleEn: 'Academic Plans', icon: '🗺️' },
+            { id: 'plans', keywords: ['ط', 'خطط', 'ساعات', 'plans', 'tree', 'map'], path: '/plans', titleAr: 'الخطط الدراسي', titleEn: 'Academic Plans', icon: '🗺️' },
             { id: 'quiz', keywords: ['كويز', 'اسئل', 'بنك', 'quiz', 'bank', 'questions'], path: '/quiz', titleAr: 'بنك الأسئل', titleEn: 'Question Bank', icon: '📝' },
             { id: 'news', keywords: ['ابار', 'اعلان', 'جديد', 'news', 'announcement', 'update'], path: '/news', titleAr: 'أبار الجامعة', titleEn: 'University News', icon: '📰' }
         ];

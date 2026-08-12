@@ -744,7 +744,7 @@ export const quizData = {
                 options: [
                     { id: 'a', textEn: 'Hardware', textAr: 'الأجهز' },
                     { id: 'b', textEn: 'Software', textAr: 'البرمجيات' },
-                    { id: 'c', textEn: 'Input device', textAr: 'جهاز إدال' },
+                    { id: 'c', textEn: 'Input device', textAr: 'جهاز إدخال' },
                     { id: 'd', textEn: 'Output device', textAr: 'جهاز إراج' }
                 ],
                 correctAnswer: 'b',
@@ -754,7 +754,7 @@ export const quizData = {
                 id: 5,
                 type: 'mcq',
                 questionEn: 'Which of the following is an input device?',
-                questionAr: 'أي مما يلي يعتبر جهاز إدال؟',
+                questionAr: 'أي مما يلي يعتبر جهاز إدخال؟',
                 options: [
                     { id: 'a', textEn: 'Printer', textAr: 'طابع' },
                     { id: 'b', textEn: 'Speakers', textAr: 'سماعات' },
@@ -2319,7 +2319,7 @@ export const quizData = {
             { id: 5, type: 'mcq', questionAr: 'من أنواع الدفاع الجوي:', options: [{ id: 'a', textAr: 'الدفاع الجوي المركزي (سلاح الجو)' }, { id: 'b', textAr: 'راجمات الصواري' }, { id: 'c', textAr: 'قوات المظليين' }, { id: 'd', textAr: 'الذائر' }], correctAnswer: 'a', marks: 1 },
             { id: 6, type: 'mcq', questionAr: 'يرأس دائر المابرات العام مدير عام يتم تعيينه وعزله من قبل:', options: [{ id: 'a', textAr: 'جلال الملك المعظم' }, { id: 'b', textAr: 'رئيس الوزراء بأوامر طي' }, { id: 'c', textAr: 'مجلس الأعيان' }, { id: 'd', textAr: 'رئيس الوزراء ورئيس مجلس النواب' }], correctAnswer: 'a', marks: 1 },
             { id: 7, type: 'mcq', questionAr: 'من مصادر تجنيد الأفراد (الرتب الأرى) في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'المتطوعون عن طريق مديري شؤون الضباط' }, { id: 'b', textAr: 'المتطوعون عن طريق مديري شؤون الأفراد' }, { id: 'c', textAr: 'جامع مؤت' }, { id: 'd', textAr: 'كلية الأمير حسن للعلوم الإسلامي' }], correctAnswer: 'b', marks: 1 },
-            { id: 8, type: 'mcq', questionAr: 'من أبرز ملامح مرحل التميز الوطني والدور الإقليمي في مسير الدمات الطبي الملكي:', options: [{ id: 'a', textAr: 'إنشاء مركز الملك علياء لأمراض وجراح القلب' }, { id: 'b', textAr: 'إقرار مشروع معالج العائلات' }, { id: 'c', textAr: 'افتتاح مدين الحسين الطبي' }, { id: 'd', textAr: 'افتتاح مستشفى اللطرون العسكري' }], correctAnswer: 'a', marks: 1 },
+            { id: 8, type: 'mcq', questionAr: 'من أبرز ملامح مرحل التميز الوطني والدور الإقليمي في مسير الخدمات الطبي الملكي:', options: [{ id: 'a', textAr: 'إنشاء مركز الملك علياء لأمراض وجراح القلب' }, { id: 'b', textAr: 'إقرار مشروع معالج العائلات' }, { id: 'c', textAr: 'افتتاح مدين الحسين الطبي' }, { id: 'd', textAr: 'افتتاح مستشفى اللطرون العسكري' }], correctAnswer: 'a', marks: 1 },
             { id: 9, type: 'mcq', questionAr: 'ترمز الكر الأرضي في شعار المملك الأردني الهاشمي إلى:', options: [{ id: 'a', textAr: 'النظام الملكي' }, { id: 'b', textAr: 'راي الثور العربي الكبرى' }, { id: 'c', textAr: 'انتشار الإسلام وحضارته في العالم' }, { id: 'd', textAr: 'الفداء والتضحي' }], correctAnswer: 'c', marks: 1 },
             { id: 10, type: 'mcq', questionAr: 'بدأ استدام العلم الأردني بصورته الحالي منذ:', options: [{ id: 'a', textAr: 'استقلال المملك عام 1946' }, { id: 'b', textAr: 'تأسيس إمار شرق الأردن عام 1921' }, { id: 'c', textAr: 'تشكيل أول حكوم أردني' }, { id: 'd', textAr: 'إعلان الثور العربي الكبرى' }], correctAnswer: 'b', marks: 1 },
             { id: 11, type: 'mcq', questionAr: 'من أدوار المواطن في الحفاظ على أمن الوطن:', options: [{ id: 'a', textAr: 'التعاون مع التنظيمات المحظور' }, { id: 'b', textAr: 'إذاع الشائع' }, { id: 'c', textAr: 'رفض التطرف مهما كان مصدره' }, { id: 'd', textAr: 'البوح بأسرار البلد' }], correctAnswer: 'c', marks: 1 },
@@ -2341,7 +2341,7 @@ export const quizData = {
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 21, type: 'mcq', questionAr: 'الوحد المعني بتأمين المواد والحاجات اليومي للوحدات هي:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'وحدات الدمات' }, { id: 'c', textAr: 'سلاح اللاسلكي' }, { id: 'd', textAr: 'المشا والدروع' }], correctAnswer: 'b', marks: 1 },
+            { id: 21, type: 'mcq', questionAr: 'الوحد المعني بتأمين المواد والحاجات اليومي للوحدات هي:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'وحدات الخدمات' }, { id: 'c', textAr: 'سلاح اللاسلكي' }, { id: 'd', textAr: 'المشا والدروع' }], correctAnswer: 'b', marks: 1 },
             { id: 22, type: 'mcq', questionAr: 'أهمي مشارك الأردن في حرب 1973 تمثلت بـ:', options: [{ id: 'a', textAr: 'إشغال جزء من القوات الإسرائيلي' }, { id: 'b', textAr: 'اتراق دفاعات العدو في العراق' }, { id: 'c', textAr: 'حرمان العدو من الالتفاف على القوات المصري' }, { id: 'd', textAr: 'استدام الأراضي المصري' }], correctAnswer: 'a', marks: 1 },
             { id: 23, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثور العربي الكبرى عام:', options: [{ id: 'a', textAr: '1948' }, { id: 'b', textAr: '1916' }, { id: 'c', textAr: '1918' }, { id: 'd', textAr: '1999' }], correctAnswer: 'b', marks: 1 },
             { id: 24, type: 'mcq', questionAr: 'بناء قوات مسلح نظامي حديث هدف من أهداف الثور العربي الكبرى:', options: [{ id: 'a', textAr: 'العسكري' }, { id: 'b', textAr: 'السياسي' }, { id: 'c', textAr: 'النفسي والمعنوي' }, { id: 'd', textAr: 'الاقتصادي' }], correctAnswer: 'a', marks: 1 },
@@ -2353,7 +2353,7 @@ export const quizData = {
             { id: 30, type: 'mcq', questionAr: 'السلاح الذي واكب تطور القوات المسلح منذ 1921 هو:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'سلاح المفارز الفني' }, { id: 'c', textAr: 'الكلي الفني العسكري' }, { id: 'd', textAr: 'سلاح الصيان الملكي' }], correctAnswer: 'a', marks: 1 },
             { id: 31, type: 'mcq', questionAr: 'رقع نسيج متعدد الألوان تمثل الشصي الاعتباري للدول هي:', options: [{ id: 'a', textAr: 'العلم الوطني' }, { id: 'b', textAr: 'شعار الدول' }, { id: 'c', textAr: 'الراي الهاشمي' }, { id: 'd', textAr: 'شعار الجيش' }], correctAnswer: 'a', marks: 1 },
             { id: 32, type: 'mcq', questionAr: 'بويع جلال الملك عبدالله الثاني ملكًا عام:', options: [{ id: 'a', textAr: '1999' }, { id: 'b', textAr: '1992' }, { id: 'c', textAr: '1996' }, { id: 'd', textAr: '1955' }], correctAnswer: 'a', marks: 1 },
-            { id: 33, type: 'mcq', questionAr: 'استمر تطوير الدبابات من حيث:', options: [{ id: 'a', textAr: 'العمق للقتال' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'إسناد الدمات الطبي' }, { id: 'd', textAr: 'قو النار والحرك والتدريع' }], correctAnswer: 'd', marks: 1 },
+            { id: 33, type: 'mcq', questionAr: 'استمر تطوير الدبابات من حيث:', options: [{ id: 'a', textAr: 'العمق للقتال' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'إسناد الخدمات الطبي' }, { id: 'd', textAr: 'قو النار والحرك والتدريع' }], correctAnswer: 'd', marks: 1 },
             { id: 34, type: 'mcq', questionAr: 'تأسست جامع مؤت / الجناح العسكري بهدف:', options: [{ id: 'a', textAr: 'رفد السوق بكوادر مهني' }, { id: 'b', textAr: 'إعداد ضباط مؤهلين' }, { id: 'c', textAr: 'تحسين الاقتصاد' }, { id: 'd', textAr: 'رفع تدريب أبناء العاملين' }], correctAnswer: 'b', marks: 1 },
             { id: 35, type: 'mcq', questionAr: 'سيفان متقاطعان ونجم سباعي وياقتان حمراوان هي رتب:', options: [{ id: 'a', textAr: 'فريق' }, { id: 'b', textAr: 'عقيد' }, { id: 'c', textAr: 'لواء' }, { id: 'd', textAr: 'مشير' }], correctAnswer: 'a', marks: 1 },
             { id: 36, type: 'mcq', questionAr: 'المشا المنقول جوًا نوع من أنواع سلاح:', options: [{ id: 'a', textAr: 'الهندس' }, { id: 'b', textAr: 'الدروع' }, { id: 'c', textAr: 'المشا' }, { id: 'd', textAr: 'الدفاع الجوي' }], correctAnswer: 'c', marks: 1 },
@@ -2370,9 +2370,9 @@ export const quizData = {
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 41, type: 'mcq', questionAr: 'رؤي الدمات الطبي الملكي هي:', options: [{ id: 'a', textAr: 'الصدار في تقديم دم طبي للقطاع الاص فقط' }, { id: 'b', textAr: 'تقديم دم لأبناء العاملين فقط' }, { id: 'c', textAr: 'معالج القطاع الاص' }, { id: 'd', textAr: 'الصدار في تقديم دم طبي متكامل متميز تواكب التقدم الطبي العالمي' }], correctAnswer: 'd', marks: 1 },
-            { id: 42, type: 'mcq', questionAr: 'من أكثر الصنوف سرع في التطور والتحديث:', options: [{ id: 'a', textAr: 'العمليات التعبوي' }, { id: 'b', textAr: 'وحدات الدمات' }, { id: 'c', textAr: 'قوات الصاعق' }, { id: 'd', textAr: 'الوحدات المدرع' }], correctAnswer: 'a', marks: 1 },
-            { id: 43, type: 'mcq', questionAr: 'ظهرت الحاج إلى وجود مستشفى للجيش العربي عام 1948 حيث تم تصيص:', options: [{ id: 'a', textAr: 'مراكز صحي في المدن' }, { id: 'b', textAr: 'تكنات قو حدود شرق الأردن' }, { id: 'c', textAr: 'مديري الإعاش والنقليات' }, { id: 'd', textAr: 'الدمات الصحي' }], correctAnswer: 'b', marks: 1 },
+            { id: 41, type: 'mcq', questionAr: 'رؤي الخدمات الطبي الملكي هي:', options: [{ id: 'a', textAr: 'الصدار في تقديم دم طبي للقطاع الاص فقط' }, { id: 'b', textAr: 'تقديم دم لأبناء العاملين فقط' }, { id: 'c', textAr: 'معالج القطاع الاص' }, { id: 'd', textAr: 'الصدار في تقديم دم طبي متكامل متميز تواكب التقدم الطبي العالمي' }], correctAnswer: 'd', marks: 1 },
+            { id: 42, type: 'mcq', questionAr: 'من أكثر الصنوف سرع في التطور والتحديث:', options: [{ id: 'a', textAr: 'العمليات التعبوي' }, { id: 'b', textAr: 'وحدات الخدمات' }, { id: 'c', textAr: 'قوات الصاعق' }, { id: 'd', textAr: 'الوحدات المدرع' }], correctAnswer: 'a', marks: 1 },
+            { id: 43, type: 'mcq', questionAr: 'ظهرت الحاج إلى وجود مستشفى للجيش العربي عام 1948 حيث تم تصيص:', options: [{ id: 'a', textAr: 'مراكز صحي في المدن' }, { id: 'b', textAr: 'تكنات قو حدود شرق الأردن' }, { id: 'c', textAr: 'مديري الإعاش والنقليات' }, { id: 'd', textAr: 'الخدمات الصحي' }], correctAnswer: 'b', marks: 1 },
             { id: 44, type: 'mcq', questionAr: 'أول وزار شُكّلت في عهد إمار شرق الأردن عام 1921 حملت اسم:', options: [{ id: 'a', textAr: 'مجلس الإمار' }, { id: 'b', textAr: 'مجلس الشورى' }, { id: 'c', textAr: 'مجلس الأم' }, { id: 'd', textAr: 'مجلس المشاورين' }], correctAnswer: 'd', marks: 1 },
             { id: 45, type: 'mcq', questionAr: 'تعتبر الوحدات المدرع سلاح الهجوم الرئيس في الجيوش الحديث وتعرف بـ:', options: [{ id: 'a', textAr: 'السلاح الحاسم في المعرك' }, { id: 'b', textAr: 'سلاح المفاجأ' }, { id: 'c', textAr: 'سلاح الإسناد' }, { id: 'd', textAr: 'إحراز التفوق في المعرك' }], correctAnswer: 'a', marks: 1 },
             { id: 46, type: 'mcq', questionAr: 'نجمتان سباعيتان يعلوهما التاج الهاشمي وباقتان حمراوان هي رتب:', options: [{ id: 'a', textAr: 'مقدم' }, { id: 'b', textAr: 'عميد' }, { id: 'c', textAr: 'عقيد' }, { id: 'd', textAr: 'رائد' }], correctAnswer: 'b', marks: 1 },
@@ -2401,7 +2401,7 @@ export const quizData = {
         questions: [
             { id: 61, type: 'mcq', questionAr: 'إعاد وحد العرب الروحي وإحياء التاري القومي العربي تُعد من:', options: [{ id: 'a', textAr: 'نتائج الثور العربي الكبرى' }, { id: 'b', textAr: 'الصعوبات التي واجهت الثور' }, { id: 'c', textAr: 'مرتكزات الثور' }, { id: 'd', textAr: 'أسباب الثور' }], correctAnswer: 'a', marks: 1 },
             { id: 62, type: 'mcq', questionAr: 'إعطاء العمق للقتال (قصف أهداف بعمق العدو) من أدوار سلاح:', options: [{ id: 'a', textAr: 'المدفعي' }, { id: 'b', textAr: 'اللاسلكي' }, { id: 'c', textAr: 'الهندس' }, { id: 'd', textAr: 'الصيان' }], correctAnswer: 'a', marks: 1 },
-            { id: 63, type: 'mcq', questionAr: 'من أكثر الصنوف سرع في التطور والتحديث:', options: [{ id: 'a', textAr: 'الوحدات المدرع' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'وحدات الدمات' }, { id: 'd', textAr: 'قوات الصاعق' }], correctAnswer: 'a', marks: 1 },
+            { id: 63, type: 'mcq', questionAr: 'من أكثر الصنوف سرع في التطور والتحديث:', options: [{ id: 'a', textAr: 'الوحدات المدرع' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'وحدات الخدمات' }, { id: 'd', textAr: 'قوات الصاعق' }], correctAnswer: 'a', marks: 1 },
             { id: 64, type: 'mcq', questionAr: 'من مصادر التجنيد في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'طلاب معاهد التدريب المهني' }, { id: 'b', textAr: 'ريجو كليات المجتمع فقط' }, { id: 'c', textAr: 'الضباط والرتب الأرى' }, { id: 'd', textAr: 'ريجو الجامعات الاص' }], correctAnswer: 'c', marks: 1 },
             { id: 65, type: 'mcq', questionAr: 'من أهداف إسرائيل في معرك الكرام:', options: [{ id: 'a', textAr: 'كسب تعاطف الدول الكبرى' }, { id: 'b', textAr: 'تحطيم الروح المعنوي للطيارين المصريين' }, { id: 'c', textAr: 'الاستحواذ على مناطق الأغوار' }, { id: 'd', textAr: 'تريب مدارج الطائرات' }], correctAnswer: 'c', marks: 1 },
             { id: 66, type: 'mcq', questionAr: 'فقدان الروح المعنوي بعد سقوط سلاح الجو المصري كان سببًا لهزيم العرب في حرب:', options: [{ id: 'a', textAr: '1967' }, { id: 'b', textAr: 'معرك الكرام' }, { id: 'c', textAr: 'حرب 1948' }, { id: 'd', textAr: 'حرب 1973' }], correctAnswer: 'a', marks: 1 },
@@ -7256,7 +7256,7 @@ export const quizData = {
                 options: [
                     { id: 'a', textEn: 'After every fixed time quantum', textAr: 'بعد كل حص زمني ثابت' },
                     { id: 'b', textEn: 'When a new process arrives with a shorter remaining burst time', textAr: 'عند وصول عملي جديد بوقت تنفيذ متبقٍّ أقصر' },
-                    { id: 'c', textEn: 'When the process requests I/O', textAr: 'عندما تطلب العملي عملي إدال/إراج' },
+                    { id: 'c', textEn: 'When the process requests I/O', textAr: 'عندما تطلب العملي عملي إدخال/إراج' },
                     { id: 'd', textEn: 'It is never preempted once started', textAr: 'لا يتم استباقها أبداً بعد البدء' }
                 ],
                 correctAnswer: 'b',

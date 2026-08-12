@@ -33,7 +33,7 @@ const AdminContributions = () => {
         if (res.success) {
             toast.success(isAr ? 'تمت الموافق على المساهم' : 'Contribution approved');
         } else {
-            toast.error(isAr ? 'طأ في التحديث' : 'Update failed');
+            toast.error(isAr ? 'خطأ في التحديث' : 'Update failed');
         }
     };
 
@@ -43,7 +43,7 @@ const AdminContributions = () => {
         if (res.success) {
             toast.success(isAr ? 'تم حذف المساهم' : 'Contribution deleted');
         } else {
-            toast.error(isAr ? 'طأ' : 'Error');
+            toast.error(isAr ? 'خطأ' : 'Error');
         }
     };
 
@@ -72,7 +72,7 @@ const AdminContributions = () => {
             </div>
 
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-                {isAr ? 'هذه المساهمات تأتي من قسم "ساهم في إثراء محتوى مكانك" في صفحات المواد والاتبارات.' : 'These contributions come from the "Share & Enrich Makanak Content" section.'}
+                {isAr ? 'هذه المساهمات تأتي من قسم "ساهم في إثراء محتوى مكانك" في صفحات المواد والاختبارات.' : 'These contributions come from the "Share & Enrich Makanak Content" section.'}
             </p>
 
             <div className="admin-filter-row" style={{ marginBottom: '1.5rem' }}>
@@ -179,7 +179,7 @@ const AdminContributions = () => {
                 <div className="admin-modal-overlay" onClick={() => setPreviewFile(null)}>
                     <div className="admin-modal-card preview-modal-card" onClick={e => e.stopPropagation()}>
                         <div className="admin-modal-header">
-                            <h4>🔍 {previewFile.name || (isAr ? 'معاين الملف' : 'File Preview')}</h4>
+                            <h4>🔍 {previewFile.name || (isAr ? 'معاينة الملف' : 'File Preview')}</h4>
                             <button className="close-btn" onClick={() => setPreviewFile(null)}>&times;</button>
                         </div>
                         <div className="admin-modal-body" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '350px' }}>

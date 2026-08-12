@@ -111,6 +111,7 @@ const translations = {
         'hero.btn.exchange': 'تبادل المواد',
         'hero.stat.materials': 'مادة دراسية',
         'hero.stat.students': 'زائر',
+        'hero.stat.quizzes': 'الاختبارات التفاعلية',
         'hero.stat.support': 'دعم إرشادي',
 
         // Marquee
@@ -450,6 +451,7 @@ const translations = {
         'hero.btn.exchange': 'Material Exchange',
         'hero.stat.materials': 'Study Materials',
         'hero.stat.students': 'Visitors',
+        'hero.stat.quizzes': 'Interactive Quizzes',
         'hero.stat.support': 'Guidance Support',
 
         // Marquee

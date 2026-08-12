@@ -109,12 +109,12 @@ const AdminGeneral = () => {
 
             toast.success(
                 isAr
-                    ? 'تمت الموافق! سيظهر الباركود الجديد عند دول المشرف في المر القادم.'
+                    ? 'تمت الموافق! سيظهر الباركود الجديد عند دول المشرف في المرة القادمة.'
                     : 'Approved! The new QR code will appear on next admin login.'
             );
         } catch (err) {
             console.error('Failed to approve 2FA reset:', err);
-            toast.error(isAr ? 'فشل الموافق' : 'Approval failed');
+            toast.error(isAr ? 'فشل الموافقة' : 'Approval failed');
         } finally {
             setResetProcessing(false);
         }
@@ -139,14 +139,14 @@ const AdminGeneral = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل الإعدادات العام...' : 'Loading general settings...'}</p>
+                <p>{isAr ? 'جاري تحميل الإعدادات العامةة...' : 'Loading general settings...'}</p>
             </div>
         );
     }
 
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
-            <h3 className="admin-section-title"><span>{isAr ? 'الإدار العام' : 'General Settings'}</span></h3>
+            <h3 className="admin-section-title"><span>{isAr ? 'الإدارة العامة' : 'General Settings'}</span></h3>
 
             {/* ── 2FA Reset Request Banner ── */}
             {!resetLoading && resetRequest && resetRequest.status === 'pending' && (
@@ -164,11 +164,11 @@ const AdminGeneral = () => {
                 }}>
                     <div>
                         <p style={{ margin: 0, fontWeight: 700, color: '#fca5a5', fontSize: '0.95rem' }}>
-                            {isAr ? 'طلب إعاد تعيين باركود 2FA معلق' : 'Pending 2FA QR Reset Request'}
+                            {isAr ? 'طلب إعادة تعيين باركود 2FA معلق' : 'Pending 2FA QR Reset Request'}
                         </p>
                         <p style={{ margin: '0.3rem 0 0', color: 'rgba(255,255,255,0.6)', fontSize: '0.78rem' }}>
                             {isAr
-                                ? `تم إرسال الطلب بتاري: ${new Date(resetRequest.requestedAt).toLocaleString('ar-SA')}`
+                                ? `تم إرسال الطلب بتاريخ: ${new Date(resetRequest.requestedAt).toLocaleString('ar-SA')}`
                                 : `Requested at: ${new Date(resetRequest.requestedAt).toLocaleString('en-US')}`}
                         </p>
                     </div>
@@ -194,12 +194,12 @@ const AdminGeneral = () => {
             <div className="admin-general-layout">
                 {/* 1. System Configs Card */}
                 <div className="admin-glass-card">
-                    <h4 className="admin-card-header-title">{isAr ? 'إعدادات النظام الأساسي' : 'Base System Configurations'}</h4>
+                    <h4 className="admin-card-header-title">{isAr ? 'إعدادات النظام الأساسية' : 'Base System Configurations'}</h4>
                     
                     <div className="admin-setting-item">
                         <div className="setting-details">
-                            <h5>{isAr ? 'نافذ التقييم بعد 3 دقائق' : 'Feedback Rating Popup (3 min)'}</h5>
-                            <p>{isAr ? 'تفعيل أو إيقاف نافذ التقييم التلقائي للزوار الجدد.' : 'Enable/disable rating popup for new visitors.'}</p>
+                            <h5>{isAr ? 'نافذة التقييم بعد 3 دقائق' : 'Feedback Rating Popup (3 min)'}</h5>
+                            <p>{isAr ? 'تفعيل أو إيقاف نافذة التقييم التلقائي للزوار الجدد.' : 'Enable/disable rating popup for new visitors.'}</p>
                         </div>
                         <button 
                             className={`admin-action-btn ${settings.feedbackPopupEnabled ? 'approve' : 'decline'}`}
@@ -214,8 +214,8 @@ const AdminGeneral = () => {
 
                     <div className="admin-setting-item">
                         <div className="setting-details">
-                            <h5>{isAr ? 'كود بواب المنسقين (Gateway Code)' : 'Secret Gateway Code'}</h5>
-                            <p>{isAr ? 'الكود السري للدول إلى البواب الارجي.' : 'Secret entry code for portal gateway.'}</p>
+                            <h5>{isAr ? 'كود بوابة المنسقين (Gateway Code)' : 'Secret Gateway Code'}</h5>
+                            <p>{isAr ? 'الكود السري للدخول إلى البوابة الخارجية.' : 'Secret entry code for portal gateway.'}</p>
                         </div>
                         <div className="setting-input-action">
                             <input 
@@ -239,8 +239,8 @@ const AdminGeneral = () => {
 
                     <div className="admin-setting-item">
                         <div className="setting-details">
-                            <h5>{isAr ? 'كلم مرور المشرف (Admin Password)' : 'Admin Dashboard Password'}</h5>
-                            <p>{isAr ? 'كلم المرور الاص بلوح التحكم للأدمن.' : 'Admin account password.'}</p>
+                            <h5>{isAr ? 'كلمة مرور المشرف (Admin Password)' : 'Admin Dashboard Password'}</h5>
+                            <p>{isAr ? 'كلمة المرور الخاصة بلوحة التحكم للأدمن.' : 'Admin account password.'}</p>
                         </div>
                         <div className="setting-input-action">
                             <input 
@@ -255,7 +255,7 @@ const AdminGeneral = () => {
                                 onClick={() => handleSave({ adminPassword: settings.adminPassword })}
                                 disabled={saving}
                             >
-                                {isAr ? 'تحديث كلم المرور' : 'Update Password'}
+                                {isAr ? 'تحديث كلمة المرور' : 'Update Password'}
                             </button>
                         </div>
                     </div>
@@ -263,12 +263,12 @@ const AdminGeneral = () => {
 
                 {/* 2. Campaign Phase Card */}
                 <div className="admin-glass-card" style={{ marginTop: '1.5rem' }}>
-                    <h4 className="admin-card-header-title">{isAr ? 'حمل تبادل الكتب والمواد' : 'Book Exchange Campaign Settings'}</h4>
+                    <h4 className="admin-card-header-title">{isAr ? 'حملة تبادل الكتب والمواد' : 'Book Exchange Campaign Settings'}</h4>
                     
                     <div className="admin-setting-item">
                         <div className="setting-details">
-                            <h5>{isAr ? 'حال الحمل الحالي' : 'Campaign Current Status'}</h5>
-                            <p>{isAr ? 'تحديد المرحل النشط لحمل تبادل الكتب.' : 'Set current campaign phase.'}</p>
+                            <h5>{isAr ? 'حالة الحملة الحالية' : 'Campaign Current Status'}</h5>
+                            <p>{isAr ? 'تحديد المرحلة النشطة لحملةة تبادل الكتب.' : 'Set current campaign phase.'}</p>
                         </div>
                         <select 
                             className="admin-filter-select"
@@ -277,20 +277,20 @@ const AdminGeneral = () => {
                             disabled={saving}
                         >
                             <option value="suspended">{isAr ? 'معطّل / متوقف مؤقتاً' : 'Suspended'}</option>
-                            <option value="collection">{isAr ? 'مرحل التبرع بالمواد' : 'Donation Phase'}</option>
-                            <option value="exchange">{isAr ? 'مرحل حجز الكتب والمواد' : 'Booking Phase'}</option>
+                            <option value="collection">{isAr ? 'مرحلة التبرع بالمواد' : 'Donation Phase'}</option>
+                            <option value="exchange">{isAr ? 'مرحلة حجز الكتب والمواد' : 'Booking Phase'}</option>
                         </select>
                     </div>
 
                     <hr className="setting-divider" />
 
                     <div className="admin-setting-item-block">
-                        <h5>{isAr ? 'رسال توقف الحمل (بالعربي)' : 'Suspended Message (Arabic)'}</h5>
+                        <h5>{isAr ? 'رسالة توقف الحملة (بالعربي)' : 'Suspended Message (Arabic)'}</h5>
                         <textarea
                             className="admin-textarea-field"
                             value={settings.exchangeSuspendedMessageAr}
                             onChange={(e) => setSettings({ ...settings, exchangeSuspendedMessageAr: e.target.value })}
-                            placeholder="تظهر هذه الرسال عند إيقاف الحمل للطلاب..."
+                            placeholder="تظهر هذه الرسالة عند إيقاف الحملة للطلاب..."
                         />
                         <button 
                             className="admin-action-btn approve"
@@ -298,14 +298,14 @@ const AdminGeneral = () => {
                             onClick={() => handleSave({ exchangeSuspendedMessageAr: settings.exchangeSuspendedMessageAr })}
                             disabled={saving}
                         >
-                            {isAr ? 'حفظ الرسال العربي' : 'Save Message'}
+                            {isAr ? 'حفظ الرسالة بالعربية' : 'Save Message'}
                         </button>
                     </div>
 
                     <hr className="setting-divider" />
 
                     <div className="admin-setting-item-block">
-                        <h5>{isAr ? 'رسال توقف الحمل (بالإنجليزي)' : 'Suspended Message (English)'}</h5>
+                        <h5>{isAr ? 'رسالة توقف الحملة (بالإنجليزي)' : 'Suspended Message (English)'}</h5>
                         <textarea
                             className="admin-textarea-field"
                             value={settings.exchangeSuspendedMessageEn}
@@ -318,7 +318,7 @@ const AdminGeneral = () => {
                             onClick={() => handleSave({ exchangeSuspendedMessageEn: settings.exchangeSuspendedMessageEn })}
                             disabled={saving}
                         >
-                            {isAr ? 'حفظ الرسال الإنجليزي' : 'Save Message'}
+                            {isAr ? 'حفظ الرسالة بالإنجليزية' : 'Save Message'}
                         </button>
                     </div>
                 </div>

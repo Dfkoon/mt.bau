@@ -37,7 +37,7 @@ const CookieConsent = () => {
                         <h4>{isAr ? 'نحن نهتم بصوصيتك' : 'We care about your privacy'}</h4>
                         <p>
                             {isAr
-                                ? 'يستدم موقع "مكانك" ملفات تعريف الارتباط لتوفير تجرب مستدم ممتاز وحفظ تفضيلاتك (مثل اللغ والمظهر الداكن). باستمرارك في التصفح، فإنك توافق على سياس الصوصي الاص بنا.'
+                                ? 'يستدم موقع "مكانك" ملفات تعريف الارتباط لتوفير تجرب مستدم ممتاز وحفظ تفضيلاتك (مثل اللغ والمظهر الداكن). باستمرارك في التصفح، فإنك توافق على سياس الصوصي الخاص بنا.'
                                 : 'Makanak uses cookies to enhance your browsing experience, analyze site usage, and remember your preferences (like language and dark theme). By continuing to browse, you agree to our privacy policy.'}
                         </p>
                     </div>

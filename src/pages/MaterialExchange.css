@@ -6106,6 +6106,13 @@
     cursor: pointer;
 }
 
+.terms-hint-text {
+    margin: 12px 0 0;
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
 /* Terms Modal */
 .terms-modal {
     position: fixed;

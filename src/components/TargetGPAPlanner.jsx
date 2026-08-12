@@ -23,7 +23,7 @@ const TargetGPAPlanner = () => {
 
     if (isNaN(cur) || isNaN(hours) || isNaN(target) || isNaN(semHours) || hours <= 0 || semHours <= 0) {
       setResult({
-        error: isAr ? 'يرجى إدال قيم صحيح في جميع الحقول' : 'Please enter valid values in all fields'
+        error: isAr ? 'يرجى إدخال قيم صحيح في جميع الحقول' : 'Please enter valid values in all fields'
       });
       return;
     }
@@ -94,7 +94,7 @@ const TargetGPAPlanner = () => {
       <div className="target-planner-header">
         <div className="header-icon">🎯</div>
         <div>
-          <h3>{isAr ? 'مطط ومحدد المعدل المستهدف' : 'Target GPA Planner'}</h3>
+          <h3>{isAr ? 'مخطط ومحدد المعدل المستهدف' : 'Target GPA Planner'}</h3>
           <p>{isAr ? 'احسب المعدل الفصلي المطلوب منك في الفصل القادم للوصول لمعدلك التراكمي الحلم' : 'Calculate the semester GPA required to hit your target cumulative GPA'}</p>
         </div>
       </div>

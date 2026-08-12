@@ -18,7 +18,7 @@ const IconReset    = () => <span className="ast-icon">🔄</span>;
 const OUTPUT_TYPES = [
   { id: 'quiz',    icon: '📝', labelAr: 'اتبار',        labelEn: 'Quiz',       descAr: 'أسئل تفاعلي',   descEn: 'Interactive questions' },
   { id: 'summary', icon: '📋', labelAr: 'ملص ذكي',      labelEn: 'Summary',    descAr: 'نقاط ومفاهيم',    descEn: 'Key points & concepts' },
-  { id: 'mindmap', icon: '🗺️', labelAr: 'مطط ذهني',    labelEn: 'Mind Map',   descAr: 'هيكل بصري',        descEn: 'Visual structure' },
+  { id: 'mindmap', icon: '🗺️', labelAr: 'مخطط ذهني',    labelEn: 'Mind Map',   descAr: 'هيكل بصري',        descEn: 'Visual structure' },
   { id: 'plan',    icon: '📚', labelAr: 'ط الدراس',  labelEn: 'Study Plan', descAr: 'جدول يومي',        descEn: 'Daily schedule' },
 ];
 
@@ -209,7 +209,7 @@ const MindMapResult = ({ data, lang }) => {
         ))}
       </div>
       {data.branches?.length === 0 && (
-        <p className="ast-empty">{isRtl ? 'لم يتم إنشاء مطط.' : 'No mind map generated.'}</p>
+        <p className="ast-empty">{isRtl ? 'لم يتم إنشاء مخطط.' : 'No mind map generated.'}</p>
       )}
     </div>
   );
@@ -301,7 +301,7 @@ const AIStudyTools = () => {
 
   const handleGenerate = async () => {
     if (!text.trim() || text.trim().length < 50) {
-      toast.error(isRtl ? 'الرجاء إدال نص كافٍ (50 حرف على الأقل)' : 'Please enter sufficient text (at least 50 chars)');
+      toast.error(isRtl ? 'الرجاء إدخال نص كافٍ (50 حرف على الأقل)' : 'Please enter sufficient text (at least 50 chars)');
       return;
     }
     setLoading(true);
@@ -354,7 +354,7 @@ const AIStudyTools = () => {
           </h1>
           <p className="ast-hero-sub">
             {isRtl
-              ? 'الصق نص المادة وسيقوم الذكاء الاصطناعي بتحويله إلى اتبار، ملص، مطط ذهني أو ط دراس!'
+              ? 'الصق نص المادة وسيقوم الذكاء الاصطناعي بتحويله إلى اتبار، ملص، مخطط ذهني أو ط دراس!'
               : 'Paste your study material and AI will transform it into a quiz, summary, mind map, or study plan!'}
           </p>
           <div className="ast-hero-stats">
@@ -364,7 +364,7 @@ const AIStudyTools = () => {
             <div className="ast-stat-divider" />
             <div className="ast-stat"><span>🗺️</span><span>{isRtl ? 'مططات' : 'Mind Maps'}</span></div>
             <div className="ast-stat-divider" />
-            <div className="ast-stat"><span>📚</span><span>{isRtl ? 'طط' : 'Plans'}</span></div>
+            <div className="ast-stat"><span>📚</span><span>{isRtl ? 'خطط' : 'Plans'}</span></div>
           </div>
         </div>
       </div>

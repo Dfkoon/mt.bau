@@ -179,7 +179,8 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [bookingData, setBookingData] = useState({ name: '', phone: '', gender: '' });
-    const [preRequestForm, setPreRequestForm] = useState({ type: 'donate', studentName: '', phoneNumber: '', materialName: '', notes: '', agreedToPreRequestTerms: false, acknowledgeUrgentNeed: false });
+    const [preRequestForm, setPreRequestForm] = useState({ type: 'donate', studentName: '', phoneNumber: '', materialName: '', notes: '', agreedToPreRequestTerms: false });
+    const [hasViewedTerms, setHasViewedTerms] = useState(false);
     const [preRequests, setPreRequests] = useState([]);
     const [preRequestLoading, setPreRequestLoading] = useState(false);
 
@@ -329,8 +330,16 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [selectedArchive, setSelectedArchive] = useState(null);
     const [archivesLoading, setArchivesLoading] = useState(false);
 
-    // ── TERMS AND CONDITIONS MODAL STATE ─────────────────────────
+    // ── TERMS AND CONDITIONS VISIBILITY STATE ────────────────────
+    const [showTermsDetails, setShowTermsDetails] = useState(false);
     const [showTermsModal, setShowTermsModal] = useState(false);
+
+    const toggleTermsVisibility = () => {
+        const nextState = !showTermsDetails;
+        setShowTermsDetails(nextState);
+        setShowTermsModal(nextState);
+        setHasViewedTerms(true);
+    };
 
     const generateCaptchaText = () => {
         const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -528,8 +537,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                         workdayEnabled: data.workdayEnabled !== undefined ? Boolean(data.workdayEnabled) : false,
                         workdayStart: data.workdayStart || '08:00',
                         workdayEnd: data.workdayEnd || '16:00',
-                        workdayNoticeAr: data.workdayNoticeAr || 'ارج أوقات الشغل اليومي، الطلبات تُراجع لاحقاً.',
-                        workdayNoticeEn: data.workdayNoticeEn || 'Outside working hours, requests are reviewed later.',
                         ahmad2faSecret: data.ahmad2faSecret || '',
                         sara2faSecret: data.sara2faSecret || '',
                         admin2faSecret: data.admin2faSecret || '',
@@ -711,9 +718,9 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             to_name: staffName,
             to_email: email,
             verification_code: code,
-            subject: isAr ? 'رمز التحقق لتسجيل دول المنسق' : 'Coordinator login verification code',
+            subject: isAr ? 'رمز التحقق لتسجيل دخول المنسق' : 'Coordinator login verification code',
             message: isAr
-                ? `رمز التحقق الاص بك هو ${code}. الرجاء إداله لإكمال تسجيل الدول.`
+                ? `رمز التحقق الخاص بك هو ${code}. الرجاء إدخاله لإكمال تسجيل الدخول.`
                 : `Your verification code is ${code}. Please enter it to complete login.`
         };
 
@@ -909,7 +916,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             student_gender: gender === 'female' ? 'أنثى' : 'ذكر',
             action_type: actionText,
             details: detailsText,
-            message: `مرحباً ${coordName}،\n\nيوجد ${actionText} في منص مكانك الجامعي.\n\nتفاصيل الطالب:\n- الاسم: ${data.studentName}\n- الهاتف: ${data.phoneNumber || data.phone || 'غير متوفر'}\n\n${detailsText}\n\nيرجى الدول إلى لوح التحكم للمتابع والتنسيق.`
+            message: `مرحباً ${coordName}،\n\nيوجد ${actionText} في منصتك الجامعية.\n\nتفاصيل الطالب:\n- الاسم: ${data.studentName}\n- الهاتف: ${data.phoneNumber || data.phone || 'غير متوفر'}\n\n${detailsText}\n\nيرجى الدخول إلى لوحة التحكم للمتابعة والتنسيق.`
         };
 
         try {
@@ -1189,11 +1196,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             return;
         }
 
-        if (preRequestForm.type === 'need' && !preRequestForm.acknowledgeUrgentNeed) {
-            toast.error(isAr ? 'يرجى التأكيد بأنك بحاج ماس لهذه المادة' : 'Please confirm that you urgently need this material');
-            return;
-        }
-
         setPreRequestLoading(true);
         try {
             await addDoc(collection(db, 'materialPreRequests'), {
@@ -1203,13 +1205,12 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 materialName: preRequestForm.materialName.trim(),
                 notes: preRequestForm.notes.trim(),
                 agreedToPreRequestTerms: preRequestForm.agreedToPreRequestTerms,
-                acknowledgeUrgentNeed: preRequestForm.acknowledgeUrgentNeed,
                 createdAt: serverTimestamp(),
                 status: 'pending'
             });
 
             toast.success(isAr ? 'تم حفظ طلبك المسبق بنجاح' : 'Your pre-request was saved successfully');
-            setPreRequestForm({ type: 'donate', studentName: '', phoneNumber: '', materialName: '', notes: '', agreedToPreRequestTerms: false, acknowledgeUrgentNeed: false });
+            setPreRequestForm({ type: 'donate', studentName: '', phoneNumber: '', materialName: '', notes: '', agreedToPreRequestTerms: false });
         } catch (error) {
             console.error('Error saving pre-request:', error);
             toast.error(isAr ? 'حدث طأ أثناء إرسال الطلب المسبق، حاول مر أرى' : 'An error occurred while submitting your pre-request. Please try again.');
@@ -1288,7 +1289,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             return;
         }
         if (bookingData.name.trim().split(/\s+/).length < 2) {
-            toast.error(isAr ? 'يرجى إدال الاسم الثنائي على الأقل' : 'Please enter at least two parts of your name');
+            toast.error(isAr ? 'يرجى إدخال الاسم الثنائي على الأقل' : 'Please enter at least two parts of your name');
             return;
         }
         const phoneRegex = /^[0-9]{10}$/;
@@ -1528,7 +1529,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 operatorId: matchedKey,
                 operatorNameAr: user.nameAr,
                 operatorNameEn: user.nameEn,
-                actionAr: 'سجّل دوله إلى النظام',
+                actionAr: 'سجل دخوله إلى النظام',
                 actionEn: 'Logged in to the system',
                 details: { type: 'login' },
                 timestamp: serverTimestamp()
@@ -1582,7 +1583,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             operatorId: pendingStaffKey,
             operatorNameAr: user.nameAr,
             operatorNameEn: user.nameEn,
-            actionAr: 'سجّل دوله إلى النظام',
+            actionAr: 'سجل دخوله إلى النظام',
             actionEn: 'Logged in to the system',
             details: { type: 'login' },
             timestamp: serverTimestamp()
@@ -1659,7 +1660,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 operatorId: pendingStaffKey,
                 operatorNameAr: user.nameAr,
                 operatorNameEn: user.nameEn,
-                actionAr: 'سجّل دوله إلى النظام',
+                actionAr: 'سجل دخوله إلى النظام',
                 actionEn: 'Logged in to the system',
                 details: { type: 'login' },
                 timestamp: serverTimestamp()
@@ -1677,7 +1678,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             setTotpError(false);
             setPendingStaffKey('');
             setPendingStaffTotpSecret('');
-            toast.success(isAr ? 'تم تسجيل الدول بنجاح! 🔐' : 'Logged in successfully! 🔐');
+            toast.success(isAr ? 'تم تسجيل الدخول بنجاح! 🔐' : 'Logged in successfully! 🔐');
 
             if (user.role === 'admin') {
                 setTimeout(() => {
@@ -3087,7 +3088,7 @@ Please contact us to coordinate the pickup.Thank you.`;
 
     const handleArchiveCampaign = async () => {
         if (!archiveName.trim()) {
-            toast.error(isAr ? 'يرجى إدال اسم الأرشيف' : 'Please enter an archive name');
+            toast.error(isAr ? 'يرجى إدخال اسم الأرشيف' : 'Please enter an archive name');
             return;
         }
         try {
@@ -3146,7 +3147,7 @@ Please contact us to coordinate the pickup.Thank you.`;
             await Promise.all([...deleteDonationPromises, ...deleteSchedulePromises]);
 
             toast.success(isAr
-                ? `✅ تم أرشف كاف أقسام الحمل (${allDonations.length} تبرع و ${deliverySchedules.length} جدول تسليم) بنجاح تحت "${archiveName.trim()}"`
+                ? `✅ تم أرشفة كافة أقسام الحملة (${allDonations.length} تبرعات و ${deliverySchedules.length} جداول تسليم) بنجاح تحت "${archiveName.trim()}"`
                 : `✅ Archived all campaign sections (${allDonations.length} donations & ${deliverySchedules.length} schedules) as "${archiveName.trim()}"`);
             setShowArchiveModal(false);
             setArchiveName('');
@@ -3156,7 +3157,7 @@ Please contact us to coordinate the pickup.Thank you.`;
             fetchDeliverySchedules();
 
             addAuditLog(
-                `قام بأرشف كاف التبرعات وجداول تسليم الحجوزات (${allDonations.length} تبرع و ${deliverySchedules.length} تسليم) تحت اسم الأرشيف "${archiveName.trim()}" وبدء دور جديد`,
+                `قام بأرشفة كافة التبرعات وجداول التسليم (${allDonations.length} تبرعات و ${deliverySchedules.length} جداول) تحت اسم الأرشيف "${archiveName.trim()}" وبدأ دورة جديدة`,
                 `Archived all donations and delivery schedules (${allDonations.length} donations & ${deliverySchedules.length} schedules) under "${archiveName.trim()}" and started a new cycle`,
                 { archiveName: archiveName.trim(), donationsCount: allDonations.length, schedulesCount: deliverySchedules.length }
             );
@@ -3758,12 +3759,12 @@ Please contact us to coordinate the pickup.Thank you.`;
 
         <header>
             <div class="title-block">
-                <h1>${isAr ? `كشف حرك تسليم المواد — يوم ${dayLabel}` : `Material Handover Sheet — ${dayLabel}`}</h1>
-                <p>${isAr ? 'تقرير تفصيلي بمواعيد الإحضار والتسليم المجدول، متضمناً بيانات المتبرعين والحاجزين والمنسقين.' : 'Detailed report of scheduled pickups and deliveries.'}</p>
+                <h1>${isAr ? `كشف حركة تسليم المواد — يوم ${dayLabel}` : `Material Handover Sheet — ${dayLabel}`}</h1>
+                <p>${isAr ? 'تقرير تفصيلي بمواعيد الإحضار والتسليم المجدولة، متضمناً بيانات المتبرعين والحاجزين والمنسقين.' : 'Detailed report of scheduled pickups and deliveries.'}</p>
             </div>
             <div class="meta">
-                <div>${isAr ? 'التاري المجدول:' : 'Scheduled Date:'} <b>${formattedDate}</b></div>
-                <div>${isAr ? 'عدد الحالات المجدول:' : 'Scheduled count:'} <b>${daySchedules.length}</b></div>
+                <div>${isAr ? 'التاريخ المجدول:' : 'Scheduled Date:'} <b>${formattedDate}</b></div>
+                <div>${isAr ? 'عدد الحالات المجدولة:' : 'Scheduled count:'} <b>${daySchedules.length}</b></div>
                 <div>${isAr ? 'المنسق المصدر:' : 'Issued By:'} <b>${loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
             </div>
         </header>
@@ -3988,8 +3989,8 @@ Please contact us to coordinate the pickup.Thank you.`;
 
                     <section className="pre-request-section glass-card">
                         <div className="section-header">
-                            <h2>{isAr ? 'طلبات مسبق' : 'Pre-Requests'}</h2>
-                            <p>{isAr ? 'إذا كنت ترغب في التبرع بماد أو تحتاج مادة معين، أرسل طلباً مسبقاً. الطلبات تظهر فقط للطاقم الإداري في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are visible only to administrative staff in the control panel.'}</p>
+                            <h2>{isAr ? 'طلبات مسبقة' : 'Pre-Requests'}</h2>
+                            <p>{isAr ? 'إذا كنت ترغب في التبرع بمواد أو تحتاج مادة معينة، أرسل طلباً مسبقاً. الطلبات تظهر فقط للطاقم الإداري في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are visible only to administrative staff in the control panel.'}</p>
                         </div>
 
                         <form className="pre-request-form" onSubmit={handlePreRequestSubmit}>
@@ -4049,42 +4050,46 @@ Please contact us to coordinate the pickup.Thank you.`;
 
                             <div className="pre-request-terms">
                                 <div className="terms-section-header">
-                                    <h4>{isAr ? 'الاتفاقي والشروط الاص بتقديم طلب التبرع' : 'Terms and Conditions for Donation Request'}</h4>
-                                    <button
-                                        type="button"
-                                        className="view-terms-link"
-                                        onClick={() => setShowTermsModal(true)}
-                                    >
-                                        {isAr ? 'عرض الشروط' : 'View Terms'}
-                                    </button>
+                                    <h4>{isAr ? 'الاتفاقية والشروط الخاصة بتقديم طلب التبرع' : 'Terms and Conditions for Donation Request'}</h4>
+                                    {preRequestForm.type === 'donate' && (
+                                        <button
+                                            type="button"
+                                            className="view-terms-link"
+                                            onClick={toggleTermsVisibility}
+                                        >
+                                            {isAr ? (showTermsModal ? 'إخفاء الشروط' : 'عرض الشروط') : (showTermsModal ? 'Hide Terms' : 'View Terms')}
+                                        </button>
+                                    )}
                                 </div>
 
-                                <div className="terms-summary-box">
-                                    <div className="terms-quick-header">
-                                        <strong>{isAr ? 'الشروط الأساسي (يجب قراءتها):' : 'Key Terms (Must Read):'}</strong>
+                                {preRequestForm.type === 'donate' && showTermsDetails && (
+                                    <div className="terms-summary-box">
+                                        <div className="terms-quick-header">
+                                            <strong>{isAr ? 'الشروط الأساسية (يجب قراءتها):' : 'Key Terms (Must Read):'}</strong>
+                                        </div>
+                                        <div className="terms-quick-list">
+                                            {isAr ? (
+                                                <>
+                                                    <div className="quick-item"><strong>الإرادة الكاملة:</strong> تقديم الطلب بمحض إرادتك</div>
+                                                    <div className="quick-item"><strong>الجدية:</strong> لا توجد طلبات وهمية أو متكررة</div>
+                                                    <div className="quick-item"><strong>الإلغاء:</strong> يجب إبلاغ الفريق قبل التسليم بـ 24 ساعة على الأقل</div>
+                                                    <div className="quick-item"><strong>المسؤولية:</strong> أنت مسؤول عن المادة بعد التسليم</div>
+                                                    <div className="quick-item"><strong>التواصل:</strong> فقط من قبل المنسق الرسمي (واتس آب)</div>
+                                                    <div className="quick-item"><strong>الخصوصية:</strong> لن يتم نشر بياناتك الشخصية</div>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <div className="quick-item"><strong>Full Consent:</strong> Submit request of your own free will</div>
+                                                    <div className="quick-item"><strong>Seriousness:</strong> No fake or duplicate requests allowed</div>
+                                                    <div className="quick-item"><strong>Cancellation:</strong> Notify team at least 24 hours before delivery</div>
+                                                    <div className="quick-item"><strong>Responsibility:</strong> You are responsible for the material after delivery</div>
+                                                    <div className="quick-item"><strong>Communication:</strong> Only through official coordinator (WhatsApp)</div>
+                                                    <div className="quick-item"><strong>Privacy:</strong> Your personal data will not be published</div>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="terms-quick-list">
-                                        {isAr ? (
-                                            <>
-                                                <div className="quick-item"><strong>الإراد الكامل:</strong> تقديم الطلب بمحض إرادتك</div>
-                                                <div className="quick-item"><strong>الجدي:</strong> لا توجد طلبات وهمي أو متكرر</div>
-                                                <div className="quick-item"><strong>الإلغاء:</strong> يجب إبلاغ الفريق قبل التسليم بـ 24 ساع على الأقل</div>
-                                                <div className="quick-item"><strong>المسؤولي:</strong> أنت مسؤول عن المادة بعد التسليم</div>
-                                                <div className="quick-item"><strong>التواصل:</strong> فقط من لال المنسق الرسمي (الواتس أب)</div>
-                                                <div className="quick-item"><strong>الصوصي:</strong> لن يتم نشر بياناتك الشصي</div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="quick-item"><strong>Full Consent:</strong> Submit request of your own free will</div>
-                                                <div className="quick-item"><strong>Seriousness:</strong> No fake or duplicate requests allowed</div>
-                                                <div className="quick-item"><strong>Cancellation:</strong> Notify team at least 24 hours before delivery</div>
-                                                <div className="quick-item"><strong>Responsibility:</strong> You are responsible for the material after delivery</div>
-                                                <div className="quick-item"><strong>Communication:</strong> Only through official coordinator (WhatsApp)</div>
-                                                <div className="quick-item"><strong>Privacy:</strong> Your personal data will not be published</div>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
+                                )}
 
                                 <label className="terms-label agreement-checkbox">
                                     <input
@@ -4092,23 +4097,21 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         checked={preRequestForm.agreedToPreRequestTerms}
                                         onChange={(e) => setPreRequestForm(prev => ({ ...prev, agreedToPreRequestTerms: e.target.checked }))}
                                     />
-                                    {isAr ? 'أقر بأنني قرأت ووافقت على جميع الشروط والأحكام أعلاه' : 'I have read and agree to all terms and conditions above'}
+                                    {isAr ? 'أقر بأنني قرأت ووافقت على الشروط والأحكام' : 'I have read and agree to the terms and conditions'}
                                 </label>
-                                {preRequestForm.type === 'need' && (
-                                    <label className="terms-label urgent-need-row">
-                                        <input
-                                            type="checkbox"
-                                            checked={preRequestForm.acknowledgeUrgentNeed}
-                                            onChange={(e) => setPreRequestForm(prev => ({ ...prev, acknowledgeUrgentNeed: e.target.checked }))}
-                                        />
-                                        {isAr ? 'أقر بأنني بحاج ماس للماد' : 'I acknowledge that I urgently need this material'}
-                                    </label>
+                                {preRequestForm.type === 'donate' && !hasViewedTerms && (
+                                    <p className="terms-hint-text">
+                                        {isAr ? 'اضغط على عرض الشروط قبل إرسال الطلب.' : 'Please click View Terms before submitting the request.'}
+                                    </p>
                                 )}
+                                <button
+                                    type="submit"
+                                    className="submit-btn"
+                                    disabled={preRequestLoading || !preRequestForm.agreedToPreRequestTerms || (preRequestForm.type === 'donate' && !hasViewedTerms)}
+                                >
+                                    {preRequestLoading ? (isAr ? 'جارٍ الإرسال...' : 'Submitting...') : (isAr ? 'إرسال الطلب' : 'Submit Request')}
+                                </button>
                             </div>
-
-                            <button type="submit" className="submit-btn" disabled={preRequestLoading}>
-                                {preRequestLoading ? (isAr ? 'جارٍ الإرسال...' : 'Submitting...') : (isAr ? 'إرسال الطلب' : 'Submit Request')}
-                            </button>
                         </form>
                     </section>
 
@@ -4442,7 +4445,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         className={`tab-btn ${activeTab === 'preRequests' ? 'active' : ''}`}
                                         onClick={() => setActiveTab('preRequests')}
                                     >
-                                         {isAr ? 'طلبات مسبق' : 'Pre-Requests'}
+                                        {isAr ? 'طلبات مسبقة' : 'Pre-Requests'}
                                         {preRequests.length > 0 && (
                                             <span className="tab-badge">{preRequests.length}</span>
                                         )}
@@ -5158,11 +5161,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     <div className="pre-requests-dashboard">
                                                         <div className="formal-table-wrapper">
                                                             <div className="formal-table-header">
-                                                                <span className="formal-table-title"> {isAr ? 'طلبات مسبق' : 'Pre-Requests'}</span>
+                                                                <span className="formal-table-title"> {isAr ? 'طلبات مسبقة' : 'Pre-Requests'}</span>
                                                                 <span className="formal-table-count">{isAr ? `إجمالي: ${preRequests.length} طلب` : `Total: ${preRequests.length} requests`}</span>
                                                             </div>
                                                             {preRequests.length === 0 ? (
-                                                                <div className="empty-state">📭 {isAr ? 'لا توجد طلبات مسبق حتى الآن' : 'No pre-requests yet'}</div>
+                                                                <div className="empty-state">📭 {isAr ? 'لا توجد طلبات مسبقة حتى الآن' : 'No pre-requests yet'}</div>
                                                             ) : (
                                                                 <div className="formal-table-scroll">
                                                                     <table className="formal-table prerequests-formal-table">
@@ -5842,7 +5845,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     {/* Notes */}
                                                     <div style={{ gridColumn: '1 / -1' }}>
                                                         <label className="schedule-form-label">{isAr ? 'ملاحظات' : 'Notes'}</label>
-                                                        <input type="text" value={scheduleFormData.notes} onChange={e => setScheduleFormData(p => ({ ...p, notes: e.target.value }))} placeholder={isAr ? 'ملاحظات اتياري...' : 'Optional notes...'} className="schedule-form-input" />
+                                                        <input type="text" value={scheduleFormData.notes} onChange={e => setScheduleFormData(p => ({ ...p, notes: e.target.value }))} placeholder={isAr ? 'ملاحظات اختيارية...' : 'Optional notes...'} className="schedule-form-input" />
                                                     </div>
                                                     {/* Actions */}
                                                     <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
@@ -7266,14 +7269,14 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                             </div>
                                                             {online && status.currentTab && (
                                                                 <div className="staff-detail-row">
-                                                                    <label>{isAr ? 'الصفح المفتوح حالياً' : 'Current Page'}</label>
+                                                                    <label>{isAr ? 'الصفحة المفتوح حالياً' : 'Current Page'}</label>
                                                                     <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>
                                                                         {getTabLabel(status.currentTab)}
                                                                     </span>
                                                                 </div>
                                                             )}
                                                             <div className="staff-detail-row">
-                                                                <label>{isAr ? 'آر تسجيل دول' : 'Last Login'}</label>
+                                                                <label>{isAr ? 'آخر تسجيل دخول' : 'Last Login'}</label>
                                                                 <span>{formatStatusTime(status.lastLogin)}</span>
                                                             </div>
                                                             <div className="staff-detail-row">
@@ -7656,7 +7659,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         value={description}
                                                         onChange={e => updateMaterialField('description', e.target.value)}
                                                         className="form-input material-desc-input"
-                                                        placeholder={isAr ? 'وصف المادة (اتياري)' : 'Description (optional)'}
+                                                        placeholder={isAr ? 'وصف المادة (اختياري)' : 'Description (optional)'}
                                                     />
                                                     {['reserved', 'completed'].includes(status) && (
                                                         <div className="taker-info-fields" style={{ marginTop: '10px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>
@@ -7766,8 +7769,8 @@ Please contact us to coordinate the pickup.Thank you.`;
                             {loginStep === 1 && (
                                 <>
                                     <div className="modal-header">
-                                        <h2>🔒 {isAr ? 'بواب الوصول' : 'Access Gateway'}</h2>
-                                        <p>{isAr ? 'أدل الكود للمتابع' : 'Enter the code to continue'}</p>
+                                        <h2>🔒 {isAr ? 'بوابة الوصول' : 'Access Gateway'}</h2>
+                                        <p>{isAr ? 'أدخل الكود للمتابعة' : 'Enter the code to continue'}</p>
                                     </div>
                                     <form className="login-form" onSubmit={e => {
                                         e.preventDefault();
@@ -7804,7 +7807,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                             {loginStep === 2 && (
                                 <>
                                     <div className="modal-header">
-                                        <h2>🔐 {isAr ? 'دول الفريق' : 'Staff Login'}</h2>
+                                        <h2>🔐 {isAr ? 'دخول الفريق' : 'Staff Login'}</h2>
                                         <p>{isAr ? 'اص بفريق الإدار والمنسقين فقط' : 'For management team and coordinators only'}</p>
                                     </div>
                                     <form className="login-form" onSubmit={handleLogin}>
@@ -7870,7 +7873,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         setCaptchaInput(e.target.value);
                                                         setCaptchaError(false);
                                                     }}
-                                                    placeholder={isAr ? 'أدل الرمز أعلاه' : 'Enter the code above'}
+                                                    placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
                                                     autoComplete="off"
                                                     maxLength="6"
                                                 />
@@ -7882,7 +7885,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             type="submit"
                                             className="submit-btn"
                                         >
-                                            {isAr ? 'تسجيل الدول' : 'Login'}
+                                            {isAr ? 'تسجيل الدخول' : 'Login'}
                                         </button>
                                     </form>
                                 </>
@@ -7892,7 +7895,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 <>
                                     <div className="modal-header">
                                         <h2>✉️ {isAr ? 'التحقق عبر البريد الإلكتروني' : 'Email Verification'}</h2>
-                                        <p>{isAr ? 'تم إرسال رمز تحقق إلى البريد الإلكتروني التالي. أدله لإكمال تسجيل الدول.' : 'A verification code has been sent to the coordinator email below. Enter it to complete login.'}</p>
+                                        <p>{isAr ? 'تم إرسال رمز تحقق إلى البريد الإلكتروني التالي. أدخله لإكمال تسجيل الدخول.' : 'A verification code has been sent to the coordinator email below. Enter it to complete login.'}</p>
                                     </div>
                                     <form className="login-form" onSubmit={handleVerificationSubmit}>
                                         <div className="form-group">
@@ -7953,7 +7956,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <>
                                         <div className="modal-header" style={{ position: 'relative' }}>
                                             <h2>🛡️ {isAr ? 'التحقق بطوتين (2FA)' : 'Two-Factor Authentication'}</h2>
-                                            <p>{isAr ? 'أدل الرمز المكون من 6 أرقام من تطبيق Authenticator الاص بك.' : 'Enter the 6-digit code from your authenticator app.'}</p>
+                                            <p>{isAr ? 'أدخل الرمز المكون من 6 أرقام من تطبيق Authenticator الخاص بك.' : 'Enter the 6-digit code from your authenticator app.'}</p>
 
                                             {/*  Three-dot button — always visible */}
                                             <button
@@ -7976,7 +7979,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                                                 }}
                                             >
-                                                
+
                                             </button>
                                         </div>
 
@@ -8048,7 +8051,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             </div>
                                             <div className="login-action-row">
                                                 <button type="submit" className="submit-btn" style={{ width: '100%' }}>
-                                                    {isAr ? 'تأكيد ودول' : 'Verify & Enter'}
+                                                    {isAr ? 'تأكيد وتسجيل الدخول' : 'Verify & Enter'}
                                                 </button>
                                             </div>
                                         </form>
@@ -8067,7 +8070,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 <h2>🛡️ {isAr ? 'تأمين الحساب بـ 2FA' : 'Secure Account with 2FA'}</h2>
                                 <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '8px 0 16px', lineHeight: '1.5' }}>
                                     {isAr
-                                        ? `امسح رمز الاستجاب السريع (QR Code) باستدام تطبيق Authenticator الاص بك (مثل Google Authenticator أو Authy) أو أدل المفتاح السري يدوياً لتوليد الرموز.`
+                                        ? `امسح رمز الاستجابة السريعة (QR Code) باستخدام تطبيق Authenticator الخاص بك (مثل Google Authenticator أو Authy) أو أدخل المفتاح السري يدوياً لتوليد الرموز.`
                                         : `Scan the QR code with your authenticator app (Google Authenticator, Authy, etc.) or enter the secret manually to generate login codes.`
                                     }
                                 </p>
@@ -8195,7 +8198,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <small className="gender-field-hint">
                                         {isAr
-                                            ? 'يُستدم الجنس لتصنيف موادك وإيصالها للمنسق المتص بقسمك لتسهيل عملي التسليم والتواصل'
+                                            ? 'يُستخدم الجنس لتصنيف موادك وإيصالها للمنسق المتصل بقسمك لتسهيل عملية التسليم والتواصل'
                                             : 'Gender is used to route your materials to the right coordinator for organized delivery and communication'}
                                     </small>
                                 </div>
@@ -8203,7 +8206,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <label>{isAr ? 'المواد المتوفر' : 'Available Materials'}</label>
                                     <div className="material-input-container">
                                         <input type="text" value={currentMaterial.name} onChange={e => setCurrentMaterial(prev => ({ ...prev, name: e.target.value }))} placeholder={isAr ? 'اسم المادة (مثال: كتاب الفيزياء 1)' : 'Material name (e.g. Physics 1 Book)'} className="form-input" />
-                                        <textarea value={currentMaterial.description} onChange={e => setCurrentMaterial(prev => ({ ...prev, description: e.target.value }))} placeholder={isAr ? 'وصف المادة (اتياري): مثال: سلايدات كامل، سلايدات الميد فقط، كتاب + شرح، إل...' : 'Material description (optional): e.g. Complete slides, Midterm only, Book + notes, etc.'} className="form-input material-description" rows="2" />
+                                        <textarea value={currentMaterial.description} onChange={e => setCurrentMaterial(prev => ({ ...prev, description: e.target.value }))} placeholder={isAr ? 'وصف المادة (اختياري): مثال: سلايدات كاملة، سلايدات الميد فقط، كتاب + شرح، إل...' : 'Material description (optional): e.g. Complete slides, Midterm only, Book + notes, etc.'} className="form-input material-description" rows="2" />
                                         <button type="button" onClick={handleAddMaterial} className="add-btn">{isAr ? 'إضاف' : 'Add'}</button>
                                     </div>
                                     <small className="form-hint">{isAr ? 'يمكنك إضاف أكثر من مادة بالنقر على "إضاف" عد مرات' : 'You can add multiple materials by clicking "Add" multiple times'}</small>
@@ -8229,12 +8232,12 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </h4>
                                     <p className="disclaimer-content">
                                         {isAr
-                                            ? 'المواد التي يتم التبرع بها تصبح من ضمن المواد المحجوز لدى الموقع، وتبقى تحت تصرف مسؤول الموقع أو المنسقين المعتمدين إلى حين انتهاء الحمل. يتم التواصل مع المتبرعين أو الحاجزين من قبل مسؤول الموقع أو المنسقين المعتمدين فقط. الموقع يلي مسؤوليته عن أي تواصل يتم من قبل أي شص آر باسم الموقع.'
+                                            ? 'المواد التي يتم التبرع بها تصبح من ضمن المواد المحجوزة لدى الموقع، وتبقى تحت تصرف مسؤول الموقع أو المنسقين المعتمدين إلى حين انتهاء الحملة. يتم التواصل مع المتبرعين أو الحاجزين من قبل مسؤول الموقع أو المنسقين المعتمدين فقط. الموقع لا يتحمل مسؤولية أي تواصل يتم من قبل أي شخص آخر باسم الموقع.'
                                             : 'Donated materials become part of the reserved materials managed by the site and remain under the control of the site administrator or approved coordinators until the end of the campaign. Communication is carried out only by authorized coordinators or the site administrator. We disclaim responsibility for any communication by anyone else in the name of the website.'}
                                     </p>
                                     <p className="disclaimer-content" style={{ marginTop: '0.6rem', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '0.6rem', fontWeight: 600 }}>
                                         {isAr
-                                            ? 'موعد تسليم المواد متوقع يكون لال الأسبوع الأول أو الثاني من بداي الدوام الرسمي. على كل من يرغب في حجز مادة أن يكون على إدراك تام بأنه بحاج إليها فعلاً — لا يُقبل إلغاء التسليم بحج عدم الرغب في المادة بعد تأكيد الحجز.'
+                                            ? 'موعد تسليم المواد متوقع أن يكون في الأسبوع الأول أو الثاني من بداية الدوام الرسمي. على كل من يرغب في حجز مادة أن يكون على إدراك تام بأنه بحاجة إليها فعلاً — لا يُقبل إلغاء التسليم بحجة عدم الرغبة في المادة بعد تأكيد الحجز.'
                                             : 'Material delivery is expected during the first or second week of the official semester. Anyone wishing to book a material must be fully aware that they genuinely need it — cancellation of delivery will not be accepted after booking confirmation on the grounds of no longer wanting the material.'}
                                     </p>
                                 </div>
@@ -8266,7 +8269,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 setDonationCaptchaInput(e.target.value);
                                                 setDonationCaptchaError(false);
                                             }}
-                                            placeholder={isAr ? 'أدل الرمز أعلاه' : 'Enter the code above'}
+                                            placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
                                             autoComplete="off"
                                             maxLength="6"
                                         />
@@ -8347,7 +8350,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 className="form-input pre-request-notes"
                                 value={preRequestForm.notes}
                                 onChange={(e) => setPreRequestForm(prev => ({ ...prev, notes: e.target.value }))}
-                                placeholder={isAr ? 'ملاحظات إضافي (اتياري)' : 'Additional notes (optional)'}
+                                placeholder={isAr ? 'ملاحظات إضافية (اختياري)' : 'Additional notes (optional)'}
                                 rows="3"
                             />
 
@@ -8360,16 +8363,6 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     />
                                     {isAr ? 'أقر بأنني قرأت الشروط والأحكام وأوافق عليها' : 'I confirm that I have read and agree to the terms and conditions'}
                                 </label>
-                                {preRequestForm.type === 'need' && (
-                                    <label className="checkbox-label">
-                                        <input
-                                            type="checkbox"
-                                            checked={preRequestForm.acknowledgeUrgentNeed}
-                                            onChange={(e) => setPreRequestForm(prev => ({ ...prev, acknowledgeUrgentNeed: e.target.checked }))}
-                                        />
-                                        {isAr ? 'أقر بأنني بحاج ماس لهذه المادة' : 'I confirm that I urgently need this material'}
-                                    </label>
-                                )}
                             </div>
 
                             <button type="submit" className="submit-btn full-width" disabled={preRequestLoading}>
@@ -8388,7 +8381,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     <div className="materials-section glass-card">
                         <div className="section-header">
                             <h2>
-                                {isAr ? 'المواد المتوفر' : 'Available Materials'}
+                                {isAr ? 'المواد المتوفرة' : 'Available Materials'}
                                 {systemSettings.isExchangeActive && bookingOpen && <span className="live-badge">● {isAr ? 'مباشر الآن' : 'Live Now'}</span>}
                             </h2>
                             <p>{isAr ? 'تصفح المواد المتاح للتبادل' : 'Browse available materials for exchange'}</p>
@@ -8407,785 +8400,518 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             <div className="countdown-item"><span className="time-val">{timeLeft.seconds}</span><span className="time-label">{isAr ? 'ثاني' : 'Sec'}</span></div>
                                         </div>
                                         {systemSettings.bookingStartTime ? (
-                                            <p className="booking-info-text">
-                                                {isAr
-                                                    ? `الفتر الحالي مصص حصراً لجمع وتبرع المواد، على أن يبدأ حجزها بتاري ${new Date(systemSettings.bookingStartTime).toLocaleString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`
-                                                    : `This period is exclusively for donations. Booking opens on ${new Date(systemSettings.bookingStartTime).toLocaleString('en-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`}
-                                            </p>
+                                            <>
+                                                <p className="booking-info-text">
+                                                    {isAr
+                                                        ? `الفترة الحالية مخصصة حصراً لجمع وتبرع المواد، على أن يبدأ حجزها بتاريخ ${new Date(systemSettings.bookingStartTime).toLocaleString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`
+                                                        : `This period is exclusively for donations. Booking opens on ${new Date(systemSettings.bookingStartTime).toLocaleString('en-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`}
+                                                </p>
+                                                <input
+                                                    type="text"
+                                                    className={`form-input captcha-input-field ${captchaError ? 'input-error-shake' : ''}`}
+                                                    value={captchaInput}
+                                                    onChange={e => {
+                                                        setCaptchaInput(e.target.value);
+                                                        setCaptchaError(false);
+                                                    }}
+                                                    placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
+                                                    autoComplete="off"
+                                                    maxLength="6"
+                                                />
+                                                <div className="empty-icon">⏳</div>
+                                                <h3>{isAr ? 'جاري التحميل...' : 'Loading...'}</h3>
+                                            </>
+                                        ) : !systemSettings.isExchangeActive ? (
+                                            <div className="no-materials">
+                                                <div className="empty-icon">🔧</div>
+                                                <h3>{isAr ? 'النظام قيد التطوير' : 'System Under Development'}</h3>
+                                                <p>{isAr ? 'نعمل على إطلاق نظام جديد ومتكامل قريباً' : 'We are launching a new integrated system soon'}</p>
+                                            </div>
+                                        ) : availableMaterials.length > 0 ? (
+                                            <div className="materials-grid">
+                                                {availableMaterials.map(item => (
+                                                    <div key={item.uniqueKey} className="donation-card">
+                                                        <div className="donation-main">
+                                                            <div className="material-icon">📚</div>
+                                                            <div className="donation-details"><h3>{item.materialItem.name}</h3></div>
+                                                        </div>
+                                                        <button
+                                                            className={`btn-book ${!bookingOpen ? 'locked' : ''}`}
+                                                            onClick={() => { if (bookingOpen) openBookingModal(item); }}
+                                                            disabled={!bookingOpen}
+                                                            title={!bookingOpen ? (isAr ? 'حمل الحجز مغلق حالياً' : 'Booking campaign is currently closed') : ''}
+                                                        >
+                                                            {isAr ? 'حجز المادة' : 'Book Material'}
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         ) : (
-                                            <p className="booking-info-text">{t('exchange.booking.starts_at')}</p>
-                                        )}
+                                            <div className="no-materials">
+                                                <div className="empty-icon">📦</div>
+                                                <h3>{isAr ? 'لا توجد مواد معروض حالياً' : 'No materials available yet'}</h3>
+                                                <p>{isAr ? 'كن أول المبادرين!' : 'Be the first!'}</p>
+                                            </div>
+                                        )
+                                        }
+
+                                        {
+                                            systemSettings.isExchangeActive && reservedMaterials.length > 0 && (
+                                                <div className="reserved-materials-container">
+                                                    <div className="section-divider-wrapper">
+                                                        <hr className="section-divider" />
+                                                        <span className="divider-text">{isAr ? 'مواد نفذت (غير متاح حالياً)' : 'Out of Stock (Currently Unavailable)'}</span>
+                                                    </div>
+                                                    <div className="materials-grid">
+                                                        {reservedMaterials.map((item, index) => (
+                                                            <div key={index} className="donation-card reserved-card">
+                                                                <div className="material-icon">📚</div>
+                                                                <div className="donation-details"><h3>{item.materialName}</h3></div>
+                                                                <button className="btn-book disabled" disabled>{isAr ? 'تم الحجز' : 'Reserved'}</button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                 </div>
                             )
                         }
 
-                        {
-                            !settingsLoaded ? (
-                                <div className="no-materials" style={{ opacity: 0.5 }}>
-                                    <div className="empty-icon">⏳</div>
-                                    <h3>{isAr ? 'جاري التحميل...' : 'Loading...'}</h3>
-                                </div>
-                            ) : !systemSettings.isExchangeActive ? (
-                                <div className="no-materials">
-                                    <div className="empty-icon">🔧</div>
-                                    <h3>{isAr ? 'النظام قيد التطوير' : 'System Under Development'}</h3>
-                                    <p>{isAr ? 'نعمل على إطلاق نظام جديد ومتكامل قريباً' : 'We are launching a new integrated system soon'}</p>
-                                </div>
-                            ) : availableMaterials.length > 0 ? (
-                                <div className="materials-grid">
-                                    {availableMaterials.map(item => (
-                                        <div key={item.uniqueKey} className="donation-card">
-                                            <div className="donation-main">
-                                                <div className="material-icon">📚</div>
-                                                <div className="donation-details"><h3>{item.materialItem.name}</h3></div>
-                                            </div>
-                                            <button
-                                                className={`btn-book ${!bookingOpen ? 'locked' : ''}`}
-                                                onClick={() => { if (bookingOpen) openBookingModal(item); }}
-                                                disabled={!bookingOpen}
-                                                title={!bookingOpen ? (isAr ? 'حمل الحجز مغلق حالياً' : 'Booking campaign is currently closed') : ''}
-                                            >
-                                                {isAr ? 'حجز المادة' : 'Book Material'}
-                                            </button>
+                        {/* Team Section */}
+                        <section className="coordination-team-section glass-card">
+                            <div className="coordination-badge">
+                                <span className="badge-icon">🤝</span>
+                                <span>{isAr ? 'فريق التنسيق المعتمد' : 'Certified Coordination Team'}</span>
+                            </div>
+                            <div className="coordination-content">
+                                <h3>{isAr ? 'آلي الإشراف والتوزيع' : 'Supervision & Distribution Mechanism'}</h3>
+                                <p className="coordination-description">
+                                    {isAr
+                                        ? 'هناك فريق تنسيق معتمد يقوم بالإشراف وتنسيق عملي التبرع والحجز، حيث يتم التواصل مع الطلاب الذكور من قبل المنسق المعني، والطالبات الإناث من قبل المنسق المعني، وذلك لضمان الخصوصية والتنظيم والسرعة في تسليم المواد.'
+                                        : 'There is a certified coordination team supervising and coordinating the donation and booking process: male students are contacted by the male coordinator, and female students by the female coordinator, ensuring privacy, organization, and speed in material delivery.'}
+                                </p>
+                                <div className="coordination-features">
+                                    <div className="coord-feature-item">
+                                        <span className="feature-icon">♂️</span>
+                                        <div className="feature-text">
+                                            <h4>{isAr ? 'قسم الذكور' : 'Male Section'}</h4>
+                                            <p>{isAr ? `بإشراف المنسق المعني (${systemSettings.ahmadNameAr || 'أحمد'})` : `Supervised by male coordinator (${systemSettings.ahmadNameEn || 'Ahmad'})`}</p>
                                         </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="no-materials">
-                                    <div className="empty-icon">📦</div>
-                                    <h3>{isAr ? 'لا توجد مواد معروض حالياً' : 'No materials available yet'}</h3>
-                                    <p>{isAr ? 'كن أول المبادرين!' : 'Be the first!'}</p>
-                                </div>
-                            )
-                        }
-
-                        {
-                            systemSettings.isExchangeActive && reservedMaterials.length > 0 && (
-                                <div className="reserved-materials-container">
-                                    <div className="section-divider-wrapper">
-                                        <hr className="section-divider" />
-                                        <span className="divider-text">{isAr ? 'مواد نفذت (غير متاح حالياً)' : 'Out of Stock (Currently Unavailable)'}</span>
                                     </div>
-                                    <div className="materials-grid">
-                                        {reservedMaterials.map((item, index) => (
-                                            <div key={index} className="donation-card reserved-card">
-                                                <div className="material-icon">📚</div>
-                                                <div className="donation-details"><h3>{item.materialName}</h3></div>
-                                                <button className="btn-book disabled" disabled>{isAr ? 'تم الحجز' : 'Reserved'}</button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )
-                        }
-                    </div>
-
-                    {/* Team Section */}
-                    <section className="coordination-team-section glass-card">
-                        <div className="coordination-badge">
-                            <span className="badge-icon">🤝</span>
-                            <span>{isAr ? 'فريق التنسيق المعتمد' : 'Certified Coordination Team'}</span>
-                        </div>
-                        <div className="coordination-content">
-                            <h3>{isAr ? 'آلي الإشراف والتوزيع' : 'Supervision & Distribution Mechanism'}</h3>
-                            <p className="coordination-description">
-                                {isAr
-                                    ? 'هناك فريق تنسيق معتمد يقوم بالإشراف وتنسيق عملي التبرع والحجز، حيث يتم التواصل مع الطلاب الذكور من قبل المنسق المعني، والطالبات الإناث من قبل المنسق المعني، وذلك لضمان الصوصي والتنظيم والسرع في تسليم المواد.'
-                                    : 'There is a certified coordination team supervising and coordinating the donation and booking process: male students are contacted by the male coordinator, and female students by the female coordinator, ensuring privacy, organization, and speed in material delivery.'}
-                            </p>
-                            <div className="coordination-features">
-                                <div className="coord-feature-item">
-                                    <span className="feature-icon">♂️</span>
-                                    <div className="feature-text">
-                                        <h4>{isAr ? 'قسم الذكور' : 'Male Section'}</h4>
-                                        <p>{isAr ? `بإشراف المنسق المعني (${systemSettings.ahmadNameAr || 'أحمد'})` : `Supervised by male coordinator (${systemSettings.ahmadNameEn || 'Ahmad'})`}</p>
-                                    </div>
-                                </div>
-                                <div className="coord-feature-item">
-                                    <span className="feature-icon">♀️</span>
-                                    <div className="feature-text">
-                                        <h4>{isAr ? 'قسم الإناث' : 'Female Section'}</h4>
-                                        <p>{isAr ? `بإشراف المنسق المعني (${systemSettings.saraNameAr || 'سار'})` : `Supervised by female coordinator (${systemSettings.saraNameEn || 'Sara'})`}</p>
+                                    <div className="coord-feature-item">
+                                        <span className="feature-icon">♀️</span>
+                                        <div className="feature-text">
+                                            <h4>{isAr ? 'قسم الإناث' : 'Female Section'}</h4>
+                                            <p>{isAr ? `بإشراف المنسق المعني (${systemSettings.saraNameAr || 'سار'})` : `Supervised by female coordinator (${systemSettings.saraNameEn || 'Sara'})`}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
+                    </div>
                 </div>
 
-                {/* Booking Modal */}
-                {
-                    showBookingModal && (
-                        <div className="modal-overlay">
-                            <div className="booking-modal glass-card">
-                                <button className="close-modal" onClick={() => setShowBookingModal(false)}>×</button>
-                                <div className="modal-header">
-                                    <h2>{isAr ? 'حجز المادة' : 'Book Material'}</h2>
-                                    <p>{isAr ? 'يرجى ملء معلوماتك لحجز المادة وسنتواصل معك قريباً' : 'Please fill in your details to book the material'}</p>
-                                    <div className="material-to-book"><span>📖</span><strong>{selectedMaterial?.materialName}</strong></div>
-                                </div>
-                                <form className="booking-form" onSubmit={handleBookingSubmit}>
-                                    <div className="form-group">
-                                        <label>{isAr ? 'الاسم (من مقطعين على الأقل)' : 'Full Name (at least 2 parts)'}</label>
-                                        <input type="text" required value={bookingData.name} onChange={e => setBookingData({ ...bookingData, name: e.target.value })} placeholder={isAr ? 'مثال: محمد أحمد' : 'e.g. Mohammad Ahmad'} className="form-input" />
+                    {/* Booking Modal */}
+                    {
+                        showBookingModal && (
+                            <div className="modal-overlay">
+                                <div className="booking-modal glass-card">
+                                    <button className="close-modal" onClick={() => setShowBookingModal(false)}>×</button>
+                                    <div className="modal-header">
+                                        <h2>{isAr ? 'حجز المادة' : 'Book Material'}</h2>
+                                        <p>{isAr ? 'يرجى ملء معلوماتك لحجز المادة وسنتواصل معك قريباً' : 'Please fill in your details to book the material'}</p>
+                                        <div className="material-to-book"><span>📖</span><strong>{selectedMaterial?.materialName}</strong></div>
                                     </div>
-                                    <div className="form-group">
-                                        <label>{isAr ? 'رقم الهاتف للتواصل واستلام المادة' : 'Contact Number'}</label>
-                                        <input type="tel" required value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: toEnglishNumerals(e.target.value) })} placeholder="07xxxxxxxx" className="form-input" dir="ltr" />
-                                    </div>
-                                    {/* ── Gender Selection ── */}
-                                    <div className="form-group">
-                                        <label className="gender-field-label">
-                                            {isAr ? 'الجنس' : 'Gender'}
-                                            <span className="required-star">*</span>
-                                            <span
-                                                className="gender-hint-icon"
-                                                title={isAr
-                                                    ? 'اتيار الجنس يساعد المنسق المتص بقسمك على التواصل معك وإتمام عملي الاستلام بشكل منظم'
-                                                    : 'Selecting gender helps the right coordinator contact you to arrange material pickup'}
-                                            >
-                                                i
-                                            </span>
-                                        </label>
-                                        <div className="gender-select-row">
-                                            <button
-                                                type="button"
-                                                className={`gender-select-btn ${bookingData.gender === 'male' ? 'gender-active-male' : ''}`}
-                                                onClick={() => setBookingData(prev => ({ ...prev, gender: 'male' }))}
-                                            >
-                                                <span>{isAr ? 'ذكر' : 'Male'}</span>
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={`gender-select-btn ${bookingData.gender === 'female' ? 'gender-active-female' : ''}`}
-                                                onClick={() => setBookingData(prev => ({ ...prev, gender: 'female' }))}
-                                            >
-                                                <span>{isAr ? 'أنثى' : 'Female'}</span>
-                                            </button>
+                                    <form className="booking-form" onSubmit={handleBookingSubmit}>
+                                        <div className="form-group">
+                                            <label>{isAr ? 'الاسم (من مقطعين على الأقل)' : 'Full Name (at least 2 parts)'}</label>
+                                            <input type="text" required value={bookingData.name} onChange={e => setBookingData({ ...bookingData, name: e.target.value })} placeholder={isAr ? 'مثال: محمد أحمد' : 'e.g. Mohammad Ahmad'} className="form-input" />
                                         </div>
-                                        <small className="gender-field-hint">
-                                            {isAr
-                                                ? 'يُستدم لتحديد المنسق المتص الذي سيتواصل معك لتسليمك المادة'
-                                                : 'Used to identify the right coordinator who will contact you for material pickup'}
-                                        </small>
-                                    </div>
-                                    {/* ── CAPTCHA — Verification Code ── */}
-                                    <div className="form-group captcha-form-group">
-                                        <label>{isAr ? 'رمز التحقق' : 'Verification Code'}</label>
-                                        <div className="captcha-wrapper">
-                                            <div className="captcha-canvas-container">
-                                                <canvas
-                                                    ref={bookingCanvasRef}
-                                                    width="240"
-                                                    height="70"
-                                                    className="captcha-canvas"
-                                                />
+                                        <div className="form-group">
+                                            <label>{isAr ? 'رقم الهاتف للتواصل واستلام المادة' : 'Contact Number'}</label>
+                                            <input type="tel" required value={bookingData.phone} onChange={e => setBookingData({ ...bookingData, phone: toEnglishNumerals(e.target.value) })} placeholder="07xxxxxxxx" className="form-input" dir="ltr" />
+                                        </div>
+                                        {/* ── Gender Selection ── */}
+                                        <div className="form-group">
+                                            <label className="gender-field-label">
+                                                {isAr ? 'الجنس' : 'Gender'}
+                                                <span className="required-star">*</span>
+                                                <span
+                                                    className="gender-hint-icon"
+                                                    title={isAr
+                                                        ? 'اتيار الجنس يساعد المنسق المتص بقسمك على التواصل معك وإتمام عملي الاستلام بشكل منظم'
+                                                        : 'Selecting gender helps the right coordinator contact you to arrange material pickup'}
+                                                >
+                                                    i
+                                                </span>
+                                            </label>
+                                            <div className="gender-select-row">
                                                 <button
                                                     type="button"
-                                                    className="captcha-refresh-btn"
-                                                    onClick={generateBookingCaptcha}
-                                                    title={isAr ? 'تحديث الرمز' : 'Refresh code'}
+                                                    className={`gender-select-btn ${bookingData.gender === 'male' ? 'gender-active-male' : ''}`}
+                                                    onClick={() => setBookingData(prev => ({ ...prev, gender: 'male' }))}
                                                 >
-                                                    🔄
+                                                    <span>{isAr ? 'ذكر' : 'Male'}</span>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className={`gender-select-btn ${bookingData.gender === 'female' ? 'gender-active-female' : ''}`}
+                                                    onClick={() => setBookingData(prev => ({ ...prev, gender: 'female' }))}
+                                                >
+                                                    <span>{isAr ? 'أنثى' : 'Female'}</span>
                                                 </button>
                                             </div>
+                                            <small className="gender-field-hint">
+                                                {isAr
+                                                    ? 'يُستخدم لتحديد المنسق المعني الذي سيتواصل معك لتسليم المادة'
+                                                    : 'Used to identify the right coordinator who will contact you for material pickup'}
+                                            </small>
+                                        </div>
+                                        {/* ── CAPTCHA — Verification Code ── */}
+                                        <div className="form-group captcha-form-group">
+                                            <label>{isAr ? 'رمز التحقق' : 'Verification Code'}</label>
+                                            <div className="captcha-wrapper">
+                                                <div className="captcha-canvas-container">
+                                                    <canvas
+                                                        ref={bookingCanvasRef}
+                                                        width="240"
+                                                        height="70"
+                                                        className="captcha-canvas"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="captcha-refresh-btn"
+                                                        onClick={generateBookingCaptcha}
+                                                        title={isAr ? 'تحديث الرمز' : 'Refresh code'}
+                                                    >
+                                                        🔄
+                                                    </button>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    className={`form-input captcha-input-field ${bookingCaptchaError ? 'input-error-shake' : ''}`}
+                                                    value={bookingCaptchaInput}
+                                                    onChange={e => {
+                                                        setBookingCaptchaInput(e.target.value);
+                                                        setBookingCaptchaError(false);
+                                                    }}
+                                                    placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
+                                                    autoComplete="off"
+                                                    maxLength="6"
+                                                />
+                                            </div>
+                                            {bookingCaptchaError && (
+                                                <div className="captcha-error-msg">⚠️ {isAr ? 'رمز التحقق غير صحيح — حاول مرة أخرى' : 'Incorrect code — please try again'}</div>
+                                            )}
+                                        </div>
+                                        <div className="disclaimer-box" style={{ margin: '0.5rem 0 1rem 0' }}>
+                                            <h4 className="disclaimer-title">
+                                                <i className="fas fa-exclamation-triangle"></i>
+                                                {isAr ? 'تنويه هام قبل تأكيد الحجز' : 'Important Note Before Confirming'}
+                                            </h4>
+                                            <p className="disclaimer-content">
+                                                {isAr
+                                                    ? 'موعد تسليم المواد متوقع يكون لال الأسبوع الأول أو الثاني من بداي الدوام الرسمي. بتأكيدك للحجز أنت تُقر بأنك بحاج فعلي لهذه المادة وعلى إدراك تام بذلك — لا يُقبل إلغاء التسليم بحج عدم الرغب في المادة بعد تأكيد الحجز.'
+                                                    : 'Material delivery is expected during the first or second week of the official semester. By confirming your booking, you acknowledge that you genuinely need this material — cancellation of delivery will not be accepted after booking confirmation on the grounds of no longer wanting it.'}
+                                            </p>
+                                        </div>
+                                        <button type="submit" className="submit-btn full-width" disabled={loading}>
+                                            {loading ? (isAr ? 'جاري الحجز...' : 'Booking...') : (isAr ? 'تأكيد الحجز' : 'Confirm Booking')}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        )
+                    }
+
+                    {/* Edit Donation Modal moved to staff dashboard above */}
+                    {
+                        false && showEditModal && selectedDonationForEdit && (
+                            <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) { setShowEditModal(false); setSelectedDonationForEdit(null); } }}>
+                                <div className="booking-modal glass-card edit-donation-modal" onClick={e => e.stopPropagation()}>
+                                    <button className="close-modal" onClick={() => { setShowEditModal(false); setSelectedDonationForEdit(null); }}>×</button>
+                                    <div className="modal-header">
+                                        <h2>✏️ {isAr ? 'تعديل بيانات طلب التبرع' : 'Edit Donation Record'}</h2>
+                                        <p>{isAr ? 'تحديث معلومات المتبرع والمواد وحال الحجز بالكامل' : 'Update donor info, materials, and reservation status'}</p>
+                                    </div>
+                                    <form className="booking-form" onSubmit={handleSaveEditDonation}>
+                                        <div className="form-group">
+                                            <label>{isAr ? 'اسم المتبرع' : 'Donor Name'}</label>
                                             <input
                                                 type="text"
-                                                className={`form-input captcha-input-field ${bookingCaptchaError ? 'input-error-shake' : ''}`}
-                                                value={bookingCaptchaInput}
-                                                onChange={e => {
-                                                    setBookingCaptchaInput(e.target.value);
-                                                    setBookingCaptchaError(false);
-                                                }}
-                                                placeholder={isAr ? 'أدل الرمز أعلاه' : 'Enter the code above'}
-                                                autoComplete="off"
-                                                maxLength="6"
+                                                required
+                                                value={selectedDonationForEdit.studentName}
+                                                onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentName: e.target.value })}
+                                                className="form-input"
                                             />
                                         </div>
-                                        {bookingCaptchaError && (
-                                            <div className="captcha-error-msg">⚠️ {isAr ? 'رمز التحقق غير صحيح — حاول مر أرى' : 'Incorrect code — please try again'}</div>
-                                        )}
-                                    </div>
-                                    <div className="disclaimer-box" style={{ margin: '0.5rem 0 1rem 0' }}>
-                                        <h4 className="disclaimer-title">
-                                            <i className="fas fa-exclamation-triangle"></i>
-                                            {isAr ? 'تنويه هام قبل تأكيد الحجز' : 'Important Note Before Confirming'}
-                                        </h4>
-                                        <p className="disclaimer-content">
-                                            {isAr
-                                                ? 'موعد تسليم المواد متوقع يكون لال الأسبوع الأول أو الثاني من بداي الدوام الرسمي. بتأكيدك للحجز أنت تُقر بأنك بحاج فعلي لهذه المادة وعلى إدراك تام بذلك — لا يُقبل إلغاء التسليم بحج عدم الرغب في المادة بعد تأكيد الحجز.'
-                                                : 'Material delivery is expected during the first or second week of the official semester. By confirming your booking, you acknowledge that you genuinely need this material — cancellation of delivery will not be accepted after booking confirmation on the grounds of no longer wanting it.'}
-                                        </p>
-                                    </div>
-                                    <button type="submit" className="submit-btn full-width" disabled={loading}>
-                                        {loading ? (isAr ? 'جاري الحجز...' : 'Booking...') : (isAr ? 'تأكيد الحجز' : 'Confirm Booking')}
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    )
-                }
-
-                {/* Edit Donation Modal moved to staff dashboard above */}
-                {
-                    false && showEditModal && selectedDonationForEdit && (
-                        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) { setShowEditModal(false); setSelectedDonationForEdit(null); } }}>
-                            <div className="booking-modal glass-card edit-donation-modal" onClick={e => e.stopPropagation()}>
-                                <button className="close-modal" onClick={() => { setShowEditModal(false); setSelectedDonationForEdit(null); }}>×</button>
-                                <div className="modal-header">
-                                    <h2>✏️ {isAr ? 'تعديل بيانات طلب التبرع' : 'Edit Donation Record'}</h2>
-                                    <p>{isAr ? 'تحديث معلومات المتبرع والمواد وحال الحجز بالكامل' : 'Update donor info, materials, and reservation status'}</p>
-                                </div>
-                                <form className="booking-form" onSubmit={handleSaveEditDonation}>
-                                    <div className="form-group">
-                                        <label>{isAr ? 'اسم المتبرع' : 'Donor Name'}</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            value={selectedDonationForEdit.studentName}
-                                            onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentName: e.target.value })}
-                                            className="form-input"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>{isAr ? 'رقم هاتف المتبرع' : 'Donor Phone'}</label>
-                                        <input
-                                            type="text"
-                                            required
-                                            value={selectedDonationForEdit.phoneNumber}
-                                            onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, phoneNumber: toEnglishNumerals(e.target.value) })}
-                                            className="form-input"
-                                            maxLength="10"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>{isAr ? 'جنس المتبرع' : 'Donor Gender'}</label>
-                                        <select
-                                            value={selectedDonationForEdit.studentGender}
-                                            onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentGender: e.target.value })}
-                                            className="form-input"
-                                        >
-                                            <option value="male">{isAr ? 'ذكر' : 'Male'}</option>
-                                            <option value="female">{isAr ? 'أنثى' : 'Female'}</option>
-                                        </select>
-                                    </div>
-
-                                    {loggedInUser.role === 'admin' && (
-                                        <div className="form-group terms-checkbox-container" style={{ margin: '15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <div className="form-group">
+                                            <label>{isAr ? 'رقم هاتف المتبرع' : 'Donor Phone'}</label>
                                             <input
-                                                type="checkbox"
-                                                id="publishedCheckbox"
-                                                checked={selectedDonationForEdit.publishedToCoordinators || false}
-                                                onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, publishedToCoordinators: e.target.checked })}
+                                                type="text"
+                                                required
+                                                value={selectedDonationForEdit.phoneNumber}
+                                                onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, phoneNumber: toEnglishNumerals(e.target.value) })}
+                                                className="form-input"
+                                                maxLength="10"
                                             />
-                                            <label htmlFor="publishedCheckbox" style={{ margin: 0, cursor: 'pointer' }}>
-                                                📢 {isAr ? 'نشر وتفويض للمنسقين' : 'Publish/Delegate to Coordinators'}
-                                            </label>
                                         </div>
-                                    )}
+                                        <div className="form-group">
+                                            <label>{isAr ? 'جنس المتبرع' : 'Donor Gender'}</label>
+                                            <select
+                                                value={selectedDonationForEdit.studentGender}
+                                                onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentGender: e.target.value })}
+                                                className="form-input"
+                                            >
+                                                <option value="male">{isAr ? 'ذكر' : 'Male'}</option>
+                                                <option value="female">{isAr ? 'أنثى' : 'Female'}</option>
+                                            </select>
+                                        </div>
 
-                                    <div className="edit-modal-materials-section">
-                                        <h3 style={{ margin: '15px 0 10px 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '5px' }}>📚 {isAr ? 'المواد وحالات الحجز' : 'Materials & Reservation Status'}</h3>
-                                        {(selectedDonationForEdit.materials || []).map((material, index) => {
-                                            const status = typeof material === 'object' ? material.status : 'pending';
-                                            const name = typeof material === 'object' ? material.name : material;
-                                            const description = typeof material === 'object' ? material.description : '';
-                                            const taker = typeof material === 'object' ? (material.takerInfo || {}) : {};
+                                        {loggedInUser.role === 'admin' && (
+                                            <div className="form-group terms-checkbox-container" style={{ margin: '15px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    id="publishedCheckbox"
+                                                    checked={selectedDonationForEdit.publishedToCoordinators || false}
+                                                    onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, publishedToCoordinators: e.target.checked })}
+                                                />
+                                                <label htmlFor="publishedCheckbox" style={{ margin: 0, cursor: 'pointer' }}>
+                                                    📢 {isAr ? 'نشر وتفويض للمنسقين' : 'Publish/Delegate to Coordinators'}
+                                                </label>
+                                            </div>
+                                        )}
 
-                                            const updateMaterialField = (field, val) => {
-                                                const updatedMats = [...selectedDonationForEdit.materials];
-                                                if (typeof updatedMats[index] !== 'object') {
-                                                    updatedMats[index] = { name: updatedMats[index], status: 'pending' };
-                                                }
-                                                updatedMats[index] = { ...updatedMats[index], [field]: val };
-                                                setSelectedDonationForEdit({ ...selectedDonationForEdit, materials: updatedMats });
-                                            };
+                                        <div className="edit-modal-materials-section">
+                                            <h3 style={{ margin: '15px 0 10px 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '5px' }}>📚 {isAr ? 'المواد وحالات الحجز' : 'Materials & Reservation Status'}</h3>
+                                            {(selectedDonationForEdit.materials || []).map((material, index) => {
+                                                const status = typeof material === 'object' ? material.status : 'pending';
+                                                const name = typeof material === 'object' ? material.name : material;
+                                                const description = typeof material === 'object' ? material.description : '';
+                                                const taker = typeof material === 'object' ? (material.takerInfo || {}) : {};
 
-                                            const updateTakerField = (field, val) => {
-                                                const updatedMats = [...selectedDonationForEdit.materials];
-                                                if (typeof updatedMats[index] !== 'object') {
-                                                    updatedMats[index] = { name: updatedMats[index], status: 'pending' };
-                                                }
-                                                const curTaker = updatedMats[index].takerInfo || {};
-                                                updatedMats[index] = {
-                                                    ...updatedMats[index],
-                                                    takerInfo: { ...curTaker, [field]: val }
+                                                const updateMaterialField = (field, val) => {
+                                                    const updatedMats = [...selectedDonationForEdit.materials];
+                                                    if (typeof updatedMats[index] !== 'object') {
+                                                        updatedMats[index] = { name: updatedMats[index], status: 'pending' };
+                                                    }
+                                                    updatedMats[index] = { ...updatedMats[index], [field]: val };
+                                                    setSelectedDonationForEdit({ ...selectedDonationForEdit, materials: updatedMats });
                                                 };
-                                                setSelectedDonationForEdit({ ...selectedDonationForEdit, materials: updatedMats });
-                                            };
 
-                                            return (
-                                                <div key={index} className="edit-material-block" style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '12px' }}>
-                                                    <div className="material-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                                                const updateTakerField = (field, val) => {
+                                                    const updatedMats = [...selectedDonationForEdit.materials];
+                                                    if (typeof updatedMats[index] !== 'object') {
+                                                        updatedMats[index] = { name: updatedMats[index], status: 'pending' };
+                                                    }
+                                                    const curTaker = updatedMats[index].takerInfo || {};
+                                                    updatedMats[index] = {
+                                                        ...updatedMats[index],
+                                                        takerInfo: { ...curTaker, [field]: val }
+                                                    };
+                                                    setSelectedDonationForEdit({ ...selectedDonationForEdit, materials: updatedMats });
+                                                };
+
+                                                return (
+                                                    <div key={index} className="edit-material-block" style={{ border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.1)', padding: '12px', borderRadius: '8px', marginBottom: '12px' }}>
+                                                        <div className="material-details-row" style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                                                            <input
+                                                                type="text"
+                                                                value={name}
+                                                                onChange={e => updateMaterialField('name', e.target.value)}
+                                                                className="form-input material-name-input"
+                                                                placeholder={isAr ? 'اسم المادة' : 'Material name'}
+                                                                style={{ flex: 1 }}
+                                                                required
+                                                            />
+                                                            <select
+                                                                value={status}
+                                                                onChange={e => updateMaterialField('status', e.target.value)}
+                                                                className="form-input material-status-select"
+                                                                style={{ width: '150px' }}
+                                                            >
+                                                                <option value="pending">{isAr ? '⏳ معلّق' : 'Pending'}</option>
+                                                                <option value="approved">{isAr ? '✅ معتمد' : 'Approved'}</option>
+                                                                <option value="reserved">{isAr ? '🔒 محجوز' : 'Reserved'}</option>
+                                                                <option value="completed">{isAr ? '📦 تم تسليمها' : 'Completed'}</option>
+                                                            </select>
+                                                        </div>
                                                         <input
                                                             type="text"
-                                                            value={name}
-                                                            onChange={e => updateMaterialField('name', e.target.value)}
-                                                            className="form-input material-name-input"
-                                                            placeholder={isAr ? 'اسم المادة' : 'Material name'}
-                                                            style={{ flex: 1 }}
-                                                            required
+                                                            value={description}
+                                                            onChange={e => updateMaterialField('description', e.target.value)}
+                                                            className="form-input material-desc-input"
+                                                            placeholder={isAr ? 'وصف المادة (اختياري)' : 'Description (optional)'}
                                                         />
-                                                        <select
-                                                            value={status}
-                                                            onChange={e => updateMaterialField('status', e.target.value)}
-                                                            className="form-input material-status-select"
-                                                            style={{ width: '150px' }}
-                                                        >
-                                                            <option value="pending">{isAr ? '⏳ معلّق' : 'Pending'}</option>
-                                                            <option value="approved">{isAr ? '✅ معتمد' : 'Approved'}</option>
-                                                            <option value="reserved">{isAr ? '🔒 محجوز' : 'Reserved'}</option>
-                                                            <option value="completed">{isAr ? '📦 تم تسليمها' : 'Completed'}</option>
-                                                        </select>
-                                                    </div>
-                                                    <input
-                                                        type="text"
-                                                        value={description}
-                                                        onChange={e => updateMaterialField('description', e.target.value)}
-                                                        className="form-input material-desc-input"
-                                                        placeholder={isAr ? 'وصف المادة (اتياري)' : 'Description (optional)'}
-                                                    />
-                                                    {/* Taker Info (Booker) */}
-                                                    {['reserved', 'completed'].includes(status) && (
-                                                        <div className="taker-info-fields" style={{ marginTop: '10px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>
-                                                            <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>👤 {isAr ? 'معلومات المستلم (الحاجز)' : 'Taker/Booker Info'}</h4>
-                                                            <div className="taker-fields-row" style={{ display: 'flex', gap: '8px' }}>
-                                                                <input
-                                                                    type="text"
-                                                                    value={taker.name || ''}
-                                                                    onChange={e => updateTakerField('name', e.target.value)}
-                                                                    className="form-input"
-                                                                    placeholder={isAr ? 'اسم المستلم' : 'Taker Name'}
-                                                                    style={{ flex: 1 }}
-                                                                    required
-                                                                />
-                                                                <input
-                                                                    type="tel"
-                                                                    value={taker.phone || ''}
-                                                                    onChange={e => updateTakerField('phone', toEnglishNumerals(e.target.value))}
-                                                                    className="form-input"
-                                                                    placeholder={isAr ? 'رقم هاتف المستلم' : 'Taker Phone'}
-                                                                    style={{ flex: 1 }}
-                                                                    required
-                                                                    maxLength="10"
-                                                                />
+                                                        {/* Taker Info (Booker) */}
+                                                        {['reserved', 'completed'].includes(status) && (
+                                                            <div className="taker-info-fields" style={{ marginTop: '10px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>
+                                                                <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>👤 {isAr ? 'معلومات المستلم (الحاجز)' : 'Taker/Booker Info'}</h4>
+                                                                <div className="taker-fields-row" style={{ display: 'flex', gap: '8px' }}>
+                                                                    <input
+                                                                        type="text"
+                                                                        value={taker.name || ''}
+                                                                        onChange={e => updateTakerField('name', e.target.value)}
+                                                                        className="form-input"
+                                                                        placeholder={isAr ? 'اسم المستلم' : 'Taker Name'}
+                                                                        style={{ flex: 1 }}
+                                                                        required
+                                                                    />
+                                                                    <input
+                                                                        type="tel"
+                                                                        value={taker.phone || ''}
+                                                                        onChange={e => updateTakerField('phone', toEnglishNumerals(e.target.value))}
+                                                                        className="form-input"
+                                                                        placeholder={isAr ? 'رقم هاتف المستلم' : 'Taker Phone'}
+                                                                        style={{ flex: 1 }}
+                                                                        required
+                                                                        maxLength="10"
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
 
-                                    <button type="submit" className="submit-btn full-width" disabled={loading} style={{ marginTop: '20px' }}>
-                                        {loading ? (isAr ? '⏳ جاري الإرسال...' : 'Submitting...') : (!isAdminUser ? (isAr ? '📤 إرسال الطلب' : 'Submit Request') : (isAr ? '💾 حفظ التعديلات' : 'Save Changes'))}
-                                    </button>
-                                    {!isAdminUser && (
-                                        <p className="modal-note" style={{ marginTop: '12px', color: 'var(--muted-color)', fontSize: '0.95em' }}>
-                                            {isAr ? 'ملاحظ: سيتم إرسال هذا الطلب إلى الإدار للمراجع. سيُتّذ قرار بالموافق أو الرفض وسيصلك إشعار بالنتيج.' : 'Note: This request will be sent to administration for review. A decision (approve or reject) will be made and you will be notified.'}
-                                        </p>
-                                    )}
-                                </form>
+                                        <button type="submit" className="submit-btn full-width" disabled={loading} style={{ marginTop: '20px' }}>
+                                            {loading ? (isAr ? '⏳ جاري الإرسال...' : 'Submitting...') : (!isAdminUser ? (isAr ? '📤 إرسال الطلب' : 'Submit Request') : (isAr ? '💾 حفظ التعديلات' : 'Save Changes'))}
+                                        </button>
+                                        {!isAdminUser && (
+                                            <p className="modal-note" style={{ marginTop: '12px', color: 'var(--muted-color)', fontSize: '0.95em' }}>
+                                                {isAr ? 'ملاحظ: سيتم إرسال هذا الطلب إلى الإدار للمراجع. سيُتّذ قرار بالموافق أو الرفض وسيصلك إشعار بالنتيج.' : 'Note: This request will be sent to administration for review. A decision (approve or reject) will be made and you will be notified.'}
+                                            </p>
+                                        )}
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    )
-                }
+                        )
+                    }
 
-                {/* ──────────────────────────────────────────────────────────────────────────
+                    {/* ──────────────────────────────────────────────────────────────────────────
                 ADMIN DECISION MODAL
                 ──────────────────────────────────────────────────────────────────────────
                 Opens when admin clicks on approval request in the pending list.
                 Allows admin to approve/reject/suspend with optional admin notes.
             ────────────────────────────────────────────────────────────────────────────── */}
-                {
-                    showAdminResponseModal && isAdminUser && adminResponseData.request && (
-                        <div className="modal-overlay" onClick={e => {
-                            if (e.target === e.currentTarget) closeAdminResponseModal();
-                        }}>
-                            <div className="booking-modal glass-card" onClick={e => e.stopPropagation()}>
-                                <button className="close-modal" onClick={closeAdminResponseModal}>×</button>
-                                <h2 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    🔍 {isAr ? 'قرار المشرف على الطلب' : 'Admin Decision on Request'}
-                                </h2>
+                    {
+                        showAdminResponseModal && isAdminUser && adminResponseData.request && (
+                            <div className="modal-overlay" onClick={e => {
+                                if (e.target === e.currentTarget) closeAdminResponseModal();
+                            }}>
+                                <div className="booking-modal glass-card" onClick={e => e.stopPropagation()}>
+                                    <button className="close-modal" onClick={closeAdminResponseModal}>×</button>
+                                    <h2 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        🔍 {isAr ? 'قرار المشرف على الطلب' : 'Admin Decision on Request'}
+                                    </h2>
 
-                                {/* Coordinator Request Details */}
-                                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
-                                    <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: 'rgba(255,255,255,0.7)', fontWeight: 'bold' }}>
-                                        {isAr ? '📋 تفاصيل طلب المنسق:' : '📋 Coordinator Request Details:'}
-                                    </p>
-                                    <table style={{ width: '100%', fontSize: '0.9em' }}>
-                                        <tbody>
-                                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                                                <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                    {isAr ? 'نوع الطلب:' : 'Request Type:'}
-                                                </td>
-                                                <td style={{ padding: '8px' }}>
-                                                    {getApprovalRequestTypeLabel(adminResponseData.request.type)}
-                                                </td>
-                                            </tr>
-                                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                                                <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                    {isAr ? 'طالب الموافق:' : 'Requester:'}
-                                                </td>
-                                                <td style={{ padding: '8px' }}>
-                                                    {adminResponseData.request.requestedByName}
-                                                </td>
-                                            </tr>
-                                            {adminResponseData.request.coordinatorNotes && (
+                                    {/* Coordinator Request Details */}
+                                    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
+                                        <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: 'rgba(255,255,255,0.7)', fontWeight: 'bold' }}>
+                                            {isAr ? '📋 تفاصيل طلب المنسق:' : '📋 Coordinator Request Details:'}
+                                        </p>
+                                        <table style={{ width: '100%', fontSize: '0.9em' }}>
+                                            <tbody>
                                                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                                                     <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                        {isAr ? 'ملاحظات المنسق:' : 'Notes:'}
+                                                        {isAr ? 'نوع الطلب:' : 'Request Type:'}
                                                     </td>
-                                                    <td style={{ padding: '8px', fontStyle: 'italic', color: 'rgba(255,255,255,0.9)' }}>
-                                                        "{adminResponseData.request.coordinatorNotes}"
+                                                    <td style={{ padding: '8px' }}>
+                                                        {getApprovalRequestTypeLabel(adminResponseData.request.type)}
                                                     </td>
                                                 </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                {/* Admin Decision Radio Buttons */}
-                                <div style={{ marginBottom: '20px', padding: '15px', background: 'rgba(0,100,200,0.1)', borderRadius: '8px', border: '1px solid rgba(0,150,255,0.2)' }}>
-                                    <p style={{ margin: '0 0 12px 0', fontSize: '0.95em', fontWeight: 'bold' }}>
-                                        {isAr ? '⚙️ اتر قرارك:' : '⚙️ Choose your decision:'}
-                                    </p>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'approve' ? 'rgba(0,255,100,0.15)' : 'transparent' }}>
-                                            <input
-                                                type="radio"
-                                                value="approve"
-                                                checked={adminResponseData.adminAction === 'approve'}
-                                                onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
-                                                style={{ cursor: 'pointer' }}
-                                            />
-                                            <span style={{ flex: 1 }}>✅ {isAr ? 'الموافق على الطلب' : 'Approve the request'}</span>
-                                        </label>
-                                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'reject' ? 'rgba(255,0,0,0.15)' : 'transparent' }}>
-                                            <input
-                                                type="radio"
-                                                value="reject"
-                                                checked={adminResponseData.adminAction === 'reject'}
-                                                onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
-                                                style={{ cursor: 'pointer' }}
-                                            />
-                                            <span style={{ flex: 1 }}>❌ {isAr ? 'رفض الطلب' : 'Reject the request'}</span>
-                                        </label>
-                                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'suspend' ? 'rgba(255,200,0,0.15)' : 'transparent' }}>
-                                            <input
-                                                type="radio"
-                                                value="suspend"
-                                                checked={adminResponseData.adminAction === 'suspend'}
-                                                onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
-                                                style={{ cursor: 'pointer' }}
-                                            />
-                                            <span style={{ flex: 1 }}>⏸️ {isAr ? 'إيقاف الطلب للمراجع' : 'Suspend for further review'}</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                {/* Admin Notes */}
-                                <div className="form-group" style={{ marginBottom: '20px' }}>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                                        <span>📝 {isAr ? 'ملاحظات المشرف (اتياري)' : 'Admin Notes (Optional)'}</span>
-                                        <span style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.5)' }}>
-                                            ({isAr ? 'اشرح السبب لف قرارك' : 'explain your decision'})
-                                        </span>
-                                    </label>
-                                    <textarea
-                                        className="form-input"
-                                        value={adminResponseData.adminNotes}
-                                        onChange={e => setAdminResponseData({ ...adminResponseData, adminNotes: e.target.value })}
-                                        placeholder={isAr ? 'مثال: الطلب نظيف وآمن، المادة صحيح...' : 'Example: Request is clean, material is valid...'}
-                                        style={{
-                                            minHeight: '100px',
-                                            fontFamily: 'inherit',
-                                            resize: 'vertical'
-                                        }}
-                                        maxLength="500"
-                                    />
-                                    <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
-                                        {isAr ? `${adminResponseData.adminNotes.length}/500` : `${adminResponseData.adminNotes.length}/500`}
-                                    </small>
-                                </div>
-
-                                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                                    <button
-                                        onClick={closeAdminResponseModal}
-                                        className="cancel-btn"
-                                        style={{
-                                            padding: '10px 20px',
-                                            background: 'rgba(255,255,255,0.1)',
-                                            border: '1px solid rgba(255,255,255,0.2)',
-                                            borderRadius: '6px',
-                                            color: 'rgba(255,255,255,0.8)',
-                                            cursor: 'pointer',
-                                            fontSize: '0.95em'
-                                        }}
-                                    >
-                                        {isAr ? '❌ إلغاء' : '❌ Cancel'}
-                                    </button>
-                                    {adminResponseData.adminAction === 'approve' && (
-                                        <button
-                                            onClick={() => handleApproveApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
-                                            style={{
-                                                padding: '10px 20px',
-                                                background: 'linear-gradient(135deg, #00d400, #009900)',
-                                                border: 'none',
-                                                borderRadius: '6px',
-                                                color: 'white',
-                                                cursor: 'pointer',
-                                                fontWeight: 'bold',
-                                                fontSize: '0.95em'
-                                            }}
-                                        >
-                                            ✅ {isAr ? 'الموافق' : 'Approve'}
-                                        </button>
-                                    )}
-                                    {adminResponseData.adminAction === 'reject' && (
-                                        <button
-                                            onClick={() => handleRejectApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
-                                            style={{
-                                                padding: '10px 20px',
-                                                background: 'linear-gradient(135deg, #ff0000, #cc0000)',
-                                                border: 'none',
-                                                borderRadius: '6px',
-                                                color: 'white',
-                                                cursor: 'pointer',
-                                                fontWeight: 'bold',
-                                                fontSize: '0.95em'
-                                            }}
-                                        >
-                                            ❌ {isAr ? 'رفض' : 'Reject'}
-                                        </button>
-                                    )}
-                                    {adminResponseData.adminAction === 'suspend' && (
-                                        <button
-                                            onClick={() => handleSuspendApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
-                                            style={{
-                                                padding: '10px 20px',
-                                                background: 'linear-gradient(135deg, #ffc800, #ff9800)',
-                                                border: 'none',
-                                                borderRadius: '6px',
-                                                color: 'white',
-                                                cursor: 'pointer',
-                                                fontWeight: 'bold',
-                                                fontSize: '0.95em'
-                                            }}
-                                        >
-                                            ⏸️ {isAr ? 'إيقاف' : 'Suspend'}
-                                        </button>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
-
-                {
-                    showActionRequestModal && !isAdminUser && (
-                        <div className="modal-overlay" onClick={e => {
-                            if (e.target === e.currentTarget) closeActionRequestModal();
-                        }} style={{ zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <div className="booking-modal glass-card" onClick={e => e.stopPropagation()} style={{ zIndex: 10001, maxHeight: '90vh', overflowY: 'auto' }}>
-                                <button className="close-modal" onClick={closeActionRequestModal}>×</button>
-                                <h2 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    ⚠️ {isAr ? 'طلب إجراء للموافق' : 'Action Request for Approval'}
-                                </h2>
-
-                                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
-                                    <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: 'rgba(255,255,255,0.7)' }}>
-                                        {isAr ? '📋 تفاصيل الإجراء المطلوب:' : '📋 Action Details:'}
-                                    </p>
-                                    <table style={{ width: '100%', fontSize: '0.9em' }}>
-                                        <tbody>
-                                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                                                <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                    {isAr ? 'نوع الإجراء:' : 'Action Type:'}
-                                                </td>
-                                                <td style={{ padding: '8px' }}>
-                                                    {actionRequestData.actionType === 'editDonation' && (isAr ? '✏️ تعديل التبرع' : '✏️ Edit Donation')}
-                                                    {actionRequestData.actionType === 'deleteDonation' && (isAr ? '🗑️ حذف التبرع' : '🗑️ Delete Donation')}
-                                                    {actionRequestData.actionType === 'completeBooking' && (isAr ? '✅ إتمام تسليم المادة' : '✅ Complete Material Delivery')}
-                                                    {actionRequestData.actionType === 'cancelBooking' && (isAr ? '❌ إلغاء حجز المادة' : '❌ Cancel Material Booking')}
-                                                </td>
-                                            </tr>
-                                            {actionRequestData.donationDetails && (
-                                                <>
+                                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                                    <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                                        {isAr ? 'طالب الموافق:' : 'Requester:'}
+                                                    </td>
+                                                    <td style={{ padding: '8px' }}>
+                                                        {adminResponseData.request.requestedByName}
+                                                    </td>
+                                                </tr>
+                                                {adminResponseData.request.coordinatorNotes && (
                                                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                                                         <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                            {isAr ? 'المادة المتأثر:' : 'Affected Material:'}
+                                                            {isAr ? 'ملاحظات المنسق:' : 'Notes:'}
                                                         </td>
-                                                        <td style={{ padding: '8px' }}>
-                                                            {actionRequestData.donationDetails.materials && actionRequestData.donationDetails.materials[actionRequestData.materialIndex || 0]?.name}
-                                                        </td>
-                                                    </tr>
-                                                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                                                        <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                            {isAr ? 'المتبرع:' : 'Donor:'}
-                                                        </td>
-                                                        <td style={{ padding: '8px' }}>
-                                                            {actionRequestData.donationDetails.donorNameAr || actionRequestData.donationDetails.donorNameEn}
+                                                        <td style={{ padding: '8px', fontStyle: 'italic', color: 'rgba(255,255,255,0.9)' }}>
+                                                            "{adminResponseData.request.coordinatorNotes}"
                                                         </td>
                                                     </tr>
-                                                </>
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                                {/* Coordinator Notes */}
-                                <div className="form-group" style={{ marginBottom: '20px' }}>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                                        <span>📝 {isAr ? 'ملاحظات المنسق (اتياري)' : 'Coordinator Notes (Optional)'}</span>
-                                        <span style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.5)' }}>
-                                            ({isAr ? 'اشرح السبب أو التفاصيل' : 'explain reason or details'})
-                                        </span>
-                                    </label>
-                                    <textarea
-                                        className="form-input"
-                                        value={actionRequestData.coordinatorNotes}
-                                        onChange={e => setActionRequestData({ ...actionRequestData, coordinatorNotes: e.target.value })}
-                                        placeholder={isAr ? 'مثال: المادة تالف، تحتاج تحديث معلومات...' : 'Example: Material damaged, needs info update...'}
-                                        style={{
-                                            minHeight: '100px',
-                                            fontFamily: 'inherit',
-                                            resize: 'vertical'
-                                        }}
-                                        maxLength="500"
-                                    />
-                                    <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
-                                        {isAr ? `${actionRequestData.coordinatorNotes.length}/500` : `${actionRequestData.coordinatorNotes.length}/500`}
-                                    </small>
-                                </div>
+                                    {/* Admin Decision Radio Buttons */}
+                                    <div style={{ marginBottom: '20px', padding: '15px', background: 'rgba(0,100,200,0.1)', borderRadius: '8px', border: '1px solid rgba(0,150,255,0.2)' }}>
+                                        <p style={{ margin: '0 0 12px 0', fontSize: '0.95em', fontWeight: 'bold' }}>
+                                            {isAr ? '⚙️ اتر قرارك:' : '⚙️ Choose your decision:'}
+                                        </p>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'approve' ? 'rgba(0,255,100,0.15)' : 'transparent' }}>
+                                                <input
+                                                    type="radio"
+                                                    value="approve"
+                                                    checked={adminResponseData.adminAction === 'approve'}
+                                                    onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                                <span style={{ flex: 1 }}>✅ {isAr ? 'الموافق على الطلب' : 'Approve the request'}</span>
+                                            </label>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'reject' ? 'rgba(255,0,0,0.15)' : 'transparent' }}>
+                                                <input
+                                                    type="radio"
+                                                    value="reject"
+                                                    checked={adminResponseData.adminAction === 'reject'}
+                                                    onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                                <span style={{ flex: 1 }}>❌ {isAr ? 'رفض الطلب' : 'Reject the request'}</span>
+                                            </label>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'suspend' ? 'rgba(255,200,0,0.15)' : 'transparent' }}>
+                                                <input
+                                                    type="radio"
+                                                    value="suspend"
+                                                    checked={adminResponseData.adminAction === 'suspend'}
+                                                    onChange={e => setAdminResponseData({ ...adminResponseData, adminAction: e.target.value })}
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                                <span style={{ flex: 1 }}>⏸️ {isAr ? 'إيقاف الطلب للمراجع' : 'Suspend for further review'}</span>
+                                            </label>
+                                        </div>
+                                    </div>
 
-                                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                                    <button
-                                        onClick={closeActionRequestModal}
-                                        className="cancel-btn"
-                                        style={{
-                                            padding: '10px 20px',
-                                            background: 'rgba(255,255,255,0.1)',
-                                            border: '1px solid rgba(255,255,255,0.2)',
-                                            borderRadius: '6px',
-                                            color: 'rgba(255,255,255,0.8)',
-                                            cursor: 'pointer',
-                                            fontSize: '0.95em'
-                                        }}
-                                    >
-                                        {isAr ? '❌ إلغاء' : '❌ Cancel'}
-                                    </button>
-                                    <button
-                                        onClick={handleSubmitActionRequest}
-                                        className="submit-btn"
-                                        style={{
-                                            padding: '10px 20px',
-                                            background: 'linear-gradient(135deg, #00d4ff, #0099cc)',
-                                            border: 'none',
-                                            borderRadius: '6px',
-                                            color: 'white',
-                                            cursor: 'pointer',
-                                            fontWeight: 'bold',
-                                            fontSize: '0.95em'
-                                        }}
-                                    >
-                                        📤 {isAr ? 'إرسال الطلب' : 'Submit Request'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
-
-                {/* ─── WhatsApp direct links replace the old modal ─── */}
-                {
-                    false && (() => {
-                        let finalPhone = String(messageRecipient.phone || '').replace(/\D/g, '');
-                        if (finalPhone.length === 10 && finalPhone.startsWith('0')) {
-                            finalPhone = '962' + finalPhone.substring(1);
-                        }
-                        const whatsappLink = `https://wa.me/${finalPhone}?text=${encodeURIComponent(messageText)}`;
-
-                        return (
-                            <div className="modal-overlay" onClick={() => setShowMessageComposer(false)}>
-                                <div className="booking-modal glass-card" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
-                                    <div className="modal-header">
-                                        <h2>💬 {isAr ? 'إرسال رسال عبر الواتس' : 'Send WhatsApp Message'}</h2>
-                                        <button
-                                            className="close-btn"
-                                            onClick={() => setShowMessageComposer(false)}
+                                    {/* Admin Notes */}
+                                    <div className="form-group" style={{ marginBottom: '20px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                            <span>📝 {isAr ? 'ملاحظات المشرف (اختياري)' : 'Admin Notes (Optional)'}</span>
+                                            <span style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.5)' }}>
+                                                ({isAr ? 'اشرح السبب لف قرارك' : 'explain your decision'})
+                                            </span>
+                                        </label>
+                                        <textarea
+                                            className="form-input"
+                                            value={adminResponseData.adminNotes}
+                                            onChange={e => setAdminResponseData({ ...adminResponseData, adminNotes: e.target.value })}
+                                            placeholder={isAr ? 'مثال: الطلب نظيف وآمن، المادة صحيح...' : 'Example: Request is clean, material is valid...'}
                                             style={{
-                                                background: 'none',
-                                                border: 'none',
-                                                fontSize: '1.5em',
-                                                cursor: 'pointer',
-                                                color: 'rgba(255,255,255,0.7)'
+                                                minHeight: '100px',
+                                                fontFamily: 'inherit',
+                                                resize: 'vertical'
                                             }}
-                                        >
-                                            ✕
-                                        </button>
+                                            maxLength="500"
+                                        />
+                                        <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
+                                            {isAr ? `${adminResponseData.adminNotes.length}/500` : `${adminResponseData.adminNotes.length}/500`}
+                                        </small>
                                     </div>
 
-                                    <div className="modal-body">
-                                        <div className="form-group">
-                                            <label>{isAr ? 'المتلقي' : 'Recipient'}</label>
-                                            <div style={{
-                                                background: 'rgba(255,255,255,0.05)',
-                                                padding: '12px 15px',
-                                                borderRadius: '6px',
-                                                border: '1px solid rgba(255,255,255,0.1)',
-                                                marginBottom: '15px'
-                                            }}>
-                                                <p style={{ margin: '0 0 5px 0', color: 'rgba(255,255,255,0.7)', fontSize: '0.9em' }}>
-                                                    {messageRecipient.type === 'donor' ? (isAr ? 'المتبرع' : 'Donor') : (isAr ? 'الحاجز' : 'Booker')}
-                                                </p>
-                                                <p style={{ margin: '0 0 3px 0', fontWeight: 'bold', color: 'white' }}>
-                                                    {messageRecipient.name || '—'}
-                                                </p>
-                                                <p style={{ margin: '0', color: 'rgba(255,255,255,0.6)', fontSize: '0.9em', direction: 'ltr', textAlign: isAr ? 'right' : 'left' }}>
-                                                    📱 {messageRecipient.phone || '—'}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label>{isAr ? 'الرسال' : 'Message'}</label>
-                                            <textarea
-                                                className="form-input"
-                                                value={messageText}
-                                                onChange={e => setMessageText(e.target.value)}
-                                                style={{
-                                                    minHeight: '250px',
-                                                    fontFamily: 'inherit',
-                                                    resize: 'vertical',
-                                                    fontSize: '0.95em',
-                                                    lineHeight: '1.6'
-                                                }}
-                                                maxLength="2000"
-                                            />
-                                            <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px', display: 'block' }}>
-                                                {messageText.length}/2000
-                                            </small>
-                                        </div>
-
-                                        <div style={{
-                                            background: 'rgba(25, 135, 84, 0.1)',
-                                            border: '1px solid rgba(25, 135, 84, 0.3)',
-                                            borderRadius: '6px',
-                                            padding: '12px 15px',
-                                            marginBottom: '20px',
-                                            direction: isAr ? 'rtl' : 'ltr'
-                                        }}>
-                                            <p style={{ margin: '0', color: 'rgba(25, 135, 84, 1)', fontSize: '0.9em' }}>
-                                                ✓ {isAr ? 'سيتم فتح تطبيق الواتس أب مع الرسال جاهز للإرسال' : 'WhatsApp will open with the message ready to send'}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', padding: '0 20px 20px' }}>
+                                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                                         <button
-                                            onClick={() => setShowMessageComposer(false)}
+                                            onClick={closeAdminResponseModal}
                                             className="cancel-btn"
                                             style={{
                                                 padding: '10px 20px',
@@ -9197,262 +8923,535 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 fontSize: '0.95em'
                                             }}
                                         >
-                                            {isAr ? 'إلغاء' : 'Cancel'}
+                                            {isAr ? '❌ إلغاء' : '❌ Cancel'}
                                         </button>
-                                        <a
-                                            href={whatsappLink}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={() => {
-                                                toast.success(isAr ? 'تم فتح تطبيق الواتس أب' : 'WhatsApp opened');
-                                                setShowMessageComposer(false);
+                                        {adminResponseData.adminAction === 'approve' && (
+                                            <button
+                                                onClick={() => handleApproveApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
+                                                style={{
+                                                    padding: '10px 20px',
+                                                    background: 'linear-gradient(135deg, #00d400, #009900)',
+                                                    border: 'none',
+                                                    borderRadius: '6px',
+                                                    color: 'white',
+                                                    cursor: 'pointer',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.95em'
+                                                }}
+                                            >
+                                                ✅ {isAr ? 'الموافق' : 'Approve'}
+                                            </button>
+                                        )}
+                                        {adminResponseData.adminAction === 'reject' && (
+                                            <button
+                                                onClick={() => handleRejectApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
+                                                style={{
+                                                    padding: '10px 20px',
+                                                    background: 'linear-gradient(135deg, #ff0000, #cc0000)',
+                                                    border: 'none',
+                                                    borderRadius: '6px',
+                                                    color: 'white',
+                                                    cursor: 'pointer',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.95em'
+                                                }}
+                                            >
+                                                ❌ {isAr ? 'رفض' : 'Reject'}
+                                            </button>
+                                        )}
+                                        {adminResponseData.adminAction === 'suspend' && (
+                                            <button
+                                                onClick={() => handleSuspendApprovalRequest(adminResponseData.donationId, adminResponseData.request)}
+                                                style={{
+                                                    padding: '10px 20px',
+                                                    background: 'linear-gradient(135deg, #ffc800, #ff9800)',
+                                                    border: 'none',
+                                                    borderRadius: '6px',
+                                                    color: 'white',
+                                                    cursor: 'pointer',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.95em'
+                                                }}
+                                            >
+                                                ⏸️ {isAr ? 'إيقاف' : 'Suspend'}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
+
+                    {
+                        showActionRequestModal && !isAdminUser && (
+                            <div className="modal-overlay" onClick={e => {
+                                if (e.target === e.currentTarget) closeActionRequestModal();
+                            }} style={{ zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div className="booking-modal glass-card" onClick={e => e.stopPropagation()} style={{ zIndex: 10001, maxHeight: '90vh', overflowY: 'auto' }}>
+                                    <button className="close-modal" onClick={closeActionRequestModal}>×</button>
+                                    <h2 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        ⚠️ {isAr ? 'طلب إجراء للموافق' : 'Action Request for Approval'}
+                                    </h2>
+
+                                    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
+                                        <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: 'rgba(255,255,255,0.7)' }}>
+                                            {isAr ? '📋 تفاصيل الإجراء المطلوب:' : '📋 Action Details:'}
+                                        </p>
+                                        <table style={{ width: '100%', fontSize: '0.9em' }}>
+                                            <tbody>
+                                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                                    <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                                        {isAr ? 'نوع الإجراء:' : 'Action Type:'}
+                                                    </td>
+                                                    <td style={{ padding: '8px' }}>
+                                                        {actionRequestData.actionType === 'editDonation' && (isAr ? '✏️ تعديل التبرع' : '✏️ Edit Donation')}
+                                                        {actionRequestData.actionType === 'deleteDonation' && (isAr ? '🗑️ حذف التبرع' : '🗑️ Delete Donation')}
+                                                        {actionRequestData.actionType === 'completeBooking' && (isAr ? '✅ إتمام تسليم المادة' : '✅ Complete Material Delivery')}
+                                                        {actionRequestData.actionType === 'cancelBooking' && (isAr ? '❌ إلغاء حجز المادة' : '❌ Cancel Material Booking')}
+                                                    </td>
+                                                </tr>
+                                                {actionRequestData.donationDetails && (
+                                                    <>
+                                                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                                            <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                                                {isAr ? 'المادة المتأثر:' : 'Affected Material:'}
+                                                            </td>
+                                                            <td style={{ padding: '8px' }}>
+                                                                {actionRequestData.donationDetails.materials && actionRequestData.donationDetails.materials[actionRequestData.materialIndex || 0]?.name}
+                                                            </td>
+                                                        </tr>
+                                                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                                            <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
+                                                                {isAr ? 'المتبرع:' : 'Donor:'}
+                                                            </td>
+                                                            <td style={{ padding: '8px' }}>
+                                                                {actionRequestData.donationDetails.donorNameAr || actionRequestData.donationDetails.donorNameEn}
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {/* Coordinator Notes */}
+                                    <div className="form-group" style={{ marginBottom: '20px' }}>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                            <span>📝 {isAr ? 'ملاحظات المنسق (اختياري)' : 'Coordinator Notes (Optional)'}</span>
+                                            <span style={{ fontSize: '0.85em', color: 'rgba(255,255,255,0.5)' }}>
+                                                ({isAr ? 'اشرح السبب أو التفاصيل' : 'explain reason or details'})
+                                            </span>
+                                        </label>
+                                        <textarea
+                                            className="form-input"
+                                            value={actionRequestData.coordinatorNotes}
+                                            onChange={e => setActionRequestData({ ...actionRequestData, coordinatorNotes: e.target.value })}
+                                            placeholder={isAr ? 'مثال: المادة تالف، تحتاج تحديث معلومات...' : 'Example: Material damaged, needs info update...'}
+                                            style={{
+                                                minHeight: '100px',
+                                                fontFamily: 'inherit',
+                                                resize: 'vertical'
                                             }}
+                                            maxLength="500"
+                                        />
+                                        <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
+                                            {isAr ? `${actionRequestData.coordinatorNotes.length}/500` : `${actionRequestData.coordinatorNotes.length}/500`}
+                                        </small>
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                                        <button
+                                            onClick={closeActionRequestModal}
+                                            className="cancel-btn"
+                                            style={{
+                                                padding: '10px 20px',
+                                                background: 'rgba(255,255,255,0.1)',
+                                                border: '1px solid rgba(255,255,255,0.2)',
+                                                borderRadius: '6px',
+                                                color: 'rgba(255,255,255,0.8)',
+                                                cursor: 'pointer',
+                                                fontSize: '0.95em'
+                                            }}
+                                        >
+                                            {isAr ? '❌ إلغاء' : '❌ Cancel'}
+                                        </button>
+                                        <button
+                                            onClick={handleSubmitActionRequest}
                                             className="submit-btn"
                                             style={{
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
                                                 padding: '10px 20px',
-                                                background: '#25D366',
+                                                background: 'linear-gradient(135deg, #00d4ff, #0099cc)',
                                                 border: 'none',
                                                 borderRadius: '6px',
                                                 color: 'white',
                                                 cursor: 'pointer',
                                                 fontWeight: 'bold',
-                                                fontSize: '0.95em',
-                                                textDecoration: 'none'
+                                                fontSize: '0.95em'
                                             }}
                                         >
-                                            💬 {isAr ? 'إرسال عبر الواتس' : 'Send WhatsApp'}
-                                        </a>
+                                            📤 {isAr ? 'إرسال الطلب' : 'Submit Request'}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        );
-                    })()
-                }
+                        )
+                    }
 
-                {/* QR Booking Modal */}
-                {
-                    activeQRModal && (
-                        <QRBookingCard
-                            bookingId={activeQRModal.bookingId || activeQRModal.id}
-                            studentName={activeQRModal.studentName || activeQRModal.bookerName}
-                            materialName={activeQRModal.materialName}
-                            donorName={activeQRModal.donorName}
-                            coordinatorName={activeQRModal.coordinatorName || activeQRModal.assignedCoordinator}
-                            pickupDate={activeQRModal.pickupDate}
-                            pickupTime={activeQRModal.pickupTime}
-                            isAr={isAr}
-                            onClose={() => setActiveQRModal(null)}
-                        />
-                    )
-                }
+                    {/* ─── WhatsApp direct links replace the old modal ─── */}
+                    {
+                        false && (() => {
+                            let finalPhone = String(messageRecipient.phone || '').replace(/\D/g, '');
+                            if (finalPhone.length === 10 && finalPhone.startsWith('0')) {
+                                finalPhone = '962' + finalPhone.substring(1);
+                            }
+                            const whatsappLink = `https://wa.me/${finalPhone}?text=${encodeURIComponent(messageText)}`;
 
-                {/* ─── Terms and Conditions Modal ─── */}
-                {showTermsModal && (
-                    <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowTermsModal(false); }}>
-                        <div className="terms-modal glass-card" onClick={e => e.stopPropagation()}>
-                            <div className="terms-modal-header">
-                                <h2 className="terms-modal-title">
-                                    {isAr ? 'الاتفاقي والشروط الاص بتقديم طلب التبرع' : 'Terms and Conditions for Donation Request'}
-                                </h2>
-                                <button className="close-modal" onClick={() => setShowTermsModal(false)}>×</button>
-                            </div>
+                            return (
+                                <div className="modal-overlay" onClick={() => setShowMessageComposer(false)}>
+                                    <div className="booking-modal glass-card" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+                                        <div className="modal-header">
+                                            <h2>💬 {isAr ? 'إرسال رسال عبر الواتس' : 'Send WhatsApp Message'}</h2>
+                                            <button
+                                                className="close-btn"
+                                                onClick={() => setShowMessageComposer(false)}
+                                                style={{
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    fontSize: '1.5em',
+                                                    cursor: 'pointer',
+                                                    color: 'rgba(255,255,255,0.7)'
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
 
-                            <div className="terms-modal-content">
-                                <div className="terms-intro-box">
-                                    <p className="terms-intro-text">
-                                        {isAr
-                                            ? 'أقرّ أنا الموقع أدناه (مقدم الطلب) بما يلي:'
-                                            : 'I, the undersigned (requestor), hereby acknowledge the following:'}
-                                    </p>
-                                </div>
+                                        <div className="modal-body">
+                                            <div className="form-group">
+                                                <label>{isAr ? 'المتلقي' : 'Recipient'}</label>
+                                                <div style={{
+                                                    background: 'rgba(255,255,255,0.05)',
+                                                    padding: '12px 15px',
+                                                    borderRadius: '6px',
+                                                    border: '1px solid rgba(255,255,255,0.1)',
+                                                    marginBottom: '15px'
+                                                }}>
+                                                    <p style={{ margin: '0 0 5px 0', color: 'rgba(255,255,255,0.7)', fontSize: '0.9em' }}>
+                                                        {messageRecipient.type === 'donor' ? (isAr ? 'المتبرع' : 'Donor') : (isAr ? 'الحاجز' : 'Booker')}
+                                                    </p>
+                                                    <p style={{ margin: '0 0 3px 0', fontWeight: 'bold', color: 'white' }}>
+                                                        {messageRecipient.name || '—'}
+                                                    </p>
+                                                    <p style={{ margin: '0', color: 'rgba(255,255,255,0.6)', fontSize: '0.9em', direction: 'ltr', textAlign: isAr ? 'right' : 'left' }}>
+                                                        📱 {messageRecipient.phone || '—'}
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                                {/* Term 1 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">1.</span>
-                                        <h3>{isAr ? 'تأكيد الرغب والإراد الكامل' : 'Confirmation of Full Will and Desire'}</h3>
+                                            <div className="form-group">
+                                                <label>{isAr ? 'الرسال' : 'Message'}</label>
+                                                <textarea
+                                                    className="form-input"
+                                                    value={messageText}
+                                                    onChange={e => setMessageText(e.target.value)}
+                                                    style={{
+                                                        minHeight: '250px',
+                                                        fontFamily: 'inherit',
+                                                        resize: 'vertical',
+                                                        fontSize: '0.95em',
+                                                        lineHeight: '1.6'
+                                                    }}
+                                                    maxLength="2000"
+                                                />
+                                                <small style={{ color: 'rgba(255,255,255,0.5)', marginTop: '4px', display: 'block' }}>
+                                                    {messageText.length}/2000
+                                                </small>
+                                            </div>
+
+                                            <div style={{
+                                                background: 'rgba(25, 135, 84, 0.1)',
+                                                border: '1px solid rgba(25, 135, 84, 0.3)',
+                                                borderRadius: '6px',
+                                                padding: '12px 15px',
+                                                marginBottom: '20px',
+                                                direction: isAr ? 'rtl' : 'ltr'
+                                            }}>
+                                                <p style={{ margin: '0', color: 'rgba(25, 135, 84, 1)', fontSize: '0.9em' }}>
+                                                    ✓ {isAr ? 'سيتم فتح تطبيق الواتس أب مع الرسال جاهز للإرسال' : 'WhatsApp will open with the message ready to send'}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', padding: '0 20px 20px' }}>
+                                            <button
+                                                onClick={() => setShowMessageComposer(false)}
+                                                className="cancel-btn"
+                                                style={{
+                                                    padding: '10px 20px',
+                                                    background: 'rgba(255,255,255,0.1)',
+                                                    border: '1px solid rgba(255,255,255,0.2)',
+                                                    borderRadius: '6px',
+                                                    color: 'rgba(255,255,255,0.8)',
+                                                    cursor: 'pointer',
+                                                    fontSize: '0.95em'
+                                                }}
+                                            >
+                                                {isAr ? 'إلغاء' : 'Cancel'}
+                                            </button>
+                                            <a
+                                                href={whatsappLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={() => {
+                                                    toast.success(isAr ? 'تم فتح تطبيق الواتس أب' : 'WhatsApp opened');
+                                                    setShowMessageComposer(false);
+                                                }}
+                                                className="submit-btn"
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    padding: '10px 20px',
+                                                    background: '#25D366',
+                                                    border: 'none',
+                                                    borderRadius: '6px',
+                                                    color: 'white',
+                                                    cursor: 'pointer',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '0.95em',
+                                                    textDecoration: 'none'
+                                                }}
+                                            >
+                                                💬 {isAr ? 'إرسال عبر الواتس' : 'Send WhatsApp'}
+                                            </a>
+                                        </div>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'أتقدم بهذا الطلب بكامل إرادتي، وأؤكد أنني بحاج فعلي وماس للماد (المواد) المطلوب، وأن طلبي هذا يعبّر عن رغبتي الشصي، ولا يحملني أي التزام مادي أو قانوني تجاه الجه المنظم أو المتبرعين.'
-                                            : 'I submit this request of my own free will and confirm that I have a genuine and pressing need for the requested material(s). This request reflects my personal desire and does not create any financial or legal obligation toward the organizing entity or donors.'}
-                                    </p>
+                                </div>
+                            );
+                        })()
+                    }
+
+                    {/* QR Booking Modal */}
+                    {
+                        activeQRModal && (
+                            <QRBookingCard
+                                bookingId={activeQRModal.bookingId || activeQRModal.id}
+                                studentName={activeQRModal.studentName || activeQRModal.bookerName}
+                                materialName={activeQRModal.materialName}
+                                donorName={activeQRModal.donorName}
+                                coordinatorName={activeQRModal.coordinatorName || activeQRModal.assignedCoordinator}
+                                pickupDate={activeQRModal.pickupDate}
+                                pickupTime={activeQRModal.pickupTime}
+                                isAr={isAr}
+                                onClose={() => setActiveQRModal(null)}
+                            />
+                        )
+                    }
+
+                    {/* ─── Terms and Conditions Modal ─── */}
+                    {showTermsModal && (
+                        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) { setShowTermsModal(false); setShowTermsDetails(false); } }}>
+                            <div className="terms-modal glass-card" onClick={e => e.stopPropagation()}>
+                                <div className="terms-modal-header">
+                                    <h2 className="terms-modal-title">
+                                        {isAr ? 'الاتفاقية والشروط الخاصة بتقديم طلب التبرع' : 'Terms and Conditions for Donation Request'}
+                                    </h2>
+                                    <button className="close-modal" onClick={() => { setShowTermsModal(false); setShowTermsDetails(false); }}>×</button>
                                 </div>
 
-                                {/* Term 2 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">2.</span>
-                                        <h3>{isAr ? 'الالتزام بجدي الطلب' : 'Commitment to Request Seriousness'}</h3>
+                                <div className="terms-modal-content">
+                                    <div className="terms-intro-box">
+                                        <p className="terms-intro-text">
+                                            {isAr
+                                                ? 'أقرّ أنا الموقع أدناه (مقدم الطلب) بما يلي:'
+                                                : 'I, the undersigned (requestor), hereby acknowledge the following:'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'أتعهد بعدم تقديم طلبات وهمي أو متكرر بغرض الحجز دون حاج، وأدرك أن هذا الطلب سيُعتبر ملزماً لي في حال توفر المادة المطلوب.'
-                                            : 'I commit to not submitting fake or duplicate requests for the purpose of booking without genuine need. I understand that this request will be considered binding if the requested material becomes available.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 3 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">3.</span>
-                                        <h3>{isAr ? 'إلغاء الحجز' : 'Booking Cancellation'}</h3>
+                                    {/* Term 1 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">1.</span>
+                                            <h3>{isAr ? 'تأكيد الرغب والإراد الكامل' : 'Confirmation of Full Will and Desire'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'أتقدم بهذا الطلب بكامل إرادتي، وأؤكد أنني بحاجة فعلية وماسة للمادة (المواد) المطلوبة، وأن طلبي هذا يعبّر عن رغبتي الشخصية، ولا يحملني أي التزام مادي أو قانوني تجاه الجهة المنظمة أو المتبرعين.'
+                                                : 'I submit this request of my own free will and confirm that I have a genuine and pressing need for the requested material(s). This request reflects my personal desire and does not create any financial or legal obligation toward the organizing entity or donors.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? '• في حال رغبتي في إلغاء الطلب أو الحجز، أتعهد بالتواصل مع فريق الحمل عبر منسق العام (0782934685) في أقرب فرص ممكن، وقبل موعد استلام المادة بوقت كافٍ.\n\n• لا يجوز إلغاء الاستلام في يوم التسليم المحدد، إلا بموافق طي أو تواصل مباشر مع الفريق، وفي حالات طارئ مع قبول الفريق لذلك.'
-                                            : '• If I wish to cancel my request or booking, I commit to contacting the campaign team through the general coordinator (0782934685) as soon as possible and before the scheduled material pickup date.\n\n• Cancellation on the designated delivery day is not permitted unless approved in writing or via direct communication with the team, and only in emergencies with the team\'s acceptance.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 4 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">4.</span>
-                                        <h3>{isAr ? 'إبلاغ الفريق قبل التسليم' : 'Notification to Team Before Delivery'}</h3>
+                                    {/* Term 2 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">2.</span>
+                                            <h3>{isAr ? 'الالتزام بجدي الطلب' : 'Commitment to Request Seriousness'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'أتعهد بعدم تقديم طلبات وهمية أو متكررة بغرض الحجز دون حاجة، وأدرك أن هذا الطلب سيُعتبر ملزماً لي في حال توفر المادة المطلوبة.'
+                                                : 'I commit to not submitting fake or duplicate requests for the purpose of booking without genuine need. I understand that this request will be considered binding if the requested material becomes available.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'إذا تم تحديد يوم لتسليم المادة، يجب أن يتم الإبلاغ عن أي رغب في الإلغاء أو التأجيل قبل يوم التسليم على الأقل، وإلا يُعتبر الطلب نافذاً ويتم المضي قدماً في عملي التسليم.'
-                                            : 'If a delivery date is set, any cancellation or postponement request must be notified at least one day before the scheduled delivery date. Otherwise, the request will be considered confirmed and the delivery process will proceed.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 5 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">5.</span>
-                                        <h3>{isAr ? 'المسؤولي تجاه المادة المتبرع بها' : 'Responsibility Toward Donated Material'}</h3>
+                                    {/* Term 3 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">3.</span>
+                                            <h3>{isAr ? 'إلغاء الحجز' : 'Booking Cancellation'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? '• في حال رغبتي في إلغاء الطلب أو الحجز، أتعهد بالتواصل مع فريق الحملة عبر المنسق العام (0782934685) في أقرب فرصة ممكنة، وقبل موعد استلام المادة بوقت كافٍ.\n\n• لا يجوز إلغاء الاستلام في يوم التسليم المحدد، إلا بموافقة الفريق أو تواصل مباشر معه، وفي حالات طارئة فقط وبقبول الفريق.'
+                                                : '• If I wish to cancel my request or booking, I commit to contacting the campaign team through the general coordinator (0782934685) as soon as possible and before the scheduled material pickup date.\n\n• Cancellation on the designated delivery day is not permitted unless approved in writing or via direct communication with the team, and only in emergencies with the team\'s acceptance.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? '• أتعهد بعدم التصرف بالماد (بيعاً، أو إهداءً، أو إتلافاً) دون الرجوع إلى الفريق المنظم، وفي حال عدم رغبتي فيها بعد تسلمها، يجب إعادتها إلى الفريق أو التنسيق معهم بشأنها.\n\n• لا يجوز إلغاء مادة تم التبرع بها فعلياً من قبل متبرع، دون إبلاغ الفريق بشكل رسمي، وإلا أتحمل أنا (الطالب) مسؤولي تعويض الفريق أو المتبرع عن أي ضرر ينتج عن ذلك.'
-                                            : '• I commit to not selling, gifting, or disposing of the material without consulting the organizing team. If I do not want it after receiving it, I must return it to the team or coordinate with them regarding it.\n\n• I cannot reject a material that has been genuinely donated without formally notifying the team. Otherwise, I (the student) assume responsibility for compensating the team or donor for any resulting damage.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 6 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">6.</span>
-                                        <h3>{isAr ? 'التزام بالتواصل' : 'Communication Commitment'}</h3>
+                                    {/* Term 4 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">4.</span>
+                                            <h3>{isAr ? 'إبلاغ الفريق قبل التسليم' : 'Notification to Team Before Delivery'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'إذا تم تحديد يوم لتسليم المادة، يجب أن يتم الإبلاغ عن أي رغب في الإلغاء أو التأجيل قبل يوم التسليم على الأقل، وإلا يُعتبر الطلب نافذاً ويتم المضي قدماً في عملي التسليم.'
+                                                : 'If a delivery date is set, any cancellation or postponement request must be notified at least one day before the scheduled delivery date. Otherwise, the request will be considered confirmed and the delivery process will proceed.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'أدرك أن جميع مراحل الطلب والحجز تتم عبر منسق الحمل، وأي تغيير أو تعديل يجب أن يكون عبر القنوات الرسمي للفريق، وأتحمل مسؤولي متابع الطلب بنفسي.'
-                                            : 'I understand that all request and booking stages are handled through the campaign coordinator. Any changes or modifications must be made through official team channels, and I am responsible for following up on my request.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 7 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">7.</span>
-                                        <h3>{isAr ? 'حفظ الصوصي والبيانات الشصي' : 'Privacy and Personal Data Protection'}</h3>
+                                    {/* Term 5 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">5.</span>
+                                            <h3>{isAr ? 'المسؤولية تجاه المادة المتبرع بها' : 'Responsibility Toward Donated Material'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? '• أتعهد بعدم التصرف بالمادة (بيعاً، أو إهداءً، أو إتلافاً) دون الرجوع إلى الفريق المنظم، وفي حال عدم رغبتي فيها بعد تسلمها، يجب إعادتها إلى الفريق أو التنسيق معهم بشأنها.\n\n• لا يجوز إلغاء مادة تم التبرع بها فعلياً من قبل متبرع، دون إبلاغ الفريق بشكل رسمي، وإلا أتحمل أنا (الطالب) مسؤولية تعويض الفريق أو المتبرع عن أي ضرر ينتج عن ذلك.'
+                                                : '• I commit to not selling, gifting, or disposing of the material without consulting the organizing team. If I do not want it after receiving it, I must return it to the team or coordinate with them regarding it.\n\n• I cannot reject a material that has been genuinely donated without formally notifying the team. Otherwise, I (the student) assume responsibility for compensating the team or donor for any resulting damage.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'أفهم أن بيانتي الشصي (الاسم، رقم الهاتف، البريد الإلكتروني) ستُستدم فقط لأغراض التواصل والتسليم ضمن فريق الحمل المصرح. لن يتم نشر أو مشارك بياناتي مع أي جهات ارجي دون موافقتي الصريح. البيانات محفوظ بسري تام وفقاً لسياس الصوصي.'
-                                            : 'I understand that my personal data (name, phone, email) will only be used for communication and delivery purposes within the authorized campaign team. My data will not be published or shared with third parties without my explicit consent. All data is kept strictly confidential according to privacy policies.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 8 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">8.</span>
-                                        <h3>{isAr ? 'الالتزام بقوانين الجامعة والقوانين المحلي' : 'Compliance with University and Local Laws'}</h3>
+                                    {/* Term 6 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">6.</span>
+                                            <h3>{isAr ? 'التزام بالتواصل' : 'Communication Commitment'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'أدرك أن جميع مراحل الطلب والحجز تتم عبر منسق الحملة، وأي تغيير أو تعديل يجب أن يكون عبر القنوات الرسمية للفريق، وأتحمل مسؤولية متابعة الطلب بنفسي.'
+                                                : 'I understand that all request and booking stages are handled through the campaign coordinator. Any changes or modifications must be made through official team channels, and I am responsible for following up on my request.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'أتعهد بالالتزام بجميع قوانين الجامعة وأنظمتها، وكذلك القوانين المحلي المعمول بها. أفهم أن أي تجاوز أو مالف قد يؤدي إلى اتاذ إجراءات تأديبي ضدي. الحمل غير مسؤول عن أي قوانين قد أنتهكها المتبرع أو الحاجز.'
-                                            : 'I commit to complying with all university regulations and laws, as well as applicable local laws. I understand that any violation may result in disciplinary action against me. The campaign is not responsible for any laws violated by donors or recipients.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 9 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">9.</span>
-                                        <h3>{isAr ? 'حق الفريق في الرفض والتعديل' : 'Team Right to Reject and Modify'}</h3>
+                                    {/* Term 7 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">7.</span>
+                                            <h3>{isAr ? 'حفظ الخصوصية والبيانات الشخصية' : 'Privacy and Personal Data Protection'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'أفهم أن بياناتي الشخصية (الاسم، رقم الهاتف، البريد الإلكتروني) ستُستخدم فقط لأغراض التواصل والتسليم ضمن فريق الحملة المصرح. لن يتم نشر أو مشاركة بياناتي مع أي جهات خارجية دون موافقتي الصريحة. البيانات محفوظة بسرية تامة وفقاً لسياسة الخصوصية.'
+                                                : 'I understand that my personal data (name, phone, email) will only be used for communication and delivery purposes within the authorized campaign team. My data will not be published or shared with third parties without my explicit consent. All data is kept strictly confidential according to privacy policies.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'يحتفظ فريق الحمل بالحق الكامل في:\n• رفض أي طلب دون تقديم أسباب واضح إذا رأوا أنه يتعارض مع أهداف الحمل\n• تعديل شروط الحمل أو مواعيد التسليم دون إشعار مسبق\n• إلغاء أي حجز إذا تبين عدم صدق الطلب أو وجود مالفات\n• الاحتفاظ بحق تتبع مسار المواد المتبرع بها'
-                                            : 'The campaign team reserves the right to:\n• Reject any request without clear justification if it conflicts with campaign objectives\n• Modify campaign terms or delivery dates without prior notice\n• Cancel any booking if the request proves to be fraudulent or in violation\n• Track the path of donated materials'}
-                                    </p>
-                                </div>
 
-                                {/* Term 10 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">10.</span>
-                                        <h3>{isAr ? 'تجنب النزاعات والقبول بالقرار النهائي' : 'Dispute Resolution and Final Decision'}</h3>
+                                    {/* Term 8 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">8.</span>
+                                            <h3>{isAr ? 'الالتزام بقوانين الجامعة والقوانين المحلي' : 'Compliance with University and Local Laws'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'أتعهد بالالتزام بجميع قوانين الجامعة وأنظمتها، وكذلك القوانين المحلية المعمول بها. أفهم أن أي تجاوز أو مخالفات قد يؤدي إلى اتخاذ إجراءات تأديبية ضدي. الحملة غير مسؤولة عن أي قوانين قد ينتهكها المتبرع أو الحاجز.'
+                                                : 'I commit to complying with all university regulations and laws, as well as applicable local laws. I understand that any violation may result in disciplinary action against me. The campaign is not responsible for any laws violated by donors or recipients.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'أتعهد بعدم الدول في نزاع أو جدال مع فريق الحمل أو المتبرعين بصوص المواد. قراري هو الالتزام بقرار فريق الحمل النهائي في أي حال لاف. إذا كان لدي شكوى، يجب أن أقدمها بطريق احترافي وسلمي من لال المنسق الرسمي فقط.'
-                                            : 'I commit to not engaging in disputes or arguments with the campaign team or donors regarding materials. My decision is to accept the campaign team\'s final decision in any dispute. If I have a complaint, I must submit it professionally and peacefully only through the official coordinator.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 11 */}
-                                <div className="terms-item">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">11.</span>
-                                        <h3>{isAr ? 'الموافق على الفحص والتحقق' : 'Acceptance of Inspection and Verification'}</h3>
+                                    {/* Term 9 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">9.</span>
+                                            <h3>{isAr ? 'حق الفريق في الرفض والتعديل' : 'Team Right to Reject and Modify'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'يحتفظ فريق الحمل بالحق الكامل في:\n• رفض أي طلب دون تقديم أسباب واضح إذا رأوا أنه يتعارض مع أهداف الحمل\n• تعديل شروط الحمل أو مواعيد التسليم دون إشعار مسبق\n• إلغاء أي حجز إذا تبين عدم صدق الطلب أو وجود مالفات\n• الاحتفاظ بحق تتبع مسار المواد المتبرع بها'
+                                                : 'The campaign team reserves the right to:\n• Reject any request without clear justification if it conflicts with campaign objectives\n• Modify campaign terms or delivery dates without prior notice\n• Cancel any booking if the request proves to be fraudulent or in violation\n• Track the path of donated materials'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'أوافق على أن يقوم فريق الحمل بفحص المواد قبل وبعد التسليم للتأكد من سلامتها. كما أوافق على التحقق من بيانات الطلب والحجز في حال الشك أو الشكاوى. أفهم أن هذا لا يعني انتهاك الصوصي بل هو للتأكد من سير العملي بشكل صحيح.'
-                                            : 'I agree to allow the campaign team to inspect materials before and after delivery to ensure their integrity. I also agree to verification of request and booking details in case of doubt or complaints. I understand this does not violate privacy but ensures the process runs correctly.'}
-                                    </p>
-                                </div>
 
-                                {/* Term 12 */}
-                                <div className="terms-item highlight-term">
-                                    <div className="terms-item-header">
-                                        <span className="terms-item-number">12.</span>
-                                        <h3>{isAr ? 'إقرار نهائي وملزم' : 'Final and Binding Acknowledgment'}</h3>
+                                    {/* Term 10 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">10.</span>
+                                            <h3>{isAr ? 'تجنب النزاعات والقبول بالقرار النهائي' : 'Dispute Resolution and Final Decision'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'أتعهد بعدم الدخول في نزاع أو جدال مع فريق الحملة أو المتبرعين بشأن المواد. أوافق على الالتزام بقرار فريق الحملة النهائي في أي حال. إذا كان لدي شكوى، سأقدمها بطريقة احترافية وسلمية عبر المنسق الرسمي فقط.'
+                                                : 'I commit to not engaging in disputes or arguments with the campaign team or donors regarding materials. My decision is to accept the campaign team\'s final decision in any dispute. If I have a complaint, I must submit it professionally and peacefully only through the official coordinator.'}
+                                        </p>
                                     </div>
-                                    <p className="terms-item-content">
-                                        {isAr
-                                            ? 'بوضعي علام على ان الموافق، أقرّ بأنني:\n✓ قرأت جميع البنود أعلاه بعناي وفهمتها بشكل كامل\n✓ أوافق عليها بشكل طوعي وملزم قانونياً\n✓ أتحمل كامل المسؤولي عن أي عدم التزام بهذه الشروط\n✓ أفهم أن عدم الالتزام قد يؤدي إلى عواقب قانوني وتأديبي'
-                                            : 'By checking the box, I confirm that I:\n✓ Have read all the terms above carefully and understood them completely\n✓ Agree to them voluntarily and they are legally binding\n✓ Take full responsibility for any breach of these terms\n✓ Understand that non-compliance may result in legal and disciplinary consequences'}
-                                    </p>
+
+                                    {/* Term 11 */}
+                                    <div className="terms-item">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">11.</span>
+                                            <h3>{isAr ? 'الموافق على الفحص والتحقق' : 'Acceptance of Inspection and Verification'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'أوافق على أن يقوم فريق الحملة بفحص المواد قبل وبعد التسليم للتأكد من سلامتها. كما أوافق على التحقق من بيانات الطلب والحجز في حال الشك أو الشكاوى. أفهم أن هذا لا يعني انتهاك الخصوصية بل هو للتأكد من سير العمل بشكل صحيح.'
+                                                : 'I agree to allow the campaign team to inspect materials before and after delivery to ensure their integrity. I also agree to verification of request and booking details in case of doubt or complaints. I understand this does not violate privacy but ensures the process runs correctly.'}
+                                        </p>
+                                    </div>
+
+                                    {/* Term 12 */}
+                                    <div className="terms-item highlight-term">
+                                        <div className="terms-item-header">
+                                            <span className="terms-item-number">12.</span>
+                                            <h3>{isAr ? 'إقرار نهائي وملزم' : 'Final and Binding Acknowledgment'}</h3>
+                                        </div>
+                                        <p className="terms-item-content">
+                                            {isAr
+                                                ? 'بوضعي علامة على أني موافق، أقرّ بأنني:\n✓ قرأت جميع البنود أعلاه بعناية وفهمتها بشكل كامل\n✓ أوافق عليها بشكل طوعي وملزم قانونياً\n✓ أتحمل كامل المسؤولية عن أي عدم التزام بهذه الشروط\n✓ أفهم أن عدم الالتزام قد يؤدي إلى عواقب قانونية وتأديبية'
+                                                : 'By checking the box, I confirm that I:\n✓ Have read all the terms above carefully and understood them completely\n✓ Agree to them voluntarily and they are legally binding\n✓ Take full responsibility for any breach of these terms\n✓ Understand that non-compliance may result in legal and disciplinary consequences'}
+                                        </p>
+                                    </div>
+
+                                    <div className="terms-closing-box">
+                                        <p className="closing-main-text">
+                                            {isAr
+                                                ? 'شكراً لك على قراءتك والتزامك بهذه الشروط. تعاونك يساهم في نجاح هذه الحمل.'
+                                                : 'Thank you for reading and committing to these terms. Your cooperation contributes to the success of this campaign.'}
+                                        </p>
+                                        <p className="closing-sub-text">
+                                            {isAr
+                                                ? 'للاستفسارات أو الشكاوى: التواصل مع المنسق الرسمي عبر واتساب'
+                                                : 'For inquiries or complaints: Contact the official coordinator via WhatsApp'}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className="terms-closing-box">
-                                    <p className="closing-main-text">
-                                        {isAr
-                                            ? 'شكراً لك على قراءتك والتزامك بهذه الشروط. تعاونك يساهم في نجاح هذه الحمل.'
-                                            : 'Thank you for reading and committing to these terms. Your cooperation contributes to the success of this campaign.'}
-                                    </p>
-                                    <p className="closing-sub-text">
-                                        {isAr
-                                            ? 'للاستفسارات أو الشكاوى: التواصل مع المنسق الرسمي عبر واتساب'
-                                            : 'For inquiries or complaints: Contact the official coordinator via WhatsApp'}
-                                    </p>
+                                <div className="terms-modal-footer">
+                                    <button
+                                        className="close-terms-btn"
+                                        onClick={() => { setShowTermsModal(false); setShowTermsDetails(false); }}
+                                    >
+                                        {isAr ? 'إلغاء' : 'Close'}
+                                    </button>
                                 </div>
-                            </div>
-
-                            <div className="terms-modal-footer">
-                                <button
-                                    className="close-terms-btn"
-                                    onClick={() => setShowTermsModal(false)}
-                                >
-                                    {isAr ? 'إغلاق' : 'Close'}
-                                </button>
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
-        );
-    }
-};
+                    )}
+                </div>
+                );
+        }
+    };
 
-export default MaterialExchange;
+                export default MaterialExchange;

@@ -21,13 +21,13 @@ const EMPTY_FORM = {
 };
 
 const TARGET_OPTIONS = [
-    { value: '/materials', ar: 'المواد الدراسي', en: 'Study Materials' },
-    { value: '/plans', ar: 'الطط الدراسي', en: 'Academic Plans' },
-    { value: '/quiz', ar: 'الاتبارات', en: 'Quizzes' },
+    { value: '/materials', ar: 'المواد الدراسية', en: 'Study Materials' },
+    { value: '/plans', ar: 'الخطط الدراسي', en: 'Academic Plans' },
+    { value: '/quiz', ar: 'الاختبارات', en: 'Quizzes' },
     { value: '/calendar', ar: 'التقويم الأكاديمي', en: 'Academic Calendar' },
     { value: '/grading', ar: 'نظام العلامات', en: 'Grading System' },
     { value: '/exchange', ar: 'تبادل المواد', en: 'Material Exchange' },
-    { value: '/faq', ar: 'الأسئل الشائع', en: 'FAQ' },
+    { value: '/faq', ar: 'الأسئلة الشائعة', en: 'FAQ' },
     { value: '/about', ar: 'عن الموقع', en: 'About Us' },
 ];
 
@@ -127,7 +127,7 @@ const AdminNotices = () => {
             {showForm && (
                 <div className="admin-glass-card" style={{ marginBottom: '1.5rem' }}>
                     <h3 style={{ marginBottom: '1rem', fontWeight: 800, fontSize: '1rem' }}>
-                        {editId ? (isAr ? '✏️ تعديل الإعلان' : '✏️ Edit Notice') : (isAr ? '➕ إضاف إعلان جديد' : '➕ Add New Notice')}
+                        {editId ? (isAr ? '✏️ تعديل الإعلان' : '✏️ Edit Notice') : (isAr ? '➕ إضافة إعلان جديد' : '➕ Add New Notice')}
                     </h3>
                     <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -176,7 +176,7 @@ const AdminNotices = () => {
                                 <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: 4 }}>{isAr ? 'ينتهي بعد (أيام)' : 'Expires in (days)'}</label>
                                 <input type="number" min="1" max="365" value={form.expiresIn}
                                     onChange={e => setForm(f => ({ ...f, expiresIn: e.target.value }))}
-                                    placeholder={isAr ? 'اتياري' : 'optional'} className="admin-input" style={{ width: '120px' }} />
+                                    placeholder={isAr ? 'اختياري' : 'optional'} className="admin-input" style={{ width: '120px' }} />
                             </div>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 700, fontSize: '0.85rem', marginTop: '18px' }}>
                                 <input type="checkbox" checked={form.pinned} onChange={e => setForm(f => ({ ...f, pinned: e.target.checked }))} />

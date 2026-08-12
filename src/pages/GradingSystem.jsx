@@ -206,7 +206,7 @@ const GradingSystem = () => {
                     </div>
                     <p className="gpa-status-tip">
                         💡 {isAr
-                            ? 'طالب يحتاج معدل ≥ 2.0 للتسجيل الطبيعي. استدم مطط المعدل الهدف أعلاه لمعرف ما تحتاجه.'
+                            ? 'طالب يحتاج معدل ≥ 2.0 للتسجيل الطبيعي. استدم مخطط المعدل الهدف أعلاه لمعرف ما تحتاجه.'
                             : 'Students need GPA ≥ 2.0 for normal enrollment. Use the Target GPA Planner above to know what you need.'}
                     </p>
                 </section>

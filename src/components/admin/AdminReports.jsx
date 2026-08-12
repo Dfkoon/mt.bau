@@ -128,7 +128,7 @@ const AdminReports = () => {
             closeEditModal();
         } catch (e) {
             console.error(e);
-            toast.error(isAr ? 'طأ في الحفظ' : 'Save failed');
+            toast.error(isAr ? 'خطأ في الحفظ' : 'Save failed');
         } finally {
             setEditSaving(false);
         }
@@ -138,14 +138,14 @@ const AdminReports = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل بلاغات الأسئل...' : 'Loading flagged reports...'}</p>
+                <p>{isAr ? 'جاري تحميل بلاغات الأسئلة...' : 'Loading flagged reports...'}</p>
             </div>
         );
     }
 
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
-            <h3 className="admin-section-title"> <span>{isAr ? 'بلاغات الأطاء في الأسئل' : 'Flagged Questions Reports'}</span></h3>
+            <h3 className="admin-section-title"> <span>{isAr ? 'بلاغات الأطاء في الأسئلة' : 'Flagged Questions Reports'}</span></h3>
 
             {reports.length === 0 ? (
                 <div className="admin-empty-state">
@@ -246,7 +246,7 @@ const AdminReports = () => {
 
                             {/* Options */}
                             <div className="qedit-options-section" style={{ marginTop: '1.5rem' }}>
-                                <label className="qedit-label" style={{ fontWeight: 'bold' }}>🎯 {isAr ? 'اليارات المتاح:' : 'Options:'}</label>
+                                <label className="qedit-label" style={{ fontWeight: 'bold' }}>🎯 {isAr ? 'الخيارات المتاح:' : 'Options:'}</label>
                                 <div className="qedit-options-list">
                                     {editForm.options.map((opt, idx) => (
                                         <div key={opt.id} className="qedit-option-row">
@@ -277,13 +277,13 @@ const AdminReports = () => {
                                     ))}
                                 </div>
                                 <button type="button" className="admin-action-btn approve" style={{ marginTop: '0.8rem', fontSize: '0.82rem' }} onClick={addOption}>
-                                    + {isAr ? 'إضاف يار جديد' : 'Add Option'}
+                                    + {isAr ? 'إضافة يار جديد' : 'Add Option'}
                                 </button>
                             </div>
 
                             {/* Image Upload Zone */}
                             <div className="qedit-field" style={{ marginTop: '1.5rem' }}>
-                                <label className="qedit-label">🖼️ {isAr ? 'صور السؤال (اتياري):' : 'Question Image (optional):'}</label>
+                                <label className="qedit-label">🖼️ {isAr ? 'صور السؤال (اختياري):' : 'Question Image (optional):'}</label>
                                 <input
                                     ref={imageInputRef}
                                     type="file"
@@ -319,7 +319,7 @@ const AdminReports = () => {
                                             setEditForm(prev => ({ ...prev, image: compressed }));
                                         } catch (err) {
                                             console.error(err);
-                                            toast.error(isAr ? 'طأ في معالج الصور' : 'Image processing error');
+                                            toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
                                         } finally {
                                             setImageUploading(false);
                                             setImageUploadProgress(0);

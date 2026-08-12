@@ -156,7 +156,7 @@ export default function RequestServicesSection() {
     <section className="rss-section" id="request-services">
       {/* Header */}
       <div className="rss-header">
-        <div className="rss-badge">✨ دمات الفريق</div>
+        <div className="rss-badge">✨ خدمات الفريق</div>
         <h2 className="rss-title">اطلب ما تحتاجه</h2>
         <p className="rss-subtitle">
           سواء ملص مادة، إنشاء أسئل، أو اقتراح فكر — نحن هنا لمساعدتك

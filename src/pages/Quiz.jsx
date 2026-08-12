@@ -625,8 +625,10 @@ const Quiz = () => {
     // Activate timer once questions are loaded (fires when dbCurrentQuestions arrives)
     useEffect(() => {
         if (quizId && currentQuiz && !currentQuiz.parts && currentQuiz.questions?.length > 0 && !showResults) {
-            const timeLimit = currentQuiz.questions.length * 90;
-            setTimeLeft(timeLimit);
+            const durationSec = currentQuiz.durationMinutes
+                ? currentQuiz.durationMinutes * 60
+                : currentQuiz.questions.length * 90;
+            setTimeLeft(durationSec);
             setTimerActive(true);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -692,13 +694,27 @@ const Quiz = () => {
             totalMarks += q.marks || 1;
             if (q.type === 'matching') {
                 const subQuestions = q.subQuestions || [];
-                const subMarks = (q.marks || 1) / subQuestions.length;
-                subQuestions.forEach(sub => {
-                    const userSubAns = userAnswers[q.id]?.[sub.id];
-                    if (userSubAns === sub.correctAnswer) {
-                        calculatedScore += subMarks;
-                    }
-                });
+                // If sub-questions have individual marks, use them; otherwise divide equally
+                const hasPerItemMarks = subQuestions.some(s => s.marks !== undefined && s.marks !== null);
+                if (hasPerItemMarks) {
+                    // totalMarks for this question = sum of sub marks (override the q.marks already added)
+                    const subTotal = subQuestions.reduce((acc, s) => acc + (parseFloat(s.marks) || 0), 0);
+                    totalMarks += subTotal - (q.marks || 1); // adjust: we already added q.marks above
+                    subQuestions.forEach(sub => {
+                        const userSubAns = userAnswers[q.id]?.[sub.id];
+                        if (userSubAns === sub.correctAnswer) {
+                            calculatedScore += (parseFloat(sub.marks) || 0);
+                        }
+                    });
+                } else {
+                    const subMarks = (q.marks || 1) / subQuestions.length;
+                    subQuestions.forEach(sub => {
+                        const userSubAns = userAnswers[q.id]?.[sub.id];
+                        if (userSubAns === sub.correctAnswer) {
+                            calculatedScore += subMarks;
+                        }
+                    });
+                }
             } else if (q.type === 'multi_select') {
                 const correct = q.correctAnswers || (q.correctAnswer ? q.correctAnswer.split(',').filter(Boolean) : []);
                 const selected = Array.isArray(userAnswers[q.id]) ? userAnswers[q.id] : [];
@@ -774,7 +790,10 @@ const Quiz = () => {
             }
         );
 
-        if (calculatedScore / totalMarks >= 0.5) {
+        const passThreshold = currentQuiz.passMark != null
+            ? Number(currentQuiz.passMark)
+            : totalMarks * 0.5;
+        if (calculatedScore >= passThreshold) {
             playSuccessSound();
         }
     }, [currentQuiz, userAnswers]);
@@ -871,8 +890,10 @@ const Quiz = () => {
         setScore(0);
         setFlaggedQuestions(new Set());
         if (currentQuiz) {
-            const timeLimit = currentQuiz.questions.length * 90;
-            setTimeLeft(timeLimit);
+            const durationSec = currentQuiz.durationMinutes
+                ? currentQuiz.durationMinutes * 60
+                : currentQuiz.questions.length * 90;
+            setTimeLeft(durationSec);
             setTimerActive(true);
         }
         window.scrollTo(0, 0);
@@ -1132,8 +1153,9 @@ const Quiz = () => {
 
                         <div className="moodle-quiz-info-list no-print">
                             <p><strong>{language === 'ar' ? 'المحاولات المسموح بها:' : 'Attempts allowed:'}</strong> {language === 'ar' ? 'غير محدود' : 'Unlimited'}</p>
-                            <p><strong>{language === 'ar' ? 'الحد الزمني:' : 'Time limit:'}</strong> {Math.floor((totalQuestions * 90) / 60)} {language === 'ar' ? 'دقيق' : 'mins'}</p>
-                            <p><strong>{language === 'ar' ? 'درج النجاح:' : 'Grade to pass:'}</strong> {(totalQuestions * 0.5).toFixed(2)} {language === 'ar' ? 'من' : 'out of'} {totalQuestions}.00</p>
+                            <p><strong>{language === 'ar' ? 'الحد الزمني:' : 'Time limit:'}</strong> {currentQuiz.durationMinutes ? currentQuiz.durationMinutes : Math.floor((totalQuestions * 90) / 60)} {language === 'ar' ? 'دقيقة' : 'mins'}</p>
+                            <p><strong>{language === 'ar' ? 'درجة النجاح:' : 'Grade to pass:'}</strong> {currentQuiz.passMark != null ? Number(currentQuiz.passMark).toFixed(2) : (totalMarks * 0.5).toFixed(2)} {language === 'ar' ? 'من' : 'out of'} {totalMarks.toFixed(2)}</p>
+
                         </div>
 
                         <div className="moodle-results-container">
@@ -2292,7 +2314,7 @@ const Quiz = () => {
                                     onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
                                     disabled={currentQuestionIndex === 0}
                                 >
-                                    {language === 'ar' ? 'الصفح السابق' : 'Previous page'}
+                                    {language === 'ar' ? 'الصفحة السابق' : 'Previous page'}
                                 </button>
 
                                 <span className="question-counter">
@@ -2313,7 +2335,7 @@ const Quiz = () => {
                                         onClick={() => setCurrentQuestionIndex(prev => Math.min(currentQuiz.questions.length - 1, prev + 1))}
                                         style={{ backgroundColor: '#0f6cbf', color: '#fff' }}
                                     >
-                                        {language === 'ar' ? 'الصفح التالي' : 'Next page'}
+                                        {language === 'ar' ? 'الصفحة التالي' : 'Next page'}
                                     </button>
                                 )}
                             </div>

@@ -14,7 +14,7 @@ const STATUSES = [
 ];
 
 const SERVICE_TYPES = [
-  { id: 'all', label: 'جميع الدمات' },
+  { id: 'all', label: 'جميع الخدمات' },
   { id: 'summary', label: '📝 ملص مادة' },
   { id: 'quiz', label: '❓ إنشاء أسئل' },
   { id: 'idea', label: '💡 اقتراح فكر' },
@@ -245,13 +245,13 @@ export default function AdminServiceRequests() {
       {loading ? (
         <div className="asr-loading">
           <div className="asr-spinner"></div>
-          <p>جاري تحميل طلبات الدمات...</p>
+          <p>جاري تحميل طلبات الخدمات...</p>
         </div>
       ) : filteredRequests.length === 0 ? (
         <div className="asr-empty">
           <div className="asr-empty-icon">📭</div>
           <h3>لا توجد طلبات تطابق الفلتر الحالي</h3>
-          <p>جرّب اتيار فلتر آر أو البحث باسم أو رقم هاتف آر.</p>
+          <p>جرّب اختيار فلتر آر أو البحث باسم أو رقم هاتف آر.</p>
         </div>
       ) : (
         <div className="asr-list">

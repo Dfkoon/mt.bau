@@ -641,7 +641,7 @@ const SecureGateway = () => {
                                             المصادق الثنائي (2FA)
                                         </div>
                                         <div style={{ fontSize: '0.82rem', color: '#a0aec0', lineHeight: 1.4 }}>
-                                            يرجى إدال رمز الأمان المتغير المكون من 6 أرقام من تطبيق Authenticator الاص بك
+                                            يرجى إدخال رمز الأمان المتغير المكون من 6 أرقام من تطبيق Authenticator الاص بك
                                         </div>
                                     </div>
 

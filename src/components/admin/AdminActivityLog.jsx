@@ -5,23 +5,23 @@ import { useLanguage } from '../../contexts/LanguageContext';
 
 const PATH_LABELS = {
     '/': 'الرئيسي',
-    '/materials': 'المواد الدراسي',
-    '/plans': 'الطط الدراسي',
-    '/quiz': 'الاتبارات',
+    '/materials': 'المواد الدراسية',
+    '/plans': 'الخطط الدراسي',
+    '/quiz': 'الاختبارات',
     '/calendar': 'التقويم الأكاديمي',
     '/grading': 'حساب المعدل والدرجات',
     '/exchange': 'سوق تبادل المواد',
     '/about': 'من نحن',
-    '/faq': 'الأسئل الشائع',
+    '/faq': 'الأسئلة الشائعة',
     '/materials/click': 'مواد دراسي (تحميل)',
-    '/quiz/complete': 'اتبار (إتمام)',
+    '/quiz/complete': 'اختبار (إتمام)',
 };
 
 const getPathLabel = (path, lang) => {
     if (!path) return '—';
     if (lang === 'ar') {
         if (PATH_LABELS[path]) return PATH_LABELS[path];
-        if (path.startsWith('/quiz/')) return `اتبار: ${path.replace('/quiz/', '')}`;
+        if (path.startsWith('/quiz/')) return `اختبار: ${path.replace('/quiz/', '')}`;
         return path;
     }
     const en = {
@@ -62,9 +62,9 @@ const getRelativeTime = (d, lang) => {
 const TypeBadge = ({ type, lang }) => {
     const isAr = lang === 'ar';
     const map = {
-        visit: { label: isAr ? 'زيار صفح' : 'Page Visit', icon: '🌐', cls: 'log-badge-visit' },
+        visit: { label: isAr ? 'زيارة صفح' : 'Page Visit', icon: '🌐', cls: 'log-badge-visit' },
         material_view: { label: isAr ? 'مادة دراسي' : 'Study Material', icon: '📂', cls: 'log-badge-material' },
-        quiz_completed: { label: isAr ? 'إتمام اتبار' : 'Quiz Result', icon: '🎯', cls: 'log-badge-quiz' },
+        quiz_completed: { label: isAr ? 'إتمام اختبار' : 'Quiz Result', icon: '🎯', cls: 'log-badge-quiz' },
         download: { label: isAr ? 'تنزيل ملف' : 'Download', icon: '📥', cls: 'log-badge-download' },
     };
     const b = map[type] || { label: type, icon: '⚡', cls: 'log-badge-visit' };
@@ -187,7 +187,7 @@ const AdminActivityLog = () => {
                     </h3>
                     <p className="log-subtitle">
                         {isAr
-                            ? 'متابع تفاعلات الطلاب، زيارات الصفحات، ونتائج الاتبارات مباشر'
+                            ? 'متابع تفاعلات الطلاب، زيارات الصفحات، ونتائج الاختبارات مباشر'
                             : 'Real-time overview of student page visits, quizzes, and downloads'}
                     </p>
                 </div>
@@ -213,7 +213,7 @@ const AdminActivityLog = () => {
                     <div className="stat-card-icon" style={{ background: 'rgba(16,185,129,0.15)', color: '#6ee7b7' }}>🎯</div>
                     <div className="stat-card-data">
                         <span className="stat-card-value">{stats.quizzes}</span>
-                        <span className="stat-card-label">{isAr ? 'اتبارات مكتمل' : 'Quizzes Completed'}</span>
+                        <span className="stat-card-label">{isAr ? 'اختبارات مكتمل' : 'Quizzes Completed'}</span>
                     </div>
                 </div>
                 <div className="log-stat-card">
@@ -243,8 +243,8 @@ const AdminActivityLog = () => {
                     <select className="log-select-input" value={filterType} onChange={e => setFilterType(e.target.value)}>
                         <option value="all">{isAr ? '⚡ كل الأنشط' : 'All Activities'}</option>
                         <option value="visit">{isAr ? '🌐 زيارات الصفحات' : 'Page Visits'}</option>
-                        <option value="quiz_completed">{isAr ? '🎯 نتائج الاتبارات' : 'Quiz Completions'}</option>
-                        <option value="material_view">{isAr ? '📂 فتح المواد الدراسي' : 'Study Materials'}</option>
+                        <option value="quiz_completed">{isAr ? '🎯 نتائج الاختبارات' : 'Quiz Completions'}</option>
+                        <option value="material_view">{isAr ? '📂 فتح المواد الدراسية' : 'Study Materials'}</option>
                     </select>
                 </div>
             </div>
@@ -255,7 +255,7 @@ const AdminActivityLog = () => {
                     <thead>
                         <tr>
                             <th style={{ width: '130px' }}>{isAr ? 'النوع' : 'Type'}</th>
-                            <th style={{ minWidth: '180px' }}>{isAr ? 'المستدم/الطالب' : 'Student'}</th>
+                            <th style={{ minWidth: '180px' }}>{isAr ? 'المستخدم/الطالب' : 'Student'}</th>
                             <th>{isAr ? 'تفاصيل النشاط' : 'Activity Details'}</th>
                             <th style={{ width: '190px' }}>{isAr ? 'التاري والتوقيت' : 'Date & Time'}</th>
                         </tr>
@@ -372,7 +372,7 @@ const AdminActivityLog = () => {
                                                                 transition: 'background 0.18s',
                                                             }}
                                                         >
-                                                            ❌ {wrongQs.length} {isAr ? 'إجاب اطئ' : 'wrong answers'}
+                                                            ❌ {wrongQs.length} {isAr ? 'إجابة اطئ' : 'wrong answers'}
                                                             <span style={{ fontSize: '0.65rem' }}>{isWrongExpanded ? '▲' : '▼'}</span>
                                                         </button>
 

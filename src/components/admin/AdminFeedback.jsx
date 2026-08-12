@@ -56,7 +56,7 @@ const AdminFeedback = () => {
             await updateDoc(doc(db, 'suggestions', id), { status: 'resolved', read: true });
             toast.success(isAr ? 'تم حل الاقتراح / الشكوى' : 'Marked as resolved');
         } catch { 
-            toast.error(isAr ? 'طأ في التحديث' : 'Update failed'); 
+            toast.error(isAr ? 'خطأ في التحديث' : 'Update failed'); 
         }
     };
 
@@ -66,7 +66,7 @@ const AdminFeedback = () => {
             await deleteDoc(doc(db, 'suggestions', id)); 
             toast.success(isAr ? 'تم الحذف' : 'Deleted'); 
         } catch { 
-            toast.error(isAr ? 'طأ' : 'Error'); 
+            toast.error(isAr ? 'خطأ' : 'Error'); 
         }
     };
 
@@ -76,7 +76,7 @@ const AdminFeedback = () => {
             await updateDoc(doc(db, 'testimonials', id), { approved: !current });
             toast.success(isAr ? (!current ? 'تم التفعيل والظهور' : 'تم إلغاء التفعيل') : (!current ? 'Approved' : 'Unapproved'));
         } catch {
-            toast.error(isAr ? 'طأ في التحديث' : 'Update failed');
+            toast.error(isAr ? 'خطأ في التحديث' : 'Update failed');
         }
     };
 
@@ -86,7 +86,7 @@ const AdminFeedback = () => {
             await deleteDoc(doc(db, 'testimonials', id));
             toast.success(isAr ? 'تم الحذف' : 'Deleted');
         } catch {
-            toast.error(isAr ? 'طأ في الحذف' : 'Error deleting');
+            toast.error(isAr ? 'خطأ في الحذف' : 'Error deleting');
         }
     };
 

@@ -168,7 +168,7 @@ const cleanText = (str) => {
     return str
         .toLowerCase()
         .replace(/[أإآٱ]/g, 'ا')
-        .replace(//g, 'ه')
+        .replace(/\uFFFD/g, 'ه')
         .replace(/ى/g, 'ي')
         .replace(/[\u064B-\u0652]/g, '') // remove diacritics
         .replace(/[.,/#!$%^&*;:{}=\-_`~()؟?،"']/g, ' ') // remove punctuation

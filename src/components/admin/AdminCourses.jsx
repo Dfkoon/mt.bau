@@ -125,7 +125,7 @@ const AdminCourses = () => {
             setShowModal(false);
         } catch (err) {
             console.error("Error saving course:", err);
-            toast.error(isAr ? `طأ أثناء الحفظ: ${err.message || err}` : `Save error: ${err.message || err}`);
+            toast.error(isAr ? `خطأ أثناء الحفظ: ${err.message || err}` : `Save error: ${err.message || err}`);
             setShowModal(false);
         }
     };
@@ -198,7 +198,7 @@ const AdminCourses = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل المواد الدراسي...' : 'Loading courses...'}</p>
+                <p>{isAr ? 'جاري تحميل المواد الدراسية...' : 'Loading courses...'}</p>
             </div>
         );
     }
@@ -206,7 +206,7 @@ const AdminCourses = () => {
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
             <h3 className="admin-section-title">
-                <span>{isAr ? 'إدار المواد الدراسي' : 'Manage Study Materials'}</span>
+                <span>{isAr ? 'إدارة المواد الدراسيةة' : 'Manage Study Materials'}</span>
             </h3>
 
             {/* Filters Card */}
@@ -274,7 +274,7 @@ const AdminCourses = () => {
                     {/* Add button */}
                     <div style={{ flex: '0 0 auto' }}>
                         <button className="admin-action-btn approve" style={{ padding: '0.6rem 1.4rem' }} onClick={openAddModal}>
-                            {isAr ? 'اضاف مادة جديد' : 'Add New Course'}
+                            {isAr ? 'اضاف مادة جديدة' : 'Add New Course'}
                         </button>
                     </div>
                 </div>
@@ -290,7 +290,7 @@ const AdminCourses = () => {
                     paddingBottom: '0.75rem',
                     borderBottom: '1px solid var(--adm-divider)'
                 }}>
-                    {isAr ? 'قائم المواد المتوفر' : 'Available Courses'} ({mergedCourses.length})
+                    {isAr ? 'قائمة المواد المتوفر' : 'Available Courses'} ({mergedCourses.length})
                 </h4>
 
                 {mergedCourses.length === 0 ? (
@@ -386,7 +386,7 @@ const AdminCourses = () => {
                             paddingBottom: '0.75rem',
                             borderBottom: '1px solid var(--adm-divider)'
                         }}>
-                            {editingCourse ? (isAr ? 'تعديل مادة' : 'Edit Course') : (isAr ? 'إضاف مادة جديد' : 'Add New Course')}
+                            {editingCourse ? (isAr ? 'تعديل مادة' : 'Edit Course') : (isAr ? 'إضافة مادة جديدة' : 'Add New Course')}
                         </h4>
 
                         <form onSubmit={handleSaveCourse} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

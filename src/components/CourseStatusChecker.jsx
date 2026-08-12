@@ -60,7 +60,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
         e.preventDefault();
 
         if (!phoneNumber.trim()) {
-            toast.error(isAr ? 'الرجاء إدال رقم الهاتف' : 'Please enter your phone number');
+            toast.error(isAr ? 'الرجاء إدخال رقم الهاتف' : 'Please enter your phone number');
             return;
         }
 

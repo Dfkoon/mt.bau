@@ -6,16 +6,16 @@ import './AdminAnalytics.css';
 
 const PATH_LABELS = {
   '/': 'الرئيسي',
-  '/materials': 'المواد الدراسي',
-  '/plans': 'الطط الدراسي',
-  '/quiz': 'بنك الأسئل',
+  '/materials': 'المواد الدراسية',
+  '/plans': 'الخطط الدراسي',
+  '/quiz': 'بنك الأسئلة',
   '/calendar': 'التقويم الجامعي',
   '/grading': 'حساب المعدل',
   '/exchange': 'تبادل المواد',
   '/about': 'من نحن',
-  '/faq': 'الأسئل الشائع',
+  '/faq': 'الأسئلة الشائعة',
   '/materials/click': 'تحميل مادة',
-  '/quiz/complete': 'إتمام اتبار',
+  '/quiz/complete': 'إتمام اختبار',
 };
 
 const getPathLabel = (path, lang) => {
@@ -137,7 +137,7 @@ export default function AdminAnalytics() {
       ...pageViews.slice(0, 15).map(v => ({
         id: `pv-${v.id}`,
         type: v.type === 'material_view' ? 'material' : v.type === 'quiz_completed' ? 'quiz' : 'visit',
-        title: v.type === 'material_view' ? `فتح مادة: ${v.courseName || 'مادة دراسي'}` : v.type === 'quiz_completed' ? `إتمام اتبار: ${v.quizTitle || 'اتبار'}` : `زيار صفح: ${getPathLabel(v.path, language)}`,
+        title: v.type === 'material_view' ? `فتح مادة: ${v.courseName || 'مادة دراسي'}` : v.type === 'quiz_completed' ? `إتمام اختبار: ${v.quizTitle || 'اختبار'}` : `زيارة صفح: ${getPathLabel(v.path, language)}`,
         timestamp: v.timestamp,
         icon: v.type === 'material_view' ? '📂' : v.type === 'quiz_completed' ? '🎯' : '🌐',
         color: v.type === 'material_view' ? '#ec4899' : v.type === 'quiz_completed' ? '#3b82f6' : '#8b5cf6',
@@ -206,7 +206,7 @@ export default function AdminAnalytics() {
       <div className="anv-top-bar">
         <div className="anv-top-title-group">
           <h2 className="anv-top-title">لوح التحليلات والإحصائيات</h2>
-          <p className="anv-top-subtitle">متابع شامل لزيارات الطلاب، التفاعلات، تنزيل المواد، وطلبات الدمات</p>
+          <p className="anv-top-subtitle">متابع شامل لزيارات الطلاب، التفاعلات، تنزيل المواد، وطلبات الخدمات</p>
         </div>
 
         {/* Time Period Selector */}
@@ -321,7 +321,7 @@ export default function AdminAnalytics() {
               <span className="anv-sm-icon orange">🛠️</span>
               <div>
                 <span className="anv-sm-val">{totalRequests}</span>
-                <span className="anv-sm-lbl">طلبات الدمات</span>
+                <span className="anv-sm-lbl">طلبات الخدمات</span>
               </div>
             </div>
           </div>
@@ -366,11 +366,11 @@ export default function AdminAnalytics() {
             </div>
             <div>
               <span className="anv-pct-val cyan">{quizPct}%</span>
-              <span className="anv-pct-lbl">● الاتبارات</span>
+              <span className="anv-pct-lbl">● الاختبارات</span>
             </div>
             <div>
               <span className="anv-pct-val orange">{reqPct}%</span>
-              <span className="anv-pct-lbl">● الدمات</span>
+              <span className="anv-pct-lbl">● الخدمات</span>
             </div>
           </div>
         </div>
@@ -398,7 +398,7 @@ export default function AdminAnalytics() {
         {/* Card 2: Vibrant Deep Blue / Magenta */}
         <div className="anv-vcard anv-vcard-blue">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">فتح المواد الدراسي</span>
+            <span className="anv-vc-title">فتح المواد الدراسية</span>
             <span className="anv-vc-icon">📂</span>
           </div>
           <div className="anv-vc-body">
@@ -413,7 +413,7 @@ export default function AdminAnalytics() {
         {/* Card 3: Vibrant Teal / Cyan */}
         <div className="anv-vcard anv-vcard-teal">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">إجتياز بنك الأسئل</span>
+            <span className="anv-vc-title">إجتياز بنك الأسئلة</span>
             <span className="anv-vc-icon">🎯</span>
           </div>
           <div className="anv-vc-body">
@@ -428,7 +428,7 @@ export default function AdminAnalytics() {
         {/* Card 4: Vibrant Orange / Gold */}
         <div className="anv-vcard anv-vcard-orange">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">طلبات الدمات الجديد</span>
+            <span className="anv-vc-title">طلبات الخدمات الجديد</span>
             <span className="anv-vc-icon">🛠️</span>
           </div>
           <div className="anv-vc-body">

@@ -76,12 +76,12 @@ const SmartAdvisor = () => {
                     <div className="plan-type-grid">
                         <div className="plan-option-card" onClick={() => handlePlanTypeSelection('old')}>
                             <div className="plan-badge-icon">📜</div>
-                            <h5>{language === 'ar' ? 'الطط الدراسي القديم' : 'Old Academic Plans'}</h5>
+                            <h5>{language === 'ar' ? 'الخطط الدراسي القديم' : 'Old Academic Plans'}</h5>
                             <p>{language === 'ar' ? 'تشمل الأجيال: 2003، 2004، 2005، 2006' : 'Generations: 2003, 2004, 2005, 2006'}</p>
                         </div>
                         <div className="plan-option-card">
                             <div className="plan-badge-icon">✨</div>
-                            <h5>{language === 'ar' ? 'الطط الدراسي الجديد' : 'New Academic Plans'}</h5>
+                            <h5>{language === 'ar' ? 'الخطط الدراسي الجديد' : 'New Academic Plans'}</h5>
                             <p>{language === 'ar' ? 'تشمل جيل 2007 والأجيال القادم (2008، 2009...)' : 'Generation 2007 and beyond (2008, 2009...)'}</p>
                             <div className="under-construction-overlay">
                                 <span>{language === 'ar' ? 'قريباً... (جاري العمل عليها)' : 'Coming Soon... (Under Construction)'}</span>
@@ -110,7 +110,7 @@ const SmartAdvisor = () => {
                                 )}
                             </button>
                         ))}
-                        {majors.length === 0 && <p style={{ textAlign: 'center', gridColumn: '1/-1', color: 'var(--text-muted)' }}>{language === 'ar' ? 'نعتذر، الطط لهذه الفئ قيد العمل حالياً...' : 'Sorry, plans for this category are currently under development...'}</p>}
+                        {majors.length === 0 && <p style={{ textAlign: 'center', gridColumn: '1/-1', color: 'var(--text-muted)' }}>{language === 'ar' ? 'نعتذر، الخطط لهذه الفئ قيد العمل حالياً...' : 'Sorry, plans for this category are currently under development...'}</p>}
                     </div>
 
                     {majors.length > 0 && (

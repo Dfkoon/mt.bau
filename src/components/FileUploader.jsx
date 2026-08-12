@@ -164,7 +164,7 @@ const FileUploader = ({ onClose }) => {
         if (!contributionType) return;
 
         if (!subjectName || subjectName.trim().length < 2) {
-            toast.error(language === 'ar' ? 'يرجى إدال اسم المادة بشكل صحيح' : 'Please enter a valid subject name');
+            toast.error(language === 'ar' ? 'يرجى إدخال اسم المادة بشكل صحيح' : 'Please enter a valid subject name');
             return;
         }
 

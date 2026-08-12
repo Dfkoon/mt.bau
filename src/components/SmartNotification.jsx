@@ -24,7 +24,7 @@ const NOTIFICATIONS = {
             emoji: '⭐',
             titleAr: 'ساعد زملاءك!',
             titleEn: 'Help your classmates!',
-            msgAr: 'بعد تحميل الملف، قيّم المادة بالنجوم لمساعد الطلاب الآرين على اتيار أفضل المراجع.',
+            msgAr: 'بعد تحميل الملف، قيّم المادة بالنجوم لمساعد الطلاب الآخرين على اتيار أفضل المراجع.',
             msgEn: 'After downloading, rate the material with stars to help other students pick the best references.',
             type: 'tip',
         }
@@ -35,7 +35,7 @@ const NOTIFICATIONS = {
             emoji: '🎯',
             titleAr: 'حدّد هدفك الدراسي!',
             titleEn: 'Set your academic target!',
-            msgAr: 'استدم مطط معدل الهدف لمعرف كم تحتاج تحصل في كل مادة لترفع معدلك.',
+            msgAr: 'استدم مخطط معدل الهدف لمعرف كم تحتاج تحصل في كل مادة لترفع معدلك.',
             msgEn: 'Use the Target GPA planner to know exactly what grades you need to raise your average.',
             type: 'success',
         }

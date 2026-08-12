@@ -34,7 +34,7 @@ const NashmiGuide = () => {
     // Detailed page context for AI and preview bubbles
     const pageGuides = {
         '/': {
-            ar: 'أهلاً بك في الصفح الرئيسي! هون بتقدر تلاقي لمح سريع عن دماتنا، وقسم "بصم مكانك المميز" اللي فيه أهم الروابط.',
+            ar: 'أهلاً بك في الصفحة الرئيسية! هون بتقدر تلاقي لمح سريع عن خدماتنا، وقسم "بصم مكانك المميز" اللي فيه أهم الروابط.',
             en: 'Welcome to the Homepage! Here you can find a quick overview of our services and the "Makanak Touch" section with essential links.',
             hint: 'User is on Homepage. Focus on general navigation and the new Resources Showcase/Services loop.'
         },
@@ -44,7 +44,7 @@ const NashmiGuide = () => {
             hint: 'User is looking for study materials. Help them find specific subjects or summaries.'
         },
         '/plans': {
-            ar: 'وصلت لصفح الطط الدراسي؛ هون "شجر المواد" لكل تصص عشان تعرف شو تسجل وتوزع موادك صح.',
+            ar: 'وصلت لصفح الخطط الدراسي؛ هون "شجر المواد" لكل تصص عشان تعرف شو تسجل وتوزع موادك صح.',
             en: 'You are at the Academic Plans page; see the "Course Tree" for each major to plan your registration correctly.',
             hint: 'User is planning their semester. Guide them through the course tree and prerequisites.'
         },
@@ -131,7 +131,7 @@ const NashmiGuide = () => {
     const normalizeText = (text) => {
         if (!text) return '';
         return text.toLowerCase().trim()
-            .replace(/[أإآ]/g, 'ا').replace(//g, 'ه')
+            .replace(/[أإآ]/g, 'ا').replace(/\uFFFD/g, 'ه')
             .replace(/ى/g, 'ي').replace(/ئ/g, 'ي').replace(/ؤ/g, 'و');
     };
 
@@ -341,7 +341,7 @@ const NashmiGuide = () => {
                                     setInputValue(chip);
                                     setTimeout(() => {
                                         document.querySelector('.chat-input-row')?.requestSubmit?.() ||
-                                        document.querySelector('.chat-input-row button[type="submit"]')?.click();
+                                            document.querySelector('.chat-input-row button[type="submit"]')?.click();
                                     }, 100);
                                 }}
                             >
