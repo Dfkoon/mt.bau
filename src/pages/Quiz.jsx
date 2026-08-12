@@ -641,19 +641,31 @@ const Quiz = () => {
         window.scrollTo(0, 0);
         setTimerActive(false);
         setTimeLeft(0);
+        // Reset so the timer re-initialises for each new quiz
+        timerStartedRef.current = false;
     }, [quizId]);
 
-    // Activate timer once questions are loaded (fires when dbCurrentQuestions arrives)
+    // Track whether the timer has already started for this quiz session
+    const timerStartedRef = React.useRef(false);
+
+    // Activate timer once questions are loaded — re-init if durationMinutes changes
     useEffect(() => {
         if (quizId && currentQuiz && !currentQuiz.parts && currentQuiz.questions?.length > 0 && !showResults) {
             const durationSec = currentQuiz.durationMinutes
                 ? currentQuiz.durationMinutes * 60
                 : currentQuiz.questions.length * 90;
-            setTimeLeft(durationSec);
-            setTimerActive(true);
+
+            // Always (re-)set the timer when durationMinutes or question count changes,
+            // but only set it once per quiz session after it has already been started
+            // (avoids jumping back to full time mid-quiz on unrelated re-renders).
+            if (!timerStartedRef.current) {
+                timerStartedRef.current = true;
+                setTimeLeft(durationSec);
+                setTimerActive(true);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [quizId, currentQuiz?.questions?.length]);
+    }, [quizId, currentQuiz?.questions?.length, currentQuiz?.durationMinutes]);
 
     // Handle back navigation state to restore selected subject category
     useEffect(() => {
