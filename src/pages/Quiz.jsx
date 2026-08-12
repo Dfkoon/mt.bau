@@ -608,6 +608,24 @@ const Quiz = () => {
     });
 
     // Reset state when quiz ID changes (navigation)
+    // Calculate total possible marks for current quiz
+    const quizTotalMarks = useMemo(() => {
+        if (!currentQuiz?.questions?.length) return 0;
+        let total = 0;
+        currentQuiz.questions.forEach(q => {
+            total += q.marks || 1;
+            if (q.type === 'matching') {
+                const subQuestions = q.subQuestions || [];
+                const hasPerItemMarks = subQuestions.some(s => s.marks !== undefined && s.marks !== null);
+                if (hasPerItemMarks) {
+                    const subTotal = subQuestions.reduce((acc, s) => acc + (parseFloat(s.marks) || 0), 0);
+                    total += subTotal - (q.marks || 1);
+                }
+            }
+        });
+        return total;
+    }, [currentQuiz]);
+
     useEffect(() => {
         setCurrentQuestionIndex(0);
         setUserAnswers({});
@@ -1154,13 +1172,12 @@ const Quiz = () => {
                         <div className="moodle-quiz-info-list no-print">
                             <p><strong>{language === 'ar' ? 'المحاولات المسموح بها:' : 'Attempts allowed:'}</strong> {language === 'ar' ? 'غير محدود' : 'Unlimited'}</p>
                             <p><strong>{language === 'ar' ? 'الحد الزمني:' : 'Time limit:'}</strong> {currentQuiz.durationMinutes ? currentQuiz.durationMinutes : Math.floor((totalQuestions * 90) / 60)} {language === 'ar' ? 'دقيقة' : 'mins'}</p>
-                            <p><strong>{language === 'ar' ? 'درجة النجاح:' : 'Grade to pass:'}</strong> {currentQuiz.passMark != null ? Number(currentQuiz.passMark).toFixed(2) : (totalMarks * 0.5).toFixed(2)} {language === 'ar' ? 'من' : 'out of'} {totalMarks.toFixed(2)}</p>
-
+                            <p><strong>{language === 'ar' ? 'درجة النجاح:' : 'Grade to pass:'}</strong> {currentQuiz.passMark != null ? Number(currentQuiz.passMark).toFixed(2) : (quizTotalMarks * 0.5).toFixed(2)} {language === 'ar' ? 'من' : 'out of'} {quizTotalMarks.toFixed(2)}</p>
                         </div>
 
                         <div className="moodle-results-container">
                             <h2 className="moodle-final-grade">
-                                {language === 'ar' ? `علامتك النهائي في هذا الاتبار هي ${score.toFixed(2)}/${totalQuestions}.00.` : `Your final grade for this quiz is ${score.toFixed(2)}/${totalQuestions}.00.`}
+                                {language === 'ar' ? `علامتك النهائية في هذا الاختبار هي ${score.toFixed(2)}/${quizTotalMarks.toFixed(2)}.` : `Your final grade for this quiz is ${score.toFixed(2)}/${quizTotalMarks.toFixed(2)}.`}
                             </h2>
 
                             <h3 className="moodle-attempts-title">

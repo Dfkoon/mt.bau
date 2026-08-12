@@ -22,14 +22,16 @@ const auth = getAuth(app);
 let analytics = null;
 if (typeof window !== "undefined") {
     isSupported().then((supported) => {
-        if (supported) {
+        if (supported && firebaseConfig.measurementId && firebaseConfig.apiKey) {
             try {
                 analytics = getAnalytics(app);
             } catch (err) {
-                console.warn("Firebase Analytics skipped:", err.message);
+                console.warn("Firebase Analytics skipped:", err?.message || err);
             }
         }
-    }).catch(() => {});
+    }).catch((err) => {
+        console.warn("Firebase Analytics check failed:", err?.message || err);
+    });
 }
 
 export { db, storage, auth, analytics };
