@@ -1629,32 +1629,32 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
           {/* ── KPI Cards ── */}
           {activeTab === 'analytics' && (
-            <div className="admin-kpi-row" style={{ marginTop: isEmbedded ? '0' : '2.5rem' }}>
+            <div className="admin-kpi-row" style={{ marginTop: isEmbedded ? '0' : '1.5rem' }}>
               <div className="admin-kpi-card">
-                <div className="kpi-icon"></div>
+                <div className="kpi-icon">🌐</div>
                 <div className="kpi-value">{totalVisits}</div>
                 <div className="kpi-label">{isAr ? 'إجمالي الزيارات' : 'Total Page Views'}</div>
               </div>
 
               <div className="admin-kpi-card">
-                <div className="kpi-icon"></div>
+                <div className="kpi-icon">📚</div>
                 <div className="kpi-value">{materialViews}</div>
                 <div className="kpi-label">{isAr ? 'فتح مواد دراسية' : 'Material Opens'}</div>
               </div>
               <div className="admin-kpi-card">
-                <div className="kpi-icon"></div>
+                <div className="kpi-icon">✅</div>
                 <div className="kpi-value">{quizCompletions}</div>
-                <div className="kpi-label">{isAr ? 'اختبارات مكتمل' : 'Quizzes Completed'}</div>
+                <div className="kpi-label">{isAr ? 'اختبارات مكتملة' : 'Quizzes Completed'}</div>
               </div>
               <div className="admin-kpi-card">
-                <div className="kpi-icon"></div>
+                <div className="kpi-icon">💬</div>
                 <div className="kpi-value">{suggestions.length}</div>
                 <div className="kpi-label">{isAr ? 'رسائل واقتراحات' : 'Suggestions'}</div>
               </div>
               <div className="admin-kpi-card">
-                <div className="kpi-icon"></div>
+                <div className="kpi-icon">🚩</div>
                 <div className="kpi-value">{reports.filter(r => r.status === 'pending').length}</div>
-                <div className="kpi-label">{isAr ? 'بلاغات معلّق' : 'Pending Reports'}</div>
+                <div className="kpi-label">{isAr ? 'بلاغات معلقة' : 'Pending Reports'}</div>
               </div>
             </div>
           )}
