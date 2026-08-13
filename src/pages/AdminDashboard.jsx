@@ -272,7 +272,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const [editingSubjectOriginalId, setEditingSubjectOriginalId] = useState(null); // null = add mode, string = edit mode
 
   const [showAddPartModal, setShowAddPartModal] = useState(false);
-  const [partForm, setPartForm] = useState({ id: '', title: '', titleAr: '', isGroup: false, durationMinutes: 30, passMark: '' });
+  const [partForm, setPartForm] = useState({ id: '', title: '', titleAr: '', isGroup: false, subParts: [], durationMinutes: 30, passMark: '' });
+  const [selectedSubPartId, setSelectedSubPartId] = useState(''); // for drilling into group sub-parts in column 3
 
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
@@ -427,21 +428,65 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     };
   }, [loggedIn]);
 
-  // ── Load questions for selected part ──
+  // ── Load questions for selected part (also load sub-parts if group) ──
   useEffect(() => {
+    setSelectedSubPartId(''); // reset sub-part selection when part changes
     if (!selectedPartId || !loggedIn) {
       setQManageQuestions([]);
       return;
     }
+    // Listen for Firestore questions (for this part AND any sub-parts)
     const q = query(collection(db, 'quiz_questions'), where('partId', '==', selectedPartId));
-    const unsubQuestions = onSnapshot(q, (snap) => {
+    const unsubQuestions = onSnapshot(q, async (snap) => {
       const list = [];
       snap.forEach(d => list.push(d.data()));
+
+      // Also load question_edits deleted markers for this part
+      try {
+        const editsSnap = await getDocs(query(collection(db, 'question_edits'), where('partId', '==', selectedPartId)));
+        const deletedIds = new Set();
+        editsSnap.forEach(d => { if (d.data().deleted) deletedIds.add(String(d.data().questionId)); });
+        // Add deleted markers so allQuestions can filter them out
+        deletedIds.forEach(qid => {
+          if (!list.some(q => String(q.id) === qid)) {
+            list.push({ id: qid, partId: selectedPartId, deleted: true });
+          } else {
+            const idx = list.findIndex(q => String(q.id) === qid);
+            list[idx] = { ...list[idx], deleted: true };
+          }
+        });
+      } catch (e) { /* ignore edits load error */ }
+
       setQManageQuestions(list);
     }, err => console.error('Questions read error:', err));
 
     return () => unsubQuestions();
   }, [selectedPartId, loggedIn]);
+
+  // ── Load questions for selected sub-part ──
+  useEffect(() => {
+    if (!selectedSubPartId || !loggedIn) return;
+    const q = query(collection(db, 'quiz_questions'), where('partId', '==', selectedSubPartId));
+    const unsubSubQ = onSnapshot(q, async (snap) => {
+      const list = [];
+      snap.forEach(d => list.push(d.data()));
+      try {
+        const editsSnap = await getDocs(query(collection(db, 'question_edits'), where('partId', '==', selectedSubPartId)));
+        const deletedIds = new Set();
+        editsSnap.forEach(d => { if (d.data().deleted) deletedIds.add(String(d.data().questionId)); });
+        deletedIds.forEach(qid => {
+          if (!list.some(q => String(q.id) === qid)) {
+            list.push({ id: qid, partId: selectedSubPartId, deleted: true });
+          } else {
+            const idx = list.findIndex(q => String(q.id) === qid);
+            list[idx] = { ...list[idx], deleted: true };
+          }
+        });
+      } catch (e) { /* ignore */ }
+      setQManageQuestions(list);
+    }, err => console.error('Sub-questions read error:', err));
+    return () => unsubSubQ();
+  }, [selectedSubPartId, loggedIn]);
 
   useEffect(() => {
     if (!loggedIn) return;
@@ -619,7 +664,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       }
     } catch (e) { }
 
-    return Array.from(map.values());
+    return Array.from(map.values()).filter(sub => !sub.deleted && !sub.hidden);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qManageSubjects, subjectRefreshKey]);
 
@@ -639,22 +684,39 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     return list;
   }, [selectedSubjectId, activeSubject, qManageParts]);
 
+  // Determine if selected part is a group (has sub-parts in quizData or Firestore)
+  const selectedPartData = selectedPartId
+    ? (staticBaseQuizData[selectedPartId] || staticExtraQuizData[selectedPartId] || null)
+    : null;
+  const staticSubParts = selectedPartData?.parts || []; // sub-parts defined in quizData.js
+  const dbPartObj = qManageParts.find(p => p.id === selectedPartId);
+  const dbSubParts = (dbPartObj?.isGroup && dbPartObj?.subParts) ? dbPartObj.subParts : [];
+  const allSubPartsList = [
+    ...staticSubParts,
+    ...dbSubParts.filter(sp => !staticSubParts.some(s => s.id === sp.id))
+  ];
+  const isGroupPart = allSubPartsList.length > 0;
+
+  // The effective part ID for questions (either the selected sub-part, or the part itself)
+  const effectivePartId = isGroupPart ? (selectedSubPartId || '') : selectedPartId;
+
   const allQuestions = useMemo(() => {
-    if (!selectedPartId) return [];
-    const staticQuizObj = staticBaseQuizData[selectedPartId] || staticExtraQuizData[selectedPartId] || {};
-    const staticQs = staticQuizObj.questions || [];
+    if (!effectivePartId) return [];
+    const staticQuizObj = staticBaseQuizData[effectivePartId] || staticExtraQuizData[effectivePartId] || {};
+    const staticQs = (staticQuizObj.questions || []).map(q => ({ ...q, isStatic: true }));
     const list = [...staticQs];
 
     qManageQuestions.forEach(dbQ => {
-      const idx = list.findIndex(q => q.id === dbQ.id);
+      const idx = list.findIndex(q => String(q.id) === String(dbQ.id));
       if (idx >= 0) {
         list[idx] = { ...list[idx], ...dbQ, isDynamic: true };
       } else {
         list.push({ ...dbQ, isDynamic: true });
       }
     });
-    return list;
-  }, [selectedPartId, qManageQuestions]);
+    // Filter out questions marked as deleted
+    return list.filter(q => !q.deleted);
+  }, [effectivePartId, qManageQuestions]);
 
   const saveSubject = async () => {
     if (!subjectForm.id || !subjectForm.name || !subjectForm.nameAr) {
@@ -723,8 +785,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       localStorage.setItem('koon_local_quiz_subjects', JSON.stringify(localSubjects));
     } catch (e) { }
 
+    toast.success(isAr ? 'تم حذف المادة بنجاح' : 'Subject deleted successfully');
+
     try {
-      await deleteDoc(doc(db, 'quiz_subjects', subId));
+      // Soft-hide static subject or hard-delete dynamic subject in Firestore
+      await setDoc(doc(db, 'quiz_subjects', subId), { id: subId, deleted: true, hidden: true }, { merge: true });
       const partsSnap = await getDocs(query(collection(db, 'quiz_parts'), where('subjectId', '==', subId)));
       const promises = [];
       partsSnap.forEach(d => promises.push(deleteDoc(d.ref)));
@@ -752,7 +817,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       title: partForm.title.trim(),
       titleAr: partForm.titleAr.trim(),
       isGroup: partForm.isGroup || false,
-      subParts: partForm.isGroup ? [] : null,
+      subParts: partForm.isGroup ? (partForm.subParts || []) : null,
       durationMinutes: partForm.durationMinutes ? Number(partForm.durationMinutes) : null,
       passMark: partForm.passMark !== '' ? Number(partForm.passMark) : null,
       createdAt: new Date().toISOString()
@@ -789,6 +854,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const deletePart = async (partId) => {
     if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئلة التابع له!' : 'Are you sure? This will delete all questions in this part!')) return;
 
+    const isStaticPart = !qManageParts.some(p => p.id === partId && p.isDynamic);
+
     // Remove from state immediately
     setQManageParts(prev => prev.filter(p => p.id !== partId));
     if (selectedPartId === partId) setSelectedPartId('');
@@ -800,15 +867,20 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       localStorage.setItem('koon_local_quiz_parts', JSON.stringify(localParts));
     } catch (e) { }
 
-    toast.success(isAr ? ' تم حذف الجزء وكاف أسئلته' : ' Part and questions deleted');
+    toast.success(isAr ? ' تم حذف الجزء وكافة أسئلته' : ' Part and questions deleted');
 
-    // Cloud delete in background
+    // Cloud delete / soft-hide in background
     try {
-      await deleteDoc(doc(db, 'quiz_parts', partId));
-      const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', partId)));
-      const promises = [];
-      qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
-      await Promise.all(promises);
+      if (isStaticPart) {
+        // Soft-hide static parts by writing hidden:true to quiz_parts
+        await setDoc(doc(db, 'quiz_parts', partId), { hidden: true, id: partId }, { merge: true });
+      } else {
+        await deleteDoc(doc(db, 'quiz_parts', partId));
+        const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', partId)));
+        const promises = [];
+        qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
+        await Promise.all(promises);
+      }
     } catch (e) {
       console.warn('Cloud delete part warning:', e);
     }
@@ -1394,11 +1466,26 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     }
   };
 
-  const deleteQuestion = async (qId) => {
+  const deleteQuestion = async (qId, isStatic = false) => {
     if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا السؤال؟' : 'Are you sure you want to delete this question?')) return;
+    const partIdForQuery = effectivePartId || selectedPartId;
     try {
-      await deleteDoc(doc(db, 'quiz_questions', `${selectedPartId}_${qId}`));
-      toast.success(isAr ? ' تم حذف السؤال' : ' Question deleted');
+      if (isStatic) {
+        // Soft-delete static question via question_edits marker
+        const editRef = doc(db, 'question_edits', `${partIdForQuery}_${qId}`);
+        await setDoc(editRef, { deleted: true, partId: partIdForQuery, questionId: String(qId) }, { merge: true });
+        // Also mark in qManageQuestions state so UI updates immediately
+        setQManageQuestions(prev => {
+          const exists = prev.some(q => String(q.id) === String(qId));
+          if (exists) return prev.map(q => String(q.id) === String(qId) ? { ...q, deleted: true } : q);
+          return [...prev, { id: qId, partId: partIdForQuery, deleted: true }];
+        });
+        toast.success(isAr ? ' تم حذف السؤال' : ' Question deleted');
+      } else {
+        // Hard-delete dynamic question
+        await deleteDoc(doc(db, 'quiz_questions', `${partIdForQuery}_${qId}`));
+        toast.success(isAr ? ' تم حذف السؤال' : ' Question deleted');
+      }
     } catch (e) {
       console.error(e);
       toast.error(isAr ? 'فشل حذف السؤال' : 'Failed to delete question');
@@ -1790,16 +1877,14 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                               setShowAddSubjectModal(true);
                             }}
                           >✏️</button>
-                          {/* Delete subject */}
-                          {sub.isDynamic && (
-                            <button
-                              className="qmanage-item-delete-btn"
-                              onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
-                              title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
-                            >
+                          {/* Delete subject — available for ALL subjects */}
+                          <button
+                            className="qmanage-item-delete-btn"
+                            onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
+                            title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
+                          >
 
-                            </button>
-                          )}
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -1855,16 +1940,14 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                   setShowAddPartModal(true);
                                 }}
                               >✏️</button>
-                              {/* Delete part */}
-                              {part.isDynamic && (
-                                <button
-                                  className="qmanage-item-delete-btn"
-                                  onClick={(e) => { e.stopPropagation(); deletePart(part.id); }}
-                                  title={isAr ? 'حذف الجزء بالكامل' : 'Delete entire part'}
-                                >
+                              {/* Delete part — allow for any part (soft-hide for static, hard-delete for dynamic) */}
+                              <button
+                                className="qmanage-item-delete-btn"
+                                onClick={(e) => { e.stopPropagation(); deletePart(part.id); }}
+                                title={isAr ? 'حذف الجزء بالكامل' : 'Delete entire part'}
+                              >
 
-                                </button>
-                              )}
+                              </button>
                             </div>
                           </div>
                         ))
@@ -1875,23 +1958,69 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   </div>
                 </div>
 
-                {/* Column 3: Questions List */}
+                {/* Column 3: Questions List / Sub-parts navigator */}
                 <div className="qmanage-column questions-col">
                   <div className="qmanage-col-header">
-                    <h4> {isAr ? 'أسئلة الاختبار' : 'Questions List'}</h4>
-                    {selectedPartId ? (
+                    <h4>
+                      {isGroupPart && !selectedSubPartId
+                        ? (isAr ? '📂 الأجزاء المصغرة' : '📂 Sub-parts')
+                        : isGroupPart && selectedSubPartId
+                          ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                              <button
+                                onClick={() => setSelectedSubPartId('')}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--adm-accent)', padding: 0 }}
+                                title={isAr ? 'العودة للأجزاء' : 'Back to sub-parts'}
+                              >← </button>
+                              {isAr ? 'أسئلة الجزء' : 'Part Questions'}
+                            </span>
+                          : (isAr ? 'أسئلة الاختبار' : 'Questions List')
+                      }
+                    </h4>
+                    {/* Add Question button — shown when we have an effective part for questions */}
+                    {effectivePartId ? (
                       <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
                         {isAr ? 'إضافة سؤال' : 'New Question'}
                       </button>
-                    ) : (
+                    ) : selectedPartId && !isGroupPart ? (
+                      <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
+                        {isAr ? 'إضافة سؤال' : 'New Question'}
+                      </button>
+                    ) : !selectedPartId ? (
                       <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {isAr ? 'اتر اختباراً أولاً' : 'Select a quiz first'}
+                        {isAr ? 'اختر اختباراً أولاً' : 'Select a quiz first'}
                       </span>
-                    )}
+                    ) : null}
                   </div>
                   <div className="qmanage-list">
                     {selectedPartId ? (
-                      allQuestions.length === 0 ? (
+                      isGroupPart && !selectedSubPartId ? (
+                        // ── Group part: show sub-parts navigator ──
+                        allSubPartsList.length === 0 ? (
+                          <div className="qmanage-empty">{isAr ? 'لا توجد أجزاء مصغرة' : 'No sub-parts yet'}</div>
+                        ) : (
+                          allSubPartsList.map(sp => {
+                            const spData = staticBaseQuizData[sp.id] || staticExtraQuizData[sp.id] || {};
+                            const spStaticCount = spData.questions?.length || 0;
+                            return (
+                              <div
+                                key={sp.id}
+                                className={`qmanage-item-card ${selectedSubPartId === sp.id ? 'active' : ''}`}
+                                onClick={() => setSelectedSubPartId(sp.id)}
+                                style={{ cursor: 'pointer' }}
+                              >
+                                <span className="qmanage-item-icon">📄</span>
+                                <div className="qmanage-item-info">
+                                  <span className="qmanage-item-name">{isAr ? (sp.titleAr || sp.title) : (sp.title || sp.titleAr)}</span>
+                                  <span className="qmanage-item-id">
+                                    {spStaticCount} {isAr ? 'سؤال' : 'questions'} • ID: {sp.id}
+                                  </span>
+                                </div>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--adm-accent)' }}>→</span>
+                              </div>
+                            );
+                          })
+                        )
+                      ) : allQuestions.length === 0 ? (
                         <div className="qmanage-empty">{isAr ? 'لا توجد أسئلة في هذا الجزء بعد' : 'No questions in this part yet'}</div>
                       ) : (
                         allQuestions.map((q, idx) => (
@@ -1903,9 +2032,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
                               <div style={{ marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto', display: 'flex', gap: '0.4rem' }}>
                                 <button className="qmanage-q-action-btn" onClick={() => openQuestionModal(q)} title={isAr ? 'تعديل السؤال' : 'Edit Question'}></button>
-                                {q.isDynamic && (
-                                  <button className="qmanage-q-action-btn delete" onClick={() => deleteQuestion(q.id)} title={isAr ? 'حذف السؤال' : 'Delete Question'}></button>
-                                )}
+                                {/* Delete button for ALL questions — static uses soft-delete, dynamic uses hard-delete */}
+                                <button
+                                  className="qmanage-q-action-btn delete"
+                                  onClick={() => deleteQuestion(q.id, q.isStatic && !q.isDynamic)}
+                                  title={isAr ? 'حذف السؤال' : 'Delete Question'}
+                                ></button>
                               </div>
                             </div>
                             <div className="qmanage-question-card-body">

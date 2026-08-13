@@ -446,7 +446,7 @@ const Quiz = () => {
             }
         } catch (e) {}
 
-        return cats;
+        return cats.filter(cat => !cat.deleted && !cat.hidden);
     }, [dbSubjects, dbParts]);
 
     // Load all questions for the current subject (to count questions per part on subject landing page)
