@@ -676,11 +676,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const map = new Map();
     staticParts.forEach(p => map.set(p.id, { ...p }));
 
-    const dynamicParts = qManageParts.filter(p => p.subjectId === selectedSubjectId);
-    dynamicParts.forEach(dp => {
+    qManageParts.forEach(dp => {
       if (map.has(dp.id)) {
         map.set(dp.id, { ...map.get(dp.id), ...dp, isDynamic: true });
-      } else {
+      } else if (dp.subjectId === selectedSubjectId) {
         map.set(dp.id, { ...dp, isDynamic: true });
       }
     });
@@ -785,10 +784,15 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   };
 
   const deleteSubject = async (subId) => {
-    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه المادة؟ سيتم حذف كافة الأجزاء والأسئل التابع لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
+    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذه المادة؟ سيتم حذف كافة الأجزاء والأسئلة التابعة لها!' : 'Are you sure? This will delete all parts and questions in this subject!')) return;
 
-    setQManageSubjects(prev => prev.filter(s => s.id !== subId));
-    if (selectedSubjectId === subId) setSelectedSubjectId('');
+    setQManageSubjects(prev => [...prev.filter(s => s.id !== subId), { id: subId, deleted: true, hidden: true }]);
+    if (selectedSubjectId === subId) {
+      setSelectedSubjectId('');
+      setSelectedPartId('');
+      setSelectedSubPartId('');
+      setQManageQuestions([]);
+    }
 
     try {
       const localSubjects = JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}');
@@ -865,11 +869,15 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const deletePart = async (partId) => {
     if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئلة التابع له!' : 'Are you sure? This will delete all questions in this part!')) return;
 
-    const isStaticPart = !qManageParts.some(p => p.id === partId && p.isDynamic);
+    const partSubjectId = selectedSubjectId || (activeSubject ? activeSubject.id : '');
 
-    // Remove from state immediately
-    setQManageParts(prev => prev.filter(p => p.id !== partId));
-    if (selectedPartId === partId) setSelectedPartId('');
+    // Remove / mark hidden in state immediately so UI updates instantly
+    setQManageParts(prev => [...prev.filter(p => p.id !== partId), { id: partId, subjectId: partSubjectId, hidden: true, deleted: true }]);
+    if (selectedPartId === partId) {
+      setSelectedPartId('');
+      setSelectedSubPartId('');
+      setQManageQuestions([]);
+    }
 
     // Remove from localStorage
     try {
@@ -882,16 +890,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     // Cloud delete / soft-hide in background
     try {
-      if (isStaticPart) {
-        // Soft-hide static parts by writing hidden:true to quiz_parts
-        await setDoc(doc(db, 'quiz_parts', partId), { hidden: true, id: partId }, { merge: true });
-      } else {
-        await deleteDoc(doc(db, 'quiz_parts', partId));
-        const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', partId)));
-        const promises = [];
-        qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
-        await Promise.all(promises);
-      }
+      await setDoc(doc(db, 'quiz_parts', partId), { hidden: true, deleted: true, id: partId, subjectId: partSubjectId }, { merge: true });
+      const qSnap = await getDocs(query(collection(db, 'quiz_questions'), where('partId', '==', partId)));
+      const promises = [];
+      qSnap.forEach(d => promises.push(deleteDoc(d.ref)));
+      await Promise.all(promises);
     } catch (e) {
       console.warn('Cloud delete part warning:', e);
     }
