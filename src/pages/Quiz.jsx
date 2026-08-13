@@ -378,10 +378,14 @@ const Quiz = () => {
     // Load edits for the current quizId
     useEffect(() => {
         if (!quizId) { setQuestionEdits({}); return; }
-        const q = query(collection(db, 'question_edits'), where('quizId', '==', quizId));
-        const unsubEdits = onSnapshot(q, (snap) => {
+        const unsubEdits = onSnapshot(collection(db, 'question_edits'), (snap) => {
             const map = {};
-            snap.forEach(d => { map[d.data().questionId] = d.data(); });
+            snap.forEach(d => {
+                const data = d.data();
+                if (data.quizId === quizId || data.partId === quizId || d.id.startsWith(`${quizId}_`)) {
+                    map[data.questionId] = data;
+                }
+            });
             setQuestionEdits(map);
         }, () => { }); // silently fail — local data is fallback
 
@@ -560,6 +564,7 @@ const Quiz = () => {
             mergedQuestions = mergedQuestions.map(q => {
                 const edit = questionEdits[q.id];
                 if (!edit) return q;
+                if (edit.deleted) return { ...q, deleted: true };
                 return {
                     ...q,
                     questionAr: edit.questionAr || q.questionAr,
@@ -570,6 +575,9 @@ const Quiz = () => {
                 };
             });
         }
+
+        // Filter out deleted questions
+        mergedQuestions = mergedQuestions.filter(q => !q.deleted);
 
         return {
             ...baseQuiz,

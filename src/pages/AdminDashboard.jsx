@@ -1431,10 +1431,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     try {
       const qId = questionForm.id || `q_${Date.now()}`;
-      const docRef = doc(db, 'quiz_questions', `${selectedPartId}_${qId}`);
+      const targetPartId = effectivePartId || selectedPartId;
+      const docRef = doc(db, 'quiz_questions', `${targetPartId}_${qId}`);
       const docData = {
         id: qId,
-        partId: selectedPartId,
+        partId: targetPartId,
         subjectId: selectedSubjectId,
         type: questionForm.type,
         questionAr: questionForm.questionAr.trim(),
@@ -1473,7 +1474,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       if (isStatic) {
         // Soft-delete static question via question_edits marker
         const editRef = doc(db, 'question_edits', `${partIdForQuery}_${qId}`);
-        await setDoc(editRef, { deleted: true, partId: partIdForQuery, questionId: String(qId) }, { merge: true });
+        await setDoc(editRef, { deleted: true, partId: partIdForQuery, quizId: partIdForQuery, questionId: String(qId) }, { merge: true });
         // Also mark in qManageQuestions state so UI updates immediately
         setQManageQuestions(prev => {
           const exists = prev.some(q => String(q.id) === String(qId));
