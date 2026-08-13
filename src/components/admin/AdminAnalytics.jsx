@@ -235,12 +235,12 @@ export default function AdminAnalytics() {
         <div className="anv-card anv-chart-card">
           <div className="anv-chart-card-header">
             <div>
-              <span className="anv-card-sub">إجمالي الأنشط والتفاعلات</span>
+              <span className="anv-card-sub">إجمالي الأنشطة والتفاعلات</span>
               <h3 className="anv-big-metric">{(totalEventsSum).toLocaleString('ar-JO')} <span className="anv-unit">تفاعل</span></h3>
               <div className="anv-growth-badge">↑ 18% نمو متصاعد هذا الشهر</div>
             </div>
             <div className="anv-chart-legend">
-              <span className="anv-dot online"></span> الزيارات الحي
+              <span className="anv-dot online"></span> الزيارات الحية
               <span className="anv-dot store"></span> فتح المواد
             </div>
           </div>
@@ -330,7 +330,7 @@ export default function AdminAnalytics() {
         {/* Right Donut / Traffic Chart Card */}
         <div className="anv-card anv-donut-card">
           <h3 className="anv-card-title">توزيع التفاعلات والزيارات</h3>
-          <p className="anv-card-desc">نسب توزيع الأنشط الأكاديمي على المنصة</p>
+          <p className="anv-card-desc">نسب توزيع الأنشطة الأكاديمية على المنصة</p>
 
           <div className="anv-donut-wrapper">
             <svg viewBox="0 0 100 100" className="anv-donut-svg">
@@ -413,12 +413,12 @@ export default function AdminAnalytics() {
         {/* Card 3: Vibrant Teal / Cyan */}
         <div className="anv-vcard anv-vcard-teal">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">إجتياز بنك الأسئلة</span>
+            <span className="anv-vc-title">إتمام كويزات بنك الأسئلة</span>
             <span className="anv-vc-icon">🎯</span>
           </div>
           <div className="anv-vc-body">
             <h3 className="anv-vc-num">{totalQuizCompletions.toLocaleString('ar-JO')}</h3>
-            <span className="anv-vc-tag">إجمالي {quizCounts[0]?.[0] || 'كويزات'}</span>
+            <span className="anv-vc-tag">إجمالي كويزات مكتملة</span>
           </div>
           <svg viewBox="0 0 120 30" className="anv-vc-spark">
             <path d="M0 28 L30 15 L60 20 L90 5 L120 14" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />
@@ -428,12 +428,12 @@ export default function AdminAnalytics() {
         {/* Card 4: Vibrant Orange / Gold */}
         <div className="anv-vcard anv-vcard-orange">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">طلبات الخدمات الجديد</span>
+            <span className="anv-vc-title">طلبات الخدمات الجديدة</span>
             <span className="anv-vc-icon">🛠️</span>
           </div>
           <div className="anv-vc-body">
             <h3 className="anv-vc-num">{totalRequests.toLocaleString('ar-JO')}</h3>
-            <span className="anv-vc-tag">طلبات الطلاب المباشر</span>
+            <span className="anv-vc-tag">طلبات الطلاب المباشرة</span>
           </div>
           <svg viewBox="0 0 120 30" className="anv-vc-spark">
             <path d="M0 22 L20 14 L40 18 L60 8 L80 12 L100 4 L120 10" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="2.5" />

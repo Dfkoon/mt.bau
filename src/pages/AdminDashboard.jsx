@@ -1627,9 +1627,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             </aside>
           )}
 
-          {/* ── KPI Cards ── */}
-          {activeTab === 'analytics' && (
-            <div className="admin-kpi-row" style={{ marginTop: isEmbedded ? '0' : '1.5rem' }}>
+          {/* ── Main Tab Content Container ── */}
+          <main className="admin-main-content">
+            {/* ── KPI Cards ── */}
+            {activeTab === 'analytics' && (
+              <div className="admin-kpi-row">
               <div className="admin-kpi-card">
                 <div className="kpi-icon">🌐</div>
                 <div className="kpi-value">{totalVisits}</div>
@@ -1920,9 +1922,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
               </div>
             </div>
           )}
-
-        </div>
+        </main>
       </div>
+    </div>
 
       {/* ══ Question Edit Modal ══ */}
       {editingReport && (
@@ -2304,7 +2306,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         </div>
       )}
 
-      {/* ══ Add Subject Modal ══ */}
+          {/* ══ Add Subject Modal ══ */}
       {showAddSubjectModal && (
         <div className="qedit-overlay" onClick={() => setShowAddSubjectModal(false)}>
           <div className="qedit-modal" onClick={e => e.stopPropagation()}>

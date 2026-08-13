@@ -315,6 +315,14 @@ body, input, select, textarea, button {
   min-width: 0;
 }
 
+.admin-main-content {
+  grid-column: 2;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .admin-sidebar {
   position: sticky;
   top: 100px;
