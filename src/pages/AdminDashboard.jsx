@@ -591,28 +591,35 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   // ── Quiz Management Helpers & Memos ──
   const allSubjects = useMemo(() => {
-    const list = [...quizCategories];
+    // Start with static base categories
+    const map = new Map();
+    quizCategories.forEach(cat => map.set(cat.id, { ...cat }));
 
-    // Merge Firestore subjects
+    // Apply Firestore subjects — update existing OR add new ones
     qManageSubjects.forEach(sub => {
-      if (!list.some(c => c.id === sub.id)) {
-        list.push({ ...sub, isDynamic: true });
+      if (map.has(sub.id)) {
+        // Merge Firestore data over static data (so edits like nameAr, icon etc. apply)
+        map.set(sub.id, { ...map.get(sub.id), ...sub, isDynamic: true });
+      } else {
+        map.set(sub.id, { ...sub, isDynamic: true });
       }
     });
 
-    // Always also merge localStorage subjects so offline-added ones always show
+    // Also merge localStorage subjects (offline fallback)
     try {
       const raw = localStorage.getItem('koon_local_quiz_subjects');
       if (raw) {
         Object.values(JSON.parse(raw)).forEach(lSub => {
-          if (!list.some(c => c.id === lSub.id)) {
-            list.push({ ...lSub, isDynamic: true });
+          if (map.has(lSub.id)) {
+            map.set(lSub.id, { ...map.get(lSub.id), ...lSub, isDynamic: true });
+          } else {
+            map.set(lSub.id, { ...lSub, isDynamic: true });
           }
         });
       }
     } catch (e) { }
 
-    return list;
+    return Array.from(map.values());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qManageSubjects, subjectRefreshKey]);
 
@@ -1740,7 +1747,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 <div className="qmanage-column subjects-col">
                   <div className="qmanage-col-header">
                     <h4> {isAr ? 'المواد الدراسية' : 'Subjects'}</h4>
-                    <button className="qmanage-add-btn" onClick={() => setShowAddSubjectModal(true)}>
+                    <button className="qmanage-add-btn" onClick={() => {
+                      // Reset to add-mode before opening modal
+                      setEditingSubjectOriginalId(null);
+                      setSubjectForm({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
+                      setShowAddSubjectModal(true);
+                    }}>
                       {isAr ? 'مادة جديدة' : 'New Subject'}
                     </button>
                   </div>
