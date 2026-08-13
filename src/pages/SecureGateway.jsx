@@ -527,8 +527,8 @@ const SecureGateway = () => {
                                 : isLocked
                                     ? `الوصول مقفل — يُرفع بعد ${lockCountdown} ثاني`
                                     : loginStep === 2
-                                        ? 'دول لوح التحكم'
-                                        : 'التحقق بطوتين'}
+                                        ? 'لوحة التحكم'
+                                        : 'التحقق الثنائي (2FA)'}
                         </h1>
                     </div>
 
@@ -562,8 +562,12 @@ const SecureGateway = () => {
                             {/* STEP 2: Coordinator Credentials */}
                             {loginStep === 2 && (
                                 <form className="sgw-form" onSubmit={handleStep2Submit} autoComplete="off">
+                                    <div className="sgw-subtitle-hint">
+                                        أدخل اسم المستخدم وكلمة المرور للمتابعة
+                                    </div>
+
                                     <div className="sgw-field">
-                                        <label className="sgw-label">اسم المستدم</label>
+                                        <label className="sgw-label">اسم المستخدم</label>
                                         <div className="sgw-input-wrapper">
                                             <span className="sgw-input-icon">👤</span>
                                             <input
@@ -571,7 +575,7 @@ const SecureGateway = () => {
                                                 className="sgw-input"
                                                 value={usernameInput}
                                                 onChange={e => setUsernameInput(e.target.value)}
-                                                placeholder="اسم المستدم"
+                                                placeholder="اسم المستخدم"
                                                 disabled={isLoading}
                                                 required
                                                 dir="ltr"
@@ -580,7 +584,7 @@ const SecureGateway = () => {
                                     </div>
 
                                     <div className="sgw-field">
-                                        <label className="sgw-label">كلم المرور</label>
+                                        <label className="sgw-label">كود الوصول</label>
                                         <div className="sgw-input-wrapper">
                                             <span className="sgw-input-icon">🔒</span>
                                             <input
@@ -588,7 +592,7 @@ const SecureGateway = () => {
                                                 className="sgw-input"
                                                 value={passwordInput}
                                                 onChange={e => setPasswordInput(e.target.value)}
-                                                placeholder="كلم المرور"
+                                                placeholder="كلمة المرور"
                                                 disabled={isLoading}
                                                 required
                                                 dir="ltr"
@@ -598,17 +602,17 @@ const SecureGateway = () => {
 
                                     {/* CAPTCHA */}
                                     <div className="sgw-field">
-                                        <label className="sgw-label">رمز التحقق البصري</label>
+                                        <label className="sgw-label">رمز التحقق (Captcha)</label>
                                         <div className="sgw-captcha-row">
-                                            <canvas ref={canvasRef} width={180} height={52} className="sgw-captcha-canvas" />
                                             <button type="button" className="sgw-captcha-refresh" onClick={refreshCaptcha} disabled={isLoading}>🔄</button>
+                                            <canvas ref={canvasRef} width={200} height={56} className="sgw-captcha-canvas" />
                                         </div>
                                         <input
                                             type="text"
                                             className="sgw-input sgw-captcha-input"
                                             value={captchaInput}
                                             onChange={e => setCaptchaInput(e.target.value.toUpperCase())}
-                                            placeholder="اكتب الرمز الظاهر أعلاه"
+                                            placeholder="أدل الرمز أعلاه"
                                             autoComplete="off"
                                             disabled={isLoading}
                                             maxLength={5}
@@ -620,7 +624,11 @@ const SecureGateway = () => {
                                     {errorMsg && <div className="sgw-error">⚠️ {errorMsg}</div>}
 
                                     <button type="submit" className={`sgw-submit-btn ${isLoading ? 'sgw-loading' : ''}`} disabled={isLoading || !usernameInput || !passwordInput || !captchaInput}>
-                                        {isLoading ? <span className="sgw-spinner" /> : 'دول'}
+                                        {isLoading ? <span className="sgw-spinner" /> : 'التالي'}
+                                    </button>
+
+                                    <button type="button" className="sgw-home-btn" onClick={() => navigate('/')}>
+                                        الذهاب إلى الموقع الرئيسي
                                     </button>
                                 </form>
                             )}
@@ -628,46 +636,70 @@ const SecureGateway = () => {
                             {/* STEP 3: 2FA TOTP Verification */}
                             {loginStep === 3 && (
                                 <form className="sgw-form" onSubmit={handleStep3Submit} autoComplete="off">
-                                    <div className="sgw-2fa-badge" style={{
-                                        background: 'rgba(99, 102, 241, 0.12)',
-                                        border: '1px solid rgba(99, 102, 241, 0.3)',
-                                        borderRadius: '14px',
-                                        padding: '1.1rem 1rem',
-                                        marginBottom: '1.2rem',
-                                        textAlign: 'center'
-                                    }}>
-                                        <div style={{ fontSize: '2.2rem', marginBottom: '0.4rem' }}>🔐</div>
-                                        <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#fff', marginBottom: '0.3rem' }}>
-                                            المصادق الثنائي (2FA)
+
+                                    {/* 2FA Info Badge */}
+                                    <div className="sgw-2fa-badge">
+                                        <div className="sgw-2fa-icon-ring">
+                                            <span className="sgw-2fa-icon">🔐</span>
                                         </div>
-                                        <div style={{ fontSize: '0.82rem', color: '#a0aec0', lineHeight: 1.4 }}>
-                                            يرجى إدخال رمز الأمان المتغير المكون من 6 أرقام من تطبيق Authenticator الاص بك
+                                        <div className="sgw-2fa-title">التحقق الثنائي</div>
+                                        <div className="sgw-2fa-desc">
+                                            افتح تطبيق المصادقة (Google Authenticator أو Authy) وأدخل
+                                            الرمز المكوّن من <strong>6 أرقام</strong>
+                                        </div>
+                                        <div className="sgw-2fa-timer-row">
+                                            <span className="sgw-2fa-timer-dot" />
+                                            الرمز يتجدد كل 30 ثانية
                                         </div>
                                     </div>
 
+                                    {/* OTP Digit Boxes */}
                                     <div className="sgw-field">
-                                        <label className="sgw-label">رمز المصادق (2FA Code)</label>
-                                        <div className="sgw-input-wrapper">
-                                            <span className="sgw-input-icon">🔑</span>
-                                            <input
-                                                type="text"
-                                                className="sgw-input"
-                                                value={totpInput}
-                                                onChange={e => setTotpInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                                                placeholder="000000"
-                                                disabled={isLoading}
-                                                maxLength={6}
-                                                required
-                                                autoFocus
-                                                dir="ltr"
-                                                style={{
-                                                    letterSpacing: '6px',
-                                                    textAlign: 'center',
-                                                    fontSize: '1.4rem',
-                                                    fontWeight: 'bold',
-                                                    fontFamily: 'monospace'
-                                                }}
-                                            />
+                                        <label className="sgw-label">رمز المصادقة</label>
+                                        <div className="sgw-otp-row">
+                                            {[0,1,2,3,4,5].map(i => (
+                                                <input
+                                                    key={i}
+                                                    id={`otp-digit-${i}`}
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    className={`sgw-otp-box ${totpInput[i] ? 'sgw-otp-filled' : ''}`}
+                                                    value={totpInput[i] || ''}
+                                                    maxLength={1}
+                                                    disabled={isLoading}
+                                                    autoFocus={i === 0}
+                                                    onChange={ev => {
+                                                        const val = ev.target.value.replace(/\D/g, '');
+                                                        if (!val) {
+                                                            setTotpInput(prev => prev.slice(0, i) + prev.slice(i + 1));
+                                                            return;
+                                                        }
+                                                        const newCode = totpInput.split('');
+                                                        newCode[i] = val[val.length - 1];
+                                                        setTotpInput(newCode.join('').slice(0, 6));
+                                                        if (i < 5) document.getElementById(`otp-digit-${i + 1}`)?.focus();
+                                                    }}
+                                                    onKeyDown={ev => {
+                                                        if (ev.key === 'Backspace') {
+                                                            if (totpInput[i]) {
+                                                                setTotpInput(prev => prev.slice(0, i) + prev.slice(i + 1));
+                                                            } else if (i > 0) {
+                                                                document.getElementById(`otp-digit-${i - 1}`)?.focus();
+                                                                setTotpInput(prev => prev.slice(0, i - 1) + prev.slice(i));
+                                                            }
+                                                        }
+                                                        if (ev.key === 'ArrowLeft' && i > 0) document.getElementById(`otp-digit-${i - 1}`)?.focus();
+                                                        if (ev.key === 'ArrowRight' && i < 5) document.getElementById(`otp-digit-${i + 1}`)?.focus();
+                                                    }}
+                                                    onPaste={ev => {
+                                                        ev.preventDefault();
+                                                        const pasted = ev.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                                                        setTotpInput(pasted);
+                                                        const nextIdx = Math.min(pasted.length, 5);
+                                                        document.getElementById(`otp-digit-${nextIdx}`)?.focus();
+                                                    }}
+                                                />
+                                            ))}
                                         </div>
                                     </div>
 
@@ -678,28 +710,15 @@ const SecureGateway = () => {
                                         className={`sgw-submit-btn ${isLoading ? 'sgw-loading' : ''}`}
                                         disabled={isLoading || totpInput.length < 6}
                                     >
-                                        {isLoading ? <span className="sgw-spinner" /> : 'تحقق ودول'}
+                                        {isLoading ? <span className="sgw-spinner" /> : 'تحقق والدخول'}
                                     </button>
 
                                     <button
                                         type="button"
-                                        className="sgw-back-btn"
+                                        className="sgw-home-btn"
                                         onClick={() => { setLoginStep(2); setErrorMsg(''); setTotpInput(''); refreshCaptcha(); }}
-                                        style={{
-                                            background: 'transparent',
-                                            border: 'none',
-                                            color: '#a0aec0',
-                                            marginTop: '1rem',
-                                            cursor: 'pointer',
-                                            width: '100%',
-                                            fontSize: '0.85rem',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '0.4rem'
-                                        }}
                                     >
-                                        ← العود لشاش تسجيل الدول
+                                        ← العودة لشاشة تسجيل الدخول
                                     </button>
                                 </form>
                             )}

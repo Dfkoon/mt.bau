@@ -372,6 +372,144 @@
     to { transform: rotate(360deg); }
 }
 
+/* ── Subtitle Hint & Secondary Buttons ───────────────────── */
+.sgw-subtitle-hint {
+    font-size: 0.85rem;
+    color: rgba(200, 215, 255, 0.6);
+    margin-bottom: 1.2rem;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.sgw-home-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: rgba(200, 215, 255, 0.7);
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+    margin-top: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.sgw-home-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ── 2FA Badge & OTP Inputs ───────────────────────────── */
+.sgw-2fa-badge {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    border-radius: 16px;
+    padding: 1.2rem 1rem;
+    margin-bottom: 1.4rem;
+    text-align: center;
+}
+
+.sgw-2fa-icon-ring {
+    width: 52px;
+    height: 52px;
+    background: rgba(99, 102, 241, 0.18);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.6rem;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+.sgw-2fa-icon {
+    font-size: 1.6rem;
+}
+
+.sgw-2fa-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #ffffff;
+    margin-bottom: 0.3rem;
+}
+
+.sgw-2fa-desc {
+    font-size: 0.82rem;
+    color: rgba(200, 215, 255, 0.7);
+    line-height: 1.45;
+}
+
+.sgw-2fa-desc strong {
+    color: #818cf8;
+}
+
+.sgw-2fa-timer-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: rgba(200, 215, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.sgw-2fa-timer-dot {
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #10b981;
+    animation: sgwPulse 1.5s infinite;
+}
+
+@keyframes sgwPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.sgw-otp-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    direction: ltr;
+    margin-top: 0.4rem;
+}
+
+.sgw-otp-box {
+    width: 46px;
+    height: 54px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: monospace;
+    text-align: center;
+    transition: all 0.2s ease;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.sgw-otp-box:focus {
+    border-color: #818cf8;
+    background: rgba(99, 102, 241, 0.12);
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.35);
+    transform: translateY(-2px);
+}
+
+.sgw-otp-filled {
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(99, 102, 241, 0.08);
+}
+
 /* ── Locked state ────────────────────────────────────── */
 .sgw-locked-panel {
     display: flex;
