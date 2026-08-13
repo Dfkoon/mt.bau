@@ -415,23 +415,31 @@ const Quiz = () => {
             const dbSub = dbSubjects.find(s => s.id === cat.id);
             const baseCat = dbSub ? { ...cat, ...dbSub } : cat;
 
+            const staticParts = baseCat.parts || [];
+            const partsMap = new Map();
+            staticParts.forEach(p => partsMap.set(p.id, { ...p }));
+
             const matchingDbParts = dbParts.filter(p => p.subjectId === cat.id);
-            if (matchingDbParts.length > 0) {
-                const existingParts = baseCat.parts || [];
-                const filteredDbParts = matchingDbParts.filter(dp => !existingParts.some(ep => ep.id === dp.id));
-                return {
-                    ...baseCat,
-                    parts: [...existingParts, ...filteredDbParts]
-                };
-            }
-            return baseCat;
+            matchingDbParts.forEach(dp => {
+                if (partsMap.has(dp.id)) {
+                    partsMap.set(dp.id, { ...partsMap.get(dp.id), ...dp });
+                } else {
+                    partsMap.set(dp.id, dp);
+                }
+            });
+
+            const finalParts = Array.from(partsMap.values()).filter(p => !p.hidden && !p.deleted);
+            return {
+                ...baseCat,
+                parts: finalParts
+            };
         });
 
         // Add completely new subjects from Firestore
         dbSubjects.forEach(sub => {
             const exists = cats.some(c => c.id === sub.id);
             if (!exists) {
-                const subParts = dbParts.filter(p => p.subjectId === sub.id);
+                const subParts = dbParts.filter(p => p.subjectId === sub.id && !p.hidden && !p.deleted);
                 cats.push({ ...sub, parts: subParts });
             }
         });
@@ -443,7 +451,7 @@ const Quiz = () => {
                 Object.values(JSON.parse(raw)).forEach(lSub => {
                     if (!cats.some(c => c.id === lSub.id)) {
                         const rawParts = localStorage.getItem('koon_local_quiz_parts');
-                        const localParts = rawParts ? Object.values(JSON.parse(rawParts)).filter(p => p.subjectId === lSub.id) : [];
+                        const localParts = rawParts ? Object.values(JSON.parse(rawParts)).filter(p => p.subjectId === lSub.id && !p.hidden && !p.deleted) : [];
                         cats.push({ ...lSub, parts: localParts });
                     }
                 });

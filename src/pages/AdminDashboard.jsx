@@ -673,15 +673,19 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const allParts = useMemo(() => {
     if (!selectedSubjectId) return [];
     const staticParts = activeSubject?.parts || [];
-    const list = [...staticParts];
+    const map = new Map();
+    staticParts.forEach(p => map.set(p.id, { ...p }));
 
     const dynamicParts = qManageParts.filter(p => p.subjectId === selectedSubjectId);
     dynamicParts.forEach(dp => {
-      if (!list.some(p => p.id === dp.id)) {
-        list.push({ ...dp, isDynamic: true });
+      if (map.has(dp.id)) {
+        map.set(dp.id, { ...map.get(dp.id), ...dp, isDynamic: true });
+      } else {
+        map.set(dp.id, { ...dp, isDynamic: true });
       }
     });
-    return list;
+
+    return Array.from(map.values()).filter(p => !p.hidden && !p.deleted);
   }, [selectedSubjectId, activeSubject, qManageParts]);
 
   // Determine if selected part is a group (has sub-parts in quizData or Firestore)
@@ -691,11 +695,18 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const staticSubParts = selectedPartData?.parts || []; // sub-parts defined in quizData.js
   const dbPartObj = qManageParts.find(p => p.id === selectedPartId);
   const dbSubParts = (dbPartObj?.isGroup && dbPartObj?.subParts) ? dbPartObj.subParts : [];
-  const allSubPartsList = [
-    ...staticSubParts,
-    ...dbSubParts.filter(sp => !staticSubParts.some(s => s.id === sp.id))
-  ];
-  const isGroupPart = allSubPartsList.length > 0;
+  
+  const subPartsMap = new Map();
+  staticSubParts.forEach(sp => subPartsMap.set(sp.id, { ...sp }));
+  dbSubParts.forEach(sp => {
+    if (subPartsMap.has(sp.id)) {
+      subPartsMap.set(sp.id, { ...subPartsMap.get(sp.id), ...sp });
+    } else {
+      subPartsMap.set(sp.id, sp);
+    }
+  });
+  const allSubPartsList = Array.from(subPartsMap.values()).filter(sp => !sp.hidden && !sp.deleted);
+  const isGroupPart = allSubPartsList.length > 0 || (dbPartObj?.isGroup);
 
   // The effective part ID for questions (either the selected sub-part, or the part itself)
   const effectivePartId = isGroupPart ? (selectedSubPartId || '') : selectedPartId;
