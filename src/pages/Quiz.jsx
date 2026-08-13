@@ -407,19 +407,23 @@ const Quiz = () => {
     // Merge base quiz categories (static) with custom subjects & parts from DB
     const mergedCategories = useMemo(() => {
         let cats = quizCategories.map(cat => {
+            // Find any DB/Firestore update for this subject
+            const dbSub = dbSubjects.find(s => s.id === cat.id);
+            const baseCat = dbSub ? { ...cat, ...dbSub } : cat;
+
             const matchingDbParts = dbParts.filter(p => p.subjectId === cat.id);
             if (matchingDbParts.length > 0) {
-                const existingParts = cat.parts || [];
+                const existingParts = baseCat.parts || [];
                 const filteredDbParts = matchingDbParts.filter(dp => !existingParts.some(ep => ep.id === dp.id));
                 return {
-                    ...cat,
+                    ...baseCat,
                     parts: [...existingParts, ...filteredDbParts]
                 };
             }
-            return cat;
+            return baseCat;
         });
 
-        // Add completely new subjects from Firestore (already merged with localStorage in useEffect)
+        // Add completely new subjects from Firestore
         dbSubjects.forEach(sub => {
             const exists = cats.some(c => c.id === sub.id);
             if (!exists) {

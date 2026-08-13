@@ -269,6 +269,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   const [showAddSubjectModal, setShowAddSubjectModal] = useState(false);
   const [subjectForm, setSubjectForm] = useState({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
+  const [editingSubjectOriginalId, setEditingSubjectOriginalId] = useState(null); // null = add mode, string = edit mode
 
   const [showAddPartModal, setShowAddPartModal] = useState(false);
   const [partForm, setPartForm] = useState({ id: '', title: '', titleAr: '', isGroup: false, durationMinutes: 30, passMark: '' });
@@ -650,10 +651,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   const saveSubject = async () => {
     if (!subjectForm.id || !subjectForm.name || !subjectForm.nameAr) {
-      toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامي' : 'Please fill all required fields');
+      toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامية' : 'Please fill all required fields');
       return;
     }
-    const subId = subjectForm.id.toLowerCase().trim().replace(/\s+/g, '_');
+
+    const isEditing = editingSubjectOriginalId !== null;
+    // When editing, always keep the original ID to avoid creating a duplicate
+    const subId = isEditing
+      ? editingSubjectOriginalId
+      : subjectForm.id.toLowerCase().trim().replace(/\s+/g, '_');
+
     const payload = {
       id: subId,
       name: subjectForm.name.trim(),
@@ -682,12 +689,15 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     setSelectedSubjectId(subId);
 
     setShowAddSubjectModal(false);
+    setEditingSubjectOriginalId(null);
     setSubjectForm({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
 
     // Cloud Save to Firestore (awaited)
     try {
       await setDoc(doc(db, 'quiz_subjects', subId), payload);
-      toast.success(isAr ? 'تم حفظ المادة ونشرها في السحاب بنجاح!' : 'Subject saved and published to cloud successfully!');
+      toast.success(isEditing
+        ? (isAr ? ' تم تحديث المادة بنجاح!' : ' Subject updated successfully!')
+        : (isAr ? ' تم حفظ المادة ونشرها في السحاب بنجاح!' : ' Subject saved and published to cloud successfully!'));
     } catch (cloudErr) {
       console.error('Cloud save failed for quiz_subjects:', cloudErr);
       toast.error(isAr ? `تنبيه: تم الحفظ محلياً فقط! لم تحفظ بالسحاب بسبب: ${cloudErr?.message || cloudErr}` : `Warning: Saved locally only! Cloud sync failed: ${cloudErr?.message || cloudErr}`);
@@ -1756,6 +1766,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                             title={isAr ? 'تعديل المادة' : 'Edit Subject'}
                             onClick={(e) => {
                               e.stopPropagation();
+                              setEditingSubjectOriginalId(sub.id); // track original ID for edit mode
                               setSubjectForm({
                                 id: sub.id,
                                 name: sub.name || '',
@@ -2308,20 +2319,36 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
           {/* ══ Add Subject Modal ══ */}
       {showAddSubjectModal && (
-        <div className="qedit-overlay" onClick={() => setShowAddSubjectModal(false)}>
+        <div className="qedit-overlay" onClick={() => { setShowAddSubjectModal(false); setEditingSubjectOriginalId(null); }}>
           <div className="qedit-modal" onClick={e => e.stopPropagation()}>
             <div className="qedit-header">
-              <span className="qedit-badge-quiz">{isAr ? 'إضافة مادة جديدة' : 'Add New Subject'}</span>
-              <button className="qedit-close" onClick={() => setShowAddSubjectModal(false)}></button>
+              <span className="qedit-badge-quiz">
+                {editingSubjectOriginalId !== null
+                  ? (isAr ? '✏️ تعديل المادة' : '✏️ Edit Subject')
+                  : (isAr ? '➕ إضافة مادة جديدة' : '➕ Add New Subject')}
+              </span>
+              <button className="qedit-close" onClick={() => { setShowAddSubjectModal(false); setEditingSubjectOriginalId(null); }}></button>
             </div>
             <div className="qedit-body">
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'رمز المادة (ID فريد بالإنجليزي)' : 'Subject ID (unique, e.g. networks_2)'}</label>
+                <label className="qedit-label">
+                  {isAr ? 'رمز المادة (ID فريد بالإنجليزي)' : 'Subject ID (unique, e.g. networks_2)'}
+                  {editingSubjectOriginalId !== null && (
+                    <span style={{ fontSize: '0.72rem', color: 'var(--adm-muted)', marginRight: '0.4rem' }}>
+                      {isAr ? '(لا يمكن تغييره عند التعديل)' : '(cannot change when editing)'}
+                    </span>
+                  )}
+                </label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.id}
-                  onChange={e => setSubjectForm(prev => ({ ...prev, id: e.target.value }))}
+                  onChange={e => {
+                    if (editingSubjectOriginalId !== null) return; // lock ID when editing
+                    setSubjectForm(prev => ({ ...prev, id: e.target.value }));
+                  }}
                   placeholder="e.g. data_science"
+                  readOnly={editingSubjectOriginalId !== null}
+                  style={editingSubjectOriginalId !== null ? { opacity: 0.6, cursor: 'not-allowed', background: 'rgba(255,255,255,0.03)' } : {}}
                 />
               </div>
               <div className="qedit-field">
@@ -2378,8 +2405,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
               </div>
             </div>
             <div className="qedit-footer">
-              <button className="qedit-btn-cancel" onClick={() => setShowAddSubjectModal(false)}>{isAr ? 'إلغاء' : 'Cancel'}</button>
-              <button className="qedit-btn-save" onClick={saveSubject}> {isAr ? 'حفظ المادة' : 'Save Subject'}</button>
+              <button className="qedit-btn-cancel" onClick={() => { setShowAddSubjectModal(false); setEditingSubjectOriginalId(null); }}>{isAr ? 'إلغاء' : 'Cancel'}</button>
+              <button className="qedit-btn-save" onClick={saveSubject}>
+                {editingSubjectOriginalId !== null ? (isAr ? '💾 حفظ التعديل' : '💾 Save Changes') : (isAr ? '➕ إضافة المادة' : '➕ Add Subject')}
+              </button>
             </div>
           </div>
         </div>
