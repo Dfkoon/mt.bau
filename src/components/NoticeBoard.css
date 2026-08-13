@@ -215,6 +215,189 @@
     border-color: rgba(255,255,255,0.15);
 }
 
+/* Mandatory Badge & Pulse */
+.nb-mandatory-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+}
+
+.nb-pulse-icon {
+    display: inline-block;
+    animation: nbPulse 1.2s infinite ease-in-out;
+}
+
+@keyframes nbPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+.nb-overlay-urgent {
+    background: rgba(15, 23, 42, 0.78);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.nb-modal-urgent {
+    border: 2px solid #ef4444;
+    box-shadow: 0 0 45px rgba(239, 68, 68, 0.45), 0 25px 60px rgba(0,0,0,0.5);
+}
+
+.nb-modal-survey {
+    border: 2px solid #8b5cf6;
+    box-shadow: 0 0 45px rgba(139, 92, 246, 0.35), 0 25px 60px rgba(0,0,0,0.4);
+}
+
+/* Interactive Survey Component */
+.nb-survey-container {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(139, 92, 246, 0.25);
+}
+
+.nb-survey-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.nb-stars-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: rgba(139, 92, 246, 0.06);
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.nb-stars-label {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #4b5563;
+}
+
+[data-theme='dark'] .nb-stars-label {
+    color: #e2e8f0;
+}
+
+.nb-stars-list {
+    display: flex;
+    gap: 8px;
+    direction: ltr;
+}
+
+.nb-star-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.15s ease;
+    padding: 0 2px;
+    line-height: 1;
+}
+
+.nb-star-btn:hover {
+    transform: scale(1.25);
+}
+
+.nb-star-btn.filled {
+    color: #f59e0b;
+    filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.45));
+}
+
+.nb-survey-textarea {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.8);
+    resize: none;
+    outline: none;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+[data-theme='dark'] .nb-survey-textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.nb-survey-textarea:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.nb-survey-error {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ef4444;
+    text-align: center;
+}
+
+.nb-survey-submit-btn {
+    width: 100%;
+    padding: 11px;
+    border-radius: 12px;
+    border: none;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.nb-survey-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    opacity: 0.94;
+}
+
+.nb-survey-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.nb-survey-success {
+    text-align: center;
+    padding: 16px 10px;
+    animation: nbSuccessIn 0.3s ease;
+}
+
+@keyframes nbSuccessIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.nb-success-icon {
+    font-size: 2.2rem;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.nb-survey-success h4 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #10b981;
+}
+
+.nb-survey-success p {
+    margin: 0;
+    font-size: 0.82rem;
+    opacity: 0.75;
+}
+
 @media (max-width: 520px) {
     .nb-modal {
         border-radius: 16px;

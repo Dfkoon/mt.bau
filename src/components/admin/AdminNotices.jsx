@@ -7,22 +7,27 @@ import {
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const TYPE_OPTIONS = [
-    { value: 'info', labelAr: 'معلومات ℹ️', labelEn: 'Info ℹ️' },
-    { value: 'warning', labelAr: 'تحذير ⚠️', labelEn: 'Warning ⚠️' },
-    { value: 'success', labelAr: 'نجاح ✅', labelEn: 'Success ✅' },
+    { value: 'info', labelAr: 'معلومات عامة ℹ️', labelEn: 'Info ℹ️' },
+    { value: 'warning', labelAr: 'تحذير أكاديمي ⚠️', labelEn: 'Warning ⚠️' },
+    { value: 'success', labelAr: 'خبر سار ✅', labelEn: 'Success ✅' },
     { value: 'alert', labelAr: 'تنبيه 🔔', labelEn: 'Alert 🔔' },
+    { value: 'urgent', labelAr: '🚨 إعلان اضطراري / عاجل', labelEn: '🚨 Urgent Emergency' },
+    { value: 'survey', labelAr: '⭐ إعلان تقييم واستطلاع رأي إجباري', labelEn: '⭐ Rating & Feedback Survey' },
 ];
 
 const EMPTY_FORM = {
     titleAr: '', titleEn: '',
     bodyAr: '', bodyEn: '',
-    type: 'info', targetPath: '', pinned: false, active: true,
+    type: 'info', targetPath: '',
+    actionTextAr: '', actionTextEn: '',
+    isMandatory: false,
+    pinned: false, active: true,
     expiresIn: '', // days from now, optional
 };
 
 const TARGET_OPTIONS = [
     { value: '/materials', ar: 'المواد الدراسية', en: 'Study Materials' },
-    { value: '/plans', ar: 'الخطط الدراسي', en: 'Academic Plans' },
+    { value: '/plans', ar: 'الخطط الدراسية', en: 'Academic Plans' },
     { value: '/quiz', ar: 'الاختبارات', en: 'Quizzes' },
     { value: '/calendar', ar: 'التقويم الأكاديمي', en: 'Academic Calendar' },
     { value: '/grading', ar: 'نظام العلامات', en: 'Grading System' },
@@ -61,7 +66,10 @@ const AdminNotices = () => {
         setForm({
             titleAr: n.titleAr || '', titleEn: n.titleEn || '',
             bodyAr: n.bodyAr || '', bodyEn: n.bodyEn || '',
-            type: n.type || 'info', targetPath: n.targetPath || '', pinned: !!n.pinned, active: n.active !== false,
+            type: n.type || 'info', targetPath: n.targetPath || '',
+            actionTextAr: n.actionTextAr || '', actionTextEn: n.actionTextEn || '',
+            isMandatory: !!n.isMandatory,
+            pinned: !!n.pinned, active: n.active !== false,
             expiresIn: '',
         });
         setEditId(n.id);
@@ -80,6 +88,9 @@ const AdminNotices = () => {
                 bodyEn: form.bodyEn,
                 type: form.type,
                 targetPath: form.targetPath,
+                actionTextAr: form.actionTextAr,
+                actionTextEn: form.actionTextEn,
+                isMandatory: form.isMandatory,
                 pinned: form.pinned,
                 active: form.active,
                 expiresAt: form.expiresIn
@@ -110,7 +121,14 @@ const AdminNotices = () => {
         await updateDoc(doc(db, 'notices', n.id), { active: !n.active });
     };
 
-    const TYPE_COLOR = { info: '#3b82f6', warning: '#f59e0b', success: '#10b981', alert: '#e02b20' };
+    const TYPE_COLOR = {
+        info: '#3b82f6',
+        warning: '#f59e0b',
+        success: '#10b981',
+        alert: '#e02b20',
+        urgent: '#ef4444',
+        survey: '#8b5cf6',
+    };
 
     return (
         <div className="admin-panel-section admin-fade-in">
@@ -154,10 +172,24 @@ const AdminNotices = () => {
                                     placeholder="Notice body in English" className="admin-input" rows={3} dir="ltr" style={{ resize: 'vertical' }} />
                             </div>
                         </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: 4 }}>{isAr ? 'نص زر الإجراء (عربي - اختياري)' : 'Action Button Text (Arabic)'}</label>
+                                <input value={form.actionTextAr} onChange={e => setForm(f => ({ ...f, actionTextAr: e.target.value }))}
+                                    placeholder={isAr ? 'مثال: تقديم رأيي / انتقل الآن' : 'e.g. Submit Opinion'} className="admin-input" dir="rtl" />
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: 4 }}>{isAr ? 'Action Button Text (English)' : 'Action Button Text (English)'}</label>
+                                <input value={form.actionTextEn} onChange={e => setForm(f => ({ ...f, actionTextEn: e.target.value }))}
+                                    placeholder="e.g. Go to section" className="admin-input" dir="ltr" />
+                            </div>
+                        </div>
+
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
                             <div>
                                 <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'block', marginBottom: 4 }}>{isAr ? 'النوع' : 'Type'}</label>
-                                <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} className="admin-input" style={{ minWidth: '140px' }}>
+                                <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))} className="admin-input" style={{ minWidth: '170px' }}>
                                     {TYPE_OPTIONS.map(t => (
                                         <option key={t.value} value={t.value}>{isAr ? t.labelAr : t.labelEn}</option>
                                     ))}
@@ -178,6 +210,10 @@ const AdminNotices = () => {
                                     onChange={e => setForm(f => ({ ...f, expiresIn: e.target.value }))}
                                     placeholder={isAr ? 'اختياري' : 'optional'} className="admin-input" style={{ width: '120px' }} />
                             </div>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 700, fontSize: '0.85rem', marginTop: '18px', color: '#e11d48' }}>
+                                <input type="checkbox" checked={form.isMandatory} onChange={e => setForm(f => ({ ...f, isMandatory: e.target.checked }))} />
+                                🔒 {isAr ? 'إعلان/استطلاع إجباري (يمنع التخطي)' : 'Forced / Mandatory'}
+                            </label>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontWeight: 700, fontSize: '0.85rem', marginTop: '18px' }}>
                                 <input type="checkbox" checked={form.pinned} onChange={e => setForm(f => ({ ...f, pinned: e.target.checked }))} />
                                 📌 {isAr ? 'مثبت' : 'Pinned'}
@@ -222,8 +258,9 @@ const AdminNotices = () => {
                                         {n.titleAr || n.titleEn || '—'}
                                     </strong>
                                     {n.pinned && <span style={{ fontSize: '0.7rem', background: '#f59e0b22', color: '#f59e0b', padding: '1px 8px', borderRadius: '8px', fontWeight: 800 }}>📌 {isAr ? 'مثبت' : 'Pinned'}</span>}
+                                    {n.isMandatory && <span style={{ fontSize: '0.7rem', background: '#e11d4822', color: '#e11d48', padding: '1px 8px', borderRadius: '8px', fontWeight: 800 }}>🔒 {isAr ? 'إجباري' : 'Mandatory'}</span>}
                                     <span style={{ fontSize: '0.7rem', background: (TYPE_COLOR[n.type] || '#ccc') + '22', color: TYPE_COLOR[n.type] || '#ccc', padding: '1px 8px', borderRadius: '8px', fontWeight: 800 }}>
-                                        {n.type}
+                                        {n.type === 'survey' ? (isAr ? '⭐ استطلاع رأي وتقييم' : '⭐ Rating Survey') : n.type === 'urgent' ? (isAr ? '🚨 إعلان اضطراري' : '🚨 Urgent') : n.type}
                                     </span>
                                     <span style={{ fontSize: '0.7rem', background: n.active ? '#10b98122' : '#9ca3af22', color: n.active ? '#10b981' : '#9ca3af', padding: '1px 8px', borderRadius: '8px', fontWeight: 800 }}>
                                         {n.active ? (isAr ? 'نشط' : 'Active') : (isAr ? 'متوقف' : 'Inactive')}
