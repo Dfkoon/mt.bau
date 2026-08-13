@@ -320,7 +320,7 @@ const FileUploader = ({ onClose }) => {
                     ) : (
                         <>
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'نوع المساهمة (إجباري)' : 'Contribution Type (Mandatory)'}</label>
+                                <label>{language === 'ar' ? 'نوع المساهمةة (إجباري)' : 'Contribution Type (Mandatory)'}</label>
                                 <select
                                     className="type-select"
                                     value={contributionType}
@@ -381,7 +381,7 @@ const FileUploader = ({ onClose }) => {
                                             <span className="drop-icon">📤</span>
                                             <p>{language === 'ar' ? 'اسحب الملفات هنا أو' : 'Drag files here or'}</p>
                                             <label className="file-input-label">
-                                                {language === 'ar' ? 'اتر ملفات' : 'Browse Files'}
+                                                {language === 'ar' ? 'اختر ملفات' : 'Browse Files'}
                                                 <input type="file" onChange={handleFileChange} multiple hidden />
                                             </label>
                                             <span className="file-hint">PDF, PNG, JPG (Max 10MB/file)</span>

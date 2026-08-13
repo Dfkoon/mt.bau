@@ -31,17 +31,17 @@ const AdminContributions = () => {
     const handleApprove = async (id) => {
         const res = await approveContribution(id);
         if (res.success) {
-            toast.success(isAr ? 'تمت الموافق على المساهم' : 'Contribution approved');
+            toast.success(isAr ? 'تمت الموافق على المساهمة' : 'Contribution approved');
         } else {
             toast.error(isAr ? 'خطأ في التحديث' : 'Update failed');
         }
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm(isAr ? 'هل تريد حذف هذه المساهم نهائياً؟' : 'Delete this contribution permanently?')) return;
+        if (!window.confirm(isAr ? 'هل تريد حذف هذه المساهمة نهائياً؟' : 'Delete this contribution permanently?')) return;
         const res = await deleteContribution(id);
         if (res.success) {
-            toast.success(isAr ? 'تم حذف المساهم' : 'Contribution deleted');
+            toast.success(isAr ? 'تم حذف المساهمة' : 'Contribution deleted');
         } else {
             toast.error(isAr ? 'خطأ' : 'Error');
         }
@@ -72,12 +72,12 @@ const AdminContributions = () => {
             </div>
 
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-                {isAr ? 'هذه المساهمات تأتي من قسم "ساهم في إثراء محتوى مكانك" في صفحات المواد والاختبارات.' : 'These contributions come from the "Share & Enrich Makanak Content" section.'}
+                {isAr ? 'هذه المساهمةات تأتي من قسم "ساهم في إثراء محتوى مكانك" في صفحات المواد والاختبارات.' : 'These contributions come from the "Share & Enrich Makanak Content" section.'}
             </p>
 
             <div className="admin-filter-row" style={{ marginBottom: '1.5rem' }}>
                 <div className="filter-group">
-                    <label>{isAr ? 'حال المساهم:' : 'Contribution Status:'}</label>
+                    <label>{isAr ? 'حال المساهمة:' : 'Contribution Status:'}</label>
                     <select className="admin-filter-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
                         <option value="all">{isAr ? 'كل الحالات' : 'All Statuses'}</option>
                         <option value="pending">{isAr ? 'قيد الانتظار' : 'Pending'}</option>

@@ -24,7 +24,7 @@ const AddProjectModal = ({ onClose }) => {
         const file = e.target.files[0];
         if (file) {
             if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                toast.error(language === 'ar' ? 'حجم الصور كبير جداً' : 'Image size is too large');
+                toast.error(language === 'ar' ? 'حجم الصورة كبير جداً' : 'Image size is too large');
                 return;
             }
             setFormData(prev => ({ ...prev, imageFile: file }));

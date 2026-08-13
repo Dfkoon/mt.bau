@@ -612,7 +612,7 @@ const SecureGateway = () => {
                                             className="sgw-input sgw-captcha-input"
                                             value={captchaInput}
                                             onChange={e => setCaptchaInput(e.target.value.toUpperCase())}
-                                            placeholder="أدل الرمز أعلاه"
+                                            placeholder="أدخل الرمز أعلاه"
                                             autoComplete="off"
                                             disabled={isLoading}
                                             maxLength={5}

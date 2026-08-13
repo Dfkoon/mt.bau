@@ -179,7 +179,7 @@ const AcademicPlans = () => {
             <div className="plans-container">
                 <div className="section-header">
                     <h2>
-                        {planType === 'new' ? (language === 'ar' ? 'الخطط الشجري الحديث' : 'Modern Tree Plans') : (language === 'ar' ? 'الخطط الدراسي السابق' : 'Previous Academic Plans')}
+                        {planType === 'new' ? (language === 'ar' ? 'الخطط الشجري الحديث' : 'Modern Tree Plans') : (language === 'ar' ? 'الخطط الدراسية السابق' : 'Previous Academic Plans')}
                     </h2>
                     <p>
                         {planType === 'new'

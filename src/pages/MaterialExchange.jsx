@@ -5827,7 +5827,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     <div>
                                                         <label className="schedule-form-label">{isAr ? '* المنسق' : '* Coordinator'}</label>
                                                         <select value={scheduleFormData.assignedCoordinator} onChange={e => setScheduleFormData(p => ({ ...p, assignedCoordinator: e.target.value }))} className="schedule-form-select">
-                                                            <option value="">{isAr ? '— اتر —' : '— Select —'}</option>
+                                                            <option value="">{isAr ? '— اختر —' : '— Select —'}</option>
                                                             <option value="ahmad">♂️ {systemSettings.ahmadNameAr || 'علي'}</option>
                                                             <option value="sara">♀️ {systemSettings.saraNameAr || 'سندس'}</option>
                                                         </select>
@@ -5836,7 +5836,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     <div>
                                                         <label className="schedule-form-label">{isAr ? 'التسليم النهائي' : 'Final Delivery By'}</label>
                                                         <select value={scheduleFormData.finalDeliveryBy} onChange={e => setScheduleFormData(p => ({ ...p, finalDeliveryBy: e.target.value }))} className="schedule-form-select">
-                                                            <option value="">{isAr ? '— اتر —' : '— Select —'}</option>
+                                                            <option value="">{isAr ? '— اختر —' : '— Select —'}</option>
                                                             <option value="admin">👑 {isAr ? 'الأدمن / حسين' : 'Admin / Hussein'}</option>
                                                             <option value="ahmad">♂️ {systemSettings.ahmadNameAr || 'علي'}</option>
                                                             <option value="sara">♀️ {systemSettings.saraNameAr || 'سندس'}</option>
@@ -6155,7 +6155,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     <div>
                                                         <label style={{ display: 'block', fontSize: '0.78rem', opacity: 0.7, marginBottom: '4px' }}>{isAr ? 'المنسق' : 'Coordinator'}</label>
                                                         <select value={editScheduleFormData.assignedCoordinator || ''} onChange={e => setEditScheduleFormData(p => ({ ...p, assignedCoordinator: e.target.value }))} className="schedule-form-select schedule-form-select-lg">
-                                                            <option value="">{isAr ? '— اتر —' : '— Select —'}</option>
+                                                            <option value="">{isAr ? '— اختر —' : '— Select —'}</option>
                                                             <option value="ahmad">♂️ {systemSettings.ahmadNameAr || 'علي'}</option>
                                                             <option value="sara">♀️ {systemSettings.saraNameAr || 'سندس'}</option>
                                                         </select>
@@ -6165,7 +6165,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     <div>
                                                         <label style={{ display: 'block', fontSize: '0.78rem', opacity: 0.7, marginBottom: '4px' }}>{isAr ? 'التسليم النهائي بواسط' : 'Final Delivery By'}</label>
                                                         <select value={editScheduleFormData.finalDeliveryBy || ''} onChange={e => setEditScheduleFormData(p => ({ ...p, finalDeliveryBy: e.target.value }))} className="schedule-form-select schedule-form-select-lg">
-                                                            <option value="">{isAr ? '— اتر —' : '— Select —'}</option>
+                                                            <option value="">{isAr ? '— اختر —' : '— Select —'}</option>
                                                             <option value="admin">👑 {isAr ? 'الأدمن / حسين' : 'Admin / Hussein'}</option>
                                                             <option value="ahmad">♂️ {systemSettings.ahmadNameAr || 'علي'}</option>
                                                             <option value="sara">♀️ {systemSettings.saraNameAr || 'سندس'}</option>
@@ -6625,7 +6625,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             </div>
 
                                             <div className="settings-field">
-                                                <label>{isAr ? 'اتر المنسق' : 'Select Coordinator'}</label>
+                                                <label>{isAr ? 'اختر المنسق' : 'Select Coordinator'}</label>
                                                 <select
                                                     className="settings-input"
                                                     value={permissionsSelection}
@@ -7475,7 +7475,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </p>
                                     <p className="delegate-hint">
                                         {isAr
-                                            ? 'اتر المنسق الذي ستُفوّض إليه هذا الطلب للمتابع والتسليم:'
+                                            ? 'اختر المنسق الذي ستُفوّض إليه هذا الطلب للمتابع والتسليم:'
                                             : 'Choose the coordinator to handle this donation:'}
                                     </p>
                                 </div>
@@ -8848,7 +8848,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     {/* Admin Decision Radio Buttons */}
                                     <div style={{ marginBottom: '20px', padding: '15px', background: 'rgba(0,100,200,0.1)', borderRadius: '8px', border: '1px solid rgba(0,150,255,0.2)' }}>
                                         <p style={{ margin: '0 0 12px 0', fontSize: '0.95em', fontWeight: 'bold' }}>
-                                            {isAr ? '⚙️ اتر قرارك:' : '⚙️ Choose your decision:'}
+                                            {isAr ? '⚙️ اختر قرارك:' : '⚙️ Choose your decision:'}
                                         </p>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                             <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '10px', borderRadius: '6px', background: adminResponseData.adminAction === 'approve' ? 'rgba(0,255,100,0.15)' : 'transparent' }}>
@@ -9149,7 +9149,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             </div>
 
                                             <div className="form-group">
-                                                <label>{isAr ? 'الرسال' : 'Message'}</label>
+                                                <label>{isAr ? 'الرسالة' : 'Message'}</label>
                                                 <textarea
                                                     className="form-input"
                                                     value={messageText}
@@ -9177,7 +9177,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 direction: isAr ? 'rtl' : 'ltr'
                                             }}>
                                                 <p style={{ margin: '0', color: 'rgba(25, 135, 84, 1)', fontSize: '0.9em' }}>
-                                                    ✓ {isAr ? 'سيتم فتح تطبيق الواتس أب مع الرسال جاهز للإرسال' : 'WhatsApp will open with the message ready to send'}
+                                                    ✓ {isAr ? 'سيتم فتح تطبيق الواتس أب مع الرسالة جاهز للإرسال' : 'WhatsApp will open with the message ready to send'}
                                                 </p>
                                             </div>
                                         </div>

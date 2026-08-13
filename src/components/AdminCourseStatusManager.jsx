@@ -59,13 +59,13 @@ const AdminCourseStatusManager = () => {
             });
 
             if (result.success) {
-                toast.success(isAr ? 'تم الموافق على الطلب' : 'Request approved');
+                toast.success(isAr ? 'تمت الموافقة على الطلب' : 'Request approved');
                 setBookings(bookings.filter(b => b.id !== bookingId));
                 setApprovalNotes('');
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'خطأ في الموافق' : 'Error approving request');
+            toast.error(isAr ? 'خطأ في الموافقة' : 'Error approving request');
         }
     };
 
@@ -95,13 +95,13 @@ const AdminCourseStatusManager = () => {
             });
 
             if (result.success) {
-                toast.success(isAr ? 'تم الموافق على التبرع' : 'Donation approved');
+                toast.success(isAr ? 'تمت الموافقة على التبرع' : 'Donation approved');
                 setDonations(donations.filter(d => d.id !== donationId));
                 setApprovalNotes('');
                 setActioningItem(null);
             }
         } catch (error) {
-            toast.error(isAr ? 'خطأ في الموافق' : 'Error approving donation');
+            toast.error(isAr ? 'خطأ في الموافقة' : 'Error approving donation');
         }
     };
 

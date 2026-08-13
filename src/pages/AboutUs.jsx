@@ -78,7 +78,7 @@ const AboutUs = () => {
                     </h1>
                     <p className="about-hero-subtitle">
                         {isAr
-                            ? 'منصة طلابية شاملة لخدمة طلاب جامعة البلقاء التطبيقية'
+                            ? 'منصة طلابية شاملة لخدمة طلاب جامعة البلقاء التطبيقيةة'
                             : 'A comprehensive student platform serving Al-Balqa Applied University students'}
                     </p>
                 </div>
@@ -95,7 +95,7 @@ const AboutUs = () => {
                     <div className="about-content glass-card">
                         <p className="about-text">
                             {isAr
-                                ? 'مشروع "مكانك الجامعي" هو مبادرة طلابية تطوعية بدأت من فكرة بسيطة: كيف يمكننا تسهيل الحياة الجامعية على الطلاب؟ من هنا انطلقنا لبناء منصة شاملة تجمع كل ما يحتاجه الطالب في مكان واحد - من المواد الدراسية والاختبارات التفاعلية، إلى التقويم الأكاديمي والمساعد الذكي.'
+                                ? 'مشروع "مكانك الجامعي" هو مبادرة طلابية تطوعية بدأت من فكرة بسيطة: كيف يمكننا تسهيل الحياة الجامعية على الطلاب؟ من هنا انطلقنا لبناء منصة شاملة تجمع كل ما يحتاجه الطالب في مكان واحد - من الالمواد الدراسية والاختبارات التفاعلية، إلى التقويم الأكاديمي والمساعد الذكي.'
                                 : "Makanak Al-Jami'i is a voluntary student initiative that started from a simple idea: How can we make university life easier for students? From here, we set out to build a comprehensive platform that brings together everything a student needs in one place - from study materials and interactive tests, to the academic calendar and smart assistant."}
                         </p>
                         <p className="about-text">
@@ -177,7 +177,7 @@ const AboutUs = () => {
                     </div>
                     <div className="about-roadmap">
                         {[
-                            { done: true, labelAr: 'إطلاق المنصة وتوفير المواد الدراسية', labelEn: 'Platform launch with study materials' },
+                            { done: true, labelAr: 'إطلاق المنصة وتوفير الالمواد الدراسية', labelEn: 'Platform launch with study materials' },
                             { done: true, labelAr: 'الاختبار التفاعلي مع تصحيح فوري', labelEn: 'Interactive quiz with instant grading' },
                             { done: true, labelAr: 'مساعد نشمي الذكي + محادثة محفوظة', labelEn: 'Nashmi AI assistant with chat memory' },
                             { done: true, labelAr: 'حاسبة المعدل ومخطط المعدل الهدف', labelEn: 'GPA calculator & Target GPA planner' },
@@ -202,7 +202,7 @@ const AboutUs = () => {
                         </h2>
                         <p className="cta-text">
                             {isAr
-                                ? 'لديك اقتراح؟ وجدت مشكلة؟ تريد المساهمة في تطوير المنصة؟ نحن نرحب بجميع الأفكار والملاحظات!'
+                                ? 'لديك اقتراح؟ وجدت مشكلة؟ تريد المساهمةة في تطوير المنصة؟ نحن نرحب بجميع الأفكار والملاحظات!'
                                 : 'Have a suggestion? Found a problem? Want to contribute to the platform? We welcome all ideas and feedback!'}
                         </p>
                         <div className="cta-buttons">

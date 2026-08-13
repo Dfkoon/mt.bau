@@ -26,7 +26,7 @@ const EMPTY_FORM = {
 };
 
 const TARGET_OPTIONS = [
-    { value: '/materials', ar: 'المواد الدراسية', en: 'Study Materials' },
+    { value: '/materials', ar: 'الالمواد الدراسية', en: 'Study Materials' },
     { value: '/plans', ar: 'الخطط الدراسية', en: 'Academic Plans' },
     { value: '/quiz', ar: 'الاختبارات', en: 'Quizzes' },
     { value: '/calendar', ar: 'التقويم الأكاديمي', en: 'Academic Calendar' },

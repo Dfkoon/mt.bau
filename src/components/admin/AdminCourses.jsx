@@ -198,7 +198,7 @@ const AdminCourses = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل المواد الدراسية...' : 'Loading courses...'}</p>
+                <p>{isAr ? 'جاري تحميل الالمواد الدراسية...' : 'Loading courses...'}</p>
             </div>
         );
     }
@@ -206,7 +206,7 @@ const AdminCourses = () => {
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
             <h3 className="admin-section-title">
-                <span>{isAr ? 'إدارة المواد الدراسيةة' : 'Manage Study Materials'}</span>
+                <span>{isAr ? 'إدارة الالمواد الدراسيةة' : 'Manage Study Materials'}</span>
             </h3>
 
             {/* Filters Card */}

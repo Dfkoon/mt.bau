@@ -5,7 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 
 const PATH_LABELS = {
     '/': 'الرئيسي',
-    '/materials': 'المواد الدراسية',
+    '/materials': 'الالمواد الدراسية',
     '/plans': 'الخطط الدراسي',
     '/quiz': 'الاختبارات',
     '/calendar': 'التقويم الأكاديمي',
@@ -244,7 +244,7 @@ const AdminActivityLog = () => {
                         <option value="all">{isAr ? '⚡ كل الأنشط' : 'All Activities'}</option>
                         <option value="visit">{isAr ? '🌐 زيارات الصفحات' : 'Page Visits'}</option>
                         <option value="quiz_completed">{isAr ? '🎯 نتائج الاختبارات' : 'Quiz Completions'}</option>
-                        <option value="material_view">{isAr ? '📂 فتح المواد الدراسية' : 'Study Materials'}</option>
+                        <option value="material_view">{isAr ? '📂 فتح الالمواد الدراسية' : 'Study Materials'}</option>
                     </select>
                 </div>
             </div>

@@ -2,7 +2,7 @@ const translations = {
     ar: {
         // Navbar
         'nav.home': 'الرئيسية',
-        'nav.materials': 'المواد الدراسية',
+        'nav.materials': 'الالمواد الدراسية',
         'nav.plans': 'الخطط الإرشادية',
         'nav.grading': 'نظام العلامات',
         'nav.quiz': 'الاختبارات',
@@ -29,7 +29,7 @@ const translations = {
 
         // Academic Calendar Page
         'calendar.hero.title': 'التقويم الأكاديمي',
-        'calendar.hero.subtitle': 'التقويم الجامعي 2026/2025 - جامعة البلقاء التطبيقية',
+        'calendar.hero.subtitle': 'التقويم الجامعي 2026/2025 - جامعة البلقاء التطبيقيةة',
         'calendar.hero.note': 'وحدة القبول والتسجيل',
         'calendar.stats.total': 'إجمالي الأحداث',
         'calendar.stats.exams': 'امتحانات',
@@ -71,8 +71,8 @@ const translations = {
         'quiz.finish': 'إنهاء المحاولة',
 
         // Study Materials Page
-        'materials.hero.title': 'المواد الدراسية',
-        'materials.hero.subtitle': 'استكشف جميع المواد الدراسية ومصادرها المتنوعة',
+        'materials.hero.title': 'الالمواد الدراسية',
+        'materials.hero.subtitle': 'استكشف جميع الالمواد الدراسية ومصادرها المتنوعة',
         'materials.search.placeholder': 'ابحث عن مادة...',
         'materials.no_results.title': 'لم يتم العثور على نتائج',
         'materials.no_results.text': 'جرب البحث بكلمات مختلفة',
@@ -136,7 +136,7 @@ const translations = {
         'chat.send': 'إرسال',
         'chat.typing': 'نشمي يكتب...',
         'chat.whoarewe': 'من نحن؟',
-        'chat.materials': 'المواد الدراسية',
+        'chat.materials': 'الالمواد الدراسية',
         'chat.calendar': 'التقويم الأكاديمي',
         'chat.news': 'الأخبار',
         'chat.suggestions': 'اقتراحات',
@@ -161,7 +161,7 @@ const translations = {
         'news.viewall': 'مشاهدة جميع الأخبار',
         'news.1.title': 'كلية الذكاء الاصطناعي تطلق مجلة "CHAIN"', 'news.1.desc': 'أطلقت الكلية النسخة الأولى من مجلتها المتخصصة في الذكاء الاصطناعي والروبوتات، بمشاركة نخبة من الطلبة والأساتذة.', 'news.1.tag': 'جديد', 'news.1.badge': 'إعلان',
         'news.2.title': 'شروط وإجراءات تقسيط الرسوم الدراسية', 'news.2.desc': 'تسهيلاً على الطلبة، أعلنت الجامعة عن تفاصيل نظام التقسيط الجديد للرسوم الدراسية للفصل الدراسي القادم.', 'news.2.tag': 'هام', 'news.2.badge': 'قبول وتسجيل',
-        'news.3.title': 'تميز 17 باحثاً من الجامعة في تصنيف ستانفورد', 'news.3.desc': 'إنجاز عالمي جديد لجامعة البلقاء التطبيقية بدخول 17 من أساتذتها ضمن قائمة أفضل 2% من الباحثين عالمياً.', 'news.3.tag': 'أكاديمي', 'news.3.badge': 'إنجاز',
+        'news.3.title': 'تميز 17 باحثاً من الجامعة في تصنيف ستانفورد', 'news.3.desc': 'إنجاز عالمي جديد لجامعة البلقاء التطبيقيةة بدخول 17 من أساتذتها ضمن قائمة أفضل 2% من الباحثين عالمياً.', 'news.3.tag': 'أكاديمي', 'news.3.badge': 'إنجاز',
         'news.4.title': 'عيد الاستقلال الأردني المجيد', 'news.4.desc': 'في هذه المناسبة الوطنية العظيمة، نجدد عهدنا بالوطن الغالي. كل عام والأردن شامخٌ بعزة أبنائه، تحيا الأردن وطناً ومن تحته ثرى وفوقه سماء. بكل حب وامتنان وانتماء — من مكانك الجامعي لكل أردني.', 'news.4.tag': 'وطني', 'news.4.badge': 'مناسبة',
         'news.5.title': 'يوم العلم الأردني — 16 نيسان', 'news.5.desc': 'رايتنا السوداء والبيضاء والخضراء بقلبها الأحمر... علمٌ حملنا تحته أجمل الذكريات وأعمق الانتماء. في يوم العلم الأردني، نرفع رأسنا عالياً ونقول: هذا وطني وهذا علمي — من الجامعة لكل ركن أردني.', 'news.5.tag': 'وطني', 'news.5.badge': 'يوم العلم',
 
@@ -179,9 +179,9 @@ const translations = {
         'services.subtitle': 'نوفر لك كل الأدوات التي تحتاجها للنجاح في مسيرتك الدراسية',
         'services.goto': 'انتقل للموقع',
         'services.soon': 'قريباً',
-        'service.1.title': 'المواد الدراسية', 'service.1.desc': 'تنزيل أحدث المواد والملخصات بصيغة PDF لجميع التخصصات.',
+        'service.1.title': 'الالمواد الدراسية', 'service.1.desc': 'تنزيل أحدث المواد والملخصات بصيغة PDF لجميع التخصصات.',
         'service.2.title': 'بنك الأسئلة', 'service.2.desc': 'أسئلة السنوات السابقة مع الحلول النموذجية للتدرب على الامتحانات.',
-        'service.3.title': 'الدروس التعليمية', 'service.3.desc': 'شروحات مفصلة وفيديوهات تعليمية للمواد الدراسية المعقدة.',
+        'service.3.title': 'الدروس التعليمية', 'service.3.desc': 'شروحات مفصلة وفيديوهات تعليمية للالمواد الدراسية المعقدة.',
         'service.4.title': 'نظام العلامات', 'service.4.desc': 'تتبع أدائك الأكاديمي وحساب معدلك الفصلي والتراكمي بسهولة.',
         'service.5.title': 'وصف القاعات', 'service.5.desc': 'تعرف على تفاصيل القاعات الدراسية والمختبرات ومواقعها في الجامعة.',
         'service.6.title': 'تبادل المواد', 'service.6.desc': 'فرصة لتبادل الكتب والمصادر الدراسية مع زملائك في بداية كل فصل.',
@@ -209,7 +209,7 @@ const translations = {
         'suggestions.success.desc': 'شكراً لتواصلك معنا، سنقوم بمراجعة طلبك في أقرب وقت.',
         'suggestions.label.name': 'الاسم (اختياري)',
         'suggestions.ph.name': 'اكتب اسمك هنا',
-        'suggestions.label.type': 'نوع الرسالة',
+        'suggestions.label.type': 'نوع الرسالةة',
         'suggestions.opt.suggestion': '💡 اقتراح تحسين',
         'suggestions.opt.technical': '🔧 مشكلة تقنية',
         'suggestions.opt.collaboration': '🤝 رغبة بالتعاون / تواصل',
@@ -220,7 +220,7 @@ const translations = {
         'suggestions.label.phone': 'رقم الهاتف (اختياري)',
         'suggestions.ph.phone': '0791234567',
         'suggestions.hint.contact': 'أضف وسيلة تواصل إذا كنت ترغب في الحصول على رد.',
-        'suggestions.label.message': 'نص الرسالة *',
+        'suggestions.label.message': 'نص الرسالةة *',
         'suggestions.ph.message': 'اكتب تفاصيل اقتراحك أو مشكلتك هنا...',
         'suggestions.btn.submit': 'إرسال',
         'suggestions.btn.sending': 'جاري الإرسال...',
@@ -254,7 +254,7 @@ const translations = {
         'plans.btn.open': 'فتح في تبويب جديد 🔗',
 
         // Footer
-        'footer.brand.desc': 'مبادرة طلابية تهدف لتسهيل الحياة الدراسية لطلبة جامعة البلقاء التطبيقية من خلال توفير كافة المصادر التعليمية والخدمات الإلكترونية في منصة واحدة.',
+        'footer.brand.desc': 'مبادرة طلابية تهدف لتسهيل الحياة الدراسية لطلبة جامعة البلقاء التطبيقيةة من خلال توفير كافة المصادر التعليمية والخدمات الإلكترونية في منصة واحدة.',
         'footer.quicklinks': 'روابط سريعة',
         'footer.contact': 'تواصل معنا',
         'footer.follow': 'تابعنا',
@@ -270,9 +270,9 @@ const translations = {
         'tip.tag.tech': 'تقنية',
 
         // Contributors
-        'contributors.title': 'لوحة شرف المساهمين ⭐',
+        'contributors.title': 'لوحة شرف المساهمةين ⭐',
         'contributors.subtitle': 'قريباً... ⏳',
-        'contributors.invitation': 'ساهم معنا بمصادر دراسية لتنال مقعدك في لوحة المساهمين المميزين!',
+        'contributors.invitation': 'ساهم معنا بمصادر دراسية لتنال مقعدك في لوحة المساهمةين المميزين!',
         'contributors.thanks': 'شكراً لكل من ساهم ولو بشيء بسيط في نجاح هذه المبادرة.',
         'footer.charity': 'صدقة جارية عن أرواح شهداء العلم',
 
@@ -335,7 +335,7 @@ const translations = {
         
         'promo.nabdh.badge': '🌟 مبادرة إنسانية',
         'promo.nabdh.title': 'مبادرة مرافقة الطلبة ذوي الاحتياجات الخاصة ',
-        'promo.nabdh.highlight': 'جامعة البلقاء التطبيقية',
+        'promo.nabdh.highlight': 'جامعة البلقاء التطبيقيةة',
         'promo.nabdh.desc': 'يعلن نادي نبض عن فتح باب الانضمام لمبادرة مرافقة زملائنا من الطلبة ذوي الاحتياجات الخاصة، تعزيزا لروح المساندة والتكافل داخل جامعتنا.',
         'promo.nabdh.task1': 'قراءة الأسئلة للطالب/ـة عند الحاجة.',
         'promo.nabdh.task2': 'كتابة الإجابات نيابة عن الطالب.',

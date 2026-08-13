@@ -78,7 +78,7 @@ function drawCanvas(canvas, text) {
 // ── Path label helper ─────────────────────────────────────────────────
 const PATH_LABELS = {
   '/': 'الرئيسي',
-  '/materials': 'المواد الدراسية',
+  '/materials': 'الالمواد الدراسية',
   '/plans': 'الخطط الدراسي',
   '/quiz': 'الاختبارات',
   '/calendar': 'التقويم',
@@ -528,21 +528,21 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   };
 
   const deleteSuggestion = async (id) => {
-    if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسال؟' : 'Delete this message?')) return;
+    if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسالة؟' : 'Delete this message?')) return;
     try { await deleteDoc(doc(db, 'suggestions', id)); toast.success(''); } catch { toast.error('خطأ'); }
   };
 
   const toggleTestimonialApproval = async (id, current) => {
     try {
       await updateDoc(doc(db, 'testimonials', id), { approved: !current });
-      toast.success(isAr ? (current ? 'تم إلغاء الظهور' : 'تم الموافق') : (current ? 'Hidden' : 'Approved'));
+      toast.success(isAr ? (current ? 'تم إلغاء الظهور' : 'تمت الموافقة') : (current ? 'Hidden' : 'Approved'));
     } catch { toast.error(isAr ? 'خطأ في التحديث' : 'Update failed'); }
   };
 
   const resolveReport = async (id) => {
     try {
       await updateDoc(doc(db, 'question_reports', id), { status: 'resolved' });
-      toast.success(isAr ? 'تم وضع علام محلول' : 'Marked resolved');
+      toast.success(isAr ? 'تم وضع علامة محلول' : 'Marked resolved');
     } catch (err) {
       console.error('Error resolving report:', err);
       toast.error((isAr ? 'تعذر الحفظ: ' : 'Error: ') + (err.message || err));
@@ -730,7 +730,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   const saveSubject = async () => {
     if (!subjectForm.id || !subjectForm.name || !subjectForm.nameAr) {
-      toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزامية' : 'Please fill all required fields');
+      toast.error(isAr ? 'يرجى ملء جميع الحقول الإلزاميةة' : 'Please fill all required fields');
       return;
     }
 
@@ -822,7 +822,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       return;
     }
     if (!partForm.id || !partForm.title || !partForm.titleAr) {
-      toast.error(isAr ? ' يرجى ملء جميع الحقول الإلزامي' : ' Please fill all required fields');
+      toast.error(isAr ? ' يرجى ملء جميع الحقول الإلزامية' : ' Please fill all required fields');
       return;
     }
     const partId = partForm.id.toLowerCase().trim().replace(/\s+/g, '_');
@@ -867,7 +867,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   };
 
   const deletePart = async (partId) => {
-    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئلة التابع له!' : 'Are you sure? This will delete all questions in this part!')) return;
+    if (!window.confirm(isAr ? 'هل أنت متأكد من حذف هذا الجزء؟ سيتم حذف جميع الأسئلة التابعة له!' : 'Are you sure? This will delete all questions in this part!')) return;
 
     const partSubjectId = selectedSubjectId || (activeSubject ? activeSubject.id : '');
 
@@ -1056,9 +1056,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
     // For table, no selection needed — just append
     if (tagType === 'table') {
-      const relName = prompt(isAr ? 'أدل اسم الجدول / العلاق (مثال: B):' : 'Enter relation name (e.g. B):');
+      const relName = prompt(isAr ? 'أدخل اسم الجدول / العلاقة (مثال: B):' : 'Enter relation name (e.g. B):');
       if (relName === null) return;
-      const attrsInput = prompt(isAr ? 'أدل الحقول مفصول بفاصل. ضع نجم (*) قبل الحقل لتسطيره كمفتاح أساسي (مثال: *s1, b1, x, y):' : 'Enter attributes separated by commas. Put an asterisk (*) before an attribute to underline it (e.g., *s1, b1, x, y):');
+      const attrsInput = prompt(isAr ? 'أدخل الحقول مفصولة بفاصلة. ضع نجمة (*) قبل الحقل لتسطيره كمفتاح أساسي (مثال: *s1, b1, x, y):' : 'Enter attributes separated by commas. Put an asterisk (*) before an attribute to underline it (e.g., *s1, b1, x, y):');
       if (attrsInput === null) return;
       const cells = attrsInput.split(',').map(attr => {
         const trimmed = attr.trim();
@@ -1165,7 +1165,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         const file = item.getAsFile();
         if (!file) continue;
 
-        toast(isAr ? 'جاري رفع الصور الملصق...' : 'Uploading pasted image...');
+        toast(isAr ? 'جاري رفع الصورة الملصق...' : 'Uploading pasted image...');
         try {
           const fd = new FormData();
           fd.append('file', file);
@@ -1186,13 +1186,13 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 return { ...prev, image2: data.secure_url };
               }
             });
-            toast.success(isAr ? ' تم رفع ولصق الصور بنجاح!' : ' Image uploaded and pasted!');
+            toast.success(isAr ? ' تم رفع ولصق الصورة بنجاح!' : ' Image uploaded and pasted!');
           } else {
-            toast.error(isAr ? 'فشل رفع الصور' : 'Image upload failed');
+            toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
           }
         } catch (err) {
           console.error(err);
-          toast.error(isAr ? 'حدث خطأ أثناء رفع الصور' : 'Error uploading image');
+          toast.error(isAr ? 'حدث خطأ أثناء رفع الصورة' : 'Error uploading image');
         }
         break;
       }
@@ -1280,7 +1280,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 10 * 1024 * 1024) {
-      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
       e.target.value = '';
       return;
     }
@@ -1297,7 +1297,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       setOcrProgress(100);
       const parsed = parseOcrText(text);
       if (!parsed) {
-        toast.error(isAr ? 'لم يتم استخراج نص واضح من الصور' : 'Could not extract clear text from the image');
+        toast.error(isAr ? 'لم يتم استخراج نص واضح من الصورة' : 'Could not extract clear text from the image');
         return;
       }
       const isArabic = /[\u0600-\u06FF]/.test(parsed.question);
@@ -1314,7 +1314,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       toast.success(isAr ? ' تم استخراج السؤال بنجاح' : ' Question scanned successfully');
     } catch (err) {
       console.error(err);
-      toast.error(isAr ? 'فشل مسح الصور ضوئياً' : 'OCR scan failed');
+      toast.error(isAr ? 'فشل مسح الصورة ضوئياً' : 'OCR scan failed');
     } finally {
       setOcrScanning(false);
       setOcrProgress(0);
@@ -1340,7 +1340,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
       return;
     }
     try {
@@ -1361,10 +1361,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         img.src = url;
       });
       updateQuestionOption(idx, 'image', compressed);
-      toast.success(isAr ? ' تم تحميل صور اليار' : ' Option image loaded');
+      toast.success(isAr ? ' تم تحميل صورة الخيار' : ' Option image loaded');
     } catch (err) {
       console.error(err);
-      toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
+      toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
     }
     e.target.value = '';
   };
@@ -1380,11 +1380,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         if (!file) continue;
 
         if (file.size > 5 * 1024 * 1024) {
-          toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
+          toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 5 ميجا بايت' : 'Image must be under 5MB');
           return;
         }
 
-        toast(isAr ? 'جاري معالجة ولصق صور اليار...' : 'Processing and pasting option image...');
+        toast(isAr ? 'جاري معالجة ولصق صور الخيار...' : 'Processing and pasting option image...');
         try {
           const compressed = await new Promise((resolve, reject) => {
             const img = new Image();
@@ -1403,10 +1403,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             img.src = url;
           });
           updateQuestionOption(idx, 'image', compressed);
-          toast.success(isAr ? ' تم لصق صور اليار بنجاح!' : ' Option image pasted successfully!');
+          toast.success(isAr ? ' تم لصق صور الخيار بنجاح!' : ' Option image pasted successfully!');
         } catch (err) {
           console.error(err);
-          toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
+          toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
         }
         break;
       }
@@ -1420,16 +1420,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       return;
     }
     if (questionForm.type !== 'matching' && questionForm.options.length < 2) {
-      toast.error(isAr ? 'يجب إدخال يارين على الأقل' : 'Please add at least 2 options');
+      toast.error(isAr ? 'يجب إدخال خيارين على الأقل' : 'Please add at least 2 options');
       return;
     }
     if (questionForm.type === 'matching') {
       if (questionForm.options.length < 2) {
-        toast.error(isAr ? 'يجب إدخال يارين على الأقل في قائمة الإجابات' : 'Please add at least 2 answer options');
+        toast.error(isAr ? 'يجب إدخال خيارين على الأقل في قائمة الإجابات' : 'Please add at least 2 answer options');
         return;
       }
       if (questionForm.subQuestions.length < 1) {
-        toast.error(isAr ? 'يجب إدخال جمل فرعي واحد على الأقل' : 'Please add at least 1 sub-question');
+        toast.error(isAr ? 'يجب إدخال جملة فرعية واحد على الأقل' : 'Please add at least 1 sub-question');
         return;
       }
     } else if (questionForm.type === 'multi_select') {
@@ -1439,7 +1439,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         return;
       }
     } else if (!questionForm.correctAnswer && questionForm.type !== 'text') {
-      toast.error(isAr ? 'يرجى اختيار الإجابة الصحيح' : 'Please select the correct answer');
+      toast.error(isAr ? 'يرجى اختيار الإجابة الصحيحة' : 'Please select the correct answer');
       return;
     }
 
@@ -1546,7 +1546,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       id: 'student_contributions',
       titleAr: 'مساهمات الطلاب',
       titleEn: 'Student Contributions',
-      descAr: 'عرض وإدار المساهمات الوارد من قسم إثراء محتوى مكانك.',
+      descAr: 'عرض وإدار المساهمةات الوارد من قسم إثراء محتوى مكانك.',
       descEn: 'View and manage contributions submitted through the content enrichment section.',
     },
     {
@@ -1569,7 +1569,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         <div className="admin-login-logo"></div>
         <h1 className="admin-login-title">{isAr ? 'لوحة التحكم' : 'Admin Dashboard'}</h1>
         <>
-          <p className="admin-login-subtitle">{isAr ? 'أدل اسم المستخدم وكود الوصول للمتابع' : 'Enter username and access code to continue'}</p>
+          <p className="admin-login-subtitle">{isAr ? 'أدخل اسم المستخدم وكود الوصول للمتابع' : 'Enter username and access code to continue'}</p>
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div className="form-group" style={{ margin: 0 }}>
               <label className="form-label">{isAr ? 'اسم المستخدم' : 'Username'}</label>
@@ -1578,7 +1578,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 className={`form-input${loginErr ? ' input-error-shake' : ''}`}
                 value={adminUsername}
                 onChange={e => { setAdminUsername(e.target.value); setLoginErr(''); }}
-                placeholder={isAr ? 'أدل اسم المستخدم' : 'Enter username'}
+                placeholder={isAr ? 'أدخل اسم المستخدم' : 'Enter username'}
                 autoComplete="username"
                 required
               />
@@ -1592,7 +1592,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   className={`form-input${loginErr ? ' input-error-shake' : ''}`}
                   value={adminPwd}
                   onChange={e => { setAdminPwd(e.target.value); setLoginErr(''); }}
-                  placeholder={isAr ? 'أدل كود الوصول' : 'Enter access code'}
+                  placeholder={isAr ? 'أدخل كود الوصول' : 'Enter access code'}
                   autoComplete="current-password"
                   required
                 />
@@ -1636,7 +1636,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   className={`form-input captcha-input-field${captchaErr ? ' input-error-shake' : ''}`}
                   value={captchaInput}
                   onChange={e => { setCaptchaInput(e.target.value); setCaptchaErr(false); }}
-                  placeholder={isAr ? 'أدل الرمز أعلاه' : 'Enter the code above'}
+                  placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
                   autoComplete="off"
                   maxLength="5"
                   required
@@ -1687,9 +1687,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     { id: 'donations', label: isAr ? 'إدارة التبرعات' : 'Donations' },
     { id: 'quizzes', label: isAr ? 'الاختبارات' : 'Quizzes' },
     { id: 'feedback', label: isAr ? 'الآراء والتقييمات' : 'Feedback & Testimonials' },
-    { id: 'courses', label: isAr ? 'إدارة المواد الدراسيةة' : 'Manage Courses' },
+    { id: 'courses', label: isAr ? 'إدارة الالمواد الدراسيةة' : 'Manage Courses' },
     { id: 'reports', label: isAr ? 'البلاغات' : 'Reports' },
-    { id: 'contributions', label: isAr ? 'المساهمات' : 'Contributions' },
+    { id: 'contributions', label: isAr ? 'المساهمةات' : 'Contributions' },
     { id: 'activity', label: isAr ? 'سجل النشاط' : 'Activity' },
     { id: 'chatfaq', label: isAr ? 'نشمي والأسئلة الشائعة' : 'Nashmi & FAQ' },
     { id: 'coordinators', label: isAr ? 'المنسقون' : 'Coordinators' },
@@ -1848,7 +1848,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {/* Column 1: Subjects List */}
                 <div className="qmanage-column subjects-col">
                   <div className="qmanage-col-header">
-                    <h4> {isAr ? 'المواد الدراسية' : 'Subjects'}</h4>
+                    <h4> {isAr ? 'الالمواد الدراسية' : 'Subjects'}</h4>
                     <button className="qmanage-add-btn" onClick={() => {
                       // Reset to add-mode before opening modal
                       setEditingSubjectOriginalId(null);
@@ -1916,7 +1916,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       </button>
                     ) : (
                       <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {isAr ? 'اتر مادة أولاً' : 'Select a subject first'}
+                        {isAr ? 'اختر مادة أولاً' : 'Select a subject first'}
                       </span>
                     )}
                   </div>
@@ -2112,7 +2112,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             </div>
 
             <div className="qedit-title">
-              {isAr ? 'تعديل السؤال واليارات' : 'Edit Question & Options'}
+              {isAr ? 'تعديل السؤال والخيارات' : 'Edit Question & Options'}
             </div>
 
             <div className="qedit-body">
@@ -2161,7 +2161,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       if (file.size > 10 * 1024 * 1024) {
-                        toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                        toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                         return;
                       }
                       setQuizImageUploading(true);
@@ -2188,7 +2188,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         toast.success(isAr ? ' تم تحميل الصور الأولى بنجاح' : ' Image 1 loaded successfully');
                       } catch (err) {
                         console.error(err);
-                        toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
+                        toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
                       } finally {
                         setQuizImageUploading(false);
                         setQuizImageProgress(0);
@@ -2233,7 +2233,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
                       if (file.size > 10 * 1024 * 1024) {
-                        toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                        toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                         return;
                       }
                       setQuizImage2Uploading(true);
@@ -2260,7 +2260,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         toast.success(isAr ? ' تم تحميل الصور الثاني بنجاح' : ' Image 2 loaded successfully');
                       } catch (err) {
                         console.error(err);
-                        toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
+                        toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
                       } finally {
                         setQuizImage2Uploading(false);
                         setQuizImage2Progress(0);
@@ -2297,7 +2297,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
               {/* Options — with add/delete */}
               <div className="qedit-field">
                 <label className="qedit-label">
-                  {isAr ? 'الخيارات — اتر الإجابة الصحيح' : 'Options — select the correct answer'}
+                  {isAr ? 'الخيارات — اختر الإجابة الصحيحة' : 'Options — select the correct answer'}
                 </label>
                 <div className="qedit-options-list">
                   {editForm.options.map((opt, idx) => (
@@ -2319,12 +2319,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                             checked={editForm.correctAnswer === opt.id}
                             onChange={() => setEditForm(prev => ({ ...prev, correctAnswer: opt.id }))}
                           />
-                          {isAr ? 'الإجابة الصحيح ' : 'Correct Answer '}
+                          {isAr ? 'الإجابة الصحيحة ' : 'Correct Answer '}
                         </label>
                         <button
                           className="qedit-opt-delete"
                           onClick={() => deleteOption(idx)}
-                          title={isAr ? 'حذف اليار' : 'Delete option'}
+                          title={isAr ? 'حذف الخيار' : 'Delete option'}
                         ></button>
                       </div>
                       {/* Arabic option text */}
@@ -2333,7 +2333,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                           className="qedit-opt-input"
                           value={opt.textAr || ''}
                           onChange={e => updateOption(idx, 'textAr', e.target.value)}
-                          placeholder={isAr ? 'نص اليار (عربي)' : 'Option text (AR)'}
+                          placeholder={isAr ? 'نص الخيار (عربي)' : 'Option text (AR)'}
                           dir="rtl"
                         />
                       )}
@@ -2370,7 +2370,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
                     if (file.size > 10 * 1024 * 1024) {
-                      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                       return;
                     }
                     setImageUploading(true);
@@ -2398,7 +2398,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       toast.success(isAr ? ' تم تحميل الصور بنجاح' : ' Image loaded successfully');
                     } catch (err) {
                       console.error(err);
-                      toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
+                      toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
                     } finally {
                       setImageUploading(false);
                       setImageUploadProgress(0);
@@ -2764,14 +2764,14 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                             fd.append('file', file);
                             fd.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'zkqqznab');
                             fd.append('folder', 'quiz_images');
-                            toast(isAr ? 'جاري رفع الصور...' : 'Uploading image...');
+                            toast(isAr ? 'جاري رفع الصورة...' : 'Uploading image...');
                             const res = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'yp11vyap'}/image/upload`, { method: 'POST', body: fd });
                             const data = await res.json();
                             if (data.secure_url) {
                               setQuestionForm(prev => ({ ...prev, image: data.secure_url }));
-                              toast.success(isAr ? ' تم لصق الصور!' : ' Image pasted!');
+                              toast.success(isAr ? ' تم لصق الصورة!' : ' Image pasted!');
                             } else {
-                              toast.error(isAr ? 'فشل رفع الصور' : 'Image upload failed');
+                              toast.error(isAr ? 'فشل رفع الصورة' : 'Image upload failed');
                             }
                             break;
                           }
@@ -2984,7 +2984,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     padding: '0.5rem 0.8rem',
                     marginTop: '0.3rem'
                   }}
-                  placeholder={isAr ? 'أدل الكود البرمجي هنا...' : 'Enter the source code here...'}
+                  placeholder={isAr ? 'أدخل الكود البرمجي هنا...' : 'Enter the source code here...'}
                 />
                 {/* Live preview when HTML tags present */}
                 {/[<]/.test(questionForm.questionEn) && (
@@ -3033,7 +3033,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                         </div>
                         {/* Correct answer for this sub-question */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', minWidth: '130px' }}>
-                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{isAr ? 'الإجابة الصحيح' : 'Correct answer'}</span>
+                          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>{isAr ? 'الإجابة الصحيحة' : 'Correct answer'}</span>
                           <select
                             value={sq.correctAnswer || ''}
                             onChange={e => {
@@ -3043,7 +3043,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                             }}
                             style={{ fontSize: '0.78rem', padding: '0.2rem 0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(0,0,0,0.35)', color: 'inherit', cursor: 'pointer' }}
                           >
-                            <option value="">{isAr ? '-- اتر --' : '-- pick --'}</option>
+                            <option value="">{isAr ? '-- اختر --' : '-- pick --'}</option>
                             {(questionForm.options || []).map(opt => (
                               <option key={opt.id} value={opt.id}>
                                 {(isAr ? (opt.textAr || opt.textEn) : (opt.textEn || opt.textAr)) || opt.id}
@@ -3110,7 +3110,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       ? ` ${isAr ? 'قائمة الإجابات المشترك (يتار الطالب منها لكل فراغ)' : 'Shared Answer Pool (student picks for each blank)'}`
                       : questionForm.type === 'multi_select'
                         ? ` ${isAr ? 'الخيارات — ضع على كل إجابة صحيح (يمكن أكثر من واحد)' : 'Options — check ALL correct answers (can be multiple)'}`
-                        : ` ${isAr ? 'الخيارات — حدد الإجابة الصحيح' : 'Options — select correct answer'}`
+                        : ` ${isAr ? 'الخيارات — حدد الإجابة الصحيحة' : 'Options — select correct answer'}`
                     }
                   </label>
                   <div className="qedit-options-list">
@@ -3166,7 +3166,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                                   const res = await translateText(opt.textEn, 'en2ar');
                                   if (res) { updateQuestionOption(idx, 'textAr', res); toast.success(isAr ? 'تمت الترجم!' : 'Translated!'); }
                                 } else {
-                                  toast.error(isAr ? 'اكتب نص اليار أولاً' : 'Type option text first');
+                                  toast.error(isAr ? 'اكتب نص الخيار أولاً' : 'Type option text first');
                                 }
                               }}
                             >
@@ -3182,7 +3182,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                           value={opt.textAr || ''}
                           onChange={e => updateQuestionOption(idx, 'textAr', e.target.value)}
                           onPaste={e => handlePasteInOption(e, idx)}
-                          placeholder={isAr ? 'نص اليار عربي (اختياري)' : 'Arabic option text (optional)'}
+                          placeholder={isAr ? 'نص الخيار عربي (اختياري)' : 'Arabic option text (optional)'}
                           dir="rtl"
                         />
                         <input
@@ -3315,7 +3315,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 </div>
               ) : questionForm.type === 'short_answer' ? (
                 <div className="qedit-field" style={{ background: 'rgba(16,185,129,0.06)', borderRadius: '10px', padding: '0.8rem', border: '1px solid rgba(16,185,129,0.2)' }}>
-                  <label className="qedit-label"> {isAr ? 'الإجابة الصحيح المقبول' : 'Correct Accepted Answer'}</label>
+                  <label className="qedit-label"> {isAr ? 'الإجابة الصحيحة المقبول' : 'Correct Accepted Answer'}</label>
                   <input
                     className="qedit-opt-input"
                     value={questionForm.correctAnswer || ''}
@@ -3347,7 +3347,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
                     if (file.size > 10 * 1024 * 1024) {
-                      toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                      toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                       return;
                     }
                     setQuizImageUploading(true);
@@ -3374,7 +3374,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                       toast.success(isAr ? ' تم تحميل الصور بنجاح' : ' Image loaded successfully');
                     } catch (err) {
                       console.error(err);
-                      toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
+                      toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
                     } finally {
                       setQuizImageUploading(false);
                       setQuizImageProgress(0);

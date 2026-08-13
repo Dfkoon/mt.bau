@@ -349,7 +349,7 @@ export const coursesData = {
         },
         {
             id: 'df_mobile',
-            name: 'تحقيقات الأجهز النقال',
+            name: 'تحقيقات الأجهزة النقالة',
             nameEn: 'Mobile Forensics',
             icon: '📱',
             files: {
@@ -898,7 +898,7 @@ export const coursesData = {
         },
         {
             id: 'vr_image_proc',
-            name: 'معالج الصور والرؤي الرقمي',
+            name: 'معالجة الصور والرؤية الرقمية',
             nameEn: 'Image Processing and Computer Vision',
             icon: '👁️',
             files: {
@@ -1488,7 +1488,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_image', 
-            name: 'معالجه الصور والرؤيه الرقميه', 
+            name: 'معالجة الصور والرؤية الرقمية', 
             nameEn: 'Image processing and digital vision', 
             icon: '👁️', 
             files: { 
@@ -1560,14 +1560,14 @@ export const coursesData = {
         { id: 'cga_pcg', name: 'مبادئ الرسم الحاسوبي', nameEn: 'Principles of CG', icon: '🖼️', files: { link: 'https://drive.google.com/drive/folders/17tSVOmXQzQuBVBvU_2iYfW8UJlqNDqiu' } },
         { id: 'cga_2dal', name: 'متبر الرسوم المتحرك ثنائي الابعاد', nameEn: '2D Animation Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1d8GjcQY8s6jNflWiAcczOauU_9Ur2MwK' } },
         { id: 'cga_fdl', name: 'متبر تصميم افلام', nameEn: 'Film Design Lab', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1cQ4czWvaCSi_yJUzDu-2DfHDEiCjX2ny' } },
-        { id: 'cga_ipdv', name: 'معالجـ الصور و الرؤي الرقمي', nameEn: 'Image Processing & Digital Vision', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/10ZGgs4J1iPPvCh4Xgh-h75JmBDnlJz--' } }
+        { id: 'cga_ipdv', name: 'معالجة الصور والرؤية الرقمية', nameEn: 'Image Processing & Digital Vision', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/10ZGgs4J1iPPvCh4Xgh-h75JmBDnlJz--' } }
     ],
 
     // Computer Graphics and Animation Elective Specialization
     it_cga_elective: [
         { id: 'cga_pc', name: 'الحوسب المتوازي للرسم الحاسوبي', nameEn: 'Parallel Computing for CG', icon: '⚡', files: { link: 'https://drive.google.com/drive/folders/1EIY1823LUhbF0ftVmAfBRM0wH3oVVlpa' } },
         { id: 'cga_gd', name: 'تصميم الالعاب', nameEn: 'Game Design', icon: '', files: { link: 'https://drive.google.com/drive/folders/1bnM4OgMpSC4hbQutU1JzVD8p9MmWmu0G' } },
-        { id: 'cga_ipdv_e', name: 'معالج الصور والرؤيا الرقمي', nameEn: 'Image Processing & Digital Vision (Elective)', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/1HejjPhYOIajU-WTOShtx6UCpHdSSnVVb' } },
+        { id: 'cga_ipdv_e', name: 'معالجة الصور والرؤية الرقمية', nameEn: 'Image Processing & Digital Vision (Elective)', icon: '👁️', files: { link: 'https://drive.google.com/drive/folders/1HejjPhYOIajU-WTOShtx6UCpHdSSnVVb' } },
         { id: 'cga_st', name: 'مواضيع اص في الرسم الحاسوبي', nameEn: 'Special Topics in CG', icon: '📚', files: { link: 'https://drive.google.com/drive/folders/1UtEZl5bdBZkZ9SGZIVBleXGTNOWqpcEw' } }
     ],
 

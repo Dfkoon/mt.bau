@@ -1659,7 +1659,7 @@ const Quiz = () => {
                                                                         <span style={{ margin: '0 10px' }}>➔</span>
                                                                         <span className={isSubCorrect ? 'moodle-correct-text' : 'moodle-wrong-text'} style={{ padding: '2px 8px', borderRadius: '4px', background: isSubCorrect ? 'rgba(40, 167, 69, 0.1)' : 'rgba(220, 53, 69, 0.1)', color: isSubCorrect ? '#28a745' : '#dc3545' }}>
                                                                             {userOptText}
-                                                                            {isSubCorrect ? ' ✔' : ` ❌ (${language === 'ar' ? 'الإجابة الصحيحة هي' : 'Correct is'}: ${correctOptText})`}
+                                                                            {isSubCorrect ? ' ✔' : ` ❌ (${language === 'ar' ? 'الإجابة الصحيحةة هي' : 'Correct is'}: ${correctOptText})`}
                                                                         </span>
                                                                     </div>
                                                                 );
@@ -2296,7 +2296,7 @@ const Quiz = () => {
                                                 />
                                                 {question.correctAnswer && showResults && (
                                                     <div style={{ color: '#495057', fontSize: '0.95rem' }}>
-                                                        <strong>{language === 'ar' ? 'الإجابة الصحيحة:' : 'Correct answer:'}</strong> {question.correctAnswer}
+                                                        <strong>{language === 'ar' ? 'الإجابة الصحيحةة:' : 'Correct answer:'}</strong> {question.correctAnswer}
                                                     </div>
                                                 )}
                                             </div>

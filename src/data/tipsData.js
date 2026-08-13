@@ -92,8 +92,8 @@ export const tipsData = {
         {
             id: 13,
             category: 'tech',
-            title: 'تعلم اتصارات لوح المفاتيح',
-            description: 'اتصارات الكيبورد توفر الكثير من الوقت. تعلم Ctrl+C, Ctrl+V, Ctrl+Z وغيرها.',
+            title: 'تعلم اختصارات لوح المفاتيح',
+            description: 'اختصارات الكيبورد توفر الكثير من الوقت. تعلم Ctrl+C, Ctrl+V, Ctrl+Z وغيرها.',
             emoji: '⌨️'
         },
         {

@@ -76,12 +76,12 @@ const SmartAdvisor = () => {
                     <div className="plan-type-grid">
                         <div className="plan-option-card" onClick={() => handlePlanTypeSelection('old')}>
                             <div className="plan-badge-icon">📜</div>
-                            <h5>{language === 'ar' ? 'الخطط الدراسي القديم' : 'Old Academic Plans'}</h5>
+                            <h5>{language === 'ar' ? 'الخطط الدراسية القديم' : 'Old Academic Plans'}</h5>
                             <p>{language === 'ar' ? 'تشمل الأجيال: 2003، 2004، 2005، 2006' : 'Generations: 2003, 2004, 2005, 2006'}</p>
                         </div>
                         <div className="plan-option-card">
                             <div className="plan-badge-icon">✨</div>
-                            <h5>{language === 'ar' ? 'الخطط الدراسي الجديد' : 'New Academic Plans'}</h5>
+                            <h5>{language === 'ar' ? 'الخطط الدراسية الجديد' : 'New Academic Plans'}</h5>
                             <p>{language === 'ar' ? 'تشمل جيل 2007 والأجيال القادم (2008، 2009...)' : 'Generation 2007 and beyond (2008, 2009...)'}</p>
                             <div className="under-construction-overlay">
                                 <span>{language === 'ar' ? 'قريباً... (جاري العمل عليها)' : 'Coming Soon... (Under Construction)'}</span>
@@ -94,7 +94,7 @@ const SmartAdvisor = () => {
             {step === 1 && (
                 <div className="advisor-step fade-in">
                     <button className="back-step-btn" onClick={() => setStep(0)}>←</button>
-                    <h4>{language === 'ar' ? 'اتر تخصصك' : 'Select your Major'}</h4>
+                    <h4>{language === 'ar' ? 'اختر تخصصك' : 'Select your Major'}</h4>
                     <div className="major-grid">
                         {majors.map(mId => (
                             <button

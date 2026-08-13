@@ -6,7 +6,7 @@ import './AdminAnalytics.css';
 
 const PATH_LABELS = {
   '/': 'الرئيسي',
-  '/materials': 'المواد الدراسية',
+  '/materials': 'الالمواد الدراسية',
   '/plans': 'الخطط الدراسي',
   '/quiz': 'بنك الأسئلة',
   '/calendar': 'التقويم الجامعي',
@@ -398,7 +398,7 @@ export default function AdminAnalytics() {
         {/* Card 2: Vibrant Deep Blue / Magenta */}
         <div className="anv-vcard anv-vcard-blue">
           <div className="anv-vc-header">
-            <span className="anv-vc-title">فتح المواد الدراسية</span>
+            <span className="anv-vc-title">فتح الالمواد الدراسية</span>
             <span className="anv-vc-icon">📂</span>
           </div>
           <div className="anv-vc-body">

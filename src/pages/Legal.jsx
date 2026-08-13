@@ -69,7 +69,7 @@ const Legal = () => {
                     <h2>{isAr ? '⚖️ إلاء المسؤولي' : '⚖️ Disclaimer'}</h2>
                     <p>
                         {isAr
-                            ? 'مشروع "مكانك الجامعي" هو مبادرة طلابي تطوعي غير رسمي، ولا يمثل جامعة البلقاء التطبيقي بشكل رسمي. جميع المعلومات الوارد هي اجتهادات شصي لمساعد الطلاب.'
+                            ? 'مشروع "مكانك الجامعي" هو مبادرة طلابي تطوعي غير رسمي، ولا يمثل جامعة البلقاء التطبيقية بشكل رسمي. جميع المعلومات الوارد هي اجتهادات شصي لمساعد الطلاب.'
                             : '"Makanak Al-Jami\'i" project is an unofficial voluntary student initiative and does not officially represent Al-Balqa Applied University. All information provided consists of personal efforts to help students.'}
                     </p>
                 </section>

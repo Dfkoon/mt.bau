@@ -110,7 +110,7 @@ const InstallPWAButton = ({ isAr = true }) => {
                             📲
                         </span>
                         <span style={{ color: '#ffffff', fontWeight: '700' }}>
-                            {isAr ? 'التثبيت وإنشاء اتصار' : 'Install & Add Shortcut'}
+                            {isAr ? 'التثبيت وإنشاء اختصار' : 'Install & Add Shortcut'}
                         </span>
                     </button>
 
@@ -191,7 +191,7 @@ const InstallPWAButton = ({ isAr = true }) => {
                                     📲
                                 </span>
                                 <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#ffffff', fontWeight: 800 }}>
-                                    {isAr ? 'التثبيت وإنشاء اتصار للتطبيق' : 'Install & Add Shortcut'}
+                                    {isAr ? 'التثبيت وإنشاء اختصار للتطبيق' : 'Install & Add Shortcut'}
                                 </h3>
                             </div>
                             <button
@@ -227,7 +227,7 @@ const InstallPWAButton = ({ isAr = true }) => {
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
-                                        <span>{isAr ? 'اتر "إضاف إلى الشاش الرئيسي"' : 'Select "Add to Home Screen"'} <strong style={{ color: '#fbbf24' }}>(➕)</strong></span>
+                                        <span>{isAr ? 'اختر "إضاف إلى الشاش الرئيسي"' : 'Select "Add to Home Screen"'} <strong style={{ color: '#fbbf24' }}>(➕)</strong></span>
                                     </div>
                                 </div>
                             </div>
@@ -243,7 +243,7 @@ const InstallPWAButton = ({ isAr = true }) => {
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>
-                                        <span>{isAr ? 'اتر اليار:' : 'Choose:'} <strong style={{ color: '#4ade80' }}>"التثبيت وإنشاء اتصار" 📲</strong></span>
+                                        <span>{isAr ? 'اختر الخيار:' : 'Choose:'} <strong style={{ color: '#4ade80' }}>"التثبيت وإنشاء اختصار" 📲</strong></span>
                                     </div>
                                 </div>
                             </div>

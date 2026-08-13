@@ -55,7 +55,7 @@ export const plansData = {
                     courses: [
                         { id: 'data_recovery', name: 'استعاد البيانات + متبر', nameEn: 'Data Recovery + Lab', credits: 4, prereq: 'os_forensics' },
                         { id: 'db_forensics', name: 'التحقيقات الجنائي لقواعد البيانات', nameEn: 'Database Forensics', credits: 3, prereq: 'db_design' },
-                        { id: 'mobile_forensics', name: 'تحقيقات الأجهز النقال', nameEn: 'Mobile Forensics', credits: 3, prereq: 'net_forensics' },
+                        { id: 'mobile_forensics', name: 'تحقيقات الأجهزة النقالة', nameEn: 'Mobile Forensics', credits: 3, prereq: 'net_forensics' },
                         { id: 'privacy', name: 'صوصي وحماي بيانات', nameEn: 'Data Privacy', credits: 3, prereq: 'sec_intro' },
                         { id: 'justice', name: 'التحقيقات الجنائي الرقمي والعدال الجنائي', nameEn: 'DF & Criminal Justice', credits: 3 }
                     ]

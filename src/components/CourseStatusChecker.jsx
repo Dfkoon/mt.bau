@@ -138,7 +138,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                 {booking.approvedAt && (
                     <div className="detail-item">
-                        <span className="label">✔️ {isAr ? 'تاري الموافق' : 'Approval Date'}</span>
+                        <span className="label">✔️ {isAr ? 'تاريخ الموافقة' : 'Approval Date'}</span>
                         <span className="value">
                             {booking.approvedAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                         </span>
@@ -210,7 +210,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                     {donation.approvedAt && (
                         <div className="detail-item">
-                            <span className="label">✔️ {isAr ? 'تاري الموافق' : 'Approval Date'}</span>
+                            <span className="label">✔️ {isAr ? 'تاريخ الموافقة' : 'Approval Date'}</span>
                             <span className="value">
                                 {donation.approvedAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                             </span>
@@ -249,7 +249,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
                     <h2>📊 {isAr ? 'فحص حال المقررات' : 'Course Status Checker'}</h2>
                     <p>
                         {isAr
-                            ? 'تحقق من حال الموافق على مقرراتك المحجوز والمتبرع بها'
+                            ? 'تحقق من حالة الموافقة على مقرراتك المحجوزة والمتبرع بها'
                             : 'Check the approval status of your booked and donated courses'}
                     </p>
                 </div>

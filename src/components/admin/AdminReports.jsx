@@ -262,7 +262,7 @@ const AdminReports = () => {
                                                 className="admin-input-field option-input"
                                                 value={opt.textAr || ''}
                                                 onChange={e => updateOption(idx, 'textAr', e.target.value)}
-                                                placeholder={isAr ? 'اليار بالعربي' : 'Option (AR)'}
+                                                placeholder={isAr ? 'الخيار بالعربي' : 'Option (AR)'}
                                             />
                                             <input
                                                 type="text"
@@ -293,7 +293,7 @@ const AdminReports = () => {
                                         const file = e.target.files?.[0];
                                         if (!file) return;
                                         if (file.size > 10 * 1024 * 1024) {
-                                            toast.error(isAr ? 'حجم الصور يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
+                                            toast.error(isAr ? 'حجم الصورة يجب أن يكون أقل من 10 ميجا بايت' : 'Image must be under 10MB');
                                             return;
                                         }
                                         setImageUploading(true);
@@ -319,7 +319,7 @@ const AdminReports = () => {
                                             setEditForm(prev => ({ ...prev, image: compressed }));
                                         } catch (err) {
                                             console.error(err);
-                                            toast.error(isAr ? 'خطأ في معالجة الصور' : 'Image processing error');
+                                            toast.error(isAr ? 'خطأ في معالجة الصورة' : 'Image processing error');
                                         } finally {
                                             setImageUploading(false);
                                             setImageUploadProgress(0);

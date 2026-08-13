@@ -61,7 +61,7 @@ const AdminFeedback = () => {
     };
 
     const deleteSuggestion = async (id) => {
-        if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسال؟' : 'Delete this message?')) return;
+        if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسالة؟' : 'Delete this message?')) return;
         try { 
             await deleteDoc(doc(db, 'suggestions', id)); 
             toast.success(isAr ? 'تم الحذف' : 'Deleted'); 
@@ -189,7 +189,7 @@ const AdminFeedback = () => {
                                         </button>
                                     )}
                                     <button className="admin-action-btn delete" onClick={() => deleteSuggestion(s.id)}>
-                                        {isAr ? 'حذف الرسال' : 'Delete'}
+                                        {isAr ? 'حذف الرسالة' : 'Delete'}
                                     </button>
                                 </div>
                             </div>

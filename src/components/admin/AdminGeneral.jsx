@@ -109,7 +109,7 @@ const AdminGeneral = () => {
 
             toast.success(
                 isAr
-                    ? 'تمت الموافق! سيظهر الباركود الجديد عند دول المشرف في المرة القادمة.'
+                    ? 'تمت الموافق! سيظهر الباركود الجديد عند دخول المشرف في المرة القادمة.'
                     : 'Approved! The new QR code will appear on next admin login.'
             );
         } catch (err) {
@@ -290,7 +290,7 @@ const AdminGeneral = () => {
                             className="admin-textarea-field"
                             value={settings.exchangeSuspendedMessageAr}
                             onChange={(e) => setSettings({ ...settings, exchangeSuspendedMessageAr: e.target.value })}
-                            placeholder="تظهر هذه الرسالة عند إيقاف الحملة للطلاب..."
+                            placeholder="تظهر هذه الرسالةة عند إيقاف الحملة للطلاب..."
                         />
                         <button 
                             className="admin-action-btn approve"
@@ -298,7 +298,7 @@ const AdminGeneral = () => {
                             onClick={() => handleSave({ exchangeSuspendedMessageAr: settings.exchangeSuspendedMessageAr })}
                             disabled={saving}
                         >
-                            {isAr ? 'حفظ الرسالة بالعربية' : 'Save Message'}
+                            {isAr ? 'حفظ الرسالةة بالعربية' : 'Save Message'}
                         </button>
                     </div>
 
@@ -318,7 +318,7 @@ const AdminGeneral = () => {
                             onClick={() => handleSave({ exchangeSuspendedMessageEn: settings.exchangeSuspendedMessageEn })}
                             disabled={saving}
                         >
-                            {isAr ? 'حفظ الرسالة بالإنجليزية' : 'Save Message'}
+                            {isAr ? 'حفظ الرسالةة بالإنجليزية' : 'Save Message'}
                         </button>
                     </div>
                 </div>

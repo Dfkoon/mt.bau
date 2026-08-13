@@ -463,7 +463,7 @@ const StudyMaterials = () => {
                     <h3>{language === 'ar' ? 'ملاحظ هام' : 'Important Note'}</h3>
                     <p>
                         {language === 'ar'
-                            ? 'إذا كنت تبحث عن الخطط الدراسي الشجري المعتمد (2025)، يمكنك العثور عليها في صفح الخطط الدراسي.'
+                            ? 'إذا كنت تبحث عن الخطط الدراسية الشجري المعتمد (2025)، يمكنك العثور عليها في صفح الخطط الدراسي.'
                             : 'If you are looking for the approved academic tree plans (2025), you can find them in the Academic Plans page.'}
                     </p>
                     <Link to="/plans" className="btn-primary" style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none' }}>
