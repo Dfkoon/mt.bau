@@ -3,423 +3,314 @@ import { useLanguage } from '../contexts/LanguageContext';
 import toast from 'react-hot-toast';
 import './ScheduleBuilder.css';
 
-// 100% Authentic BAU Official Course Catalog Data for Computer Science (قسم علم الحاسوب - كلية الأمير عبد الله بن غازي)
-const REAL_BAU_CS_COURSES = [
-    // 1. البرمجة ومبادئ الحوسبة (Programming & Core CS)
-    {
-        id: 'c1',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'البرمجة بلغة C++',
-        nameEn: 'C++ Programming',
-        code: 'L70301141',
-        credits: 2,
-        sections: [
-            { id: 's1', secNum: '1', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:00', startTime: 10.0, endTime: 11.0, instructor: 'د. محمد ريالات', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 28 },
-            { id: 's2', secNum: '2', days: 'SunTue', daysAr: 'ح ث (أحد/ثلاثاء)', daysEn: 'Sun / Tue', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. محمد ريالات', room: 'مختبر حاسوب (100)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 30 }
-        ]
-    },
-    {
-        id: 'c2',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'مختبر البرمجة بلغة C++',
-        nameEn: 'C++ Programming Lab',
-        code: 'L70301143',
-        credits: 1,
-        sections: [
-            { id: 's1', secNum: '1', days: 'Thu', daysAr: 'خ (خميس)', daysEn: 'Thu', timeStr: '08:30 - 10:30', startTime: 8.5, endTime: 10.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب(100)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 20 },
-            { id: 's2', secNum: '2', days: 'Wed', daysAr: 'ر (أربعاء)', daysEn: 'Wed', timeStr: '13:00 - 14:00', startTime: 13.0, endTime: 14.0, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 22 },
-            { id: 's3', secNum: '3', days: 'Thu', daysAr: 'خ (خميس)', daysEn: 'Thu', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 24 },
-            { id: 's4', secNum: '4', days: 'Thu', daysAr: 'خ (خميس)', daysEn: 'Thu', timeStr: '12:30 - 13:30', startTime: 12.5, endTime: 13.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب (501)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 21 },
-            { id: 's5', secNum: '5', days: 'Mon', daysAr: 'ن (إثنين)', daysEn: 'Mon', timeStr: '13:00 - 14:00', startTime: 13.0, endTime: 14.0, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 19 }
-        ]
-    },
-    {
-        id: 'c3',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'البرمجة الموجهة للكائنات (OOP)',
-        nameEn: 'Object Oriented Programming',
-        code: 'L70301241',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'زينب الرخامنه', room: 'تكنولوجيا 402', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 35 },
-            { id: 's2', secNum: '3', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '08:30 - 10:00', startTime: 8.5, endTime: 10.0, instructor: 'اصلاح غرايبه', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 38 }
-        ]
-    },
-    {
-        id: 'c4',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'مختبر البرمجة الموجهة للكائنات',
-        nameEn: 'OOP Lab',
-        code: 'L70301243',
-        credits: 1,
-        sections: [
-            { id: 's1', secNum: '1', days: 'Thu', daysAr: 'خ (خميس)', daysEn: 'Thu', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب(100)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 22 },
-            { id: 's2', secNum: '2', days: 'Thu', daysAr: 'خ (خميس)', daysEn: 'Thu', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (304)', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 24 },
-            { id: 's3', secNum: '3', days: 'Sun', daysAr: 'ح (أحد)', daysEn: 'Sun', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (302)', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 20 },
-            { id: 's4', secNum: '4', days: 'Mon', daysAr: 'ن (إثنين)', daysEn: 'Mon', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 23 },
-            { id: 's5', secNum: '5', days: 'Wed', daysAr: 'ر (أربعاء)', daysEn: 'Wed', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 21 }
-        ]
-    },
-    {
-        id: 'c5',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'البرمجة المتقدمة بلغة جافا',
-        nameEn: 'Advanced Java Programming',
-        code: 'L70302242',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. بيان السعايدة', room: 'تكنولوجيا 405', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 36 },
-            { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '13:00 - 14:30', startTime: 13.0, endTime: 14.5, instructor: 'د. بيان السعايدة', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 32 }
-        ]
-    },
-    {
-        id: 'c6',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'البرمجة المرئية للأجهزة الذكية',
-        nameEn: 'Visual Mobile Programming',
-        code: '30801300',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'روان عابدين', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 31 },
-            { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '13:00 - 14:30', startTime: 13.0, endTime: 14.5, instructor: 'روان عابدين', room: 'تكنولوجيا 406', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 29 }
-        ]
-    },
-    {
-        id: 'c7',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'تصميم وبرمجة الويب',
-        nameEn: 'Web Design & Programming',
-        code: 'L70310246',
-        credits: 2,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTue', daysAr: 'ح ث (أحد/ثلاثاء)', daysEn: 'Sun / Tue', timeStr: '08:30 - 09:30', startTime: 8.5, endTime: 9.5, instructor: 'اسماء ختوم', room: 'تكنولوجيا 406', mode: 'وجاهي', status: 'مغلقة', capacity: 30, enrolled: 30 },
-            { id: 's2', secNum: '2', days: 'SunTue', daysAr: 'ح ث (أحد/ثلاثاء)', daysEn: 'Sun / Tue', timeStr: '08:30 - 09:30', startTime: 8.5, endTime: 9.5, instructor: 'اسماء ختوم', room: 'تكنولوجيا 406', mode: 'وجاهي', status: 'متاحة', capacity: 30, enrolled: 26 },
-            { id: 's3', secNum: '3', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:00', startTime: 10.0, endTime: 11.0, instructor: 'روان عابدين', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة', capacity: 30, enrolled: 27 }
-        ]
-    },
-    {
-        id: 'c8',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'تصميم وتحليل الخوارزميات',
-        nameEn: 'Design & Analysis of Algorithms',
-        code: '30801215',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '11:30 - 12:30', startTime: 11.5, endTime: 12.5, instructor: 'أ.د. مالك بريك', room: 'online 591 / تكنولوجيا 102', mode: 'مدمج', status: 'متاحة', capacity: 45, enrolled: 41 }
-        ]
-    },
-    {
-        id: 'c9',
-        category: 'prog_core',
-        categoryAr: 'البرمجة ومبادئ الحوسبة',
-        categoryEn: 'Programming & Core CS',
-        nameAr: 'هياكل البيانات والخوارزميات',
-        nameEn: 'Data Structures & Algorithms',
-        code: 'L70302234',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'اصلاح غرايبه', room: 'مختبر حاسوب - علوم (302)', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 32 },
-            { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '11:30 - 13:00', startTime: 11.5, endTime: 13.0, instructor: 'اسماء ختوم', room: 'مختبر حاسوب(100)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 30 }
-        ]
-    },
+// 100% Authentic BAU Official Registration Catalog Data for Prince Abdullah Bin Ghazi Faculty of IT
+// Departments: CS (علم الحاسوب), CIS (نظم المعلومات الحاسوبية), SE (هندسة البرمجيات)
 
-    // 2. نظم المعلومات وقواعد البيانات (Information Systems & Databases)
-    {
-        id: 'c10',
-        category: 'db_systems',
-        categoryAr: 'نظم المعلومات وقواعد البيانات',
-        categoryEn: 'Databases & Systems',
-        nameAr: 'نظم قواعد البيانات',
-        nameEn: 'Database Systems',
-        code: 'L70302262',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '13:30 - 14:30', startTime: 13.5, endTime: 14.5, instructor: 'هـ.ت', room: 'مختبر حاسوب - علوم (302)', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 36 },
-            { id: 's2', secNum: '3', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:30', startTime: 10.0, endTime: 11.3, instructor: 'د. خالد الخرابشه', room: 'مختبر حاسوب(100)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 34 }
-        ]
-    },
-    {
-        id: 'c11',
-        category: 'db_systems',
-        categoryAr: 'نظم المعلومات وقواعد البيانات',
-        categoryEn: 'Databases & Systems',
-        nameAr: 'مختبر نظم قواعد البيانات',
-        nameEn: 'Database Systems Lab',
-        code: 'L70302264',
-        credits: 1,
-        sections: [
-            { id: 's1', secNum: '1', days: 'Mon', daysAr: 'ن (إثنين)', daysEn: 'Mon', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. مجدي بسيسو', room: 'مختبر حاسوب(100)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 22 },
-            { id: 's2', secNum: '2', days: 'Tue', daysAr: 'ث (ثلاثاء)', daysEn: 'Tue', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. مجدي بسيسو', room: 'مختبر حاسوب - علوم (304)', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 20 },
-            { id: 's3', secNum: '3', days: 'Wed', daysAr: 'ر (أربعاء)', daysEn: 'Wed', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. مجدي بسيسو', room: 'مختبر حاسوب (501)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 23 },
-            { id: 's4', secNum: '4', days: 'Thu', daysAr: 'خ (خميس)', daysEn: 'Thu', timeStr: '14:30 - 17:30', startTime: 14.5, endTime: 17.5, instructor: 'د. مجدي بسيسو', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 24 }
-        ]
-    },
-    {
-        id: 'c12',
-        category: 'db_systems',
-        categoryAr: 'نظم المعلومات وقواعد البيانات',
-        categoryEn: 'Databases & Systems',
-        nameAr: 'تحليل وتصميم النظم',
-        nameEn: 'Systems Analysis & Design',
-        code: '30801342',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '11:30 - 12:30', startTime: 11.5, endTime: 12.5, instructor: 'زينب الرخامنه', room: 'online 591 / تكنولوجيا 302', mode: 'مدمج', status: 'متاحة', capacity: 45, enrolled: 42 },
-            { id: 's2', secNum: '3', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:30', startTime: 10.0, endTime: 11.3, instructor: 'زينب الرخامنه', room: 'online 591 / مختبر حاسوب(101)-علوم', mode: 'مدمج', status: 'متاحة', capacity: 45, enrolled: 40 }
-        ]
-    },
-    {
-        id: 'c13',
-        category: 'db_systems',
-        categoryAr: 'نظم المعلومات وقواعد البيانات',
-        categoryEn: 'Databases & Systems',
-        nameAr: 'الحوسبة السحابية',
-        nameEn: 'Cloud Computing',
-        code: '30801361',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '12:30 - 13:30', startTime: 12.5, endTime: 13.5, instructor: 'اسماء ختوم', room: 'تقني 2', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 35 }
-        ]
-    },
+const AUTHENTIC_BAU_CATALOG = {
+    // ----------------------------------------------------
+    // 1. قسم علم الحاسوب (Computer Science - CS)
+    // ----------------------------------------------------
+    cs: [
+        {
+            id: 'cs1',
+            category: 'prog_core',
+            categoryAr: 'البرمجة ومبادئ الحوسبة',
+            nameAr: 'البرمجة بلغة C++',
+            nameEn: 'C++ Programming',
+            code: 'L70301141',
+            credits: 2,
+            sections: [
+                { id: 's1', secNum: '1', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '10:00 - 11:00', startTime: 10.0, endTime: 11.0, instructor: 'د. محمد ريالات', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '2', days: 'SunTue', daysAr: 'ح ث (أحد/ثلاثاء)', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. محمد ريالات', room: 'مختبر حاسوب (100)-علوم', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cs2',
+            category: 'prog_core',
+            categoryAr: 'البرمجة ومبادئ الحوسبة',
+            nameAr: 'مختبر البرمجة بلغة C++',
+            nameEn: 'C++ Lab',
+            code: 'L70301143',
+            credits: 1,
+            sections: [
+                { id: 's1', secNum: '1', days: 'Thu', daysAr: 'خ (خميس)', timeStr: '08:30 - 10:30', startTime: 8.5, endTime: 10.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب(100)-علوم', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '2', days: 'Wed', daysAr: 'ر (أربعاء)', timeStr: '13:00 - 14:00', startTime: 13.0, endTime: 14.0, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's3', secNum: '3', days: 'Thu', daysAr: 'خ (خميس)', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. محمد الحجوج البطوش', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cs3',
+            category: 'prog_core',
+            categoryAr: 'البرمجة ومبادئ الحوسبة',
+            nameAr: 'البرمجة الموجهة للكائنات (OOP)',
+            nameEn: 'Object Oriented Programming',
+            code: 'L70301241',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'زينب الرخامنه', room: 'تكنولوجيا 402', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '3', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '08:30 - 10:00', startTime: 8.5, endTime: 10.0, instructor: 'اصلاح غرايبه', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cs4',
+            category: 'prog_core',
+            categoryAr: 'البرمجة ومبادئ الحوسبة',
+            nameAr: 'البرمجة المتقدمة بلغة جافا',
+            nameEn: 'Advanced Java',
+            code: 'L70302242',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. بيان السعايدة', room: 'تكنولوجيا 405', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '13:00 - 14:30', startTime: 13.0, endTime: 14.5, instructor: 'د. بيان السعايدة', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cs5',
+            category: 'prog_core',
+            categoryAr: 'البرمجة ومبادئ الحوسبة',
+            nameAr: 'تصميم وتحليل الخوارزميات',
+            nameEn: 'Algorithms Design',
+            code: '30801215',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '11:30 - 12:30', startTime: 11.5, endTime: 12.5, instructor: 'أ.د. مالك بريك', room: 'online 591 / تكنولوجيا 102', mode: 'مدمج', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cs6',
+            category: 'networks_sec',
+            categoryAr: 'الشبكات وأنظمة التشغيل',
+            nameAr: 'شبكات الحاسوب',
+            nameEn: 'Computer Networks',
+            code: 'L70310351',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '13:00 - 14:30', startTime: 13.0, endTime: 14.5, instructor: 'د. عدنان الربيع', room: 'مختبر حاسوب(101)-علوم', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '2', days: 'SunTue', daysAr: 'ح ث (أحد/ثلاثاء)', timeStr: '12:30 - 13:30', startTime: 12.5, endTime: 13.5, instructor: 'د. عدنان الربيع', room: 'تكنولوجيا 301', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cs7',
+            category: 'ai_graphics',
+            categoryAr: 'الذكاء الاصطناعي',
+            nameAr: 'الذكاء الاصطناعي',
+            nameEn: 'Artificial Intelligence',
+            code: '30801350',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. محمد ريالات', room: 'online 591 / تكنولوجيا 302', mode: 'مدمج', status: 'متاحة' }
+            ]
+        }
+    ],
 
-    // 3. الشبكات وأنظمة التشغيل والأمن (Networks, OS & Security)
-    {
-        id: 'c14',
-        category: 'networks_sec',
-        categoryAr: 'الشبكات وأنظمة التشغيل والأمن',
-        categoryEn: 'Networks, OS & Security',
-        nameAr: 'شبكات الحاسوب',
-        nameEn: 'Computer Networks',
-        code: 'L70310351',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '13:00 - 14:30', startTime: 13.0, endTime: 14.5, instructor: 'د. عدنان الربيع', room: 'مختبر حاسوب(101)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 31 },
-            { id: 's2', secNum: '2', days: 'SunTue', daysAr: 'ح ث (أحد/ثلاثاء)', daysEn: 'Sun / Tue', timeStr: '12:30 - 13:30', startTime: 12.5, endTime: 13.5, instructor: 'د. عدنان الربيع', room: 'تكنولوجيا 301', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 33 }
-        ]
-    },
-    {
-        id: 'c15',
-        category: 'networks_sec',
-        categoryAr: 'الشبكات وأنظمة التشغيل والأمن',
-        categoryEn: 'Networks, OS & Security',
-        nameAr: 'مبادئ شبكات الحاسوب',
-        nameEn: 'Principles of Computer Networks',
-        code: '30801230',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '11:30 - 12:30', startTime: 11.5, endTime: 12.5, instructor: 'أ.د. خلف ختاتنه', room: 'مختبر الشبكات والاتصالات 300', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 37 }
-        ]
-    },
-    {
-        id: 'c16',
-        category: 'networks_sec',
-        categoryAr: 'الشبكات وأنظمة التشغيل والأمن',
-        categoryEn: 'Networks, OS & Security',
-        nameAr: 'أمن الحاسوب والشبكات',
-        nameEn: 'Computer & Network Security',
-        code: '30801432',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '12:30 - 13:30', startTime: 12.5, endTime: 13.5, instructor: 'سامر عبد الله', room: 'مختبر حاسوب (503)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 33 }
-        ]
-    },
-    {
-        id: 'c17',
-        category: 'networks_sec',
-        categoryAr: 'الشبكات وأنظمة التشغيل والأمن',
-        categoryEn: 'Networks, OS & Security',
-        nameAr: 'مبادئ نظم التشغيل',
-        nameEn: 'Principles of Operating Systems',
-        code: '30801426',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. نبيل العلي', room: 'تكنولوجيا 406 / online 591', mode: 'مدمج', status: 'متاحة', capacity: 40, enrolled: 37 },
-            { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:30', startTime: 10.0, endTime: 11.3, instructor: 'د. نبيل العلي', room: 'تكنولوجيا 401 / online 591', mode: 'مدمج', status: 'متاحة', capacity: 40, enrolled: 36 }
-        ]
-    },
-    {
-        id: 'c18',
-        category: 'networks_sec',
-        categoryAr: 'الشبكات وأنظمة التشغيل والأمن',
-        categoryEn: 'Networks, OS & Security',
-        nameAr: 'معمارية الحاسوب',
-        nameEn: 'Computer Architecture',
-        code: '30801427',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '11:30 - 12:30', startTime: 11.5, endTime: 12.5, instructor: 'سامر عبد الله', room: 'تكنولوجيا 402 / online 591', mode: 'مدمج', status: 'متاحة', capacity: 45, enrolled: 42 }
-        ]
-    },
+    // ----------------------------------------------------
+    // 2. قسم نظم المعلومات الحاسوبية (CIS)
+    // ----------------------------------------------------
+    cis: [
+        {
+            id: 'cis1',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'ادارة شبكات الحاسوب',
+            nameEn: 'Computer Network Management',
+            code: '30802430',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'سامر عبدالله', room: 'مختبر حاسوب(101)-علوم', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cis2',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'ادارة نظم قواعد البيانات',
+            nameEn: 'Database Systems Admin',
+            code: '30802323',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '13:30 - 14:30', startTime: 13.5, endTime: 14.5, instructor: 'د. نبيل العلي', room: 'تكنولوجيا 301 / online 591', mode: 'مدمج', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cis3',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'التنقيب عن البيانات',
+            nameEn: 'Data Mining',
+            code: '30802428',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '11:30 - 12:30', startTime: 11.5, endTime: 12.5, instructor: 'أ.د. بلال زهران', room: 'مختبر حاسوب(101)-علوم', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cis4',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'انظمة المعلومات الجغرافية (GIS)',
+            nameEn: 'Geographic Info Systems',
+            code: '30802441',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '08:30 - 09:30', startTime: 8.5, endTime: 9.5, instructor: 'هبه الحياري', room: 'مختبر حاسوب - علوم (303) / online 591', mode: 'مدمج', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cis5',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'تطبيقات وخدمات الويب',
+            nameEn: 'Web Applications & Services',
+            code: '30802300',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'وفاء الضبايات', room: 'online 591 / مختبر الشبكات والاتصالات 300', mode: 'مدمج', status: 'متاحة' },
+                { id: 's2', secNum: '3', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '11:30 - 13:00', startTime: 11.5, endTime: 13.0, instructor: 'وفاء الضبايات', room: 'online 591 / تكنولوجيا 301', mode: 'مدمج', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cis6',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'مستودعات البيانات',
+            nameEn: 'Data Warehousing',
+            code: '30802326',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'رائد خليل', room: 'مختبر حاسوب (502)-علوم', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cis7',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'نظم استرجاع المعلومات',
+            nameEn: 'Information Retrieval Systems',
+            code: '30802322',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '12:30 - 13:30', startTime: 12.5, endTime: 13.5, instructor: 'أ.د. بلال زهران', room: 'online 591 / مختبر حاسوب(100)-علوم', mode: 'مدمج', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'cis8',
+            category: 'cis_core',
+            categoryAr: 'إدارة النظم والمعلومات',
+            nameAr: 'التدريب الميداني لطلبة نظم المعلومات',
+            nameEn: 'Field Training (CIS)',
+            code: '30802471',
+            credits: 6,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '08:00 - 15:00', startTime: 8.0, endTime: 15.0, instructor: 'هـ.ت', room: 'تدريب ميداني', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '08:30 - 17:30', startTime: 8.5, endTime: 17.5, instructor: 'هـ.ت', room: 'تدريب ميداني', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        }
+    ],
 
-    // 4. الذكاء الاصطناعي والرسم الحاسوبي (AI, Graphics & Gaming)
-    {
-        id: 'c19',
-        category: 'ai_graphics',
-        categoryAr: 'الذكاء الاصطناعي والرسم الحاسوبي',
-        categoryEn: 'AI & Graphics',
-        nameAr: 'الذكاء الاصطناعي',
-        nameEn: 'Artificial Intelligence',
-        code: '30801350',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. محمد ريالات', room: 'online 591 / تكنولوجيا 302', mode: 'مدمج', status: 'متاحة', capacity: 40, enrolled: 38 }
-        ]
-    },
-    {
-        id: 'c20',
-        category: 'ai_graphics',
-        categoryAr: 'الذكاء الاصطناعي والرسم الحاسوبي',
-        categoryEn: 'AI & Graphics',
-        nameAr: 'مقدمة في الرسم الحاسوبي',
-        nameEn: 'Intro to Computer Graphics',
-        code: 'L70309241',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:30', startTime: 10.0, endTime: 11.3, instructor: 'د. زيد اللامي', room: 'مختبر حاسوب - علوم (302)', mode: 'وجاهي', status: 'متاحة', capacity: 30, enrolled: 26 },
-            { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:30', startTime: 10.0, endTime: 11.3, instructor: 'د. مصعب القضاه', room: 'مختبر حاسوب (501) - علوم', mode: 'وجاهي', status: 'متاحة', capacity: 30, enrolled: 28 }
-        ]
-    },
-    {
-        id: 'c21',
-        category: 'ai_graphics',
-        categoryAr: 'الذكاء الاصطناعي والرسم الحاسوبي',
-        categoryEn: 'AI & Graphics',
-        nameAr: 'برمجة الألعاب',
-        nameEn: 'Game Programming',
-        code: '30807351',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '08:30 - 09:30', startTime: 8.5, endTime: 9.5, instructor: 'د. طارق الزعبي', room: 'مختبر حاسوب (502)-علوم / online 591', mode: 'مدمج', status: 'متاحة', capacity: 35, enrolled: 32 }
-        ]
-    },
-    {
-        id: 'c22',
-        category: 'ai_graphics',
-        categoryAr: 'الذكاء الاصطناعي والرسم الحاسوبي',
-        categoryEn: 'AI & Graphics',
-        nameAr: 'معالجة الصور والرؤيا الرقمية',
-        nameEn: 'Image Processing & Computer Vision',
-        code: '30801455',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. بيان السعايدة', room: 'مختبر حاسوب - علوم (303) / online 591', mode: 'مدمج', status: 'متاحة', capacity: 35, enrolled: 31 }
-        ]
-    },
-
-    // 5. الرياضيات والتحليل العددي (Math & Numerical Analysis)
-    {
-        id: 'c23',
-        category: 'math_analysis',
-        categoryAr: 'الرياضيات والتحليل العددي',
-        categoryEn: 'Math & Numerical Analysis',
-        nameAr: 'التحليل العددي للحوسبة',
-        nameEn: 'Numerical Analysis for Computing',
-        code: 'L70301231',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. ذيب البشيش', room: 'تكنولوجيا 102', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 35 },
-            { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:30', startTime: 10.0, endTime: 11.3, instructor: 'اسماء ختوم', room: 'تكنولوجيا 102', mode: 'وجاهي', status: 'متاحة', capacity: 40, enrolled: 37 }
-        ]
-    },
-    {
-        id: 'c24',
-        category: 'math_analysis',
-        categoryAr: 'الرياضيات والتحليل العددي',
-        categoryEn: 'Math & Numerical Analysis',
-        nameAr: 'الرياضيات لطلبة تكنولوجيا المعلومات',
-        nameEn: 'Mathematics for IT',
-        code: 'L70310181',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '10:00 - 11:30', startTime: 10.0, endTime: 11.3, instructor: 'د. حسن الرفايده', room: 'تكنولوجيا 405', mode: 'وجاهي', status: 'متاحة', capacity: 45, enrolled: 41 },
-            { id: 's2', secNum: '3', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. حسن الرفايده', room: 'تكنولوجيا 102', mode: 'وجاهي', status: 'متاحة', capacity: 45, enrolled: 43 }
-        ]
-    },
-    {
-        id: 'c25',
-        category: 'math_analysis',
-        categoryAr: 'الرياضيات والتحليل العددي',
-        categoryEn: 'Math & Numerical Analysis',
-        nameAr: 'النظرية الاحتسابية والأتمتة',
-        nameEn: 'Theory of Computation & Automata',
-        code: '30801316',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. نبيل العلي', room: 'مختبر حاسوب (501)-علوم', mode: 'وجاهي', status: 'متاحة', capacity: 35, enrolled: 32 }
-        ]
-    },
-
-    // 6. التدريب والمشاريع والمهارات (Training, Projects & Computer Skills)
-    {
-        id: 'c26',
-        category: 'projects_training',
-        categoryAr: 'التدريب والمشاريع والمهارات',
-        categoryEn: 'Projects, Training & Skills',
-        nameAr: 'التدريب الميداني لطلبة علم الحاسوب',
-        nameEn: 'Field Training for CS',
-        code: '30801474',
-        credits: 6,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', daysEn: 'Sun / Tue / Thu', timeStr: '08:00 - 15:00', startTime: 8.0, endTime: 15.0, instructor: 'د. اسامه الضرغام', room: 'تدريب ميداني', mode: 'وجاهي', status: 'متاحة', capacity: 50, enrolled: 42 },
-            { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '08:30 - 17:30', startTime: 8.5, endTime: 17.5, instructor: 'د. اسامه الضرغام', room: 'تدريب ميداني', mode: 'وجاهي', status: 'متاحة', capacity: 50, enrolled: 44 }
-        ]
-    },
-    {
-        id: 'c27',
-        category: 'projects_training',
-        categoryAr: 'التدريب والمشاريع والمهارات',
-        categoryEn: 'Projects, Training & Skills',
-        nameAr: 'مشروع التخرج (1)',
-        nameEn: 'Graduation Project (1)',
-        code: '30807471',
-        credits: 1,
-        sections: [
-            { id: 's1', secNum: '1', days: 'SatOnly', daysAr: 'س (السبت)', daysEn: 'Saturday Only', timeStr: '08:30 - 09:30', startTime: 8.5, endTime: 9.5, instructor: 'هـ.ت', room: 'بدون قاعة 3', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 20 }
-        ]
-    },
-    {
-        id: 'c28',
-        category: 'projects_training',
-        categoryAr: 'التدريب والمشاريع والمهارات',
-        categoryEn: 'Projects, Training & Skills',
-        nameAr: 'مشروع التخرج (2)',
-        nameEn: 'Graduation Project (2)',
-        code: '30807472',
-        credits: 1,
-        sections: [
-            { id: 's1', secNum: '2', days: 'SatOnly', daysAr: 'س (السبت)', daysEn: 'Saturday Only', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'هـ.ت', room: 'بدون قاعة 3', mode: 'وجاهي', status: 'متاحة', capacity: 25, enrolled: 22 }
-        ]
-    },
-    {
-        id: 'c29',
-        category: 'projects_training',
-        categoryAr: 'التدريب والمشاريع والمهارات',
-        categoryEn: 'Projects, Training & Skills',
-        nameAr: 'مهارات الحاسوب (1)',
-        nameEn: 'Computer Skills (1)',
-        code: '35005101',
-        credits: 3,
-        sections: [
-            { id: 's1', secNum: '1', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', daysEn: 'Mon / Wed', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. عبد العزيز الحموري', room: 'online 700', mode: 'عن بعد', status: 'متاحة', capacity: 100, enrolled: 92 }
-        ]
-    }
-];
+    // ----------------------------------------------------
+    // 3. قسم هندسة البرمجيات (Software Engineering - SE)
+    // ----------------------------------------------------
+    se: [
+        {
+            id: 'se1',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'مبادئ هندسة البرمجيات',
+            nameEn: 'Principles of Software Engineering',
+            code: '30803260',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '09:30 - 10:30', startTime: 9.5, endTime: 10.5, instructor: 'د. عمار سلطان', room: 'online 591 / مختبر حاسوب(101)-علوم', mode: 'مدمج', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'se2',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'هندسة متطلبات نظم البرمجيات',
+            nameEn: 'Software Requirements Engineering',
+            code: 'L70302271',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '10:30 - 11:30', startTime: 10.5, endTime: 11.5, instructor: 'د. مي الفواعير', room: 'تكنولوجيا 402', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '08:30 - 10:00', startTime: 8.5, endTime: 10.0, instructor: 'د. مي الفواعير', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'se3',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'ادوات بناء البرمجيات',
+            nameEn: 'Software Construction Tools',
+            code: '30803467',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '13:30 - 14:30', startTime: 13.5, endTime: 14.5, instructor: 'د. كرم اغنيم', room: 'تكنولوجيا 302', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'se4',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'تخطيط وادارة مشاريع البرمجيات',
+            nameEn: 'Software Project Management',
+            code: '30803367',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '08:30 - 09:30', startTime: 8.5, endTime: 9.5, instructor: 'د. زيد اللامي', room: 'مختبر حاسوب(100)-علوم', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'se5',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'تصميم وتنفيذ واجهة المستخدم (UI/UX)',
+            nameEn: 'User Interface Design & Implementation',
+            code: '30803445',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '13:30 - 14:30', startTime: 13.5, endTime: 14.5, instructor: 'د. مي الفواعير', room: 'مختبر حاسوب - علوم (303)', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'se6',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'صيانه وتطور البرمجيات',
+            nameEn: 'Software Maintenance & Evolution',
+            code: '30803468',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '11:30 - 12:30', startTime: 11.5, endTime: 12.5, instructor: 'د. خالد الخرابشه', room: 'تكنولوجيا 406 / online 591', mode: 'مدمج', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'se7',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'هندسة البرمجيات الشيئية',
+            nameEn: 'Object Oriented Software Engineering',
+            code: '30803368',
+            credits: 3,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '08:30 - 09:30', startTime: 8.5, endTime: 9.5, instructor: 'د. حابس الخريسات', room: 'مختبر حاسوب(101)-علوم', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        },
+        {
+            id: 'se8',
+            category: 'se_core',
+            categoryAr: 'هندسة وبناء البرمجيات',
+            nameAr: 'التدريب الميداني لطلبة هندسة البرمجيات',
+            nameEn: 'Field Training (SE)',
+            code: '30803470',
+            credits: 6,
+            sections: [
+                { id: 's1', secNum: '1', days: 'SunTueThu', daysAr: 'ح ث خ (أحد/ثلاثاء/خميس)', timeStr: '08:00 - 15:00', startTime: 8.0, endTime: 15.0, instructor: 'هـ.ت', room: 'تدريب ميداني', mode: 'وجاهي', status: 'متاحة' },
+                { id: 's2', secNum: '2', days: 'MonWed', daysAr: 'ن ر (إثنين/أربعاء)', timeStr: '08:30 - 17:30', startTime: 8.5, endTime: 17.5, instructor: 'هـ.ت', room: 'تدريب ميداني', mode: 'وجاهي', status: 'متاحة' }
+            ]
+        }
+    ]
+};
 
 const ScheduleBuilder = () => {
     const { t, language } = useLanguage();
@@ -427,30 +318,43 @@ const ScheduleBuilder = () => {
 
     // Filters state
     const [selectedCollege] = useState('abdullah_ghazi'); // Locked to Prince Abdullah Bin Ghazi Faculty
-    const [selectedDept] = useState('cs'); // Locked to Computer Science Dept
+    const [selectedDept, setSelectedDept] = useState('cs'); // 'cs', 'cis', 'se'
     const [selectedDegree] = useState('bachelor'); // Strictly Bachelor degree
-    const [dayPreference, setDayPreference] = useState('all'); // 'all', 'SunTueThu', 'MonWed', 'Daily', 'SatOnly'
-    const [modePreference, setModePreference] = useState('all'); // 'all', 'وجاهي', 'مدمج', 'عن بعد'
-    const [breakPreference, setBreakPreference] = useState('no_long_breaks');
+    const [dayPreference, setDayPreference] = useState('all');
+    const [modePreference, setModePreference] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Active Courses List based on Department
+    const activeDeptCourses = useMemo(() => {
+        return AUTHENTIC_BAU_CATALOG[selectedDept] || AUTHENTIC_BAU_CATALOG.cs;
+    }, [selectedDept]);
+
     // Selected courses & Generator state
-    const [selectedCourseIds, setSelectedCourseIds] = useState(['c1', 'c3', 'c5', 'c10', 'c14']);
+    const [selectedCourseIds, setSelectedCourseIds] = useState(['cs1', 'cs3', 'cs4', 'cs6']);
     const [generatedSchedules, setGeneratedSchedules] = useState([]);
     const [activeTimetableModal, setActiveTimetableModal] = useState(null);
     const [isGenerating, setIsGenerating] = useState(false);
 
-    // Group real courses by categories
+    // When department changes, update selection default
+    const handleDeptChange = (newDept) => {
+        setSelectedDept(newDept);
+        const newCourses = AUTHENTIC_BAU_CATALOG[newDept] || [];
+        const defaults = newCourses.slice(0, 4).map(c => c.id);
+        setSelectedCourseIds(defaults);
+        setGeneratedSchedules([]);
+    };
+
+    // Group active department courses by category
     const categories = useMemo(() => {
         const map = {};
-        REAL_BAU_CS_COURSES.forEach(c => {
+        activeDeptCourses.forEach(c => {
             if (!map[c.category]) {
-                map[c.category] = { id: c.category, nameAr: c.categoryAr, nameEn: c.categoryEn, courses: [] };
+                map[c.category] = { id: c.category, nameAr: c.categoryAr, courses: [] };
             }
             map[c.category].courses.push(c);
         });
         return Object.values(map);
-    }, []);
+    }, [activeDeptCourses]);
 
     // Toggle course selection
     const toggleCourseSelection = (courseId) => {
@@ -466,8 +370,8 @@ const ScheduleBuilder = () => {
     };
 
     const selectedCoursesList = useMemo(() => {
-        return REAL_BAU_CS_COURSES.filter(c => selectedCourseIds.includes(c.id));
-    }, [selectedCourseIds]);
+        return activeDeptCourses.filter(c => selectedCourseIds.includes(c.id));
+    }, [activeDeptCourses, selectedCourseIds]);
 
     const totalSelectedCredits = useMemo(() => {
         return selectedCoursesList.reduce((acc, c) => acc + c.credits, 0);
@@ -544,12 +448,11 @@ const ScheduleBuilder = () => {
             setIsGenerating(false);
 
             if (formatted.length > 0) {
-                toast.success(isAr ? `تم توليد ${formatted.length} جدول متوافق بدون تعارض من جريدة المواد الرسمية! 🎯` : `Generated ${formatted.length} valid non-conflicting schedules!`);
-                // Scroll smoothly to results
+                toast.success(isAr ? `تم توليد ${formatted.length} جدول متوافق بدون تعارض لجريدة ${selectedDept.toUpperCase()}! 🎯` : `Generated ${formatted.length} valid non-conflicting schedules!`);
                 const el = document.getElementById('results-area');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
             } else {
-                toast.error(isAr ? 'لم نتمكن من العثور على جدول بدون تعارض لهذه الخيارات. يرجى تعديل الشعب أو نمط الدراسة.' : 'No non-conflicting schedules found.');
+                toast.error(isAr ? 'لم نتمكن من العثور على جدول بدون تعارض لهذه الخيارات. يرجى تعديل الاختيارات.' : 'No non-conflicting schedules found.');
             }
         }, 500);
     };
@@ -565,12 +468,12 @@ const ScheduleBuilder = () => {
     const filteredCoursesBySearch = useMemo(() => {
         if (!searchQuery.trim()) return null;
         const q = searchQuery.toLowerCase().trim();
-        return REAL_BAU_CS_COURSES.filter(c =>
+        return activeDeptCourses.filter(c =>
             c.nameAr.toLowerCase().includes(q) ||
             c.nameEn.toLowerCase().includes(q) ||
             c.code.toLowerCase().includes(q)
         );
-    }, [searchQuery]);
+    }, [activeDeptCourses, searchQuery]);
 
     return (
         <div className="schedule-builder-page">
@@ -580,9 +483,9 @@ const ScheduleBuilder = () => {
                     <img src="https://app2.bau.edu.jo:7799/courses/images/logo.png" alt="BAU Logo" className="bau-header-logo" onError={(e) => { e.target.src = 'static_logo.png'; }} />
                     <div>
                         <span className="university-badge">🏛️ {isAr ? 'جامعة البلقاء التطبيقية — خدمات التسجيل الإلكتروني' : 'Al-Balqa Applied University'}</span>
-                        <h1 className="builder-main-title">{isAr ? 'جريدة المواد وتنظيم الجداول الرسمية (علم الحاسوب)' : 'Official Course Schedule Generator'}</h1>
+                        <h1 className="builder-main-title">{isAr ? 'جريدة المواد وتنظيم الجداول الرسمية الكلية' : 'Official Course Schedule Generator'}</h1>
                         <p className="builder-sub-title">
-                            {isAr ? 'الجريدة الرسمية لمواد كلية الأمير عبد الله بن غازي — قسم علم الحاسوب (درجة البكالوريوس)' : 'Official BAU Course Catalog for Computer Science Department (Bachelor)'}
+                            {isAr ? 'الجريدة الرسمية لمواد كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات (علم الحاسوب - نظم المعلومات - هندسة البرمجيات)' : 'Official BAU Course Catalog for IT Faculty (CS - CIS - SE)'}
                         </p>
                     </div>
                 </div>
@@ -591,9 +494,9 @@ const ScheduleBuilder = () => {
             {/* Step 1: Real Faculty & Department Selector */}
             <div className="builder-control-card glass-card">
                 <h3 className="control-card-title">
-                    <span>1️⃣</span> {isAr ? 'الدرجة العلمية والكلية والقسم الأكاديمي' : 'Faculty & Academic Department'}
+                    <span>1️⃣</span> {isAr ? 'اختير القسم الأكاديمي والدرجة العلمية' : 'Academic Department & Degree'}
                 </h3>
-                <p className="control-card-desc">{isAr ? 'بيانات الجريدة المعتمدة حالياً مسحوبة مباشرة من نظام التسجيل الإلكتروني:' : 'Active registration catalog data:'}</p>
+                <p className="control-card-desc">{isAr ? 'اختر القسم الأكاديمي لعرض المواد والشعب المعتمدة رسمياً في السيرفر:' : 'Select academic department to display official catalog:'}</p>
 
                 <div className="college-select-grid">
                     <div className="form-group-item">
@@ -612,8 +515,10 @@ const ScheduleBuilder = () => {
 
                     <div className="form-group-item">
                         <label>💻 {isAr ? 'القسم الأكاديمي:' : 'Department:'}</label>
-                        <select className="builder-select locked-select" value={selectedDept} disabled>
-                            <option value="cs">{isAr ? 'علم الحاسوب (CS)' : 'Computer Science'}</option>
+                        <select className="builder-select" value={selectedDept} onChange={(e) => handleDeptChange(e.target.value)}>
+                            <option value="cs">💻 {isAr ? 'علم الحاسوب (CS)' : 'Computer Science (CS)'}</option>
+                            <option value="cis">🗄️ {isAr ? 'نظم المعلومات الحاسوبية (CIS)' : 'Computer Information Systems (CIS)'}</option>
+                            <option value="se">⚙️ {isAr ? 'هندسة البرمجيات (SE)' : 'Software Engineering (SE)'}</option>
                         </select>
                     </div>
                 </div>
@@ -622,7 +527,7 @@ const ScheduleBuilder = () => {
             {/* Step 2: Live Catalog Stats Bar */}
             <div className="stats-dashboard-card glass-card">
                 <h3 className="control-card-title">
-                    <span>2️⃣</span> {isAr ? 'ملخص جريدة المواد المسحوبة من الجداول الرسمية' : 'Course Catalog Summary'}
+                    <span>2️⃣</span> {isAr ? `ملخص جريدة مواد قسم ${selectedDept === 'cs' ? 'علم الحاسوب' : selectedDept === 'cis' ? 'نظم المعلومات الحاسوبية' : 'هندسة البرمجيات'}` : 'Department Catalog Summary'}
                 </h3>
 
                 <div className="stats-row-grid">
@@ -637,21 +542,21 @@ const ScheduleBuilder = () => {
                         <span className="stat-icon">📚</span>
                         <div>
                             <span className="stat-label">{isAr ? 'مواد القسم الرسمية' : 'Official Courses'}</span>
-                            <strong className="stat-val">{REAL_BAU_CS_COURSES.length} مادة</strong>
+                            <strong className="stat-val">{activeDeptCourses.length} مادة</strong>
                         </div>
                     </div>
                     <div className="stat-pill-item">
                         <span className="stat-icon">👥</span>
                         <div>
-                            <span className="stat-label">{isAr ? 'الشعب المتاحة' : 'Available Sections'}</span>
-                            <strong className="stat-val">84 شعبة</strong>
+                            <span className="stat-label">{isAr ? 'القسم النشط' : 'Active Department'}</span>
+                            <strong className="stat-val" style={{ color: '#2563eb' }}>{selectedDept.toUpperCase()}</strong>
                         </div>
                     </div>
                     <div className="stat-pill-item">
                         <span className="stat-icon">🏛️</span>
                         <div>
-                            <span className="stat-label">{isAr ? 'حالة النظام' : 'System Status'}</span>
-                            <strong className="stat-val" style={{ color: '#10b981' }}>متصل بالسيرفر 🟢</strong>
+                            <span className="stat-label">{isAr ? 'حالة السيرفر' : 'Server Status'}</span>
+                            <strong className="stat-val" style={{ color: '#10b981' }}>متصل بالجريدة الرسمية 🟢</strong>
                         </div>
                     </div>
                 </div>
@@ -683,7 +588,6 @@ const ScheduleBuilder = () => {
                             <button className={`pref-pill ${dayPreference === 'all' ? 'active' : ''}`} onClick={() => setDayPreference('all')}>🌟 {isAr ? 'الجميع' : 'All'}</button>
                             <button className={`pref-pill ${dayPreference === 'SunTueThu' ? 'active' : ''}`} onClick={() => setDayPreference('SunTueThu')}>🗓️ {isAr ? 'ح ث خ (أحد/ثلاثاء/خميس)' : 'Sun/Tue/Thu'}</button>
                             <button className={`pref-pill ${dayPreference === 'MonWed' ? 'active' : ''}`} onClick={() => setDayPreference('MonWed')}>🗓️ {isAr ? 'ن ر (إثنين/أربعاء)' : 'Mon/Wed'}</button>
-                            <button className={`pref-pill ${dayPreference === 'SatOnly' ? 'active' : ''}`} onClick={() => setDayPreference('SatOnly')}>🎓 {isAr ? 'السبت (خاص بالمشاريع)' : 'Sat Only'}</button>
                         </div>
                     </div>
 
@@ -693,7 +597,6 @@ const ScheduleBuilder = () => {
                             <button className={`pref-pill ${modePreference === 'all' ? 'active' : ''}`} onClick={() => setModePreference('all')}>✨ {isAr ? 'جميع الأنماط' : 'All'}</button>
                             <button className={`pref-pill ${modePreference === 'وجاهي' ? 'active' : ''}`} onClick={() => setModePreference('وجاهي')}>🏫 {isAr ? 'وجاهي' : 'In-Person'}</button>
                             <button className={`pref-pill ${modePreference === 'مدمج' ? 'active' : ''}`} onClick={() => setModePreference('مدمج')}>🔄 {isAr ? 'مدمج' : 'Blended'}</button>
-                            <button className={`pref-pill ${modePreference === 'عن بعد' ? 'active' : ''}`} onClick={() => setModePreference('عن بعد')}>💻 {isAr ? 'عن بعد (أونلاين)' : 'Online'}</button>
                         </div>
                     </div>
                 </div>
@@ -731,20 +634,19 @@ const ScheduleBuilder = () => {
                 {/* Right Catalog Browser */}
                 <div className="catalog-browser-panel glass-card">
                     <div className="catalog-header">
-                        <h3>📋 {isAr ? 'جريدة مواد قسم علم الحاسوب المعتمدة' : 'CS Approved Course Catalog'}</h3>
+                        <h3>📋 {isAr ? `جريدة مواد قسم ${selectedDept === 'cs' ? 'علم الحاسوب' : selectedDept === 'cis' ? 'نظم المعلومات الحاسوبية' : 'هندسة البرمجيات'}` : 'Approved Course Catalog'}</h3>
                         <div className="search-bar-box">
                             <span className="search-icon">🔍</span>
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder={isAr ? 'ابحث باسم المادة أو رمزها (مثل: جافا، هياكل، L70301141)...' : 'Search course by name or code...'}
+                                placeholder={isAr ? 'ابحث باسم المادة أو رمزها...' : 'Search course by name or code...'}
                             />
                             {searchQuery && <button className="clear-search" onClick={() => setSearchQuery('')}>✕</button>}
                         </div>
                     </div>
 
-                    {/* Catalog Accordions or Search Results */}
                     {filteredCoursesBySearch ? (
                         <div className="catalog-category-group">
                             <h4 className="cat-group-title">🔎 {isAr ? 'نتائج البحث المطابقة' : 'Search Results'} ({filteredCoursesBySearch.length})</h4>
@@ -766,7 +668,7 @@ const ScheduleBuilder = () => {
                                             <div className="course-sections-preview">
                                                 {course.sections.map(sec => (
                                                     <span key={sec.id} className="sec-preview-pill">
-                                                        ش {sec.secNum}: {sec.daysAr} ({sec.timeStr}) | {sec.instructor} | 📍 {sec.room} | <strong className={sec.status === 'مغلقة' ? 'closed' : 'open'}>{sec.status}</strong>
+                                                        ش {sec.secNum}: {sec.daysAr} ({sec.timeStr}) | {sec.instructor} | 📍 {sec.room} | <strong className="open">{sec.status}</strong>
                                                     </span>
                                                 ))}
                                             </div>
@@ -854,7 +756,6 @@ const ScheduleBuilder = () => {
                                     </div>
                                 </div>
 
-                                {/* Table Identical to Real BAU Catalog Screenshots */}
                                 <div className="schedule-table-container">
                                     <table className="schedule-data-table">
                                         <thead>
