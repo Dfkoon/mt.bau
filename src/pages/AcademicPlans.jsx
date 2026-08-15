@@ -21,7 +21,7 @@ import cyberTree from '../assets/plans/cyber_tree.jpg';
 import aiRoboticsTree from '../assets/plans/ai_robotics_tree.jpg';
 import forensicsTree from '../assets/plans/forensics_tree.jpg';
 
-// Expected Career Opportunities Data
+// Expected Career Opportunities Data (Official BAU Faculty of AI Directory)
 const CAREER_DATA = [
     {
         majorId: 'cybersecurity',
@@ -30,7 +30,7 @@ const CAREER_DATA = [
         icon: '🛡️',
         color: '#ef4444',
         accentBg: 'rgba(239, 68, 68, 0.08)',
-        badgeText: '12 مهنة متوقعة',
+        badgeText: '17 مهنة متوقعة',
         careers: [
             { ar: 'أخصائي أمن معلومات', en: 'Information Security Specialist' },
             { ar: 'محلل أمني', en: 'Security Analyst' },
@@ -38,12 +38,17 @@ const CAREER_DATA = [
             { ar: 'مدير أمن المعلومات التنفيذي', en: 'Chief Information Security Officer (CISO)' },
             { ar: 'مهندس أمن الشبكات', en: 'Network Security Engineer' },
             { ar: 'خبير استجابة للحوادث السيبرانية', en: 'Incident Responder' },
-            { ar: 'مستشار أمني سيبراني', en: 'Security Consultant' },
+            { ar: 'مستشار أمني وقانوني سيبراني', en: 'Security & Legal Consultant' },
             { ar: 'خبير حماية البيانات والخصوصية', en: 'Data Protection Officer' },
             { ar: 'باحث في الثغرات البرمجية والأمنية', en: 'Vulnerability Researcher' },
-            { ar: 'أخصائي أمن الحوسبة السحابية', en: 'Cloud Security Specialist' },
+            { ar: 'أخصائي ومدير أمن الحوسبة السحابية', en: 'Cloud Security Manager' },
             { ar: 'خبير أمن إنترنت الأشياء', en: 'IoT Security Expert' },
             { ar: 'محقق جرائم إلكترونية', en: 'Cybercrime Investigator' },
+            { ar: 'مدير مخاطر الأمن السيبراني', en: 'Cybersecurity Risk Manager' },
+            { ar: 'مسؤول ومطور سياسات الأمن السيبراني', en: 'Cybersecurity Policy Developer' },
+            { ar: 'مدرب على نظم الأمن وبرمجياتها', en: 'Cybersecurity Systems Trainer' },
+            { ar: 'مبرمج ومطور نظم تشغيل وشبكات آمنة', en: 'Secure OS & Network Administrator' },
+            { ar: 'أخصائي دعم فني لأمن الشبكات والمعلومات', en: 'Network Security Support Specialist' },
         ]
     },
     {
@@ -53,20 +58,24 @@ const CAREER_DATA = [
         icon: '📊',
         color: '#3b82f6',
         accentBg: 'rgba(59, 130, 246, 0.08)',
-        badgeText: '12 مهنة متوقعة',
+        badgeText: '16 مهنة متوقعة',
         careers: [
             { ar: 'عالم بيانات', en: 'Data Scientist' },
             { ar: 'مهندس بيانات', en: 'Data Engineer' },
-            { ar: 'محلل بيانات', en: 'Data Analyst' },
+            { ar: 'محلل بيانات ورسوم بيانية', en: 'Data Analyst' },
             { ar: 'خبير تعلم الآلة', en: 'Machine Learning Engineer' },
             { ar: 'أخصائي ذكاء اصطناعي', en: 'AI Specialist' },
-            { ar: 'مدير قواعد البيانات', en: 'Database Administrator' },
-            { ar: 'محلل ذكاء الأعمال', en: 'Business Intelligence Analyst' },
+            { ar: 'مدير ومسؤول قواعد البيانات', en: 'Database Administrator' },
+            { ar: 'محلل ذكاء الأعمال والبيانات', en: 'Business Intelligence Analyst' },
             { ar: 'خبير معالجة اللغة الطبيعية', en: 'NLP Specialist' },
-            { ar: 'باحث في البيانات', en: 'Data Researcher' },
+            { ar: 'باحث في علوم البيانات', en: 'Data Researcher' },
             { ar: 'أخصائي تصور وتمثيل البيانات', en: 'Data Visualization Specialist' },
             { ar: 'مهندس نظم البيانات الضخمة', en: 'Big Data Engineer' },
-            { ar: 'مستشار تحليلات', en: 'Analytics Consultant' },
+            { ar: 'مستشار تحليلات وتنبؤات', en: 'Analytics Consultant' },
+            { ar: 'محلل بيانات وسائل التواصل الاجتماعي والإعلام', en: 'Social Media & Media Data Analyst' },
+            { ar: 'محلل التحليلات الرياضية والسياسية', en: 'Sports & Political Analytics Specialist' },
+            { ar: 'مطور خوارزميات ونماذج التنبؤ', en: 'Predictive Algorithm Developer' },
+            { ar: 'مهندس عرض واستخراج المعرفة من البيانات', en: 'Knowledge Extraction Engineer' },
         ]
     },
     {
@@ -76,20 +85,23 @@ const CAREER_DATA = [
         icon: '🔍',
         color: '#f59e0b',
         accentBg: 'rgba(245, 158, 11, 0.08)',
-        badgeText: '12 مهنة متوقعة',
+        badgeText: '15 مهنة متوقعة',
         careers: [
             { ar: 'محقق أدلة رقمية', en: 'Digital Forensics Investigator' },
             { ar: 'خبير استعادة البيانات المفقودة', en: 'Data Recovery Specialist' },
             { ar: 'محقق جرائم إلكترونية', en: 'Cybercrime Investigator' },
-            { ar: 'أخصائي أدلة جنائية رقمية', en: 'Digital Evidence Analyst' },
-            { ar: 'خبير تحليل الهواتف الذكية', en: 'Mobile Forensics Expert' },
+            { ar: 'أخصائي ومحلل أدلة جنائية رقمية', en: 'Digital Evidence Analyst' },
+            { ar: 'خبير تحليل الهواتف والأجهزة المحمولة', en: 'Mobile Forensics Expert' },
             { ar: 'محقق في جرائم الاحتيال الإلكتروني', en: 'Fraud Examiner' },
-            { ar: 'مختبر أدلة رقمية جنائية', en: 'Forensic Lab Technician' },
-            { ar: 'مستشار أمني جنائي رقمي', en: 'Forensic Security Consultant' },
+            { ar: 'مختبر وفني أدلة رقمية جنائية', en: 'Forensic Lab Technician' },
+            { ar: 'مستشار أمني وقانوني جنائي رقمي', en: 'Forensic Legal & Security Consultant' },
             { ar: 'محقق في جرائم الابتزاز الإلكتروني', en: 'Cyber Extortion Investigator' },
-            { ar: 'خبير تحليل شبكات جنائي', en: 'Network Forensics Analyst' },
+            { ar: 'خبير ومحلل حركة الشبكات الجنائي', en: 'Network Forensics Analyst' },
             { ar: 'محقق في جرائم التشفير والعملات الرقمية', en: 'Cryptocurrency Investigator' },
             { ar: 'خبير التحقيق في انتهاكات الخصوصية', en: 'Privacy Violation Investigator' },
+            { ar: 'أخصائي ومحلل مركز عمليات الأمن (SOC)', en: 'SOC Analyst & Specialist' },
+            { ar: 'أخصائي التشريعات السيبرانية والحوسبة الجنائية', en: 'Cyber Legislation Specialist' },
+            { ar: 'محقق جنائي رقمي للشركات والجهات الأمنية', en: 'Corporate & Law Enforcement Forensic Analyst' },
         ]
     },
     {
@@ -99,12 +111,14 @@ const CAREER_DATA = [
         icon: '🥽',
         color: '#a855f7',
         accentBg: 'rgba(168, 85, 247, 0.08)',
-        badgeText: '4 مهن متوقعة',
+        badgeText: '6 مهن متوقعة',
         careers: [
-            { ar: 'مصمم رسومات الحاسوب الثابتة والمتحركة والتفاعلية', en: '2D/3D & Interactive Graphics Designer' },
-            { ar: 'مصمم أنظمة الواقع الافتراضي والمحاكاة', en: 'VR Systems & Simulation Designer' },
-            { ar: 'مصمم ألعاب إلكترونية ذكية', en: 'Smart Game Developer & Designer' },
-            { ar: 'مطور برامج وتطبيقات واقع افتراضي أو معزز', en: 'VR/AR Software Developer' },
+            { ar: 'مصمم رسومات الحاسوب الثابتة والمتحركة والتفاعلية 2D/3D', en: 'Interactive & Motion Computer Graphics Designer' },
+            { ar: 'مصمم أنظمة ومحاكاة الواقع الافتراضي والتفاعل', en: 'VR Systems & Simulation Designer' },
+            { ar: 'مصمم ومطور ألعاب إلكترونية ذكية', en: 'Smart Game Developer & Designer' },
+            { ar: 'مطور تطبيقات وبرامج واقع افتراضي أو معزز', en: 'VR/AR Software Developer' },
+            { ar: 'مطور تطبيقات القصص المصورة ثلاثية الأبعاد', en: '3D Storyboarding & Interactive Media Developer' },
+            { ar: 'مصمم واجهات التفاعل بين الإنسان والحاسوب', en: 'Human-Computer Interaction (HCI) Designer' },
         ]
     },
     {
@@ -114,13 +128,103 @@ const CAREER_DATA = [
         icon: '🤖',
         color: '#10b981',
         accentBg: 'rgba(16, 185, 129, 0.08)',
-        badgeText: '5 مهن متوقعة',
+        badgeText: '9 مهن متوقعة',
         careers: [
-            { ar: 'أخصائي روبوتات وأتمتة', en: 'Robotics & Automation Specialist' },
+            { ar: 'أخصائي مهندس روبوتات وأتمتة', en: 'Robotics & Automation Engineer' },
             { ar: 'مطور برامج وأنظمة ذكية', en: 'AI Software Developer' },
-            { ar: 'مطور نظم مضمنة ذكية', en: 'Smart Embedded Systems Developer' },
+            { ar: 'مطور نظم مضمنة وأجهزة ذكية', en: 'Smart Embedded Systems Developer' },
             { ar: 'محلل برامج وأنظمة ذكية', en: 'Smart Systems Analyst' },
             { ar: 'باحث في علوم الذكاء الاصطناعي والروبوتات وتطبيقاتها', en: 'AI & Robotics Researcher' },
+            { ar: 'مهندس رؤية حاسوبية ومعالجة الصور', en: 'Computer Vision Engineer' },
+            { ar: 'مبرمج ألعاب فيديو ذكية', en: 'Smart Video Game Programmer' },
+            { ar: 'مهندس نظم السيارات والتنقل الذكي', en: 'Autonomous & Smart Mobility Engineer' },
+            { ar: 'أخصائي إدراك الأصوات والوجوه والرؤية السلوكية', en: 'Voice, Face & Perception Specialist' },
+        ]
+    }
+];
+
+// Official Descriptions & Graduate Specifications Data
+const MAJOR_DESCRIPTIONS = [
+    {
+        id: 'cybersecurity',
+        nameAr: 'أمن المعلومات والفضاء الإلكتروني',
+        nameEn: 'Info Security & Cybersecurity',
+        icon: '🛡️',
+        color: '#ef4444',
+        accentBg: 'rgba(239, 68, 68, 0.08)',
+        overviewAr: `يهدف التخصص إلى إعداد القوى البشرية والكوادر المتخصصة في مجال أمن المعلومات والفضاء الإلكتروني لحماية الأنظمة والمعلومات من المخاطر والتهديدات الداخلية والخارجية. يُزود الطالب بالمعارف النظرية والعملية المناسبة لحل المشكلات، اتخاذ القرارات، وتطبيق أفضل سياسات الأمن السيبراني وإدارة الشبكات وقواعد البيانات بأمان.`,
+        overviewEn: `Prepares human cadres specialized in Information Security and Cybersecurity to handle internal and external cyber threats. Equips students with theoretical and practical tools to protect networks, systems, cloud environments, and enact security policies.`,
+        graduateSpecs: [
+            'القدرة على تقييم وأمن الشبكات وأنظمة التشغيل والشبكات السحابية',
+            'إعداد وتطبيق أفضل سياسات وممارسات الأمن السيبراني للمؤسسات',
+            'فهم وتطبيق أدوات التشفير والدعم الفني للحماية من الجرائم الإلكترونية',
+            'إتقان إدارة مخاطر أمن المعلومات واتخاذ القرارات الاستراتيجية'
+        ],
+        masterInfoAr: `درجة الماجستير في أمن المعلومات والفضاء الإلكتروني: يهدف برنامج الماجستير لتنمية المهارات المتخصصة والبحثية تحت إشراف هيئة تدريسية، وإعداد الطلبة للقيام بأدوار ومهام أمنية متقدمة في القطاع الحكومي والخاص وتطوير سياسات الحوكمة والتحقيقات الجنائية لمواجهة التزايد الهائل في الهجمات الإلكترونية.`,
+        masterInfoEn: `Master's Degree: Focuses on specialized research and advanced security roles in government and enterprise sectors.`
+    },
+    {
+        id: 'datascience',
+        nameAr: 'علم البيانات والذكاء الاصطناعي',
+        nameEn: 'Data Science & AI',
+        icon: '📊',
+        color: '#3b82f6',
+        accentBg: 'rgba(59, 130, 246, 0.08)',
+        overviewAr: `علم البيانات هو تخصص حديث يجمع بين علوم الحاسوب، الرياضيات، الإحصاء والذكاء الاصطناعي لاستخراج المعرفة والقيمة من البيانات الضخمة (Big Data). يُمكن الخريجين من بناء خوارزميات التنبؤ والنماذج الإحصائية وتنقيب البيانات في شتى القطاعات مثل الأعمال، المالية، الصحة، الإعلام، والتحليلات الرياضية والسياسية لمساعدة متخذي القرار في التنبؤ بالمستقبل وتسهيل تدفق المعلومات.`,
+        overviewEn: `Combines computer science, math, statistics, and AI to extract valuable insights from Big Data. Enables graduates to build predictive algorithms, machine learning models, and data pipelines across business, health, and finance.`,
+        graduateSpecs: [
+            'إتقان أساسيات تنقيب البيانات الضخمة (Data Mining) والتعلم الآلي',
+            'تطوير وبناء خوارزميات إحصائية للتنبؤ وتفسير البيانات',
+            'عرض وتمثيل البيانات (Data Visualization) بطرق سهلة ومفيدة لأصحاب القرار',
+            'تحليل بيانات منصات التواصل الاجتماعي والتحليلات الرياضية والسياسية'
+        ]
+    },
+    {
+        id: 'digitalforensics',
+        nameAr: 'التحقيقات الجنائية الرقمية',
+        nameEn: 'Digital Forensics',
+        icon: '🔍',
+        color: '#f59e0b',
+        accentBg: 'rgba(245, 158, 11, 0.08)',
+        overviewAr: `يركز برنامج التحقيقات الجنائية الرقمية على كشف وتحليل الجرائم الإلكترونية من خلال جمع الأدلة الرقمية وفحصها بطرق علمية وقانونية محكمة. يشمل الخطة دراسة التشريعات السيبرانية، الحوسبة الجنائية، استعادة البيانات، فحص الأجهزة المحمولة والشبكات، التحقيق في الاحتيال، الابتزاز، والعملات الرقمية المشفرة مع الالتزام التام بالمعايير القانونية والأخلاقية لتزويد الجهات الأمنية والقضائية بالخبراء.`,
+        overviewEn: `Focuses on investigating digital crimes and gathering electronic evidence legally and scientifically. Covers mobile forensics, network forensics, data recovery, fraud, extortion, and cryptocurrency crime investigations.`,
+        graduateSpecs: [
+            'جمع وتحليل الأدلة الرقمية من الأجهزة المحمولة والشبكات والحواسيب',
+            'استعادة البيانات المفقودة والممسوحة وتتبع المعاملات المشفرة',
+            'فهم وتطبيق التشريعات السيبرانية المعمول بها أمام الجهات القضائية',
+            'التحقيق في الجرائم الإلكترونية مثل الاحتيال والابتزاز وانتهاك الخصوصية'
+        ]
+    },
+    {
+        id: 'vr',
+        nameAr: 'الواقع الافتراضي والمعزز',
+        nameEn: 'Virtual Reality & AR',
+        icon: '🥽',
+        color: '#a855f7',
+        accentBg: 'rgba(168, 85, 247, 0.08)',
+        overviewAr: `تخصص هندسة وبرمجة الواقع الافتراضي والمعزز يهدف لإنشاء بيئات تفاعلية ثلاثية الأبعاد ومحاكاة ذكية للمحتوى والروبوتات والرسومات التفاعلية. يتعلم الطالب كيفية تصميم وإنشاء أنظمة الواقع الافتراضي، تفاعل الإنسان مع الحاسوب (HCI)، بناء الألعاب الإلكترونية الذكية وتطبيقات القصص المصورة ثلاثية الأبعاد، لخدمة كافة القطاعات التعليمية والترفيهية والطبية والصناعية.`,
+        overviewEn: `Creates interactive 3D virtual environments and AI simulations. Focuses on VR/AR app development, smart 3D game design, and Human-Computer Interaction (HCI) technology.`,
+        graduateSpecs: [
+            'تصميم وإنشاء رسومات الحاسوب 2D/3D الثابتة والمتحركة والتفاعلية',
+            'تطوير وبرمجة محاكاة الواقع الافتراضي والمعزز (VR/AR)',
+            'تصميم وبناء الألعاب الإلكترونية الذكية ثلاثية الأبعاد',
+            'إتقان مبادئ تفاعل الإنسان مع الحاسوب (Human-Computer Interaction)'
+        ]
+    },
+    {
+        id: 'airobotics',
+        nameAr: 'الذكاء الاصطناعي والروبوتات',
+        nameEn: 'Artificial Intelligence & Robotics',
+        icon: '🤖',
+        color: '#10b981',
+        accentBg: 'rgba(16, 185, 129, 0.08)',
+        overviewAr: `يجمع هذا التخصص بين امتيازات علمين فريدين: علم الذكاء الاصطناعي وعلم الروبوتات لبناء آلات وأنظمة ذكية قادرة على إدراك الأصوات والوجوه ومعالجة اللغات والرؤية الحاسوبية والتجاوب مع المحيط. يهدف لخلق جيل قادر على قيادة التكنولوجيا الحديثة والأتمتة في قطاعات تصنيع السيارات الذكية، النقل، الدفاع، والرعاية الصحية محلياً ودولياً.`,
+        overviewEn: `Blends AI with Robotics to build intelligent autonomous machines. Covers machine vision, voice & speech recognition, NLP, smart embedded systems, and robotics programming.`,
+        graduateSpecs: [
+            'فهم عميق للمفاهيم الرياضية والإحصائية لبناء نماذج التعلم الآلي',
+            'مهارات برمجية متقدمة بلغات (Python, C++, Java) لتطوير الأنظمة الذكية',
+            'برمجة وتطوير الأنظمة الكهروميكانيكية والروبوتات والأتمتة',
+            'الالتزام بأخلاقيات الذكاء الاصطناعي والقدرة على العمل في فرق متكاملة'
         ]
     }
 ];
@@ -440,6 +544,58 @@ const AcademicPlans = () => {
                             ))}
                         </div>
                     )}
+                </div>
+            </section>
+
+            {/* Official Major Overviews & Graduate Specifications */}
+            <section className="major-descriptions-section" style={{ marginTop: '4rem' }}>
+                <div className="careers-container">
+                    <div className="careers-header">
+                        <div className="careers-badge" style={{ background: 'rgba(99, 102, 241, 0.12)', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#818cf8' }}>
+                            <span>📚</span> {isAr ? 'دليل ومواصفات خريجي الكلية' : 'Faculty Majors & Graduate Specs'}
+                        </div>
+                        <h2 className="careers-title">
+                            {isAr ? 'وصف التخصصات ومواصفات خريجي الكلية' : 'Official Major Overviews & Graduate Specs'}
+                        </h2>
+                        <p className="careers-subtitle">
+                            {isAr
+                                ? 'تعرف على الرؤية الأكاديمية والمهارات المكتسبة وخطة ماجستير أمن المعلومات بكلية الذكاء الاصطناعي بجامعة البلقاء التطبيقية'
+                                : 'Discover academic visions, graduate specifications, and master programs at BAU AI Faculty'}
+                        </p>
+                    </div>
+
+                    <div className="major-descriptions-grid">
+                        {MAJOR_DESCRIPTIONS.map((item) => (
+                            <div key={item.id} className="major-desc-card glass-card" style={{ '--card-color': item.color }}>
+                                <div className="major-desc-header" style={{ background: item.accentBg }}>
+                                    <span className="major-desc-icon">{item.icon}</span>
+                                    <div>
+                                        <h3 className="major-desc-title">{isAr ? item.nameAr : item.nameEn}</h3>
+                                        <span className="major-desc-sub">{isAr ? item.nameEn : item.nameAr}</span>
+                                    </div>
+                                </div>
+                                <div className="major-desc-body">
+                                    <p className="overview-text">{isAr ? item.overviewAr : item.overviewEn}</p>
+
+                                    <div className="specs-box">
+                                        <h4>📋 {isAr ? 'مواصفات وتأهيل الخريجين المكتسبة:' : 'Graduate Specifications & Skills:'}</h4>
+                                        <ul>
+                                            {item.graduateSpecs.map((spec, sIdx) => (
+                                                <li key={sIdx}><span>✅</span> {spec}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+                                    {item.masterInfoAr && (
+                                        <div className="master-info-box">
+                                            <h4>🎓 {isAr ? 'درجة الماجستير في التخصص:' : 'Master\'s Degree Overview:'}</h4>
+                                            <p>{isAr ? item.masterInfoAr : item.masterInfoEn}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 

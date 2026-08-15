@@ -833,3 +833,120 @@
         padding: 1.2rem;
     }
 }
+
+/* Major Descriptions Grid & Cards */
+.major-descriptions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2rem;
+}
+
+.major-desc-card {
+    border-radius: 24px;
+    overflow: hidden;
+    border: 2px solid var(--glass-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.major-desc-card:hover {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.major-desc-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.major-desc-icon {
+    font-size: 2.4rem;
+    line-height: 1;
+}
+
+.major-desc-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 0.2rem;
+}
+
+.major-desc-sub {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.major-desc-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.overview-text {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.specs-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.4rem 1.6rem;
+}
+
+.specs-box h4 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--card-color, var(--primary));
+    margin: 0 0 1rem;
+}
+
+.specs-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.85rem;
+}
+
+.specs-box li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.specs-box li span {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.master-info-box {
+    background: rgba(239, 68, 68, 0.06);
+    border: 1.5px dashed rgba(239, 68, 68, 0.3);
+    border-radius: 16px;
+    padding: 1.4rem 1.6rem;
+}
+
+.master-info-box h4 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ef4444;
+    margin: 0 0 0.6rem;
+}
+
+.master-info-box p {
+    font-size: 0.96rem;
+    line-height: 1.65;
+    color: var(--text-main);
+    margin: 0;
+}
