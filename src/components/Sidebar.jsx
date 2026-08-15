@@ -29,7 +29,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
                 <ul className="sidebar-links">
                     <li><Link to="/" onClick={toggleSidebar}>{t('nav.home')}</Link></li>
-                    <li><Link to="/schedule-builder" onClick={toggleSidebar}>{language === 'ar' ? 'مولد ومُنظّم الجداول 🗓️' : 'Schedule Builder'}</Link></li>
                     <li><Link to="/materials" onClick={toggleSidebar}>{t('nav.materials')}</Link></li>
                     <li><Link to="/plans" onClick={toggleSidebar}>{t('nav.plans')}</Link></li>
                     <li><Link to="/grading" onClick={toggleSidebar}>{t('nav.grading') || 'نظام العلامات'}</Link></li>

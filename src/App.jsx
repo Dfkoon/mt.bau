@@ -23,7 +23,6 @@ import PageTitleUpdater from './components/PageTitleUpdater';
 
 import StudyMaterials from './pages/StudyMaterials';
 import AcademicPlans from './pages/AcademicPlans';
-import ScheduleBuilder from './pages/ScheduleBuilder';
 import Quiz from './pages/Quiz';
 import AcademicCalendar from './pages/AcademicCalendar';
 import GradingSystem from './pages/GradingSystem';
@@ -219,7 +218,6 @@ function App() {
               <main>
                 <Routes>
                   <Route path="/" element={<HomePage />} />
-                  <Route path="/schedule-builder" element={<ScheduleBuilder />} />
                   <Route path="/materials" element={<StudyMaterials />} />
                   <Route path="/plans" element={<AcademicPlans />} />
                   <Route path="/quiz" element={<Quiz />} />
