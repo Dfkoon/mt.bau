@@ -21,6 +21,12 @@ import cyberTree from '../assets/plans/cyber_tree.jpg';
 import aiRoboticsTree from '../assets/plans/ai_robotics_tree.jpg';
 import forensicsTree from '../assets/plans/forensics_tree.jpg';
 
+// Import Prince Abdullah Bin Ghazi Faculty tree plan images
+import cisTreeOld from '../assets/plans/cis_tree_old.png';
+import cgaTreeOld from '../assets/plans/cga_tree_old.png';
+import csTreeOld from '../assets/plans/cs_tree_old.png';
+import seTreeOld from '../assets/plans/se_tree_old.jpg';
+
 // Expected Career Opportunities Data (Official BAU Faculty of AI Directory)
 const CAREER_DATA = [
     {
@@ -308,10 +314,17 @@ const AcademicPlans = () => {
     const [activeCareerTab, setActiveCareerTab] = useState('all');
     const [careerSearchQuery, setCareerSearchQuery] = useState('');
 
-    // Old Plans
+    // State for Faculty Filter: 'all', 'ai', 'abdullah_ghazi'
+    const [selectedFaculty, setSelectedFaculty] = useState('all');
+
+    // Old Plans (Includes AI Faculty Old Trees + Prince Abdullah Bin Ghazi Faculty Trees)
     const oldPlans = [
+        // Faculty of AI
         {
             id: 'old-1',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'علم البيانات',
             nameEn: 'Data Science',
             icon: '📊',
@@ -321,6 +334,9 @@ const AcademicPlans = () => {
         },
         {
             id: 'old-2',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'الواقع الافتراضي',
             nameEn: 'Virtual Reality',
             icon: '🥽',
@@ -330,6 +346,9 @@ const AcademicPlans = () => {
         },
         {
             id: 'old-3',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'أمن المعلومات والفضاء الإلكتروني',
             nameEn: 'Cyber Security',
             icon: '🔒',
@@ -339,6 +358,9 @@ const AcademicPlans = () => {
         },
         {
             id: 'old-4',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'الذكاء الاصطناعي والروبوتات',
             nameEn: 'AI & Robotics',
             icon: '🤖',
@@ -348,21 +370,69 @@ const AcademicPlans = () => {
         },
         {
             id: 'old-5',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'التحقيقات الجنائية الرقمية',
             nameEn: 'Digital Forensics',
             icon: '🔍',
             image: forensicsTree,
             pdf: 'https://www.bau.edu.jo/bauar/Colleges/AI/media/102.pdf',
             color: '#FF9800'
+        },
+        // Prince Abdullah Bin Ghazi Faculty of IT (Tree Plans)
+        {
+            id: 'abg-old-1',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'الرسم الحاسوبي والرسوم المتحركة',
+            nameEn: 'Computer Graphics & Animation',
+            icon: '🎨',
+            image: cgaTreeOld,
+            color: '#ec4899',
+            status: 'active'
+        },
+        {
+            id: 'abg-old-2',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'علم الحاسوب',
+            nameEn: 'Computer Science',
+            icon: '💻',
+            image: csTreeOld,
+            color: '#6366f1',
+            status: 'active'
+        },
+        {
+            id: 'abg-old-3',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'نظم المعلومات الحاسوبية',
+            nameEn: 'Computer Information Systems (CIS)',
+            icon: '🗄️',
+            image: cisTreeOld,
+            color: '#06b6d4',
+            status: 'active'
+        },
+        {
+            id: 'abg-old-4',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'هندسة البرمجيات',
+            nameEn: 'Software Engineering',
+            icon: '⚙️',
+            image: seTreeOld,
+            color: '#8b5cf6',
+            status: 'active'
         }
     ];
 
-    // State for Faculty Filter: 'all', 'ai', 'abdullah_ghazi'
-    const [selectedFaculty, setSelectedFaculty] = useState('all');
-
-    // New Plans (2025/2026) - Faculty of AI & Prince Abdullah Bin Ghazi Faculty
+    // New Plans (2025/2026 - Faculty of AI)
     const newPlans = [
-        // Faculty of AI
         {
             id: 'new-1',
             faculty: 'ai',
@@ -421,55 +491,6 @@ const AcademicPlans = () => {
             icon: '🥽',
             image: vrTreeNew,
             color: '#9C27B0',
-            status: 'active'
-        },
-        // Prince Abdullah Bin Ghazi Faculty of IT
-        {
-            id: 'abg-1',
-            faculty: 'abdullah_ghazi',
-            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
-            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
-            name: 'الرسم الحاسوبي والرسوم المتحركة',
-            nameEn: 'Computer Graphics & Animation',
-            icon: '🎨',
-            color: '#ec4899',
-            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
-            status: 'active'
-        },
-        {
-            id: 'abg-2',
-            faculty: 'abdullah_ghazi',
-            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
-            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
-            name: 'علم الحاسوب',
-            nameEn: 'Computer Science',
-            icon: '💻',
-            color: '#6366f1',
-            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
-            status: 'active'
-        },
-        {
-            id: 'abg-3',
-            faculty: 'abdullah_ghazi',
-            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
-            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
-            name: 'نظم المعلومات الحاسوبية',
-            nameEn: 'Computer Information Systems (CIS)',
-            icon: '🗄️',
-            color: '#06b6d4',
-            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
-            status: 'active'
-        },
-        {
-            id: 'abg-4',
-            faculty: 'abdullah_ghazi',
-            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
-            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
-            name: 'هندسة البرمجيات',
-            nameEn: 'Software Engineering',
-            icon: '⚙️',
-            color: '#8b5cf6',
-            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
             status: 'active'
         }
     ];
