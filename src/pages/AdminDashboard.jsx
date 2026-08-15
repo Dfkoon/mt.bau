@@ -2511,7 +2511,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'اسم المادة باللغ العربي' : 'Subject Name (Arabic)'}</label>
+                <label className="qedit-label">{isAr ? 'اسم المادة باللغة العربية' : 'Subject Name (Arabic)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.nameAr}
@@ -2521,7 +2521,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'اسم المادة باللغ الإنجليزي' : 'Subject Name (English)'}</label>
+                <label className="qedit-label">{isAr ? 'اسم المادة باللغة الإنجليزية' : 'Subject Name (English)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={subjectForm.name}
@@ -2592,7 +2592,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغ العربي' : 'Quiz Title (Arabic)'}</label>
+                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغة العربية' : 'Quiz Title (Arabic)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={partForm.titleAr}
@@ -2602,7 +2602,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 />
               </div>
               <div className="qedit-field">
-                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغ الإنجليزي' : 'Quiz Title (English)'}</label>
+                <label className="qedit-label">{isAr ? 'عنوان الاختبار باللغة الإنجليزية' : 'Quiz Title (English)'}</label>
                 <input
                   className="qedit-opt-input"
                   value={partForm.title}

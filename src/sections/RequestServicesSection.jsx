@@ -242,7 +242,7 @@ export default function RequestServicesSection() {
                 {/* ── QUIZ fields ── */}
                 {service.id === 'quiz' && <>
                   <Field label="اسم المادة" required>
-                    <input className="rss-input" placeholder="مثال: قواعد بيانات، برمج متقدم..." required
+                    <input className="rss-input" placeholder="مثال: قواعد بيانات، برمجة متقدم..." required
                       value={form.subject || ''} onChange={e => set('subject', e.target.value)} />
                   </Field>
                   <Field label="نمط الأسئلة">

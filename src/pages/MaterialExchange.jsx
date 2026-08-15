@@ -3341,7 +3341,7 @@ Please contact us to coordinate the pickup.Thank you.`;
         <header>
             <div class="title-block">
                 <h1>${title}</h1>
-                <p>${isAr ? 'تقرير تفصيلي بجدول التبرعات المقدم من الطلاب للثيم والمرحل الحالي.' : 'Detailed report of student donation records.'}</p>
+                <p>${isAr ? 'تقرير تفصيلي بجدول التبرعات المقدمة من الطلاب للثيم والمرحل الحالي.' : 'Detailed report of student donation records.'}</p>
             </div>
             <div class="meta">
                 <div>${isAr ? 'تاريخخ التصدير:' : 'Export Date:'} <b>${dateStr}</b></div>
@@ -7701,7 +7701,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 className="form-input"
                                                 value={editCoordinatorNotes}
                                                 onChange={e => setEditCoordinatorNotes(e.target.value)}
-                                                placeholder={isAr ? 'مثال: حذف كتاب اللغ العربي بسبب تسليمه، أو تصحيح اسم الطالب...' : 'Example: Deleted Arabic Book because it was delivered, or corrected student name...'}
+                                                placeholder={isAr ? 'مثال: حذف كتاب اللغة العربية بسبب تسليمه، أو تصحيح اسم الطالب...' : 'Example: Deleted Arabic Book because it was delivered, or corrected student name...'}
                                                 style={{
                                                     minHeight: '80px',
                                                     fontFamily: 'inherit',
@@ -9263,7 +9263,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <div className="terms-intro-box">
                                         <p className="terms-intro-text">
                                             {isAr
-                                                ? 'أقرّ أنا الموقع أدناه (مقدم الطلب) بما يلي:'
+                                                ? 'أقرّ أنا الموقع أدناه (مقدمة الطلب) بما يلي:'
                                                 : 'I, the undersigned (requestor), hereby acknowledge the following:'}
                                         </p>
                                     </div>

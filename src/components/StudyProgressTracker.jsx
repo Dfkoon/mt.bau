@@ -8,8 +8,8 @@ const PRESET_SUBJECTS = [
     { id: 'math', nameAr: 'تفاضل وتكامل', nameEn: 'Calculus', icon: '📐' },
     { id: 'phys', nameAr: 'فيزياء عام', nameEn: 'Physics', icon: '⚛️' },
     { id: 'prog', nameAr: 'أساسيات البرمج', nameEn: 'Programming', icon: '💻' },
-    { id: 'arabic', nameAr: 'اللغ العربي', nameEn: 'Arabic', icon: '📖' },
-    { id: 'english', nameAr: 'اللغ الإنجليزي', nameEn: 'English', icon: '🌐' },
+    { id: 'arabic', nameAr: 'اللغة العربية', nameEn: 'Arabic', icon: '📖' },
+    { id: 'english', nameAr: 'اللغة الإنجليزية', nameEn: 'English', icon: '🌐' },
 ];
 
 const StudyProgressTracker = () => {

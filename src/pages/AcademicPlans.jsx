@@ -53,7 +53,7 @@ const CAREER_DATA = [
             { ar: 'مدير مخاطر الأمن السيبراني', en: 'Cybersecurity Risk Manager' },
             { ar: 'مسؤول ومطور سياسات الأمن السيبراني', en: 'Cybersecurity Policy Developer' },
             { ar: 'مدرب على نظم الأمن وبرمجياتها', en: 'Cybersecurity Systems Trainer' },
-            { ar: 'مبرمج ومطور نظم تشغيل وشبكات آمنة', en: 'Secure OS & Network Administrator' },
+            { ar: 'مبرمجة ومطور نظم تشغيل وشبكات آمنة', en: 'Secure OS & Network Administrator' },
             { ar: 'أخصائي دعم فني لأمن الشبكات والمعلومات', en: 'Network Security Support Specialist' },
         ]
     },
@@ -142,7 +142,7 @@ const CAREER_DATA = [
             { ar: 'محلل برامج وأنظمة ذكية', en: 'Smart Systems Analyst' },
             { ar: 'باحث في علوم الذكاء الاصطناعي والروبوتات وتطبيقاتها', en: 'AI & Robotics Researcher' },
             { ar: 'مهندس رؤية حاسوبية ومعالجة الصور', en: 'Computer Vision Engineer' },
-            { ar: 'مبرمج ألعاب فيديو ذكية', en: 'Smart Video Game Programmer' },
+            { ar: 'مبرمجة ألعاب فيديو ذكية', en: 'Smart Video Game Programmer' },
             { ar: 'مهندس نظم السيارات والتنقل الذكي', en: 'Autonomous & Smart Mobility Engineer' },
             { ar: 'أخصائي إدراك الأصوات والوجوه والرؤية السلوكية', en: 'Voice, Face & Perception Specialist' },
         ]
@@ -157,7 +157,7 @@ const CAREER_DATA = [
         badgeText: '6 مهن متوقعة',
         careers: [
             { ar: 'مصمم رسومات ثنائية وثلاثية الأبعاد (2D/3D Graphic Designer)', en: '2D/3D Graphic Designer' },
-            { ar: 'مبرمج ومصمم رسوم متحركة (Animator)', en: '2D/3D Animator' },
+            { ar: 'مبرمجة ومصمم رسوم متحركة (Animator)', en: '2D/3D Animator' },
             { ar: 'مطور خدع بصرية ومؤثرات رقمية (VFX Artist)', en: 'VFX & Effects Artist' },
             { ar: 'مصمم ومطور ألعاب إلكترونية (Game Designer)', en: 'Game Designer & Developer' },
             { ar: 'مصمم واجهات وتجربة المستخدم (UI/UX Designer)', en: 'UI/UX Designer' },
@@ -175,7 +175,7 @@ const CAREER_DATA = [
         careers: [
             { ar: 'مطور برمجيات وتطبيقات (Software Developer)', en: 'Software & Mobile Developer' },
             { ar: 'مهندس حاسوب ونظم تشغيل (Systems Engineer)', en: 'Systems & OS Engineer' },
-            { ar: 'مبرمج ومطور مواقع ويب (Web Developer)', en: 'Web Developer' },
+            { ar: 'مبرمجة ومطور مواقع ويب (Web Developer)', en: 'Web Developer' },
             { ar: 'مهندس ذكاء اصطناعي وخوارزميات (AI & Algorithm Engineer)', en: 'AI & Algorithm Engineer' },
             { ar: 'مدير ومدقق قواعد بيانات وشبكات (Database Administrator)', en: 'Database Administrator' },
             { ar: 'باحث في علوم وتطبيقات الحاسوب (Computer Science Researcher)', en: 'Computer Science Researcher' },
