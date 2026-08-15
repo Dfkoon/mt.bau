@@ -550,7 +550,7 @@ const SecureGateway = () => {
                             <div className="sgw-lock-icon">🔒</div>
                             <p className="sgw-lock-msg">
                                 تم تجاوز عدد المحاولات المسموح بها.<br />
-                                سيُرفع القفل تلقائياً لال:
+                                سيُرفع القفل تلقائياً خلال:
                             </p>
                             <div className="sgw-countdown">{lockCountdown}s</div>
                         </div>

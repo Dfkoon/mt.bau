@@ -175,7 +175,7 @@ const TestimonialForm = () => {
                     <div className="form-row">
                         <div className="form-group full-width">
                             <label htmlFor="major">
-                                {language === 'ar' ? 'التصص' : 'Major'} *
+                                {language === 'ar' ? 'التخصص' : 'Major'} *
                             </label>
                             <input
                                 type="text"

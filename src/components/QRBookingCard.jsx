@@ -112,7 +112,7 @@ const QRBookingCard = ({
                     {[
                         { label: isAr ? '📦 المادة:' : '📦 Material:', value: materialName },
                         { label: isAr ? '👤 الاسم:' : '👤 Student:', value: studentName },
-                        { label: isAr ? '🎁 المتبرع:' : '🎁 Donor:', value: donorName },
+                        { label: isAr ? '🎁 المختبرع:' : '🎁 Donor:', value: donorName },
                         { label: isAr ? '🧑‍💼 المنسق:' : '🧑‍💼 Coordinator:', value: coordinatorName },
                         { label: isAr ? '📅 الموعد:' : '📅 Date:', value: `${pickupDate || '—'} ${pickupTime ? `الساع ${pickupTime}` : ''}` },
                     ].map((row, i) => row.value && (

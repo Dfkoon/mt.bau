@@ -199,7 +199,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                                         ))}
                                                     </p>
                                                     <p style={{ fontSize: '0.85em', opacity: 0.7 }}>
-                                                        <strong>{isAr ? 'التاري:' : 'Date:'}</strong>{' '}
+                                                        <strong>{isAr ? 'التاريخ:' : 'Date:'}</strong>{' '}
                                                         {new Date(donation.submittedAt).toLocaleDateString(
                                                             isAr ? 'ar-JO' : 'en-US'
                                                         )}
@@ -249,10 +249,10 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                                         <strong>{isAr ? 'المادة المحجوز:' : 'Booked Material:'}</strong> {booking.materialName}
                                                     </p>
                                                     <p>
-                                                        <strong>{isAr ? 'المتبرع:' : 'Donor:'}</strong> {booking.donorName} ({booking.donorPhone})
+                                                        <strong>{isAr ? 'المختبرع:' : 'Donor:'}</strong> {booking.donorName} ({booking.donorPhone})
                                                     </p>
                                                     <p style={{ fontSize: '0.85em', opacity: 0.7 }}>
-                                                        <strong>{isAr ? 'التاري:' : 'Date:'}</strong>{' '}
+                                                        <strong>{isAr ? 'التاريخ:' : 'Date:'}</strong>{' '}
                                                         {new Date(booking.bookedAt).toLocaleDateString(
                                                             isAr ? 'ar-JO' : 'en-US'
                                                         )}
@@ -260,7 +260,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                                                 </div>
                                                 <div className="tracker-item-note">
                                                     {isAr
-                                                        ? '📋 سيتم التواصل معك من قبل المتبرع لتنسيق التسليم.'
+                                                        ? '📋 سيتم التواصل معك من قبل المختبرع لتنسيق التسليم.'
                                                         : '📋 The donor will contact you to coordinate delivery.'}
                                                 </div>
                                             </div>

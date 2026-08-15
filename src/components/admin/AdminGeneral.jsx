@@ -168,7 +168,7 @@ const AdminGeneral = () => {
                         </p>
                         <p style={{ margin: '0.3rem 0 0', color: 'rgba(255,255,255,0.6)', fontSize: '0.78rem' }}>
                             {isAr
-                                ? `تم إرسال الطلب بتاريخ: ${new Date(resetRequest.requestedAt).toLocaleString('ar-SA')}`
+                                ? `تم إرسال الطلب بتاريخخ: ${new Date(resetRequest.requestedAt).toLocaleString('ar-SA')}`
                                 : `Requested at: ${new Date(resetRequest.requestedAt).toLocaleString('en-US')}`}
                         </p>
                     </div>

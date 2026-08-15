@@ -130,7 +130,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
                 )}
 
                 <div className="detail-item">
-                    <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted Date'}</span>
+                    <span className="label">📅 {isAr ? 'تاريخخ الطلب' : 'Submitted Date'}</span>
                     <span className="value">
                         {booking.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                     </span>
@@ -138,7 +138,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                 {booking.approvedAt && (
                     <div className="detail-item">
-                        <span className="label">✔️ {isAr ? 'تاريخ الموافقة' : 'Approval Date'}</span>
+                        <span className="label">✔️ {isAr ? 'تاريخخ الموافقة' : 'Approval Date'}</span>
                         <span className="value">
                             {booking.approvedAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                         </span>
@@ -179,7 +179,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                 <div className="status-details">
                     <div className="detail-item">
-                        <span className="label">🎓 {isAr ? 'المقررات المتبرع بها' : 'Donated Courses'}</span>
+                        <span className="label">🎓 {isAr ? 'المقررات المختبرع بها' : 'Donated Courses'}</span>
                         <span className="value">
                             {courseNamesText ? courseNamesText : isAr ? 'غير محدد' : 'Not specified'}
                         </span>
@@ -193,7 +193,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
                     )}
 
                     <div className="detail-item">
-                        <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted Date'}</span>
+                        <span className="label">📅 {isAr ? 'تاريخخ الطلب' : 'Submitted Date'}</span>
                         <span className="value">
                             {donation.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                         </span>
@@ -210,7 +210,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
 
                     {donation.approvedAt && (
                         <div className="detail-item">
-                            <span className="label">✔️ {isAr ? 'تاريخ الموافقة' : 'Approval Date'}</span>
+                            <span className="label">✔️ {isAr ? 'تاريخخ الموافقة' : 'Approval Date'}</span>
                             <span className="value">
                                 {donation.approvedAt.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                             </span>
@@ -249,7 +249,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
                     <h2>📊 {isAr ? 'فحص حال المقررات' : 'Course Status Checker'}</h2>
                     <p>
                         {isAr
-                            ? 'تحقق من حالة الموافقة على مقرراتك المحجوزة والمتبرع بها'
+                            ? 'تحقق من حالة الموافقة على مقرراتك المحجوزة والمختبرع بها'
                             : 'Check the approval status of your booked and donated courses'}
                     </p>
                 </div>
@@ -269,7 +269,7 @@ const CourseStatusChecker = ({ isOpen, onClose }) => {
                         </div>
 
                         <div className="form-group">
-                            <label>👤 {isAr ? 'اسمك الكامل (اتياري)' : 'Full Name (Optional)'}</label>
+                            <label>👤 {isAr ? 'اسمك الكامل (اختياري)' : 'Full Name (Optional)'}</label>
                             <input
                                 type="text"
                                 placeholder={isAr ? 'أحمد محمد' : 'Ahmed Mohammed'}

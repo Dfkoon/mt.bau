@@ -198,7 +198,7 @@ const AdminCourses = () => {
         return (
             <div className="admin-loading-container">
                 <div className="admin-spinner" />
-                <p>{isAr ? 'جاري تحميل الالمواد الدراسية...' : 'Loading courses...'}</p>
+                <p>{isAr ? 'جاري تحميل المواد الدراسية...' : 'Loading courses...'}</p>
             </div>
         );
     }
@@ -206,7 +206,7 @@ const AdminCourses = () => {
     return (
         <div className="admin-panel-section admin-fade-in" style={{ direction: 'rtl', textAlign: 'right' }}>
             <h3 className="admin-section-title">
-                <span>{isAr ? 'إدارة الالمواد الدراسيةة' : 'Manage Study Materials'}</span>
+                <span>{isAr ? 'إدارة المواد الدراسيةة' : 'Manage Study Materials'}</span>
             </h3>
 
             {/* Filters Card */}
@@ -238,7 +238,7 @@ const AdminCourses = () => {
                     {activeSpecializations.length > 0 && (
                         <div className="filter-group" style={{ flex: '1 1 180px' }}>
                             <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem' }}>
-                                {isAr ? 'التصص الفرعي:' : 'Specialization:'}
+                                {isAr ? 'التخصص الفرعي:' : 'Specialization:'}
                             </label>
                             <select 
                                 className="admin-input-field" 
@@ -246,7 +246,7 @@ const AdminCourses = () => {
                                 value={selectedSpecialization} 
                                 onChange={e => setSelectedSpecialization(e.target.value)}
                             >
-                                <option value="all">{isAr ? 'كل التصصات' : 'All Specializations'}</option>
+                                <option value="all">{isAr ? 'كل التخصصات' : 'All Specializations'}</option>
                                 {activeSpecializations.map(s => (
                                     <option key={s.id} value={s.id}>{isAr ? s.name : s.nameEn}</option>
                                 ))}
@@ -454,7 +454,7 @@ const AdminCourses = () => {
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.82rem', color: 'var(--adm-muted)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
-                                        {isAr ? 'التصص:' : 'Specialization:'}
+                                        {isAr ? 'التخصص:' : 'Specialization:'}
                                     </label>
                                     <select 
                                         className="admin-input-field"

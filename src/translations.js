@@ -2,7 +2,7 @@ const translations = {
     ar: {
         // Navbar
         'nav.home': 'الرئيسية',
-        'nav.materials': 'الالمواد الدراسية',
+        'nav.materials': 'المواد الدراسية',
         'nav.plans': 'الخطط الإرشادية',
         'nav.grading': 'نظام العلامات',
         'nav.quiz': 'الاختبارات',
@@ -36,7 +36,7 @@ const translations = {
         'calendar.stats.holidays': 'عطل رسمية',
         'calendar.stats.deadlines': 'مواعيد نهائية',
         'calendar.upcoming.title': '🔔 أحداث قادمة قريباً',
-        'calendar.search.placeholder': 'ابحث عن حدث أو تاريخ...',
+        'calendar.search.placeholder': 'ابحث عن حدث أو تاريخخ...',
         'calendar.actions.print': 'طباعة التقويم',
         'calendar.filters.all': 'الكل',
         'calendar.filters.exams': 'امتحانات',
@@ -71,8 +71,8 @@ const translations = {
         'quiz.finish': 'إنهاء المحاولة',
 
         // Study Materials Page
-        'materials.hero.title': 'الالمواد الدراسية',
-        'materials.hero.subtitle': 'استكشف جميع الالمواد الدراسية ومصادرها المتنوعة',
+        'materials.hero.title': 'المواد الدراسية',
+        'materials.hero.subtitle': 'استكشف جميع المواد الدراسية ومصادرها المتنوعة',
         'materials.search.placeholder': 'ابحث عن مادة...',
         'materials.no_results.title': 'لم يتم العثور على نتائج',
         'materials.no_results.text': 'جرب البحث بكلمات مختلفة',
@@ -136,7 +136,7 @@ const translations = {
         'chat.send': 'إرسال',
         'chat.typing': 'نشمي يكتب...',
         'chat.whoarewe': 'من نحن؟',
-        'chat.materials': 'الالمواد الدراسية',
+        'chat.materials': 'المواد الدراسية',
         'chat.calendar': 'التقويم الأكاديمي',
         'chat.news': 'الأخبار',
         'chat.suggestions': 'اقتراحات',
@@ -179,7 +179,7 @@ const translations = {
         'services.subtitle': 'نوفر لك كل الأدوات التي تحتاجها للنجاح في مسيرتك الدراسية',
         'services.goto': 'انتقل للموقع',
         'services.soon': 'قريباً',
-        'service.1.title': 'الالمواد الدراسية', 'service.1.desc': 'تنزيل أحدث المواد والملخصات بصيغة PDF لجميع التخصصات.',
+        'service.1.title': 'المواد الدراسية', 'service.1.desc': 'تنزيل أحدث المواد والملخصات بصيغة PDF لجميع التخصصات.',
         'service.2.title': 'بنك الأسئلة', 'service.2.desc': 'أسئلة السنوات السابقة مع الحلول النموذجية للتدرب على الامتحانات.',
         'service.3.title': 'الدروس التعليمية', 'service.3.desc': 'شروحات مفصلة وفيديوهات تعليمية للالمواد الدراسية المعقدة.',
         'service.4.title': 'نظام العلامات', 'service.4.desc': 'تتبع أدائك الأكاديمي وحساب معدلك الفصلي والتراكمي بسهولة.',

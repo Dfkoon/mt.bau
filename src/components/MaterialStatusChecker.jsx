@@ -119,7 +119,7 @@ const MaterialStatusChecker = ({ isAr }) => {
 
                     <div className="form-group">
                         <label className="form-label">
-                            👤 {isAr ? 'الاسم (اتياري)' : 'Name (Optional)'}
+                            👤 {isAr ? 'الاسم (اختياري)' : 'Name (Optional)'}
                         </label>
                         <input
                             type="text"
@@ -214,7 +214,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     </div>
 
                                                     <div className="info-row">
-                                                        <span className="label">📅 {isAr ? 'التاري' : 'Date'}:</span>
+                                                        <span className="label">📅 {isAr ? 'التاريخ' : 'Date'}:</span>
                                                         <span className="value">{formatDate(donation.submittedAt)}</span>
                                                     </div>
                                                 </div>
@@ -261,7 +261,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     </div>
 
                                                     <div className="info-row">
-                                                        <span className="label">{isAr ? 'بيانات المتبرع' : 'Donor Info'}:</span>
+                                                        <span className="label">{isAr ? 'بيانات المختبرع' : 'Donor Info'}:</span>
                                                         <div className="donor-info">
                                                             <p>📛 {isAr ? 'الاسم' : 'Name'}: {booking.donorName}</p>
                                                             <p>📱 {isAr ? 'الهاتف' : 'Phone'}: {booking.donorPhone}</p>
@@ -269,7 +269,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     </div>
 
                                                     <div className="info-row">
-                                                        <span className="label">📅 {isAr ? 'تاري الحجز' : 'Booking Date'}:</span>
+                                                        <span className="label">📅 {isAr ? 'تاريخخ الحجز' : 'Booking Date'}:</span>
                                                         <span className="value">{formatDate(booking.bookedAt)}</span>
                                                     </div>
                                                 </div>

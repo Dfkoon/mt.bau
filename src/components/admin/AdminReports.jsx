@@ -330,7 +330,7 @@ const AdminReports = () => {
                                 {!editForm.image && !imageUploading && (
                                     <div className="image-dropzone" onClick={() => imageInputRef.current?.click()}>
                                         <span>📷</span>
-                                        <p>{isAr ? 'اضغط لاتيار صور من جهازك' : 'Click to select image'}</p>
+                                        <p>{isAr ? 'اضغط لاختيار صور من جهازك' : 'Click to select image'}</p>
                                     </div>
                                 )}
 

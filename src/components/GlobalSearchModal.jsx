@@ -5,7 +5,7 @@ import './GlobalSearchModal.css';
 
 const SEARCH_ITEMS = [
   // Pages
-  { id: 'p-materials', titleAr: 'الالمواد الدراسية والدوسيات', titleEn: 'Study Materials & Handouts', categoryAr: 'صفحة', categoryEn: 'Page', link: '/materials', icon: '📚', keywords: 'مواد خطة دوسية تلخيص أسئلة بكالوريوس دبلوم' },
+  { id: 'p-materials', titleAr: 'المواد الدراسية والدوسيات', titleEn: 'Study Materials & Handouts', categoryAr: 'صفحة', categoryEn: 'Page', link: '/materials', icon: '📚', keywords: 'مواد خطة دوسية تلخيص أسئلة بكالوريوس دبلوم' },
   { id: 'p-plans', titleAr: 'الخطط الدراسية التفاعلية', titleEn: 'Interactive Academic Plans', categoryAr: 'صفحة', categoryEn: 'Page', link: '/plans', icon: '🗺️', keywords: 'خطة خطط تخصص ساعات مواد إجباري اختياري' },
   { id: 'p-grading', titleAr: 'حاسبة المعدل والنظام الأكاديمي', titleEn: 'GPA Calculator & Grading System', categoryAr: 'أداة', categoryEn: 'Tool', link: '/grading', icon: '⚖️', keywords: 'معدل حساب نقاط تقدير فصلي تراكمي علامات' },
   { id: 'p-quiz', titleAr: 'بنك الأسئلة الشامل والاختبارات', titleEn: 'Question Bank & Quizzes', categoryAr: 'أداة', categoryEn: 'Tool', link: '/quiz', icon: '✍️', keywords: 'أسئلة امتحانات كويز سنوات سنوات سابقة بنك' },

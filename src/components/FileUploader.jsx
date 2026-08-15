@@ -169,7 +169,7 @@ const FileUploader = ({ onClose }) => {
         }
 
         if (contributionType !== 'external_link' && files.length === 0) {
-            toast.error(language === 'ar' ? 'يرجى اتيار ملف واحد على الأقل' : 'Please select at least one file');
+            toast.error(language === 'ar' ? 'يرجى اختيار ملف واحد على الأقل' : 'Please select at least one file');
             return;
         }
 
@@ -348,7 +348,7 @@ const FileUploader = ({ onClose }) => {
                             </div>
 
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'اسمك (اتياري - سيظهر كمساهم)' : 'Your Name (Optional - will show as contributor)'}</label>
+                                <label>{language === 'ar' ? 'اسمك (اختياري - سيظهر كمساهم)' : 'Your Name (Optional - will show as contributor)'}</label>
                                 <input
                                     type="text"
                                     placeholder={language === 'ar' ? 'مثال: أحمد الد...' : 'e.g. Ahmed Khaled...'}

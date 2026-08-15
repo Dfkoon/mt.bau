@@ -45,7 +45,7 @@ const SERVICES = [
 ];
 
 const QUESTION_STYLES = [
-  'اتيار من متعدد (MCQ)',
+  'اختيار من متعدد (MCQ)',
   'صح وطأ',
   'أسئلة مقالي',
   'أسئلة قصير',
@@ -229,7 +229,7 @@ export default function RequestServicesSection() {
                       value={form.subject || ''} onChange={e => set('subject', e.target.value)} />
                   </Field>
                   <Field label="رابط المادة / الكتاب">
-                    <input className="rss-input" placeholder="https://... (اتياري)" dir="ltr"
+                    <input className="rss-input" placeholder="https://... (اختياري)" dir="ltr"
                       value={form.materialLink || ''} onChange={e => set('materialLink', e.target.value)} />
                   </Field>
                   <Field label="ملاحظات أو نقاط تريد التركيز عليها">
@@ -285,7 +285,7 @@ export default function RequestServicesSection() {
                       placeholder="اشرح فكرتك بالتفصيل: ما المشكل التي تحلها؟ من هم المستدمون؟ ما المميزات الأساسي؟"
                       value={form.ideaDetails || ''} onChange={e => set('ideaDetails', e.target.value)} />
                   </Field>
-                  <Field label="التقنيات المفضل (اتياري)">
+                  <Field label="التقنيات المفضل (اختياري)">
                     <input className="rss-input" placeholder="مثال: React, Firebase, Python..."
                       value={form.techStack || ''} onChange={e => set('techStack', e.target.value)} />
                   </Field>

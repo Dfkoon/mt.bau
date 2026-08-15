@@ -24,7 +24,7 @@ const NOTIFICATIONS = {
             emoji: '⭐',
             titleAr: 'ساعد زملاءك!',
             titleEn: 'Help your classmates!',
-            msgAr: 'بعد تحميل الملف، قيّم المادة بالنجوم لمساعد الطلاب الآخرين على اتيار أفضل المراجع.',
+            msgAr: 'بعد تحميل الملف، قيّم المادة بالنجوم لمساعد الطلاب الآخرين على اختيار أفضل المراجع.',
             msgEn: 'After downloading, rate the material with stars to help other students pick the best references.',
             type: 'tip',
         }

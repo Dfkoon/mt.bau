@@ -72,7 +72,7 @@ const StudyProgressTracker = () => {
         <div className="progress-tracker-container">
             <div className="tracker-header">
                 <div className="tracker-title">
-                    <h3>📊 {isAr ? 'متتبع تقدم الدراس الشصي' : 'Personal Study Progress Tracker'}</h3>
+                    <h3>📊 {isAr ? 'متتبع تقدم الدراس الشخصي' : 'Personal Study Progress Tracker'}</h3>
                     <p>{isAr ? 'راقب مسيرتك الدراسي وتقدمك في مواد الفصل بشكل يومي' : 'Monitor your academic journey and daily study progress per subject'}</p>
                 </div>
                 <div className="overall-circle">

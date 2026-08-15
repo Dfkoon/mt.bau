@@ -156,7 +156,7 @@ const AdminCourseStatusManager = () => {
                 )}
 
                 <div className="detail">
-                    <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted'}</span>
+                    <span className="label">📅 {isAr ? 'تاريخخ الطلب' : 'Submitted'}</span>
                     <span className="value">
                         {booking.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                     </span>
@@ -173,7 +173,7 @@ const AdminCourseStatusManager = () => {
             {actioningItem === booking.id ? (
                 <div className="approval-section">
                     <textarea
-                        placeholder={isAr ? 'أضف ملاحظاتك (اتياري)' : 'Add your notes (optional)'}
+                        placeholder={isAr ? 'أضف ملاحظاتك (اختياري)' : 'Add your notes (optional)'}
                         value={approvalNotes}
                         onChange={(e) => setApprovalNotes(e.target.value)}
                         maxLength={500}
@@ -229,7 +229,7 @@ const AdminCourseStatusManager = () => {
 
             <div className="request-details">
                 <div className="detail">
-                    <span className="label">🎓 {isAr ? 'المقررات المتبرع بها' : 'Donated Courses'}</span>
+                    <span className="label">🎓 {isAr ? 'المقررات المختبرع بها' : 'Donated Courses'}</span>
                     <span className="value">
                         {donation.courseNames?.join(', ') || (isAr ? 'غير محدد' : 'Not specified')}
                     </span>
@@ -243,7 +243,7 @@ const AdminCourseStatusManager = () => {
                 )}
 
                 <div className="detail">
-                    <span className="label">📅 {isAr ? 'تاري الطلب' : 'Submitted'}</span>
+                    <span className="label">📅 {isAr ? 'تاريخخ الطلب' : 'Submitted'}</span>
                     <span className="value">
                         {donation.submittedAt?.toLocaleDateString(isAr ? 'ar-IQ' : 'en-US')}
                     </span>
@@ -267,7 +267,7 @@ const AdminCourseStatusManager = () => {
             {actioningItem === donation.id ? (
                 <div className="approval-section">
                     <textarea
-                        placeholder={isAr ? 'أضف ملاحظاتك (اتياري)' : 'Add your notes (optional)'}
+                        placeholder={isAr ? 'أضف ملاحظاتك (اختياري)' : 'Add your notes (optional)'}
                         value={approvalNotes}
                         onChange={(e) => setApprovalNotes(e.target.value)}
                         maxLength={500}

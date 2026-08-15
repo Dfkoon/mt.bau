@@ -21,7 +21,7 @@ const buildQuizPrompt = (text, lang, count, type) => {
 
     const typeInstructions = {
         mcq: lang === 'ar'
-            ? `أنشئ ${count} سؤال اتيار متعدد (MCQ). لكل سؤال: نص السؤال، 4 يارات (A/B/C/D)، والإجاب الصحيح.`
+            ? `أنشئ ${count} سؤال اختيار متعدد (MCQ). لكل سؤال: نص السؤال، 4 يارات (A/B/C/D)، والإجاب الصحيح.`
             : `Generate ${count} multiple choice questions (MCQ). For each: question text, 4 options (A/B/C/D), correct answer.`,
         tf: lang === 'ar'
             ? `أنشئ ${count} سؤال صح أو خطأ. لكل سؤال: عبار وإجاب (صح/خطأ) مع شرح قصير.`
@@ -60,7 +60,7 @@ ${text.slice(0, 6000)}
 
 const buildSummaryPrompt = (text, lang) => {
     if (lang === 'ar') {
-        return `أنت بير أكاديمي متصص في تلخيص المواد الجامعي.
+        return `أنت بير أكاديمي متخصص في تلخيص المواد الجامعي.
 قم بتليص النص التالي باللغ العربي الفصحى بشكل منظم وشامل.
 
 أرجع النتيج بصيغ JSON فقط:

@@ -52,7 +52,7 @@ export const courseNameToQuizMapping = {
 
     // --- University Optional ---
     'Islamic Culture': 'islam_and_life',
-    'الثقاف الإسلامي': 'islam_and_life',
+    'الثقافة الإسلامية': 'islam_and_life',
     'Introduction to Psychology': 'psych_basics',
     'مدل إلى علم النفس': 'psych_basics',
     'Digital Society': 'digital_society',
@@ -62,7 +62,7 @@ export const courseNameToQuizMapping = {
     'Machine Learning': 'machine_learning',
     'تعلم الآل': 'machine_learning',
     'Machine Learning Lab': 'ml_lab',
-    'متبر تعلم الآل': 'ml_lab',
+    'مختبر تعلم الآل': 'ml_lab',
     'IoT and its Security': 'cyber_iot',
     'انترنت الأشياء وأمنها': 'cyber_iot',
     'Biometrics and Security': 'biometrics_security',

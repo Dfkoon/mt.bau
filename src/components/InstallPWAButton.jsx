@@ -239,7 +239,7 @@ const InstallPWAButton = ({ isAr = true }) => {
                                 <div style={{ background: 'rgba(255,255,255,0.04)', padding: '1rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.08)' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>1</span>
-                                        <span>{isAr ? 'اضغط على نقاط القائم الثلاث أعلى المتصفح' : 'Tap menu dots'} <strong style={{ color: '#fbbf24' }}>()</strong></span>
+                                        <span>{isAr ? 'اضغط على نقاط القائم الثلاث أعلى المختصفح' : 'Tap menu dots'} <strong style={{ color: '#fbbf24' }}>()</strong></span>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                                         <span style={{ background: '#d32f2f', color: '#ffffff', fontWeight: 800, width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', flexShrink: 0 }}>2</span>

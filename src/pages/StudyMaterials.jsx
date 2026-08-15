@@ -216,7 +216,7 @@ const StudyMaterials = () => {
                 <div className="specialization-switcher fade-in">
                     <div className="major-selection-alert fade-in">
                         <div className="alert-icon">💡</div>
-                        <div className="alert-text">{language === 'ar' ? 'يرجى اتيار تخصصك أولاً' : 'Please select your major first'}</div>
+                        <div className="alert-text">{language === 'ar' ? 'يرجى اختيار تخصصك أولاً' : 'Please select your major first'}</div>
                     </div>
                     <div className="spec-options-grid">
                         {faculty.specializations.map(spec => (

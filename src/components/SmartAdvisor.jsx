@@ -124,7 +124,7 @@ const SmartAdvisor = () => {
                     )}
                     {majors.length === 0 && (
                         <button className="advisor-reset-btn" onClick={() => setStep(0)}>
-                            {language === 'ar' ? 'رجوع للاتيار' : 'Back to Selection'}
+                            {language === 'ar' ? 'رجوع للاختيار' : 'Back to Selection'}
                         </button>
                     )}
                 </div>
@@ -191,7 +191,7 @@ const SmartAdvisor = () => {
                                 </div>
                             ))
                         ) : (
-                            <p className="no-rec">{language === 'ar' ? 'لا توجد توصيات حالياً، تأكد من اتيار تخصصك وإدال وضعك الأكاديمي بدق.' : 'No recommendations available. Please ensure you entered your progress correctly.'}</p>
+                            <p className="no-rec">{language === 'ar' ? 'لا توجد توصيات حالياً، تأكد من اختيار تخصصك وإدخال وضعك الأكاديمي بدقة.' : 'No recommendations available. Please ensure you entered your progress correctly.'}</p>
                         )}
                     </div>
 

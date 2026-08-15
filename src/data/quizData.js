@@ -1134,7 +1134,7 @@ export const quizData = {
             {
                 id: 20,
                 type: 'tf',
-                questionAr: 'من اهم ما يمز مرحل العصر الزراعي على انها الاعتماد على الارض واليرات الطبيعي كمورد اساسي؟',
+                questionAr: 'من اهم ما يمز مرحل العصر الزراعةي على انها الاعتماد على الارض واليرات الطبيعي كمورد اساسي؟',
                 questionEn: '',
                 correctAnswer: true,
                 marks: 2.0
@@ -1184,7 +1184,7 @@ export const quizData = {
             {
                 id: 24,
                 type: 'mcq',
-                questionAr: 'في المرحل لمن تنشأ فجأ ، بل كانت موجود طول تاري البشري ؟',
+                questionAr: 'في المرحل لمن تنشأ فجأ ، بل كانت موجود طول تاريخخ البشري ؟',
                 questionEn: '',
                 options: [
                     { id: 'a', textAr: 'مرحل الاولى' },
@@ -2312,13 +2312,13 @@ export const quizData = {
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 1, type: 'mcq', questionAr: 'رتب جندي أول من الرتب الأرى الأفراد وتتمثل بـ:', options: [{ id: 'a', textAr: 'شريط على الذراع' }, { id: 'b', textAr: 'التاج الهاشمي على الذراع' }, { id: 'c', textAr: 'شريطتان على الذراع' }, { id: 'd', textAr: 'ثلاث شرائط على الذراع' }], correctAnswer: 'a', marks: 1 },
-            { id: 2, type: 'mcq', questionAr: 'تأسست قياد القو البحري والزوارق الملكي عام:', options: [{ id: 'a', textAr: '1951' }, { id: 'b', textAr: '1950' }, { id: 'c', textAr: '1946' }, { id: 'd', textAr: '1977' }], correctAnswer: 'a', marks: 1 },
+            { id: 1, type: 'mcq', questionAr: 'رتب جندي أول من الرتب الأخرى الأفراد وتتمثل بـ:', options: [{ id: 'a', textAr: 'شريط على الذراع' }, { id: 'b', textAr: 'التاج الهاشمي على الذراع' }, { id: 'c', textAr: 'شريطتان على الذراع' }, { id: 'd', textAr: 'ثلاث شرائط على الذراع' }], correctAnswer: 'a', marks: 1 },
+            { id: 2, type: 'mcq', questionAr: 'تأسست قياد القو البحرية والزوارق الملكي عام:', options: [{ id: 'a', textAr: '1951' }, { id: 'b', textAr: '1950' }, { id: 'c', textAr: '1946' }, { id: 'd', textAr: '1977' }], correctAnswer: 'a', marks: 1 },
             { id: 3, type: 'mcq', questionAr: 'سيد المعرك الذي يمسك الأرض ويطهرها ويحتفظ بها هو جندي:', options: [{ id: 'a', textAr: 'اللاسلكي' }, { id: 'b', textAr: 'المدفعي' }, { id: 'c', textAr: 'الدروع' }, { id: 'd', textAr: 'المشا' }], correctAnswer: 'd', marks: 1 },
-            { id: 4, type: 'mcq', questionAr: 'تم تشكيل نوا سلاح الجو الملكي في عهد جلال:', options: [{ id: 'a', textAr: 'الملك المؤسس' }, { id: 'b', textAr: 'الملك طلال' }, { id: 'c', textAr: 'الملك حسين' }, { id: 'd', textAr: 'الملك عبدالله الثاني' }], correctAnswer: 'a', marks: 1 },
+            { id: 4, type: 'mcq', questionAr: 'تم تشكيل نوا سلاح الجو الملكي في عهد جخلال:', options: [{ id: 'a', textAr: 'الملك المؤسس' }, { id: 'b', textAr: 'الملك طلال' }, { id: 'c', textAr: 'الملك حسين' }, { id: 'd', textAr: 'الملك عبدالله الثاني' }], correctAnswer: 'a', marks: 1 },
             { id: 5, type: 'mcq', questionAr: 'من أنواع الدفاع الجوي:', options: [{ id: 'a', textAr: 'الدفاع الجوي المركزي (سلاح الجو)' }, { id: 'b', textAr: 'راجمات الصواري' }, { id: 'c', textAr: 'قوات المظليين' }, { id: 'd', textAr: 'الذائر' }], correctAnswer: 'a', marks: 1 },
-            { id: 6, type: 'mcq', questionAr: 'يرأس دائر المابرات العام مدير عام يتم تعيينه وعزله من قبل:', options: [{ id: 'a', textAr: 'جلال الملك المعظم' }, { id: 'b', textAr: 'رئيس الوزراء بأوامر طي' }, { id: 'c', textAr: 'مجلس الأعيان' }, { id: 'd', textAr: 'رئيس الوزراء ورئيس مجلس النواب' }], correctAnswer: 'a', marks: 1 },
-            { id: 7, type: 'mcq', questionAr: 'من مصادر تجنيد الأفراد (الرتب الأرى) في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'المتطوعون عن طريق مديري شؤون الضباط' }, { id: 'b', textAr: 'المتطوعون عن طريق مديري شؤون الأفراد' }, { id: 'c', textAr: 'جامع مؤت' }, { id: 'd', textAr: 'كلية الأمير حسن للعلوم الإسلامي' }], correctAnswer: 'b', marks: 1 },
+            { id: 6, type: 'mcq', questionAr: 'يرأس دائرة المخابرات العام مدير عام يتم تعيينه وعزله من قبل:', options: [{ id: 'a', textAr: 'جلال الملك المعظم' }, { id: 'b', textAr: 'رئيس الوزراء بأوامر طي' }, { id: 'c', textAr: 'مجلس الأعيان' }, { id: 'd', textAr: 'رئيس الوزراء ورئيس مجلس النواب' }], correctAnswer: 'a', marks: 1 },
+            { id: 7, type: 'mcq', questionAr: 'من مصادر تجنيد الأفراد (الرتب الأخرى) في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'المتطوعون عن طريق مديري شؤون الضباط' }, { id: 'b', textAr: 'المتطوعون عن طريق مديري شؤون الأفراد' }, { id: 'c', textAr: 'جامع مؤت' }, { id: 'd', textAr: 'كلية الأمير حسن للعلوم الإسلامي' }], correctAnswer: 'b', marks: 1 },
             { id: 8, type: 'mcq', questionAr: 'من أبرز ملامح مرحل التميز الوطني والدور الإقليمي في مسير الخدمات الطبي الملكي:', options: [{ id: 'a', textAr: 'إنشاء مركز الملك علياء لأمراض وجراح القلب' }, { id: 'b', textAr: 'إقرار مشروع معالج العائلات' }, { id: 'c', textAr: 'افتتاح مدين الحسين الطبي' }, { id: 'd', textAr: 'افتتاح مستشفى اللطرون العسكري' }], correctAnswer: 'a', marks: 1 },
             { id: 9, type: 'mcq', questionAr: 'ترمز الكر الأرضي في شعار المملك الأردني الهاشمي إلى:', options: [{ id: 'a', textAr: 'النظام الملكي' }, { id: 'b', textAr: 'راي الثور العربي الكبرى' }, { id: 'c', textAr: 'انتشار الإسلام وحضارته في العالم' }, { id: 'd', textAr: 'الفداء والتضحي' }], correctAnswer: 'c', marks: 1 },
             { id: 10, type: 'mcq', questionAr: 'بدأ استدام العلم الأردني بصورته الحالي منذ:', options: [{ id: 'a', textAr: 'استقلال المملك عام 1946' }, { id: 'b', textAr: 'تأسيس إمار شرق الأردن عام 1921' }, { id: 'c', textAr: 'تشكيل أول حكوم أردني' }, { id: 'd', textAr: 'إعلان الثور العربي الكبرى' }], correctAnswer: 'b', marks: 1 },
@@ -2326,11 +2326,11 @@ export const quizData = {
             { id: 12, type: 'mcq', questionAr: 'أصدر جلال الملك الحسين بن طلال بعد حرب الليج الثاني كتاب بعنوان:', options: [{ id: 'a', textAr: 'مهنتي كملك' }, { id: 'b', textAr: 'أحاديث ملكي' }, { id: 'c', textAr: 'الكتاب الأبيض' }, { id: 'd', textAr: 'الحرب العراقي الإيراني' }], correctAnswer: 'c', marks: 1 },
             { id: 13, type: 'mcq', questionAr: 'إدام الاتصالات اللازم لنقل الصوت والصور والمعلومات من واجبات:', options: [{ id: 'a', textAr: 'أسلح المناور' }, { id: 'b', textAr: 'أسلح الإسناد' }, { id: 'c', textAr: 'سلاح اللاسلكي الملكي' }, { id: 'd', textAr: 'سلاح الهندس الملكي' }], correctAnswer: 'c', marks: 1 },
             { id: 14, type: 'mcq', questionAr: 'أطلق الشريف الحسين بن علي رصاص الثور العربي الكبرى من:', options: [{ id: 'a', textAr: 'مك المكرم 1916' }, { id: 'b', textAr: 'مك المكرم 1917' }, { id: 'c', textAr: 'المدين المنور 1917' }, { id: 'd', textAr: 'عمان 1916' }], correctAnswer: 'a', marks: 1 },
-            { id: 15, type: 'mcq', questionAr: 'السيطر على المزارعين والصيادين والرعا ضمن مناطق المسؤولي من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندس الملكي' }, { id: 'c', textAr: 'مؤسس الإسكان والأشغال العسكري' }, { id: 'd', textAr: 'المركز العسكري لمكافح الإرهاب' }], correctAnswer: 'a', marks: 1 },
+            { id: 15, type: 'mcq', questionAr: 'السيطر على المزارعين والصيادين والرعا ضمن مناطق المسؤولية من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندس الملكي' }, { id: 'c', textAr: 'مؤسس الإسكان والأشغال العسكري' }, { id: 'd', textAr: 'المركز العسكري لمكافح الإرهاب' }], correctAnswer: 'a', marks: 1 },
             { id: 16, type: 'mcq', questionAr: 'من واجبات سلاح الهندس الملكي:', options: [{ id: 'a', textAr: 'المساعد في أعمال التفي والتمويه' }, { id: 'b', textAr: 'تأمين البريد العسكري' }, { id: 'c', textAr: 'تقديم الإسناد الفني' }, { id: 'd', textAr: 'السيطر على اللجوء غير الشرعي' }], correctAnswer: 'a', marks: 1 },
             { id: 17, type: 'mcq', questionAr: 'إدام القوات المسلح بجميع ما تحتاجه من أرزاق ووقود ونقل من واجبات:', options: [{ id: 'a', textAr: 'المركز الوطني لإدار الأزمات' }, { id: 'b', textAr: 'وزار النقل' }, { id: 'c', textAr: 'التموين والنقل الملكي' }, { id: 'd', textAr: 'المركز الأردني للتصميم' }], correctAnswer: 'c', marks: 1 },
             { id: 18, type: 'mcq', questionAr: 'تسمى الاتفاقي التي وقعتها فرنسا وبريطانيا عام 1916:', options: [{ id: 'a', textAr: 'سايكس بيكو' }, { id: 'b', textAr: 'وعد بلفور' }, { id: 'c', textAr: 'الحسين مكماهون' }, { id: 'd', textAr: 'فرساي' }], correctAnswer: 'a', marks: 1 },
-            { id: 19, type: 'mcq', questionAr: 'ضمن إدارات الأمن العام، تعمل الشرط النسائي في:', options: [{ id: 'a', textAr: 'إدار السير والمتبرات الجنائي' }, { id: 'b', textAr: 'مدارس الثقاف العسكري' }, { id: 'c', textAr: 'التصوير الجوي' }, { id: 'd', textAr: 'الإنزال الجوي' }], correctAnswer: 'a', marks: 1 },
+            { id: 19, type: 'mcq', questionAr: 'ضمن إدارات الأمن العام، تعمل الشرط النسائي في:', options: [{ id: 'a', textAr: 'إدار السير والمختبرات الجنائي' }, { id: 'b', textAr: 'مدارس الثقاف العسكري' }, { id: 'c', textAr: 'التصوير الجوي' }, { id: 'd', textAr: 'الإنزال الجوي' }], correctAnswer: 'a', marks: 1 },
             { id: 20, type: 'mcq', questionAr: 'مواجه الحملات الإعلامي غير التقليدي من إمكانيات:', options: [{ id: 'a', textAr: 'المركز الوطني للأمن وإدار الأزمات' }, { id: 'b', textAr: 'مديري الإفتاء العسكري' }, { id: 'c', textAr: 'الهيئ الهاشمي للمصابين' }, { id: 'd', textAr: 'المركز العسكري لمكافح الإرهاب' }], correctAnswer: 'd', marks: 1 }
         ]
     },
@@ -2342,22 +2342,22 @@ export const quizData = {
         color: '#5D4037',
         questions: [
             { id: 21, type: 'mcq', questionAr: 'الوحد المعني بتأمين المواد والحاجات اليومي للوحدات هي:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'وحدات الخدمات' }, { id: 'c', textAr: 'سلاح اللاسلكي' }, { id: 'd', textAr: 'المشا والدروع' }], correctAnswer: 'b', marks: 1 },
-            { id: 22, type: 'mcq', questionAr: 'أهمي مشارك الأردن في حرب 1973 تمثلت بـ:', options: [{ id: 'a', textAr: 'إشغال جزء من القوات الإسرائيلي' }, { id: 'b', textAr: 'اختراق دفاعات العدو في العراق' }, { id: 'c', textAr: 'حرمان العدو من الالتفاف على القوات المصري' }, { id: 'd', textAr: 'استدام الأراضي المصري' }], correctAnswer: 'a', marks: 1 },
+            { id: 22, type: 'mcq', questionAr: 'أهمية مشاركة الأردن في حرب 1973 تمثلت بـ:', options: [{ id: 'a', textAr: 'إشغال جزء من القوات الإسرائيلية' }, { id: 'b', textAr: 'اختراق دفاعات العدو في العراق' }, { id: 'c', textAr: 'حرمان العدو من الالتفاف على القوات المصرية' }, { id: 'd', textAr: 'استدام الأراضي المصرية' }], correctAnswer: 'a', marks: 1 },
             { id: 23, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثور العربي الكبرى عام:', options: [{ id: 'a', textAr: '1948' }, { id: 'b', textAr: '1916' }, { id: 'c', textAr: '1918' }, { id: 'd', textAr: '1999' }], correctAnswer: 'b', marks: 1 },
             { id: 24, type: 'mcq', questionAr: 'بناء قوات مسلح نظامي حديث هدف من أهداف الثور العربي الكبرى:', options: [{ id: 'a', textAr: 'العسكري' }, { id: 'b', textAr: 'السياسي' }, { id: 'c', textAr: 'النفسي والمعنوي' }, { id: 'd', textAr: 'الاقتصادي' }], correctAnswer: 'a', marks: 1 },
             { id: 25, type: 'mcq', questionAr: 'السيطر على اللجوء غير الشرعي من واجبات:', options: [{ id: 'a', textAr: 'وحدات حرس الحدود' }, { id: 'b', textAr: 'سلاح الهندس الملكي' }, { id: 'c', textAr: 'سلاح المشا' }, { id: 'd', textAr: 'سلاح الجو' }], correctAnswer: 'a', marks: 1 },
-            { id: 26, type: 'mcq', questionAr: 'تضطلع دائر المابرات العام بمهماتها من لال:', options: [{ id: 'a', textAr: 'الالتزام بقوانين الدول الأرى' }, { id: 'b', textAr: 'جمع وتحليل المعلومات' }, { id: 'c', textAr: 'العمل التشاركي الدولي' }, { id: 'd', textAr: 'احترام حقوق الدول' }], correctAnswer: 'b', marks: 1 },
+            { id: 26, type: 'mcq', questionAr: 'تضطلع دائرة المخابرات العام بمهماتها من خلال:', options: [{ id: 'a', textAr: 'الالتزام بقوانين الدول الأخرى' }, { id: 'b', textAr: 'جمع وتحليل المعلومات' }, { id: 'c', textAr: 'العمل التشاركي الدولي' }, { id: 'd', textAr: 'احترام حقوق الدول' }], correctAnswer: 'b', marks: 1 },
             { id: 27, type: 'mcq', questionAr: 'المكتب السياسي للتحقيقات مهمته الأساسي:', options: [{ id: 'a', textAr: 'الإشراف على التجمعات' }, { id: 'b', textAr: 'منع الجرائم وتعقبها' }, { id: 'c', textAr: 'حفظ أمن القوات المسلح' }, { id: 'd', textAr: 'مكافح التهريب' }], correctAnswer: 'b', marks: 1 },
             { id: 28, type: 'mcq', questionAr: 'تم افتتاح مدين الحسين الطبي واستقبال أول مريض عام:', options: [{ id: 'a', textAr: '1973' }, { id: 'b', textAr: '1975' }, { id: 'c', textAr: '1946' }, { id: 'd', textAr: '1977' }], correctAnswer: 'a', marks: 1 },
             { id: 29, type: 'mcq', questionAr: 'في عام 1955 تم تزويد سلاح الجو بطائرات الفامبير وسمي بـ:', options: [{ id: 'a', textAr: 'طيران المملك الأردني' }, { id: 'b', textAr: 'سلاح الجو الملكي الأردني' }, { id: 'c', textAr: 'القوات الجوي القتالي' }, { id: 'd', textAr: 'القوات الجوي الميداني' }], correctAnswer: 'b', marks: 1 },
             { id: 30, type: 'mcq', questionAr: 'السلاح الذي واكب تطور القوات المسلح منذ 1921 هو:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'سلاح المفارز الفني' }, { id: 'c', textAr: 'الكلي الفني العسكري' }, { id: 'd', textAr: 'سلاح الصيان الملكي' }], correctAnswer: 'a', marks: 1 },
-            { id: 31, type: 'mcq', questionAr: 'رقع نسيج متعدد الألوان تمثل الشصي الاعتباري للدول هي:', options: [{ id: 'a', textAr: 'العلم الوطني' }, { id: 'b', textAr: 'شعار الدول' }, { id: 'c', textAr: 'الراي الهاشمي' }, { id: 'd', textAr: 'شعار الجيش' }], correctAnswer: 'a', marks: 1 },
+            { id: 31, type: 'mcq', questionAr: 'رقع نسيج متعدد الألوان تمثل الشخصي الاعتباري للدول هي:', options: [{ id: 'a', textAr: 'العلم الوطني' }, { id: 'b', textAr: 'شعار الدول' }, { id: 'c', textAr: 'الراي الهاشمي' }, { id: 'd', textAr: 'شعار الجيش' }], correctAnswer: 'a', marks: 1 },
             { id: 32, type: 'mcq', questionAr: 'بويع جلال الملك عبدالله الثاني ملكًا عام:', options: [{ id: 'a', textAr: '1999' }, { id: 'b', textAr: '1992' }, { id: 'c', textAr: '1996' }, { id: 'd', textAr: '1955' }], correctAnswer: 'a', marks: 1 },
             { id: 33, type: 'mcq', questionAr: 'استمر تطوير الدبابات من حيث:', options: [{ id: 'a', textAr: 'العمق للقتال' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'إسناد الخدمات الطبي' }, { id: 'd', textAr: 'قو النار والحرك والتدريع' }], correctAnswer: 'd', marks: 1 },
             { id: 34, type: 'mcq', questionAr: 'تأسست جامع مؤت / الجناح العسكري بهدف:', options: [{ id: 'a', textAr: 'رفد السوق بكوادر مهني' }, { id: 'b', textAr: 'إعداد ضباط مؤهلين' }, { id: 'c', textAr: 'تحسين الاقتصاد' }, { id: 'd', textAr: 'رفع تدريب أبناء العاملين' }], correctAnswer: 'b', marks: 1 },
             { id: 35, type: 'mcq', questionAr: 'سيفان متقاطعان ونجم سباعي وياقتان حمراوان هي رتب:', options: [{ id: 'a', textAr: 'فريق' }, { id: 'b', textAr: 'عقيد' }, { id: 'c', textAr: 'لواء' }, { id: 'd', textAr: 'مشير' }], correctAnswer: 'a', marks: 1 },
             { id: 36, type: 'mcq', questionAr: 'المشا المنقول جوًا نوع من أنواع سلاح:', options: [{ id: 'a', textAr: 'الهندس' }, { id: 'b', textAr: 'الدروع' }, { id: 'c', textAr: 'المشا' }, { id: 'd', textAr: 'الدفاع الجوي' }], correctAnswer: 'c', marks: 1 },
-            { id: 37, type: 'mcq', questionAr: 'تعلو الحري رأس التاج في شعار المملك وترمز إلى:', options: [{ id: 'a', textAr: 'قو الجيش' }, { id: 'b', textAr: 'حري راي الهاشميين' }, { id: 'c', textAr: 'تاري الهاشميين' }, { id: 'd', textAr: 'عز النفس العربي' }], correctAnswer: 'b', marks: 1 },
+            { id: 37, type: 'mcq', questionAr: 'تعلو الحرية رأس التاج في شعار المملك وترمز إلى:', options: [{ id: 'a', textAr: 'قو الجيش' }, { id: 'b', textAr: 'حرية راي الهاشميين' }, { id: 'c', textAr: 'تاريخخ الهاشميين' }, { id: 'd', textAr: 'عز النفس العربي' }], correctAnswer: 'b', marks: 1 },
             { id: 38, type: 'mcq', questionAr: 'مفهوم الدفاع الجوي يعني:', options: [{ id: 'a', textAr: 'حماي الأرض من سلاح الجو المعادي' }, { id: 'b', textAr: 'سلاح المدفعي' }, { id: 'c', textAr: 'سلاح الهندس' }, { id: 'd', textAr: 'سلاح اللاسلكي' }], correctAnswer: 'a', marks: 1 },
             { id: 39, type: 'mcq', questionAr: 'من واجبات الدفاع الجوي:', options: [{ id: 'a', textAr: 'التجريد والاستطلاع الجوي' }, { id: 'b', textAr: 'الإنزال الجوي' }, { id: 'c', textAr: 'الدفاع عن المناطق الحيوي' }, { id: 'd', textAr: 'الاستطلاع البحري' }], correctAnswer: 'c', marks: 1 },
             { id: 40, type: 'mcq', questionAr: 'حماي حدود المملك ومنع التسلل من مهام:', options: [{ id: 'a', textAr: 'سلاح الهندس' }, { id: 'b', textAr: 'وحدات حرس الحدود' }, { id: 'c', textAr: 'سلاح الصيان' }, { id: 'd', textAr: 'القو البحري' }], correctAnswer: 'b', marks: 1 }
@@ -2382,13 +2382,13 @@ export const quizData = {
             { id: 50, type: 'mcq', questionAr: 'السلاح الذي يعمل على المحافظ على أمن وسلام الاتصالات هو:', options: [{ id: 'a', textAr: 'سلاح اللاسلكي الملكي' }, { id: 'b', textAr: 'سلاح الجو الملكي' }, { id: 'c', textAr: 'سلاح الصيان الملكي' }, { id: 'd', textAr: 'سلاح الهندس الملكي' }], correctAnswer: 'a', marks: 1 },
             { id: 51, type: 'mcq', questionAr: 'من واجبات سلاح الصيان الملكي:', options: [{ id: 'a', textAr: 'تقديم المشور الفني لجميع وحدات القوات المسلح' }, { id: 'b', textAr: 'زراع حقول الألغام' }, { id: 'c', textAr: 'إدام الاتصالات' }, { id: 'd', textAr: 'التطيط لكاف الوحدات' }], correctAnswer: 'a', marks: 1 },
             { id: 52, type: 'mcq', questionAr: 'من الأهداف المرتبط بعمليات التسلل:', options: [{ id: 'a', textAr: 'إنشاء الجسور' }, { id: 'b', textAr: 'مراقب الطوط اللوي' }, { id: 'c', textAr: 'التهريب والتجسس والبحث عن العمل' }, { id: 'd', textAr: 'نشر الطمأنين' }], correctAnswer: 'c', marks: 1 },
-            { id: 53, type: 'mcq', questionAr: 'تأسست قياد القو البحري سن 1951 في مدين العقب وأطلق عليها اسم:', options: [{ id: 'a', textAr: 'قياد الهندس الملكي' }, { id: 'b', textAr: 'أسطول الجيش العربي' }, { id: 'c', textAr: 'قاعد الأمير هاشم بن عبدالله البحري' }, { id: 'd', textAr: 'السفن البحري' }], correctAnswer: 'b', marks: 1 },
+            { id: 53, type: 'mcq', questionAr: 'تأسست قياد القو البحرية سن 1951 في مدين العقب وأطلق عليها اسم:', options: [{ id: 'a', textAr: 'قياد الهندس الملكي' }, { id: 'b', textAr: 'أسطول الجيش العربي' }, { id: 'c', textAr: 'قاعد الأمير هاشم بن عبدالله البحري' }, { id: 'd', textAr: 'السفن البحري' }], correctAnswer: 'b', marks: 1 },
             { id: 54, type: 'mcq', questionAr: 'الإلاء الجوي للحالات الصعب من أدوار:', options: [{ id: 'a', textAr: 'سلاح الدروع' }, { id: 'b', textAr: 'سلاح المشا' }, { id: 'c', textAr: 'سلاح الجو الملكي' }, { id: 'd', textAr: 'سلاح الهندس' }], correctAnswer: 'c', marks: 1 },
-            { id: 55, type: 'mcq', questionAr: 'من واجبات المابرات العام في مقاوم التريب الفكري:', options: [{ id: 'a', textAr: 'القتل والاغتيال' }, { id: 'b', textAr: 'مكافح التسلل' }, { id: 'c', textAr: 'عمليات التفجير' }, { id: 'd', textAr: 'مقاوم إثار الفتن والصراعات' }], correctAnswer: 'd', marks: 1 },
-            { id: 56, type: 'mcq', questionAr: 'القانون الساري على كاف موظفي وأعضاء دائر المابرات العام هو:', options: [{ id: 'a', textAr: 'القانون الجزائي' }, { id: 'b', textAr: 'قانون العقوبات العسكري' }, { id: 'c', textAr: 'القانون القضائي' }, { id: 'd', textAr: 'القانون المدني' }], correctAnswer: 'b', marks: 1 },
+            { id: 55, type: 'mcq', questionAr: 'من واجبات المخابرات العام في مقاوم التريب الفكري:', options: [{ id: 'a', textAr: 'القتل والاغتيال' }, { id: 'b', textAr: 'مكافح التسلل' }, { id: 'c', textAr: 'عمليات التفجير' }, { id: 'd', textAr: 'مقاوم إثار الفتن والصراعات' }], correctAnswer: 'd', marks: 1 },
+            { id: 56, type: 'mcq', questionAr: 'القانون الساري على كاف موظفي وأعضاء دائرة المخابرات العام هو:', options: [{ id: 'a', textAr: 'القانون الجزائي' }, { id: 'b', textAr: 'قانون العقوبات العسكري' }, { id: 'c', textAr: 'القانون القضائي' }, { id: 'd', textAr: 'القانون المدني' }], correctAnswer: 'b', marks: 1 },
             { id: 57, type: 'mcq', questionAr: 'يرمز لون طائر العقاب في شعار المملك إلى:', options: [{ id: 'a', textAr: 'العز والقو والشجاع' }, { id: 'b', textAr: 'راي الثور العربي الكبرى' }, { id: 'c', textAr: 'شمو شعار المملك' }, { id: 'd', textAr: 'راي الرسول ﷺ' }], correctAnswer: 'd', marks: 1 },
-            { id: 58, type: 'mcq', questionAr: 'من واجبات دائر المابرات العام على المستوى القومي:', options: [{ id: 'a', textAr: 'حماي الأمن القومي العربي' }, { id: 'b', textAr: 'وزار الارجي' }, { id: 'c', textAr: 'تحدي الفقر' }, { id: 'd', textAr: 'فض القيم النقدي' }], correctAnswer: 'a', marks: 1 },
-            { id: 59, type: 'mcq', questionAr: 'عند التطيط لوحدات حرس الحدود يراعى التهديد من لال:', options: [{ id: 'a', textAr: 'صيان الأرض' }, { id: 'b', textAr: 'رفض قياس التهديد' }, { id: 'c', textAr: 'اللجوء الاقتصادي' }, { id: 'd', textAr: 'فهم وتقدير طبيع وحجم التهديد' }], correctAnswer: 'd', marks: 1 },
+            { id: 58, type: 'mcq', questionAr: 'من واجبات دائرة المخابرات العام على المستوى القومي:', options: [{ id: 'a', textAr: 'حماي الأمن القومي العربي' }, { id: 'b', textAr: 'وزار الارجي' }, { id: 'c', textAr: 'تحدي الفقر' }, { id: 'd', textAr: 'فض القيم النقدي' }], correctAnswer: 'a', marks: 1 },
+            { id: 59, type: 'mcq', questionAr: 'عند التطيط لوحدات حرس الحدود يراعى التهديد من خلال:', options: [{ id: 'a', textAr: 'صيان الأرض' }, { id: 'b', textAr: 'رفض قياس التهديد' }, { id: 'c', textAr: 'اللجوء الاقتصادي' }, { id: 'd', textAr: 'فهم وتقدير طبيع وحجم التهديد' }], correctAnswer: 'd', marks: 1 },
             { id: 60, type: 'mcq', questionAr: 'تم تعريب قياد الجيش العربي في عهد جلال الملك الحسين بن طلال عام:', options: [{ id: 'a', textAr: '1 آذار 1956' }, { id: 'b', textAr: '2 أيار 1954' }, { id: 'c', textAr: '31 آذار 1956' }, { id: 'd', textAr: '25 أيار 1957' }], correctAnswer: 'a', marks: 1 }
         ]
     },
@@ -2399,22 +2399,22 @@ export const quizData = {
         icon: '🎖️',
         color: '#5D4037',
         questions: [
-            { id: 61, type: 'mcq', questionAr: 'إعاد وحد العرب الروحي وإحياء التاري القومي العربي تُعد من:', options: [{ id: 'a', textAr: 'نتائج الثور العربي الكبرى' }, { id: 'b', textAr: 'الصعوبات التي واجهت الثور' }, { id: 'c', textAr: 'مرتكزات الثور' }, { id: 'd', textAr: 'أسباب الثور' }], correctAnswer: 'a', marks: 1 },
+            { id: 61, type: 'mcq', questionAr: 'إعاد وحد العرب الروحي وإحياء التاريخخ القومي العربي تُعد من:', options: [{ id: 'a', textAr: 'نتائج الثور العربي الكبرى' }, { id: 'b', textAr: 'الصعوبات التي واجهت الثور' }, { id: 'c', textAr: 'مرتكزات الثور' }, { id: 'd', textAr: 'أسباب الثور' }], correctAnswer: 'a', marks: 1 },
             { id: 62, type: 'mcq', questionAr: 'إعطاء العمق للقتال (قصف أهداف بعمق العدو) من أدوار سلاح:', options: [{ id: 'a', textAr: 'المدفعي' }, { id: 'b', textAr: 'اللاسلكي' }, { id: 'c', textAr: 'الهندس' }, { id: 'd', textAr: 'الصيان' }], correctAnswer: 'a', marks: 1 },
             { id: 63, type: 'mcq', questionAr: 'من أكثر الصنوف سرع في التطور والتحديث:', options: [{ id: 'a', textAr: 'الوحدات المدرع' }, { id: 'b', textAr: 'العمليات التعبوي' }, { id: 'c', textAr: 'وحدات الخدمات' }, { id: 'd', textAr: 'قوات الصاعق' }], correctAnswer: 'a', marks: 1 },
-            { id: 64, type: 'mcq', questionAr: 'من مصادر التجنيد في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'طلاب معاهد التدريب المهني' }, { id: 'b', textAr: 'ريجو كليات المجتمع فقط' }, { id: 'c', textAr: 'الضباط والرتب الأرى' }, { id: 'd', textAr: 'ريجو الجامعات الاص' }], correctAnswer: 'c', marks: 1 },
-            { id: 65, type: 'mcq', questionAr: 'من أهداف إسرائيل في معرك الكرام:', options: [{ id: 'a', textAr: 'كسب تعاطف الدول الكبرى' }, { id: 'b', textAr: 'تحطيم الروح المعنوي للطخيارين المصريين' }, { id: 'c', textAr: 'الاستحواذ على مناطق الأغوار' }, { id: 'd', textAr: 'تخريب مدارج الطائرات' }], correctAnswer: 'c', marks: 1 },
-            { id: 66, type: 'mcq', questionAr: 'فقدان الروح المعنوي بعد سقوط سلاح الجو المصري كان سببًا لهزيم العرب في حرب:', options: [{ id: 'a', textAr: '1967' }, { id: 'b', textAr: 'معرك الكرام' }, { id: 'c', textAr: 'حرب 1948' }, { id: 'd', textAr: 'حرب 1973' }], correctAnswer: 'a', marks: 1 },
+            { id: 64, type: 'mcq', questionAr: 'من مصادر التجنيد في القوات المسلح الأردني:', options: [{ id: 'a', textAr: 'طلاب معاهد التدريب المهني' }, { id: 'b', textAr: 'ريجو كليات المجتمع فقط' }, { id: 'c', textAr: 'الضباط والرتب الأخرى' }, { id: 'd', textAr: 'ريجو الجامعات الاص' }], correctAnswer: 'c', marks: 1 },
+            { id: 65, type: 'mcq', questionAr: 'من أهداف إسرائيل في معركة الكرامة:', options: [{ id: 'a', textAr: 'كسب تعاطف الدول الكبرى' }, { id: 'b', textAr: 'تحطيم الروح المعنوي للطخيارين المصريين' }, { id: 'c', textAr: 'الاستحواذ على مناطق الأغوار' }, { id: 'd', textAr: 'تخريب مدارج الطائرات' }], correctAnswer: 'c', marks: 1 },
+            { id: 66, type: 'mcq', questionAr: 'فقدان الروح المعنوي بعد سقوط سلاح الجو المصري كان سببًا لهزيم العرب في حرب:', options: [{ id: 'a', textAr: '1967' }, { id: 'b', textAr: 'معركة الكرامة' }, { id: 'c', textAr: 'حرب 1948' }, { id: 'd', textAr: 'حرب 1973' }], correctAnswer: 'a', marks: 1 },
             { id: 67, type: 'mcq', questionAr: 'كانت مهم الجيش العربي الأردني في حرب 1948:', options: [{ id: 'a', textAr: 'التقدم شمال الحول واحتلال صفد' }, { id: 'b', textAr: 'التقدم وسط بيسان والعفول' }, { id: 'c', textAr: 'احتلال شمال فلسطين من حيفا حتى الناصر' }, { id: 'd', textAr: 'التقدم باتجاه القدس والسهل الساحلي' }], correctAnswer: 'd', marks: 1 },
-            { id: 68, type: 'mcq', questionAr: 'حرمان العدو من الالتفاف حول الجناح الأيسر للقوات السوري كان من أهمي مشارك القوات الأردني في:', options: [{ id: 'a', textAr: 'حرب 1973' }, { id: 'b', textAr: 'حرب 1948' }, { id: 'c', textAr: 'حرب 1967' }, { id: 'd', textAr: 'معرك الكرام' }], correctAnswer: 'a', marks: 1 },
+            { id: 68, type: 'mcq', questionAr: 'حرمان العدو من الالتفاف حول الجناح الأيسر للقوات السوري كان من أهمية مشاركة القوات الأردنية في:', options: [{ id: 'a', textAr: 'حرب 1973' }, { id: 'b', textAr: 'حرب 1948' }, { id: 'c', textAr: 'حرب 1967' }, { id: 'd', textAr: 'معركة الكرامة' }], correctAnswer: 'a', marks: 1 },
             { id: 69, type: 'mcq', questionAr: 'من نتائج الثور العربي الكبرى:', options: [{ id: 'a', textAr: 'بناء قوات مسلح نظامي حديث' }, { id: 'b', textAr: 'إعلان الجهاد المقدس' }, { id: 'c', textAr: 'قيام أول دول عربي في سوريا' }, { id: 'd', textAr: 'تفوق الجيش الإسرائيلي' }], correctAnswer: 'a', marks: 1 },
-            { id: 70, type: 'mcq', questionAr: 'الواجب الرئيسي للقو البحري الملكي:', options: [{ id: 'a', textAr: 'مراقب الطرق الارجي' }, { id: 'b', textAr: 'احتلال وتعزيز الأرض' }, { id: 'c', textAr: 'تدمير تشكيلات العدو المدرع' }, { id: 'd', textAr: 'الدفاع عن المياه الإقليمي للمملك' }], correctAnswer: 'd', marks: 1 },
+            { id: 70, type: 'mcq', questionAr: 'الواجب الرئيسي للقو البحرية الملكي:', options: [{ id: 'a', textAr: 'مراقب الطرق الارجي' }, { id: 'b', textAr: 'احتلال وتعزيز الأرض' }, { id: 'c', textAr: 'تدمير تشكيلات العدو المدرع' }, { id: 'd', textAr: 'الدفاع عن المياه الإقليمي للمملك' }], correctAnswer: 'd', marks: 1 },
             { id: 71, type: 'mcq', questionAr: 'يمتلك سلاح الجو الملكي الأردني حاليًا:', options: [{ id: 'a', textAr: 'أحدث معدات النقل' }, { id: 'b', textAr: 'أحدث أجهز التصاريح' }, { id: 'c', textAr: 'أحدث الطائرات التدريبي والعملياتي' }, { id: 'd', textAr: 'أحدث الوحدات الميداني' }], correctAnswer: 'c', marks: 1 },
             { id: 72, type: 'mcq', questionAr: 'من واجبات سلاح التموين والنقل الملكي:', options: [{ id: 'a', textAr: 'تنفيذ سياس القياد العام لإدام القوات المسلح' }, { id: 'b', textAr: 'زراع الأراضي حول المناطق العسكري' }, { id: 'c', textAr: 'تدريب القطاع العام على التزويد' }, { id: 'd', textAr: 'السيطر على نقليات النقل الاص' }], correctAnswer: 'a', marks: 1 },
             { id: 73, type: 'mcq', questionAr: 'مشاريع الحصاد المائي تتمثل في:', options: [{ id: 'a', textAr: 'إدار الأزمات' }, { id: 'b', textAr: 'التنقيب عن الثروات' }, { id: 'c', textAr: 'الجهد الوطني للأزمات' }, { id: 'd', textAr: 'إنشاء السدود والحفائر والبرك وحفر الآبار' }], correctAnswer: 'd', marks: 1 },
             { id: 74, type: 'mcq', questionAr: 'من واجبات حرس الحدود المرتبط بالتطيط:', options: [{ id: 'a', textAr: 'صيان الأرض' }, { id: 'b', textAr: 'رؤي قياس مستوى التهديد' }, { id: 'c', textAr: 'اللجوء الاقتصادي' }, { id: 'd', textAr: 'فهم وتقدير طبيع وحجم التهديد' }], correctAnswer: 'd', marks: 1 },
             { id: 75, type: 'mcq', questionAr: 'تم تعريب قياد الجيش العربي في عام:', options: [{ id: 'a', textAr: '1 آذار 1956' }, { id: 'b', textAr: '2 أيار 1954' }, { id: 'c', textAr: '31 آذار 1956' }, { id: 'd', textAr: '25 أيار 1957' }], correctAnswer: 'a', marks: 1 },
-            { id: 76, type: 'mcq', questionAr: 'إعاد وحد العرب الروحي وإحياء التاري القومي العربي والاعتراف بدول عربي مستقل من:', options: [{ id: 'a', textAr: 'نتائج الثور العربي الكبرى' }, { id: 'b', textAr: 'الصعوبات' }, { id: 'c', textAr: 'المرتكزات' }, { id: 'd', textAr: 'الأسباب' }], correctAnswer: 'a', marks: 1 },
+            { id: 76, type: 'mcq', questionAr: 'إعاد وحد العرب الروحي وإحياء التاريخخ القومي العربي والاعتراف بدول عربي مستقل من:', options: [{ id: 'a', textAr: 'نتائج الثور العربي الكبرى' }, { id: 'b', textAr: 'الصعوبات' }, { id: 'c', textAr: 'المرتكزات' }, { id: 'd', textAr: 'الأسباب' }], correctAnswer: 'a', marks: 1 },
             { id: 77, type: 'mcq', questionAr: 'ضمت ولاي الديكابولس في العهد الروماني مناطق:', options: [{ id: 'a', textAr: 'بيريا والأنباط' }, { id: 'b', textAr: 'عجلون وشرق البلقاء وفيلادلفيا' }, { id: 'c', textAr: 'فيلادلفيا وجدارا' }, { id: 'd', textAr: 'فيلادلفيا وبيلا' }], correctAnswer: 'd', marks: 1 },
             { id: 78, type: 'mcq', questionAr: 'أعلن الشريف الحسين بن علي الثور العربي الكبرى في:', options: [{ id: 'a', textAr: '10 حزيران 1916' }, { id: 'b', textAr: '10 تموز 1917' }, { id: 'c', textAr: '5 أيلول 1916' }, { id: 'd', textAr: '10 آذار 1921' }], correctAnswer: 'a', marks: 1 },
             { id: 79, type: 'mcq', questionAr: 'أول وزار تشكلت في إمار شرق الأردن عام 1921 حملت اسم:', options: [{ id: 'a', textAr: 'المجلس التشريعي' }, { id: 'b', textAr: 'رئاس الأركان' }, { id: 'c', textAr: 'مجلس المشاورين' }, { id: 'd', textAr: 'مجلس الأم' }], correctAnswer: 'c', marks: 1 },
@@ -2457,7 +2457,7 @@ export const quizData = {
         color: '#4CAF50',
         questions: [
             { id: 1, type: 'mcq', questionAr: 'التزام الألاق الحميد يزيد في إيمان العبد كما أن سوء اللق ينقص من الإيمان، ويدل على هذا المعنى النص الشرعي الآتي:', options: [{ id: 'a', textAr: 'حديث: أكمل المؤمنين إيمانًا أحسنهم لقًا' }, { id: 'b', textAr: 'حديث: الإيمان بضع وسبعون شعب' }, { id: 'c', textAr: 'حديث: لا يزني الزاني حين يزني وهو مؤمن' }, { id: 'd', textAr: 'حديث: إنما بعثت لأتمم مكارم الألاق' }], correctAnswer: 'a', marks: 1 },
-            { id: 2, type: 'mcq', questionAr: 'الألاق الطيب أساس لتكوين الشصي الفردي، هذه العبار تعبّر عن أثر من آثار الألاق على:', options: [{ id: 'a', textAr: 'العباد' }, { id: 'b', textAr: 'المؤسسات التعليمي' }, { id: 'c', textAr: 'النفس الإنساني' }, { id: 'd', textAr: 'المجتمع' }], correctAnswer: 'c', marks: 1 },
+            { id: 2, type: 'mcq', questionAr: 'الألاق الطيب أساس لتكوين الشخصي الفردي، هذه العبار تعبّر عن أثر من آثار الألاق على:', options: [{ id: 'a', textAr: 'العباد' }, { id: 'b', textAr: 'المؤسسات التعليمي' }, { id: 'c', textAr: 'النفس الإنساني' }, { id: 'd', textAr: 'المجتمع' }], correctAnswer: 'c', marks: 1 },
             { id: 3, type: 'mcq', questionAr: 'الُلُق بضم اللام يتص في معناه اللغوي بـ:', options: [{ id: 'a', textAr: 'الهيئات' }, { id: 'b', textAr: 'الصور المدرك بالبصر' }, { id: 'c', textAr: 'الأشكال' }, { id: 'd', textAr: 'السجي' }], correctAnswer: 'd', marks: 1 },
             { id: 4, type: 'mcq', questionAr: 'النص الشرعي الذي يدل على أن مفهوم العباد يتسع ليشمل كثيرًا من الممارسات الأخلاقي الحسي هو:', options: [{ id: 'a', textAr: 'قوله تعالى: إن الصلا تنهى عن الفحشاء والمنكر' }, { id: 'b', textAr: 'حديث: أتدرون ما المفلس؟' }, { id: 'c', textAr: 'حديث: كل سلامى من الناس عليه صدق كل يوم تطلع فيه الشمس' }, { id: 'd', textAr: 'حديث: من لم يدع قول الزور والعمل به فلا حاج أن يدع طعامه وشرابه' }], correctAnswer: 'c', marks: 1 },
             { id: 5, type: 'mcq', questionAr: 'ُلُق يعف به الإنسان عمّا ليس له به حق وإن تهيأت له ظروف العدوان عليه دون أن تلحقه إدان، المقصود هو ُلُق:', options: [{ id: 'a', textAr: 'الأمان' }, { id: 'b', textAr: 'التواضع' }, { id: 'c', textAr: 'الإيثار' }, { id: 'd', textAr: 'الكرم' }], correctAnswer: 'a', marks: 1 },
@@ -4566,7 +4566,7 @@ export const quizData = {
             },
             {
                 id: 2, type: 'tf', marks: 1.0,
-                questionAr: 'يعتبر الشص قريبا لابن عمه من الدرج الرابع حيث يحذف الاصل المشترك وهو الجد',
+                questionAr: 'يعتبر الشخص قريبا لابن عمه من الدرج الرابع حيث يحذف الاصل المشترك وهو الجد',
                 correctAnswer: true
             },
             {
@@ -4595,7 +4595,7 @@ export const quizData = {
                 options: [
                     { id: 'a', textAr: 'الحقوق الذهني' },
                     { id: 'b', textAr: 'الحقوق العيني' },
-                    { id: 'c', textAr: 'الحقوق الشصي' }
+                    { id: 'c', textAr: 'الحقوق الشخصي' }
                 ],
                 correctAnswer: 'b'
             }
@@ -4650,7 +4650,7 @@ export const quizData = {
                     { id: 'a', textAr: 'قاعد سلوكي اجتماعي ملزم' },
                     { id: 'b', textAr: 'قاعد أخلاقي غير ملزم' },
                     { id: 'c', textAr: 'قاعد ديني فقط' },
-                    { id: 'd', textAr: 'قاعد تنظيمي اتياري' }
+                    { id: 'd', textAr: 'قاعدة تنظيمية اختياري' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4675,7 +4675,7 @@ export const quizData = {
                 options: [
                     { id: 'a', textAr: 'عام ومجرد' },
                     { id: 'b', textAr: 'شصي' },
-                    { id: 'c', textAr: 'اتياري' },
+                    { id: 'c', textAr: 'اختياري' },
                     { id: 'd', textAr: 'مؤقت' }
                 ],
                 correctAnswer: 'a'
@@ -4712,7 +4712,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'التشريع هو:',
                 options: [
-                    { id: 'a', textAr: 'قاعد تصدر عن السلط المتص' },
+                    { id: 'a', textAr: 'قاعد تصدر عن السلط المختص' },
                     { id: 'b', textAr: 'قاعد عرفي' },
                     { id: 'c', textAr: 'قاعد ديني' },
                     { id: 'd', textAr: 'قاعد أخلاقي' }
@@ -4754,7 +4754,7 @@ export const quizData = {
                     { id: 'a', textAr: 'مادي توقعه السلط العام' },
                     { id: 'b', textAr: 'أدبي فقط' },
                     { id: 'c', textAr: 'ديني' },
-                    { id: 'd', textAr: 'اتياري' }
+                    { id: 'd', textAr: 'اختياري' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4767,7 +4767,7 @@ export const quizData = {
                     { id: 'a', textAr: 'علاق الدول بالأفراد' },
                     { id: 'b', textAr: 'علاق الأفراد ببعضهم' },
                     { id: 'c', textAr: 'المعاملات التجاري فقط' },
-                    { id: 'd', textAr: 'الأحوال الشصي فقط' }
+                    { id: 'd', textAr: 'الأحوال الشخصي فقط' }
                 ],
                 correctAnswer: 'a'
             },
@@ -4973,7 +4973,7 @@ export const quizData = {
                     { id: 'a', textAr: 'العلاقةات الدولي' },
                     { id: 'b', textAr: 'نشاط الإدار العام' },
                     { id: 'c', textAr: 'الجرائم والعقوبات' },
-                    { id: 'd', textAr: 'الأحوال الشصي' }
+                    { id: 'd', textAr: 'الأحوال الشخصي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -4983,7 +4983,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'من صائص القاعد القانوني أنها:',
                 options: [
-                    { id: 'a', textAr: 'اتياري' },
+                    { id: 'a', textAr: 'اختياري' },
                     { id: 'b', textAr: 'عام ومجرد' },
                     { id: 'c', textAr: 'أخلاقي' },
                     { id: 'd', textAr: 'ديني' }
@@ -5129,7 +5129,7 @@ export const quizData = {
                     { id: 'a', textAr: 'تطبق على شص معين' },
                     { id: 'b', textAr: 'تطبق على فئ غير محدد' },
                     { id: 'c', textAr: 'مؤقت' },
-                    { id: 'd', textAr: 'اتياري' }
+                    { id: 'd', textAr: 'اختياري' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5335,7 +5335,7 @@ export const quizData = {
                     { id: 'a', textAr: 'شصي' },
                     { id: 'b', textAr: 'مجرد وعام' },
                     { id: 'c', textAr: 'مؤقت' },
-                    { id: 'd', textAr: 'اتياري' }
+                    { id: 'd', textAr: 'اختياري' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5436,7 +5436,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القاعد القانوني الجزائي تتميز بأنها:',
                 options: [
-                    { id: 'a', textAr: 'اتياري' },
+                    { id: 'a', textAr: 'اختياري' },
                     { id: 'b', textAr: 'أخلاقي' },
                     { id: 'c', textAr: 'مقرون بجزاء' },
                     { id: 'd', textAr: 'غير ملزم' }
@@ -5551,10 +5551,10 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'متى يبدأ سريان القانون؟',
                 options: [
-                    { id: 'a', textAr: 'من تاري صدوره' },
-                    { id: 'b', textAr: 'من تاري نشره' },
-                    { id: 'c', textAr: 'من تاري العمل به' },
-                    { id: 'd', textAr: 'من تاري إقراره' }
+                    { id: 'a', textAr: 'من تاريخخ صدوره' },
+                    { id: 'b', textAr: 'من تاريخخ نشره' },
+                    { id: 'c', textAr: 'من تاريخخ العمل به' },
+                    { id: 'd', textAr: 'من تاريخخ إقراره' }
                 ],
                 correctAnswer: 'c'
             },
@@ -5567,7 +5567,7 @@ export const quizData = {
                     { id: 'a', textAr: 'الأثر الرجعي' },
                     { id: 'b', textAr: 'الأثر الفوري' },
                     { id: 'c', textAr: 'الأثر المستقبلي فقط' },
-                    { id: 'd', textAr: 'الأثر الشصي' }
+                    { id: 'd', textAr: 'الأثر الشخصي' }
                 ],
                 correctAnswer: 'b'
             },
@@ -5577,7 +5577,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'القاعد القانوني تتميز بأنها:',
                 options: [
-                    { id: 'a', textAr: 'اتياري' },
+                    { id: 'a', textAr: 'اختياري' },
                     { id: 'b', textAr: 'ملزم' },
                     { id: 'c', textAr: 'فردي' },
                     { id: 'd', textAr: 'مؤقت' }
@@ -5796,7 +5796,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'تُطبق القوانين الجنائي من حيث المكان وفق مبدأ:',
                 options: [
-                    { id: 'a', textAr: 'الشصي' },
+                    { id: 'a', textAr: 'الشخصي' },
                     { id: 'b', textAr: 'العيني' },
                     { id: 'c', textAr: 'الإقليمي' },
                     { id: 'd', textAr: 'العالمي' }
@@ -5835,7 +5835,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'الأهلي في القانون المدني تتعلق بـ:',
                 options: [
-                    { id: 'a', textAr: 'الشص' },
+                    { id: 'a', textAr: 'الشخص' },
                     { id: 'b', textAr: 'المال' },
                     { id: 'c', textAr: 'المكان' },
                     { id: 'd', textAr: 'الزمان' }
@@ -6044,7 +6044,7 @@ export const quizData = {
                     { id: 'a', textAr: 'المعيار الموضوعي.' },
                     { id: 'b', textAr: 'المعيار المعنوي.' },
                     { id: 'c', textAr: 'المعيار الشكلي (اللفظي).' },
-                    { id: 'd', textAr: 'المعيار التاريي.' }
+                    { id: 'd', textAr: 'المعيار التاريخي.' }
                 ],
                 correctAnswer: 'c'
             },
@@ -6068,7 +6068,7 @@ export const quizData = {
                 questionAr: 'يُطلق على القانون المدني وصف "الشريع العام أو الأصلي" لأنه:',
                 options: [
                     { id: 'a', textAr: 'ينظم علاقات الدول في السلم والحرب.' },
-                    { id: 'b', textAr: 'يحتوي على القواعد العام التي تُطبق على أي نزاع سكت عنه المشرع في الفروع الأرى.' },
+                    { id: 'b', textAr: 'يحتوي على القواعد العام التي تُطبق على أي نزاع سكت عنه المشرع في الفروع الأخرى.' },
                     { id: 'c', textAr: 'ينظم السلط القضائي وشروط تنصيب القضا.' },
                     { id: 'd', textAr: 'جميع قواعده تعتبر قواعد شكلي إجرائي.' }
                 ],
@@ -6121,7 +6121,7 @@ export const quizData = {
                 options: [
                     { id: 'a', textAr: 'بمجرد تطبيقها على شص معين.' },
                     { id: 'b', textAr: 'لا تنتهي بل تظل باقي ومستمر بعد تطبيقها لأنها عام ومجرد.' },
-                    { id: 'c', textAr: 'بوفا الشص الماطب بها بذاته.' },
+                    { id: 'c', textAr: 'بوفا الشخص الماطب بها بذاته.' },
                     { id: 'd', textAr: 'بمجرد صدور أمر إداري يالفها.' }
                 ],
                 correctAnswer: 'b'
@@ -6130,7 +6130,7 @@ export const quizData = {
                 id: 11,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'المكان الذي يباشر فيه الشص تجارته أو حرفته يسمى قانوناً بـ:',
+                questionAr: 'المكان الذي يباشر فيه الشخص تجارته أو حرفته يسمى قانوناً بـ:',
                 options: [
                     { id: 'a', textAr: 'الموطن العام.' },
                     { id: 'b', textAr: 'الموطن المتار.' },
@@ -6143,7 +6143,7 @@ export const quizData = {
                 id: 12,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'صلاحي الشص لكسب الحقوق وتحمل الالتزامات منذ ولادته تسمى:',
+                questionAr: 'صلاحية الشخص لكسب الحقوق وتحمل الالتزامات منذ ولادته تسمى:',
                 options: [
                     { id: 'a', textAr: 'أهلي الأداء.' },
                     { id: 'b', textAr: 'أهلي الوجوب.' },
@@ -6184,7 +6184,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'يعد "الالتصاق بفعل الإنسان" من مصادر:',
                 options: [
-                    { id: 'a', textAr: 'الحق الشصي.' },
+                    { id: 'a', textAr: 'الحق الشخصي.' },
                     { id: 'b', textAr: 'الحق العيني.' },
                     { id: 'c', textAr: 'الحقوق السياسي.' },
                     { id: 'd', textAr: 'الأهلي القانوني.' }
@@ -6195,7 +6195,7 @@ export const quizData = {
                 id: 16,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'أي من الصائص التالي "لا تنطبق" على الاسم الشصي للإنسان؟',
+                questionAr: 'أي من الصائص التالي "لا تنطبق" على الاسم الشخصي للإنسان؟',
                 options: [
                     { id: 'a', textAr: 'يجوز التصرف فيه والتنازل عنه للغير.' },
                     { id: 'b', textAr: 'لا يسقط بالتقادم (عدم الاستعمال مده طويل).' },
@@ -6221,7 +6221,7 @@ export const quizData = {
                 id: 18,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'يتميز "الحق الشصي" عن "الحق العيني" بأن الحق الشصي:',
+                questionAr: 'يتميز "الحق الشخصي" عن "الحق العيني" بأن الحق الشخصي:',
                 options: [
                     { id: 'a', textAr: 'سلط مباشر لشص على شيء مادي.' },
                     { id: 'b', textAr: 'رابط قانوني بين شصين أحدهما دائن والآر مدين.' },
@@ -6236,8 +6236,8 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'تعتبر "الشركات، والبلديات، والوقف، والطوائف الديني" من أمثل:',
                 options: [
-                    { id: 'a', textAr: 'الشصي الطبيعي.' },
-                    { id: 'b', textAr: 'الشصي الحكمي (الاعتباري).' },
+                    { id: 'a', textAr: 'الشخصي الطبيعي.' },
+                    { id: 'b', textAr: 'الشخصي الحكمي (الاعتباري).' },
                     { id: 'c', textAr: 'أهلي الأداء الكامل.' },
                     { id: 'd', textAr: 'الحقوق اللصيق بالمرأ فقط.' }
                 ],
@@ -6364,9 +6364,9 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'مفهوم "الإفلاس" في القانون التجاري يتلف عن "الإعسار" في المدني لأنه يتطلب:',
                 options: [
-                    { id: 'a', textAr: 'زياد ديون الشص عن أمواله فقط.' },
+                    { id: 'a', textAr: 'زياد ديون الشخص عن أمواله فقط.' },
                     { id: 'b', textAr: 'توقف التاجر عن دفع دين مستحق الأداء بعد إطاره بصرف النظر عما يملكه.' },
-                    { id: 'c', textAr: 'سلام قلب الشص وضعف إدراكه.' },
+                    { id: 'c', textAr: 'سلام قلب الشخص وضعف إدراكه.' },
                     { id: 'd', textAr: 'إثبات الضرر المادي والأدبي معاً.' }
                 ],
                 correctAnswer: 'b'
@@ -6401,7 +6401,7 @@ export const quizData = {
                 id: 11,
                 type: 'mcq',
                 marks: 1.0,
-                questionAr: 'القانون الذي يعين المحكم المتص والقانون الواجب التطبيق في القضايا المشوب بـ"عنصر أجنبي" هو:',
+                questionAr: 'القانون الذي يعين المحكم المختص والقانون الواجب التطبيق في القضايا المشوب بـ"عنصر أجنبي" هو:',
                 options: [
                     { id: 'a', textAr: 'القانون الدولي العام.' },
                     { id: 'b', textAr: 'القانون الدولي الاص.' },
@@ -6549,7 +6549,7 @@ export const quizData = {
                 id: 5,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'القسم الاص من قانون العقوبات يتناول الأحكام العام التي تسري على جميع الجرائم كتعريف الجريم وأركانها.',
+                questionAr: 'القسم الاص من قانون العقوبات يتناول الأحكام العام التي تسري على جميع الجرائم كتعريف الجريمة وأركانها.',
                 correctAnswer: false,
                 explanationAr: 'خطأ. تصحيح: هذا القسم العام'
             },
@@ -6565,7 +6565,7 @@ export const quizData = {
                 id: 7,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'يشترط لتطبيق القانون على الشص أن يكون بكامل قواه العقلي، ويرتبط ذلك بالشص كامل الأهلي.',
+                questionAr: 'يشترط لتطبيق القانون على الشخص أن يكون بكامل قواه العقلي، ويرتبط ذلك بالشخص كامل الأهلي.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6629,7 +6629,7 @@ export const quizData = {
                 id: 15,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'يلتزم القاضي بتطبيق القواعد القانوني الآمر من تلقاء نفسه دون الالتفات إلى أي اتفاق بين الصوم على لافها.',
+                questionAr: 'يلتزم القاضي بتطبيق القواعد القانونية الآمرة من تلقاء نفسه دون الالتفات إلى أي اتفاق بين الخصوم على خلافها.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6639,7 +6639,7 @@ export const quizData = {
                 marks: 1.0,
                 questionAr: 'تعتبر أموال الدول الاص مصص للمنفع العام مثل الطرق العام والجسور.',
                 correctAnswer: false,
-                explanationAr: 'خطأ. تصحيح: الأموال العام هي المصص للمنفع العام'
+                explanationAr: 'خطأ. تصحيح: الأموال العام هي المخصص للمنفع العام'
             },
             {
                 id: 17,
@@ -6685,7 +6685,7 @@ export const quizData = {
                 id: 22,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'تبدأ الشصي الطبيعي للإنسان بتمام ولادته حياً وتنتهي قانوناً بموته.',
+                questionAr: 'تبدأ الشخصي الطبيعي للإنسان بتمام ولادته حياً وتنتهي قانوناً بموته.',
                 correctAnswer: true,
                 explanationAr: 'صحيح.'
             },
@@ -6741,7 +6741,7 @@ export const quizData = {
                 id: 29,
                 type: 'tf',
                 marks: 1.0,
-                questionAr: 'في المعاملات المدني بالأردن، يجوز الإثبات بالبين الشصي (الشهاد) مهما بلغت قيم الالتزام التعاقدي دون قيود.',
+                questionAr: 'في المعاملات المدنية بالأردن، يجوز الإثبات بالبين الشخصي (الشهادة) مهما بلغت قيم الالتزام التعاقدي دون قيود.',
                 correctAnswer: false,
                 explanationAr: 'خطأ. تصحيح: لا يجوز إذا تجاوزت قيم الالتزام عشر دنانير ما لم يوجد دليل كتابي'
             },
@@ -7672,7 +7672,7 @@ export const quizData = {
     ml_lab_quiz1: {
         id: 'ml_lab_quiz1',
         title: 'Machine Learning Lab - Quiz 1',
-        titleAr: 'متبر تعلم الآل - كويز 1',
+        titleAr: 'مختبر تعلم الآل - كويز 1',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,
@@ -8287,7 +8287,7 @@ export const quizData = {
                 questionAr: 'مبدأ الشرعي يوجب أن يكون النص التشريعي كاملاً ومستنداً على العمل غير المشروع والجزاء، وتحديداً في النص المفترض أن يكون:',
                 options: [
                     { id: 'a', textAr: 'صادراً قبل ارتكاب الفعل المراد تجريمه' },
-                    { id: 'b', textAr: 'صادراً بعد وقوع الجريم لضمان العدال' },
+                    { id: 'b', textAr: 'صادراً بعد وقوع الجريمة لضمان العدال' },
                     { id: 'c', textAr: 'قابلاً للتفسير الواسع من المحاكم' },
                     { id: 'd', textAr: 'مقتصراً على العقوبات الجسيم' }
                 ],
@@ -8298,7 +8298,7 @@ export const quizData = {
                 questionAr: 'أُصدر قانون جديد يغير صف التجريم عن فعل وجاء بعقوب أف، فأيهما تطبق على جرائم الاعتداء اللاحق لنفاذ القانون الجديد؟',
                 options: [
                     { id: 'a', textAr: 'القانون القديم لأنه الأصل' },
-                    { id: 'b', textAr: 'القانون الجديد يسري من تاري نفاذه على جميع الأفعال اللاحق' },
+                    { id: 'b', textAr: 'القانون الجديد يسري من تاريخخ نفاذه على جميع الأفعال اللاحق' },
                     { id: 'c', textAr: 'يطبق القانون الأصلح للمتهم في جميع الأحوال' },
                     { id: 'd', textAr: 'القانون الجديد على الأفعال اللاحق حتى لو كانت عقوبته أشد من السابق' }
                 ],
@@ -8308,9 +8308,9 @@ export const quizData = {
                 id: 3, type: 'mcq', marks: 1.0,
                 questionAr: 'مع المستجد بصوص القانون الجديد في حالتين، إحداهما أن يصدر القانون الجديد قبل انتهاء حال الاستمرار، والحال الثاني هي:',
                 options: [
-                    { id: 'a', textAr: 'أن يكون مرتكب الجريم ناصراً' },
+                    { id: 'a', textAr: 'أن يكون مرتكب الجريمة ناصراً' },
                     { id: 'b', textAr: 'أن يتحقق الركن المادي بكل فئاته' },
-                    { id: 'c', textAr: 'أن تكون الجريم من جرائم الجنايات فقط' },
+                    { id: 'c', textAr: 'أن تكون الجريمة من جرائم الجنايات فقط' },
                     { id: 'd', textAr: 'أن يصدر القانون الجديد قبل صدور الحكم النهائي' }
                 ],
                 correctAnswer: 'd'
@@ -8346,7 +8346,7 @@ export const quizData = {
             },
             {
                 id: 7, type: 'mcq', marks: 1.0,
-                questionAr: 'الشروع في الجريم يُعاقب عليه في:',
+                questionAr: 'الشروع في الجريمة يُعاقب عليه في:',
                 options: [
                     { id: 'a', textAr: 'الجنايات والجنح والمالفات' },
                     { id: 'b', textAr: 'الجنايات فقط' },
@@ -8357,7 +8357,7 @@ export const quizData = {
             },
             {
                 id: 8, type: 'mcq', marks: 1.0,
-                questionAr: 'مكان وقوع الجريم في الأردن هو الذي يعتمد بحيث يكون الاتصاص المكاني للمحكم التي وقع الجرم في دائرتها، ولا يشترط لاعتبار الجريم مرتكب في الأردن:',
+                questionAr: 'مكان وقوع الجريمة في الأردن هو الذي يعتمد بحيث يكون الاتصاص المكاني للمحكم التي وقع الجرم في دائرتها، ولا يشترط لاعتبار الجريمة مرتكب في الأردن:',
                 options: [
                     { id: 'a', textAr: 'أن يتحقق فيها السلوك الإجرامي أو النتيج الإجرامي' },
                     { id: 'b', textAr: 'أن تتحقق النتيج والسلوك معاً دال الأردن' },
@@ -8412,10 +8412,10 @@ export const quizData = {
                 id: 13, type: 'mcq', marks: 1.0,
                 questionAr: 'دور وجود الدفاع الشرعي يعتبر:',
                 options: [
-                    { id: 'a', textAr: 'سبباً مبيحاً كاملاً يرفع المسؤولي الجزائي' },
+                    { id: 'a', textAr: 'سبباً مبيحاً كاملاً يرفع المسؤولية الجزائي' },
                     { id: 'b', textAr: 'ظرفاً مففاً للعقوب لا غير' },
                     { id: 'c', textAr: 'جريم مستقل بعقوب مفف' },
-                    { id: 'd', textAr: 'مانعاً من موانع المسؤولي يعفي من العقاب كلياً' }
+                    { id: 'd', textAr: 'مانعاً من موانع المسؤولية يعفي من العقاب كلياً' }
                 ],
                 correctAnswer: 'a'
             },
@@ -8430,7 +8430,7 @@ export const quizData = {
             },
             {
                 id: 15, type: 'mcq', marks: 1.0,
-                questionAr: 'الشص الذي يعتمد استقرار أمر أمني عليه ثم يدعى الدفاع الشرعي:',
+                questionAr: 'الشخص الذي يعتمد استقرار أمر أمني عليه ثم يدعى الدفاع الشرعي:',
                 options: [
                     { id: 'a', textAr: 'يحق له التدرج بالدفاع الشرعي إلى الاعتداء ولو فعلاً' },
                     { id: 'b', textAr: 'لا يحق له التدرج بالدفاع الشرعي لأن الطر نشأ عن فعله' },
@@ -8450,7 +8450,7 @@ export const quizData = {
             },
             {
                 id: 17, type: 'mcq', marks: 1.0,
-                questionAr: 'المسؤولي الجنائي لا تتحقق إلا مع وجود الاتيار والإدراك والتمييز المصص لدى مرتكب الجريم.',
+                questionAr: 'المسؤولية الجنائية لا تتحقق إلا مع وجود الاختيار والإدراك والتمييز المخصص لدى مرتكب الجريمة.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
@@ -8459,12 +8459,12 @@ export const quizData = {
             },
             {
                 id: 18, type: 'mcq', marks: 1.0,
-                questionAr: 'المسؤولي الجنائي لا تقام للغير دون سن البلوغ والشباب استقلالاً عن هؤلاء المعافين لأساس:',
+                questionAr: 'المسؤولية الجنائية لا تقام للغير دون سن البلوغ والشباب استقلالاً عن هؤلاء المعافين لأساس:',
                 options: [
                     { id: 'a', textAr: 'الإلزام الإجرامي والنفس الجنائي' },
                     { id: 'b', textAr: 'التمييز لديهم' },
                     { id: 'c', textAr: 'الوعي بالقانون الجنائي' },
-                    { id: 'd', textAr: 'الشصي الإرادي' }
+                    { id: 'd', textAr: 'الشخصي الإرادي' }
                 ],
                 correctAnswer: 'b'
             }
@@ -8481,18 +8481,18 @@ export const quizData = {
         questions: [
             {
                 id: 19, type: 'mcq', marks: 1.0,
-                questionAr: 'المسؤولي الأخلاقي والالمسؤولي الجنائي تشترك كلاهما مع توافر حري الاتيار، والمسؤولي الجنائي تتطلب الإدراك والتمييز كذلك، لكنهما تتلفان في أن:',
+                questionAr: 'المسؤولية الأخلاقية والمسؤولية الجنائية تشترك كلاهما مع توافر حرية الاختيار، والمسؤولية الجنائية تتطلب الإدراك والتمييز كذلك، لكنهما تختلفان في أن:',
                 options: [
-                    { id: 'a', textAr: 'المسؤولي الجنائي تقتصر على الأفراد الراشدين فقط' },
-                    { id: 'b', textAr: 'المسؤولي الأخلاقي كفيلها الضمير وهي مسؤولي الذات بينما العدال مظهرها القضاء' },
-                    { id: 'c', textAr: 'المسؤولي الجنائي تتقبل الأشاص المعنوي' },
-                    { id: 'd', textAr: 'المسؤولي الأخلاقي أشد من الجنائي في العقوب' }
+                    { id: 'a', textAr: 'المسؤولية الجنائية تقتصر على الأفراد الراشدين فقط' },
+                    { id: 'b', textAr: 'المسؤولية الأخلاقية كفيلها الضمير وهي مسؤولي الذات بينما العدال مظهرها القضاء' },
+                    { id: 'c', textAr: 'المسؤولية الجنائية تتقبل الأشاص المعنوي' },
+                    { id: 'd', textAr: 'المسؤولية الأخلاقية أشد من الجنائي في العقوب' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 20, type: 'mcq', marks: 1.0,
-                questionAr: 'حال الإكراه المعنوي (التهديد) كمانع من موانع المسؤولي يشترط فيه أن:',
+                questionAr: 'حال الإكراه المعنوي (التهديد) كمانع من موانع المسؤولية يشترط فيه أن:',
                 options: [
                     { id: 'a', textAr: 'يكون التهديد إيذاء نفسياً كشر غير الفكري' },
                     { id: 'b', textAr: 'يكون الطر حالاً أو وشيكاً وجسيماً ولا سبيل لتفاديه إلا بارتكاب الجريم' },
@@ -8503,7 +8503,7 @@ export const quizData = {
             },
             {
                 id: 21, type: 'mcq', marks: 1.0,
-                questionAr: 'الغلط في الوقائع يُعد مانعاً من موانع المسؤولي إذا كان غلطاً جوهرياً غير ناتج عن الإهمال.',
+                questionAr: 'الغلط في الوقائع يُعد مانعاً من موانع المسؤولية إذا كان غلطاً جوهرياً غير ناتج عن الإهمال.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
@@ -8512,7 +8512,7 @@ export const quizData = {
             },
             {
                 id: 22, type: 'mcq', marks: 1.0,
-                questionAr: 'الجهل بالقانون الجنائي يعفي من المسؤولي الجنائي.',
+                questionAr: 'الجهل بالقانون الجنائي يعفي من المسؤولية الجنائية.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
@@ -8521,33 +8521,33 @@ export const quizData = {
             },
             {
                 id: 23, type: 'mcq', marks: 1.0,
-                questionAr: 'القصد الجرمي (أو الني الجرمي) له أهمي قصوى في الجنايات لأنه:',
+                questionAr: 'القصد الجرمي (أو الني الجرمي) له أهمية قصوى في الجنايات لأنه:',
                 options: [
-                    { id: 'a', textAr: 'يحدد صلاحي المحكم للمحاكم' },
+                    { id: 'a', textAr: 'يحدد صلاحية المحكم للمحاكم' },
                     { id: 'b', textAr: 'يفرق بين الجرائم المقصود وغير المقصود' },
                     { id: 'c', textAr: 'يُحدد الإقليم الذي وقعت فيه الجريم' },
-                    { id: 'd', textAr: 'يُحدد نوع الجريم جناي أم جنح أم مالف' }
+                    { id: 'd', textAr: 'يُحدد نوع الجريمة جناي أم جنح أم مالف' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 24, type: 'mcq', marks: 1.0,
-                questionAr: 'الجريم المقصود هي كل جريم يريد الجاني ارتكابها وتحقيق نتيجتها بحيث يتوافر القصد الجرمي بعنصريه:',
+                questionAr: 'الجريمة المقصود هي كل جريم يريد الجاني ارتكابها وتحقيق نتيجتها بحيث يتوافر القصد الجرمي بعنصريه:',
                 options: [
                     { id: 'a', textAr: 'الإراد والقبول للنتيج' },
                     { id: 'b', textAr: 'العلم والإراد' },
-                    { id: 'c', textAr: 'الاتيار والقدر على الفهم' },
+                    { id: 'c', textAr: 'الاختيار والقدرة على الفهم' },
                     { id: 'd', textAr: 'الدافع والني الإجرامي' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 25, type: 'mcq', marks: 1.0,
-                questionAr: 'الجريم غير المقصود تقوم على ركن الطأ، حيث يكون الطأ بثلاث صور وهي:',
+                questionAr: 'الجريمة غير المقصود تقوم على ركن الطأ، حيث يكون الطأ بثلاث صور وهي:',
                 options: [
                     { id: 'a', textAr: 'الإهمال وقل الاحتراز وعدم مراعا القوانين والأنظم' },
                     { id: 'b', textAr: 'الغضب والانفعال وفقدان السيطر' },
-                    { id: 'c', textAr: 'الجهل والعمى وضعف الشصي' },
+                    { id: 'c', textAr: 'الجهل والعمى وضعف الشخصي' },
                     { id: 'd', textAr: 'الإدراك والتمييز وانعدام الإراد' }
                 ],
                 correctAnswer: 'a'
@@ -8587,16 +8587,16 @@ export const quizData = {
                 id: 29, type: 'mcq', marks: 1.0,
                 questionAr: 'في جرائم الاعتداء يبدأ ميعاد التقادم من:',
                 options: [
-                    { id: 'a', textAr: 'تاري أول فعل في سلسل أفعال الاعتداء' },
+                    { id: 'a', textAr: 'تاريخخ أول فعل في سلسل أفعال الاعتداء' },
                     { id: 'b', textAr: 'اليوم التالي لآر فعل من الأفعال' },
-                    { id: 'c', textAr: 'تاري علم المجني عليه بالجريم' },
-                    { id: 'd', textAr: 'تاري إلقاء القبض على المتهم' }
+                    { id: 'c', textAr: 'تاريخخ علم المجني عليه بالجريم' },
+                    { id: 'd', textAr: 'تاريخخ إلقاء القبض على المتهم' }
                 ],
                 correctAnswer: 'b'
             },
             {
                 id: 30, type: 'mcq', marks: 1.0,
-                questionAr: 'تقادم الجريم لا يزيد عن:',
+                questionAr: 'تقادم الجريمة لا يزيد عن:',
                 options: [
                     { id: 'a', textAr: 'مس سنوات' },
                     { id: 'b', textAr: 'عشر سنوات' },
@@ -8610,7 +8610,7 @@ export const quizData = {
                 questionAr: 'جريم احتجاز الرهائن التي تهدد أمن الدول الأردني ارتكبها أجنبي في دول أجنبي، أي مبدأ يمنح الأردن الاتصاص بمحاكمته؟',
                 options: [
                     { id: 'a', textAr: 'مبدأ الاتصاص الإقليمي' },
-                    { id: 'b', textAr: 'مبدأ الاتصاص الشصي' },
+                    { id: 'b', textAr: 'مبدأ الاتصاص الشخصي' },
                     { id: 'c', textAr: 'مبدأ الاتصاص العيني' },
                     { id: 'd', textAr: 'مبدأ الاتصاص الشمولي' }
                 ],
@@ -8618,7 +8618,7 @@ export const quizData = {
             },
             {
                 id: 32, type: 'mcq', marks: 1.0,
-                questionAr: 'سائق سيار تجاوز الإشار الحمراء مالفاً قواعد السير وأدى ذلك إلى إصاب شص بجروح بالغ. هذه الجريم هي:',
+                questionAr: 'سائق سيار تجاوز الإشار الحمراء مالفاً قواعد السير وأدى ذلك إلى إصاب شص بجروح بالغ. هذه الجريمة هي:',
                 options: [
                     { id: 'a', textAr: 'جريوم مقصود لأنه علم بطور تجاوز الإشار' },
                     { id: 'b', textAr: 'جريم غير مقصود (خطأ جنائي) لعدم توافر القصد الجرمي رغم وجود الركن المادي' },
@@ -8630,7 +8630,7 @@ export const quizData = {
             {
                 id: 33, type: 'mcq', marks: 1.0,
                 questionAr: 'تمتاز أسباب التبرير في قانون العقوبات بأنها ذات طابع:',
-                explanationAr: 'أسباب التبرير موضوعي؛ لأنها ترفع الصف الجرمي عن الفعل وتجعله مشروعاً، وبالتالي يستفيد منها كل من ساهم في الجريم (فاعل، شريك، متدل).',
+                explanationAr: 'أسباب التبرير موضوعي؛ لأنها ترفع الصف الجرمي عن الفعل وتجعله مشروعاً، وبالتالي يستفيد منها كل من ساهم في الجريمة (فاعل، شريك، متدل).',
                 options: [
                     { id: 'a', textAr: 'شصي يتعلق بصف الجاني ومسؤوليته' },
                     { id: 'b', textAr: 'موضوعي ينصرف إلى الفعل نفسه فيجرده من الصف الجرمي' },
@@ -8654,10 +8654,10 @@ export const quizData = {
             {
                 id: 35, type: 'mcq', marks: 1.0,
                 questionAr: 'أجرى طبيب جراح عملي جراحي عاجل لمريض وفق الأصول الطبي المعتمد بقصد شفاءه، فنتج عن العملي إصاب جسدي أو وفا المريض. ما هو الوضع القانوني للطبيب؟',
-                explanationAr: 'ممارس العمل الطبي وفق الأصول الطبي وبقصد الشفاء يعتبر استعمالاً لحق قرره القانون كسبب تبرير يمنع المسؤولي الجنائي والمدني.',
+                explanationAr: 'ممارس العمل الطبي وفق الأصول الطبي وبقصد الشفاء يعتبر استعمالاً لحق قرره القانون كسبب تبرير يمنع المسؤولية الجنائية والمدني.',
                 options: [
                     { id: 'a', textAr: 'يسأل جنائياً لأنه سبب أذىً مادياً للمريض' },
-                    { id: 'b', textAr: 'يسأل مدنياً بالتعويض فقط دون المسؤولي الجنائي' },
+                    { id: 'b', textAr: 'يسأل مدنياً بالتعويض فقط دون المسؤولية الجنائية' },
                     { id: 'c', textAr: 'لا يسأل جنائياً ولا مدنياً لأن فعله يندرج ضمن أسباب التبرير' },
                     { id: 'd', textAr: 'يسأل جنائياً إذا لم تنجح العملي في تحقيق الشفاء التام' }
                 ],
@@ -8690,8 +8690,8 @@ export const quizData = {
                 questionAr: 'إذا وقع تجاوز في حدود الدفاع الشرعي بحسن ني نتيج الرعب والضغط النفسي، فإن المحكم:',
                 explanationAr: 'التجاوز بحسن ني في الدفاع الشرعي يرج الفعل من الإباح الكامل، ولكنه يمنح عذراً مففاً أو إعفاءً طبقاً لأحكام القانون.',
                 options: [
-                    { id: 'a', textAr: 'تعاقب الفاعل بعقوب الجريم كامل دون أي تفيف' },
-                    { id: 'b', textAr: 'يمكنها إعفاء فاعل الجريم كلياً من العقاب أو تفيفها إذا توافرت شروط المادة 89 من قانون العقوبات' },
+                    { id: 'a', textAr: 'تعاقب الفاعل بعقوب الجريمة كامل دون أي تفيف' },
+                    { id: 'b', textAr: 'يمكنها إعفاء فاعل الجريمة كلياً من العقاب أو تفيفها إذا توافرت شروط المادة 89 من قانون العقوبات' },
                     { id: 'c', textAr: 'تعتبر الفعل جريم مقصود مشدد' },
                     { id: 'd', textAr: 'تحكم ببراء الفاعل لتوفر سبب التبرير كاملاً دون قيد' }
                 ],
@@ -8711,24 +8711,24 @@ export const quizData = {
             },
             {
                 id: 39, type: 'mcq', marks: 1.0,
-                questionAr: 'يتميز الشروع التام (الجريم الائب) عن الشروع الناقص (الجريم الموقوف) بأن الفاعل في الشروع التام:',
+                questionAr: 'يتميز الشروع التام (الجريمة الائب) عن الشروع الناقص (الجريمة الموقوف) بأن الفاعل في الشروع التام:',
                 explanationAr: 'الشروع التام يعني أن الجاني قام بكل ما بوسعه لكنه لم يصب المجني عليه، أما الناقص فيتم قطعه قبل استكمال السلوك المادي.',
                 options: [
                     { id: 'a', textAr: 'يستنفد كل الأفعال المادي اللازم للجريم لكن النتيج لا تتحقق لأسباب ارج عن إرادته' },
-                    { id: 'b', textAr: 'يتوقف باتياره وعدوله الطوعي قبل إتمام الأفعال التنفيذي' },
+                    { id: 'b', textAr: 'يتوقف باختياره وعدوله الطوعي قبل إتمام الأفعال التنفيذية' },
                     { id: 'c', textAr: 'يتم وقف نشاطه المادي قسراً من قبل رجال الأمن قبل إتمام السلوك' },
-                    { id: 'd', textAr: 'يرتكب سلوكاً يستحيل معه تحقيق النتيج مطلقاً لعدم صلاحي الوسيل' }
+                    { id: 'd', textAr: 'يرتكب سلوكاً يستحيل معه تحقيق النتيج مطلقاً لعدم صلاحية الوسيل' }
                 ],
                 correctAnswer: 'a'
             },
             {
                 id: 40, type: 'mcq', marks: 1.0,
                 questionAr: 'إذا قام شص بإطلاق النار على سرير يعتقد أن صمه نائم فيه بقصد قتله، فتبين أن الصم كان قد توفي قبل ذلك بساعات، فإن هذه الحال تعتبر:',
-                explanationAr: 'إطلاق النار على جث يعتبر جريم مستحيل لاستحال محل الجريم (الإنسان الحي)، والقانون يعاقب على الجريم المستحيل باعتبارها شروعاً.',
+                explanationAr: 'إطلاق النار على جث يعتبر جريم مستحيل لاستحال محل الجريمة (الإنسان الحي)، والقانون يعاقب على الجريمة المستحيل باعتبارها شروعاً.',
                 options: [
                     { id: 'a', textAr: 'جريم تام؛ لأن القصد الجرمي متوفر' },
                     { id: 'b', textAr: 'شروعاً في جريم مستحيل معاقب عليها كشروع' },
-                    { id: 'c', textAr: 'عدولاً اتيارياً يمنع العقاب' },
+                    { id: 'c', textAr: 'عدولاً اختيارياً يمنع العقاب' },
                     { id: 'd', textAr: 'جريم غير مقصود' }
                 ],
                 correctAnswer: 'b'
@@ -8747,8 +8747,8 @@ export const quizData = {
             },
             {
                 id: 42, type: 'mcq', marks: 1.0,
-                questionAr: 'تجاوز سائق سيار الإشار الضوئي الحمراء مالفاً قواعد السير، مما أدى إلى صدم أحد المار وإصابته بجروح. توصف هذه الجريم بأنها:',
-                explanationAr: 'الجريم غير عمدي؛ لأن إراد السائق اتجهت للسلوك (تجاوز الإشار) ولكنها لم تتجه إلى تحقيق النتيج (إصاب الشص).',
+                questionAr: 'تجاوز سائق سيار الإشار الضوئي الحمراء مالفاً قواعد السير، مما أدى إلى صدم أحد المار وإصابته بجروح. توصف هذه الجريمة بأنها:',
+                explanationAr: 'الجريمة غير عمدي؛ لأن إراد السائق اتجهت للسلوك (تجاوز الإشار) ولكنها لم تتجه إلى تحقيق النتيج (إصاب الشخص).',
                 options: [
                     { id: 'a', textAr: 'جريم مقصود؛ لأن السائق علم بطور تجاوز الإشار وتوقع النتيج' },
                     { id: 'b', textAr: 'جريم غير مقصود (خطأ غير عمدي)؛ لتوافر الركن المادي والطأ دون اتجاه إرادته للنتيج' },
@@ -8759,13 +8759,13 @@ export const quizData = {
             },
             {
                 id: 43, type: 'mcq', marks: 1.0,
-                questionAr: 'يُعد فاعلاً أصلياً (مساهماً أصلياً) في الجريم كل من:',
+                questionAr: 'يُعد فاعلاً أصلياً (مساهماً أصلياً) في الجريمة كل من:',
                 explanationAr: 'المساهمة الأصلي (الفاعل) هو من ينفذ الركن المادي أو يساهم في تنفيذه مباشر، أما تقديم السلاح فهو تدل، وإيواء الجاني هو جريم إفاء مستقل.',
                 options: [
-                    { id: 'a', textAr: 'يقتصر دوره على تقديم السلاح المستعمل في الجريم قبل ارتكابها' },
+                    { id: 'a', textAr: 'يقتصر دوره على تقديم السلاح المستعمل في الجريمة قبل ارتكابها' },
                     { id: 'b', textAr: 'يقوم بالأعمال المكون للركن المادي للجريم أو يرتكبها بالاشتراك المباشر مع غيره' },
                     { id: 'c', textAr: 'يوجه نصائح وإرشادات عام للجاني دون التدل في التنفيذ المادي' },
-                    { id: 'd', textAr: 'يبئ الجاني في بيته بعد إتمام الجريم هرباً من العدال' }
+                    { id: 'd', textAr: 'يبئ الجاني في بيته بعد إتمام الجريمة هرباً من العدال' }
                 ],
                 correctAnswer: 'b'
             },
@@ -8775,7 +8775,7 @@ export const quizData = {
                 explanationAr: 'القصد الجرمي للمتدل يقوم على وحد المصلح أو "التضامن الإجرامي"، أي علمه بما ينوي الفاعل القيام به وتوجيه إرادته لمساعدته.',
                 options: [
                     { id: 'a', textAr: 'يكون المتدل جاهلاً بني الفاعل الأصلي ومططه الإجرامي' },
-                    { id: 'b', textAr: 'يتوفر لديه العلم بالجريم التي يرتكبها الفاعل الأصلي وتتجه إرادته لتقديم المساعد' },
+                    { id: 'b', textAr: 'يتوفر لديه العلم بالجريمة التي يرتكبها الفاعل الأصلي وتتجه إرادته لتقديم المساعد' },
                     { id: 'c', textAr: 'يرتكب المتدل الفعل تحت تأثير القو القاهر والضرور القصوى' },
                     { id: 'd', textAr: 'يقتصر علمه على المالفات البسيط دون الجنايات والجنح' }
                 ],
@@ -8783,13 +8783,13 @@ export const quizData = {
             },
             {
                 id: 45, type: 'mcq', marks: 1.0,
-                questionAr: 'تتميز أسباب التبرير في قانون العقوبات بأنها ذات طابع موضوعي يزيل الصف الجرمي عن الفعل كلياً، بلاف موانع المسؤولي (كالجنون أو الصغر) التي لها طابع شصي ترفع العقاب عن الشص مع بقاء الفعل جريم.',
+                questionAr: 'تتميز أسباب التبرير في قانون العقوبات بأنها ذات طابع موضوعي يزيل الصف الجرمي عن الفعل كلياً، بلاف موانع المسؤولية (كالجنون أو الصغر) التي لها طابع شصي ترفع العقاب عن الشخص مع بقاء الفعل جريم.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. أسباب التبرير موضوعي تزيل صف الجريم عن الفعل ذاته، أما موانع المسؤولي فشصي ترفع العقاب عن الشص فقط.'
+                explanationAr: 'صحيح. أسباب التبرير موضوعي تزيل صف الجريمة عن الفعل ذاته، أما موانع المسؤولية فشصي ترفع العقاب عن الشخص فقط.'
             },
             {
                 id: 46, type: 'mcq', marks: 1.0,
@@ -8813,7 +8813,7 @@ export const quizData = {
             },
             {
                 id: 48, type: 'mcq', marks: 1.0,
-                questionAr: 'يعتبر الشص في حال دفاع شرعي إذا قام بضرب شص آر انتقاماً منه بعد أن انتهى الاعتداء وتمكن رجال الأمن من القبض على المعتدي.',
+                questionAr: 'يعتبر الشخص في حال دفاع شرعي إذا قام بضرب شص آر انتقاماً منه بعد أن انتهى الاعتداء وتمكن رجال الأمن من القبض على المعتدي.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
@@ -8823,17 +8823,17 @@ export const quizData = {
             },
             {
                 id: 49, type: 'mcq', marks: 1.0,
-                questionAr: 'رضاء المجني عليه لا يعتبر سبباً عاماً للتبرير في قانون العقوبات إلا في أحوال ضيق أجازها القانون، فلا يملك الشص التنازل عن حقه في الحياة (كالقتل رحم).',
+                questionAr: 'رضاء المجني عليه لا يعتبر سبباً عاماً للتبرير في قانون العقوبات إلا في أحوال ضيق أجازها القانون، فلا يملك الشخص التنازل عن حقه في الحياة (كالقتل رحم).',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. الرضا لا يُبيح القتل أو الإيذاء الجسيم لأن الحق في الحياة وسلام الجسد من الحقوق التي لا يملك الشص التنازل عنها.'
+                explanationAr: 'صحيح. الرضا لا يُبيح القتل أو الإيذاء الجسيم لأن الحق في الحياة وسلام الجسد من الحقوق التي لا يملك الشخص التنازل عنها.'
             },
             {
                 id: 50, type: 'mcq', marks: 1.0,
-                questionAr: 'لا يعاقب القانون الأردني على الشروع في الجريم إذا توقف الفاعل قسراً بسبب صرا المجني عليه أو قدوم الشرط.',
+                questionAr: 'لا يعاقب القانون الأردني على الشروع في الجريمة إذا توقف الفاعل قسراً بسبب صرا المجني عليه أو قدوم الشرط.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
@@ -8843,17 +8843,17 @@ export const quizData = {
             },
             {
                 id: 51, type: 'mcq', marks: 1.0,
-                questionAr: 'تعتبر الجريم مستحيل ويعاقب عليها كشروع إذا استحال تحقيق النتيج بسبب ظروف مادي يجهلها الجاني، مثل محاول سرق زن يظنها مليئ بالنقود وتبين أنها فارغ.',
+                questionAr: 'تعتبر الجريمة مستحيل ويعاقب عليها كشروع إذا استحال تحقيق النتيج بسبب ظروف مادي يجهلها الجاني، مثل محاول سرق زن يظنها مليئ بالنقود وتبين أنها فارغ.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. الجريم المستحيل يُعاقب عليها كشروع لوجود الطور الإجرامي وبدء التنفيذ رغم استحال النتيج.'
+                explanationAr: 'صحيح. الجريمة المستحيل يُعاقب عليها كشروع لوجود الطور الإجرامي وبدء التنفيذ رغم استحال النتيج.'
             },
             {
                 id: 52, type: 'mcq', marks: 1.0,
-                questionAr: 'يتوفر القصد الجرمي دائماً بمجرد حدوث النتيج الضار، حتى لو ثبت أن الجاني كان يجهل تماماً عنصراً أساسياً من عناصر الجريم وقت ارتكابها.',
+                questionAr: 'يتوفر القصد الجرمي دائماً بمجرد حدوث النتيج الضار، حتى لو ثبت أن الجاني كان يجهل تماماً عنصراً أساسياً من عناصر الجريمة وقت ارتكابها.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
@@ -8873,13 +8873,13 @@ export const quizData = {
             },
             {
                 id: 54, type: 'mcq', marks: 1.0,
-                questionAr: 'يتطلب القصد الجرمي في المساهمة التبعي علم المتدل بالنشاط الإجرامي للفاعل الأصلي واتجاه إرادته إلى معون الفاعل في تحقيق هذه الجريم.',
+                questionAr: 'يتطلب القصد الجرمي في المساهمة التبعي علم المتدل بالنشاط الإجرامي للفاعل الأصلي واتجاه إرادته إلى معون الفاعل في تحقيق هذه الجريمة.',
                 options: [
                     { id: 'a', textAr: 'صح' },
                     { id: 'b', textAr: 'خطأ' }
                 ],
                 correctAnswer: 'a',
-                explanationAr: 'صحيح. لا تقوم المساهمة التبعي إلا بتوافر العلم بالجريم وإراد المساعد في تحقيقها.'
+                explanationAr: 'صحيح. لا تقوم المساهمة التبعي إلا بتوافر العلم بالجريمة وإراد المساعد في تحقيقها.'
             }
         ]
     }
@@ -9055,7 +9055,7 @@ export const quizCategories = [
     {
         id: 'ml_lab',
         name: 'Machine Learning Lab',
-        nameAr: 'متبر تعلم الآل',
+        nameAr: 'مختبر تعلم الآل',
         icon: '🤖',
         color: '#E91E63',
         forceEnglish: true,

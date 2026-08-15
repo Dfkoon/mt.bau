@@ -78,7 +78,7 @@ function drawCanvas(canvas, text) {
 // ── Path label helper ─────────────────────────────────────────────────
 const PATH_LABELS = {
   '/': 'الرئيسي',
-  '/materials': 'الالمواد الدراسية',
+  '/materials': 'المواد الدراسية',
   '/plans': 'الخطط الدراسي',
   '/quiz': 'الاختبارات',
   '/calendar': 'التقويم',
@@ -1687,7 +1687,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     { id: 'donations', label: isAr ? 'إدارة التبرعات' : 'Donations' },
     { id: 'quizzes', label: isAr ? 'الاختبارات' : 'Quizzes' },
     { id: 'feedback', label: isAr ? 'الآراء والتقييمات' : 'Feedback & Testimonials' },
-    { id: 'courses', label: isAr ? 'إدارة الالمواد الدراسيةة' : 'Manage Courses' },
+    { id: 'courses', label: isAr ? 'إدارة المواد الدراسيةة' : 'Manage Courses' },
     { id: 'reports', label: isAr ? 'البلاغات' : 'Reports' },
     { id: 'contributions', label: isAr ? 'المساهمةات' : 'Contributions' },
     { id: 'activity', label: isAr ? 'سجل النشاط' : 'Activity' },
@@ -1848,7 +1848,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {/* Column 1: Subjects List */}
                 <div className="qmanage-column subjects-col">
                   <div className="qmanage-col-header">
-                    <h4> {isAr ? 'الالمواد الدراسية' : 'Subjects'}</h4>
+                    <h4> {isAr ? 'المواد الدراسية' : 'Subjects'}</h4>
                     <button className="qmanage-add-btn" onClick={() => {
                       // Reset to add-mode before opening modal
                       setEditingSubjectOriginalId(null);
@@ -2199,7 +2199,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   {!questionForm.image && !quizImageUploading && (
                     <div className="qedit-image-dropzone" onClick={() => quizImageInputRef.current?.click()}>
                       <span style={{ fontSize: '1.5rem' }}></span>
-                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاتيار صور 1' : 'Click to choose image 1'}</p>
+                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاختيار صور 1' : 'Click to choose image 1'}</p>
                     </div>
                   )}
                   {quizImageUploading && (
@@ -2271,7 +2271,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   {!questionForm.image2 && !quizImage2Uploading && (
                     <div className="qedit-image-dropzone" onClick={() => quizImage2InputRef.current?.click()}>
                       <span style={{ fontSize: '1.5rem' }}></span>
-                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاتيار صور 2' : 'Click to choose image 2'}</p>
+                      <p style={{ margin: '0.4rem 0 0', fontSize: '0.82rem' }}>{isAr ? 'اضغط لاختيار صور 2' : 'Click to choose image 2'}</p>
                     </div>
                   )}
                   {quizImage2Uploading && (
@@ -2415,7 +2415,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   >
                     <span style={{ fontSize: '2rem' }}></span>
                     <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>
-                      {isAr ? 'اضغط لاتيار صور من جهازك' : 'Click to choose an image from your device'}
+                      {isAr ? 'اضغط لاختيار صور من جهازك' : 'Click to choose an image from your device'}
                     </p>
                     <p style={{ margin: '0.2rem 0 0', fontSize: '0.78rem', opacity: 0.5 }}>
                       {isAr ? 'حد أقصى 5 ميجابايت' : 'Max 5MB'}
@@ -2808,7 +2808,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                   </button>
                 </div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-                  {isAr ? 'ارفع صور للسؤال أو الخيارات وسيتم استخراج النص وإداله تلقائيًا في الحقول.' : 'Upload a photo of the question or options and the text will be filled in automatically.'}
+                  {isAr ? 'ارفع صور للسؤال أو الخيارات وسيتم استخراج النص وإدخاله تلقائيًا في الحقول.' : 'Upload a photo of the question or options and the text will be filled in automatically.'}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
                   <label className="qedit-label" style={{ margin: 0 }}> {isAr ? 'نص السؤال — عربي' : 'Question Text — Arabic'}</label>
@@ -3385,7 +3385,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                 {!questionForm.image && !quizImageUploading && (
                   <div className="qedit-image-dropzone" onClick={() => quizImageInputRef.current?.click()}>
                     <span style={{ fontSize: '2rem' }}></span>
-                    <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>{isAr ? 'اضغط لاتيار صور من جهازك' : 'Click to choose an image from your device'}</p>
+                    <p style={{ margin: '0.4rem 0 0', fontSize: '0.9rem' }}>{isAr ? 'اضغط لاختيار صور من جهازك' : 'Click to choose an image from your device'}</p>
                   </div>
                 )}
                 {quizImageUploading && (

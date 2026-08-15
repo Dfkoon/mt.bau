@@ -66,7 +66,7 @@ export const academicCalendarData = {
             { date: '2026/6/23', day: 'الثلاثاء', dayEn: 'Tuesday', event: 'آخر موعد لتقديم طلب لمن يرغب برفع معدله التراكمي', eventEn: 'Deadline for GPA improvement requests', type: 'deadline' },
             { date: '2026/7/2-6/25', day: 'الخميس - الخميس', dayEn: 'Thu - Thu', event: 'إجاز أعضاء الهيئ التدريسي (الصيفي)', eventEn: 'Summer Faculty Leave', type: 'holiday' },
             { date: '2026/9/3-6/25', day: 'الخميس - الخميس', dayEn: 'Thu - Thu', event: 'إجاز أعضاء الهيئ التدريسي (غير المكلفين)', eventEn: 'Faculty Leave (Non-Summer staff)', type: 'holiday' },
-            { date: '2026/8/13-7/12', day: 'الأحد - الخميس', dayEn: 'Sun - Thu', event: 'فتر تقديم طلبات الالتحاق لبرامج الدراسات العليا', eventEn: 'Application period for Graduate Programs', type: 'deadline' },
+            { date: '2026/8/13-7/12', day: 'الأحد - الخميس', dayEn: 'Sun - Thu', event: 'فترة تقديم طلبات الالتحاق لبرامج الدراسات العليا', eventEn: 'Application period for Graduate Programs', type: 'deadline' },
             { date: '2026/7/1', day: 'الأربعاء', dayEn: 'Wednesday', event: 'آخر موعد لتقديم تنسيب مجالس الكليات لمنح الدرجات العلمي', eventEn: 'Deadline for submitting degree recommendations', type: 'deadline' },
             { date: '2026/7/8', day: 'الأربعاء', dayEn: 'Wednesday', event: 'قرار مجلس العمداء بمنح الدرجات العلمي', eventEn: 'Council of Deans decision on granting degrees', type: 'academic' },
             { date: '2026/7/8', day: 'الأربعاء', dayEn: 'Wednesday', event: 'آخر موعد لتزويد القبول والتسجيل بنتائج الاعتراض', eventEn: 'Deadline for submitting appeal results', type: 'deadline' }

@@ -385,7 +385,7 @@ const AIStudyTools = () => {
                 value={text}
                 onChange={e => setText(e.target.value)}
                 placeholder={isRtl
-                  ? 'الصق نص المحاضرة أو الكتاب أو الملاحظات هنا...\n\nمثال: "الشبكات العصبية هي نماذج حسابية مستوحاة من الدماغ البشري..."'
+                  ? 'الصق نص المحاضرة أو الكتاب أو الملاحظات هنا...\n\nمثال: "الشبكات العصبيةة هي نماذج حسابية مستوحاة من الدماغ البشري..."'
                   : 'Paste your lecture, book, or notes here...\n\nExample: "Neural networks are computational models inspired by the human brain..."'}
                 rows={10}
               />

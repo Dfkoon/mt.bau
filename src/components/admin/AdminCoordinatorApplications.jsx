@@ -95,7 +95,7 @@ export default function AdminCoordinatorApplications() {
                                 <th>{isAr ? 'الهاتف' : 'Phone'}</th>
                                 <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                 <th>{isAr ? 'الدافع' : 'Motivation'}</th>
-                                <th>{isAr ? 'تاري التقديم' : 'Submitted'}</th>
+                                <th>{isAr ? 'تاريخخ التقديم' : 'Submitted'}</th>
                                 <th>{isAr ? 'إجراءات' : 'Actions'}</th>
                             </tr>
                         </thead>

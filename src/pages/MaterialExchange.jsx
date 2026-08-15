@@ -903,9 +903,9 @@ const MaterialExchange = ({ isEmbedded = false }) => {
 
         let detailsText = '';
         if (isDonation) {
-            detailsText = `المواد المتبرع بها:\n` + (data.materials || []).map((m, i) => `${i + 1}. ${typeof m === 'object' ? m.name : m}`).join('\n');
+            detailsText = `المواد المختبرع بها:\n` + (data.materials || []).map((m, i) => `${i + 1}. ${typeof m === 'object' ? m.name : m}`).join('\n');
         } else {
-            detailsText = `المادة المحجوز: ${data.materialName}\nصاحب المادة (المتبرع): ${data.donorName} (${data.donorPhone})`;
+            detailsText = `المادة المحجوز: ${data.materialName}\nصاحب المادة (المختبرع): ${data.donorName} (${data.donorPhone})`;
         }
 
         const templateParams = {
@@ -1016,7 +1016,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const handleAddDeliverySchedule = async () => {
         const { donorName, materialName, pickupDate, assignedCoordinator } = scheduleFormData;
         if (!donorName.trim() || !materialName.trim() || !pickupDate || !assignedCoordinator) {
-            toast.error(isAr ? '⚠️ يرجى ملء الحقول المطلوب (الاسم، المادة، التاري، المنسق)' : '⚠️ Please fill required fields');
+            toast.error(isAr ? '⚠️ يرجى ملء الحقول المطلوب (الاسم، المادة، التاريخ، المنسق)' : '⚠️ Please fill required fields');
             return;
         }
         setScheduleFormLoading(true);
@@ -1298,7 +1298,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             return;
         }
         if (!bookingData.gender) {
-            toast.error(isAr ? 'يرجى اتيار الجنس' : 'Please select gender');
+            toast.error(isAr ? 'يرجى اختيار الجنس' : 'Please select gender');
             return;
         }
         setLoading(true);
@@ -1374,7 +1374,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 bookingId: `BK-${Date.now().toString(36).toUpperCase()}`,
                 studentName: bookingData.name.trim(),
                 materialName: selectedMaterial?.materialName || selectedMaterial?.name || '',
-                donorName: selectedMaterial?.donorName || 'متبرع',
+                donorName: selectedMaterial?.donorName || 'مختبرع',
                 coordinatorName: selectedMaterial?.studentGender === 'male' ? (systemSettings.ahmadNameAr || 'أحمد') : (systemSettings.saraNameAr || 'سار')
             });
             setBookingData({ name: '', phone: '', gender: '' });
@@ -1926,7 +1926,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                     messageText = `السلام عليكم ورحم الله وبركاته،
 الأ/الأت الفاضل/ ${name}،
 
-تقرير مُحدّث لحال المواد المتبرع بها من قبلكم عبر موقع "مكانك":${deliveredText}${remainingText}
+تقرير مُحدّث لحال المواد المختبرع بها من قبلكم عبر موقع "مكانك":${deliveredText}${remainingText}
 
 للمزيد من التفاصيل، يرجى زيار صفح تبادل المواد.
 
@@ -2050,7 +2050,7 @@ Please contact us to coordinate the pickup.Thank you.`;
     };
 
     const getReportTitle = (type) => type === 'donor'
-        ? (isAr ? 'كشف المواد المتبرع بها' : 'Donated Materials Report')
+        ? (isAr ? 'كشف المواد المختبرع بها' : 'Donated Materials Report')
         : (isAr ? 'كشف المواد المحجوز' : 'Booked Materials Report');
 
     const getReportWhatsAppLink = (data, type) => {
@@ -2142,7 +2142,7 @@ Please contact us to coordinate the pickup.Thank you.`;
             ? materialReportData.phoneNumber || materialReportData.studentPhone || '—'
             : materialReportData.takerInfo?.phone || '—';
         const statusLabel = materialReportType === 'donor'
-            ? (isAr ? 'المتبرع' : 'Donor')
+            ? (isAr ? 'المختبرع' : 'Donor')
             : (isAr ? 'الحاجز' : 'Booker');
 
         // Calculate counts for stats
@@ -2173,7 +2173,7 @@ Please contact us to coordinate the pickup.Thank you.`;
 
         const getUserStatus = () => {
             if (materialReportType === 'donor') {
-                return <span style={{ color: '#2ecc71', fontWeight: 'bold' }}>{isAr ? 'متبرع نشط' : 'Active Donor'}</span>;
+                return <span style={{ color: '#2ecc71', fontWeight: 'bold' }}>{isAr ? 'مختبرع نشط' : 'Active Donor'}</span>;
             } else {
                 return <span style={{ color: '#e67e22', fontWeight: 'bold' }}>{isAr ? 'لديه حجز نشط' : 'Has Active Booking'}</span>;
             }
@@ -2201,18 +2201,18 @@ Please contact us to coordinate the pickup.Thank you.`;
                         <header>
                             <div className="title-block">
                                 <h1>{title}</h1>
-                                <p>{isAr ? 'تقرير تفصيلي بالمواد المتبرع بها والمحجوز والمسلم لهذا الحاجز' : 'Detailed report of materials donated, reserved, and delivered.'}</p>
+                                <p>{isAr ? 'تقرير تفصيلي بالمواد المختبرع بها والمحجوز والمسلم لهذا الحاجز' : 'Detailed report of materials donated, reserved, and delivered.'}</p>
                             </div>
                             <div className="meta">
                                 <div>{isAr ? 'رقم الكشف:' : 'Report No:'} <span className="report-no">{materialReportData.id ? materialReportData.id.substring(0, 10) : '—'}</span></div>
-                                <div>{isAr ? 'تاري الإصدار:' : 'Issued:'} <b>{new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</b></div>
+                                <div>{isAr ? 'تاريخخ الإصدار:' : 'Issued:'} <b>{new Date().toLocaleDateString(isAr ? 'ar-JO' : 'en-US')}</b></div>
                                 <div>{isAr ? 'المنسق:' : 'Coordinator:'} <b>{loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
                             </div>
                         </header>
 
                         <div className="pilgrim">
                             <div className="pilgrim-field">
-                                <span>{materialReportType === 'donor' ? (isAr ? 'اسم المتبرع' : 'Donor Name') : (isAr ? 'اسم الحاجز' : 'Booker Name')}</span>
+                                <span>{materialReportType === 'donor' ? (isAr ? 'اسم المختبرع' : 'Donor Name') : (isAr ? 'اسم الحاجز' : 'Booker Name')}</span>
                                 <b>{clientName}</b>
                             </div>
                             <div className="pilgrim-field">
@@ -2222,11 +2222,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 </b>
                             </div>
                             <div className="pilgrim-field">
-                                <span>{isAr ? 'تاري التسجيل' : 'Registration Date'}</span>
+                                <span>{isAr ? 'تاريخخ التسجيل' : 'Registration Date'}</span>
                                 <b>{formatReportDate(materialReportData.createdAt)}</b>
                             </div>
                             <div className="pilgrim-field">
-                                <span>{materialReportType === 'donor' ? (isAr ? 'حال المتبرع' : 'Donor Status') : (isAr ? 'حال الحاجز' : 'Booker Status')}</span>
+                                <span>{materialReportType === 'donor' ? (isAr ? 'حال المختبرع' : 'Donor Status') : (isAr ? 'حال الحاجز' : 'Booker Status')}</span>
                                 <b>{getUserStatus()}</b>
                             </div>
                         </div>
@@ -2235,7 +2235,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                         <div className="stats">
                             <div className="stat-card donated">
                                 <div className="num">{donatedCount}</div>
-                                <div className="lbl">{isAr ? 'مواد متبرع بها متاح' : 'Available Donated Materials'}</div>
+                                <div className="lbl">{isAr ? 'مواد مختبرع بها متاح' : 'Available Donated Materials'}</div>
                             </div>
                             <div className="stat-card reserved">
                                 <div className="num">{reservedCount}</div>
@@ -2254,8 +2254,8 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <th>{isAr ? 'م' : '#'}</th>
                                     <th>{isAr ? 'اسم المادة' : 'Material Name'}</th>
                                     <th>{isAr ? 'التصنيف' : 'Classification'}</th>
-                                    <th>{isAr ? 'تاري الإجراء' : 'Action Date'}</th>
-                                    <th>{isAr ? 'تاري التسليم' : 'Delivery Date'}</th>
+                                    <th>{isAr ? 'تاريخخ الإجراء' : 'Action Date'}</th>
+                                    <th>{isAr ? 'تاريخخ التسليم' : 'Delivery Date'}</th>
                                     <th>{isAr ? 'الحال' : 'Status'}</th>
                                 </tr>
                             </thead>
@@ -2265,7 +2265,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         ? (isAr ? 'مادة مسلّم' : 'Delivered Material')
                                         : item.status === 'reserved'
                                             ? (isAr ? 'مادة محجوز' : 'Reserved Material')
-                                            : (isAr ? 'مادة متبرع بها' : 'Donated Material');
+                                            : (isAr ? 'مادة مختبرع بها' : 'Donated Material');
 
                                     return (
                                         <tr key={item.id || index}>
@@ -3344,7 +3344,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                 <p>${isAr ? 'تقرير تفصيلي بجدول التبرعات المقدم من الطلاب للثيم والمرحل الحالي.' : 'Detailed report of student donation records.'}</p>
             </div>
             <div class="meta">
-                <div>${isAr ? 'تاري التصدير:' : 'Export Date:'} <b>${dateStr}</b></div>
+                <div>${isAr ? 'تاريخخ التصدير:' : 'Export Date:'} <b>${dateStr}</b></div>
                 <div>${isAr ? 'عدد السجلات:' : 'Total Records:'} <b>${total}</b></div>
                 <div>${isAr ? 'المنسق المصدر:' : 'Issued By:'} <b>${loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
             </div>
@@ -3385,7 +3385,7 @@ Please contact us to coordinate the pickup.Thank you.`;
         <table>
             <thead>
                 <tr>
-                    <th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                    <th>${isAr ? 'اسم المختبرع' : 'Donor Name'}</th>
                     <th>${isAr ? 'الهاتف' : 'Phone'}</th>
                     <th>${isAr ? 'اسم المادة' : 'Material Name'}</th>
                     <th>${isAr ? 'الملاحظات' : 'Notes'}</th>
@@ -3416,7 +3416,7 @@ Please contact us to coordinate the pickup.Thank you.`;
     };
 
     const exportBookingsToCSV = (bookings, filename) => {
-        const headersAr = ['اسم الحاجز', 'هاتف الحاجز', 'البريد الإلكتروني', 'الجنس', 'المادة', 'ملاحظات المادة', 'اسم المتبرع', 'بريد المتبرع', 'الحال'];
+        const headersAr = ['اسم الحاجز', 'هاتف الحاجز', 'البريد الإلكتروني', 'الجنس', 'المادة', 'ملاحظات المادة', 'اسم المختبرع', 'بريد المختبرع', 'الحال'];
         const headersEn = ['Booker Name', 'Booker Phone', 'Booker Email', 'Gender', 'Material', 'Material Notes', 'Donor Name', 'Donor Email', 'Status'];
         const headers = isAr ? headersAr : headersEn;
         const statusMap = {
@@ -3558,7 +3558,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                 <p>${isAr ? 'تقرير تفصيلي بجدول الحجوزات الطلابي للمرحل الحالي.' : 'Detailed report of student booking records.'}</p>
             </div>
             <div class="meta">
-                <div>${isAr ? 'تاري التصدير:' : 'Export Date:'} <b>${dateStr}</b></div>
+                <div>${isAr ? 'تاريخخ التصدير:' : 'Export Date:'} <b>${dateStr}</b></div>
                 <div>${isAr ? 'عدد الحجوزات:' : 'Total Bookings:'} <b>${total}</b></div>
                 <div>${isAr ? 'المنسق المصدر:' : 'Issued By:'} <b>${loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
             </div>
@@ -3605,8 +3605,8 @@ Please contact us to coordinate the pickup.Thank you.`;
                     <th>${isAr ? 'الجنس' : 'Gender'}</th>
                     <th>${isAr ? 'المادة' : 'Material'}</th>
                     <th>${isAr ? 'ملاحظات المادة' : 'Material Notes'}</th>
-                    <th>${isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
-                    <th>${isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
+                    <th>${isAr ? 'اسم المختبرع' : 'Donor Name'}</th>
+                    <th>${isAr ? 'بريد المختبرع' : 'Donor Email'}</th>
                     <th>${isAr ? 'الحال' : 'Status'}</th>
                 </tr>
             </thead>
@@ -3760,10 +3760,10 @@ Please contact us to coordinate the pickup.Thank you.`;
         <header>
             <div class="title-block">
                 <h1>${isAr ? `كشف حركة تسليم المواد — يوم ${dayLabel}` : `Material Handover Sheet — ${dayLabel}`}</h1>
-                <p>${isAr ? 'تقرير تفصيلي بمواعيد الإحضار والتسليم المجدولة، متضمناً بيانات المتبرعين والحاجزين والمنسقين.' : 'Detailed report of scheduled pickups and deliveries.'}</p>
+                <p>${isAr ? 'تقرير تفصيلي بمواعيد الإحضار والتسليم المجدولة، متضمناً بيانات المختبرعين والحاجزين والمنسقين.' : 'Detailed report of scheduled pickups and deliveries.'}</p>
             </div>
             <div class="meta">
-                <div>${isAr ? 'التاريخ المجدول:' : 'Scheduled Date:'} <b>${formattedDate}</b></div>
+                <div>${isAr ? 'التاريخخ المجدول:' : 'Scheduled Date:'} <b>${formattedDate}</b></div>
                 <div>${isAr ? 'عدد الحالات المجدولة:' : 'Scheduled count:'} <b>${daySchedules.length}</b></div>
                 <div>${isAr ? 'المنسق المصدر:' : 'Issued By:'} <b>${loggedInUser?.name || (isAr ? 'فريق مكانك' : 'Makanak Team')}</b></div>
             </div>
@@ -3775,7 +3775,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                 <b>${dayLabel}</b>
             </div>
             <div class="pilgrim-field">
-                <span>${isAr ? 'التاري الهجري/الميلادي' : 'Date'}</span>
+                <span>${isAr ? 'التاريخخ الهجري/الميلادي' : 'Date'}</span>
                 <b>${formattedDate}</b>
             </div>
             <div class="pilgrim-field">
@@ -3796,7 +3796,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     <tr>
                         <th style="width:40px; text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">#</th>
                         <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'المادة' : 'Material'}</th>
-                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'المتبرع وهاتفه' : 'Donor & Phone'}</th>
+                        <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'المختبرع وهاتفه' : 'Donor & Phone'}</th>
                         <th style="padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4; text-align:${isAr ? 'right' : 'left'};">${isAr ? 'الحاجز وهاتفه' : 'Booker & Phone'}</th>
                         <th style="text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">${isAr ? 'المنسق المعني' : 'Coordinator'}</th>
                         <th style="text-align:center; padding:12px; background:#fcfbf8; border-bottom:2px solid #e4e0d4;">${isAr ? 'التسليم النهائي' : 'Final Delivery'}</th>
@@ -4575,7 +4575,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     className={`coord-tab-btn ${coordinatorSubTab === 'delegated' ? 'active' : ''}`}
                                                     onClick={() => setCoordinatorSubTab('delegated')}
                                                 >
-                                                    ⚡ {isAr ? 'المواد المفوض لي (صلاحي كامل)' : 'My Delegated Materials (Full Control)'}
+                                                    ⚡ {isAr ? 'المواد المفوض لي (صلاحية كامل)' : 'My Delegated Materials (Full Control)'}
                                                 </button>
                                                 <button
                                                     className={`coord-tab-btn ${coordinatorSubTab === 'main' ? 'active' : ''}`}
@@ -4826,7 +4826,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                     <thead>
                                                                         <tr>
                                                                             <th>#</th>
-                                                                            <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                                            <th>{isAr ? 'اسم المختبرع' : 'Donor Name'}</th>
                                                                             <th>{isAr ? 'رقم الهاتف' : 'Phone'}</th>
                                                                             <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                             <th>{isAr ? 'الجنس' : 'Gender'}</th>
@@ -4836,7 +4836,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                             <th>{isAr ? 'اسم الحاجز' : 'Booker (if reserved)'}</th>
                                                                             <th>{isAr ? 'هاتف الحاجز' : 'Booker Phone'}</th>
                                                                             <th>{isAr ? 'حال الحجز' : 'Booking Status'}</th>
-                                                                            <th>{isAr ? 'تاري التبرع' : 'Donation Date'}</th>
+                                                                            <th>{isAr ? 'تاريخخ التبرع' : 'Donation Date'}</th>
                                                                             {isAdminUser && <th>{isAr ? 'الحال العام' : 'Overall Status'}</th>}
                                                                             {isAdminUser && <th>{isAr ? 'المفوّض' : 'Delegated To'}</th>}
                                                                             {isAdminUser && <th>{isAr ? 'الإجراءات' : 'Actions'}</th>}
@@ -4939,13 +4939,13 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                     <thead>
                                                                         <tr>
                                                                             <th>{isAr ? '#' : '#'}</th>
-                                                                            <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
+                                                                            <th>{isAr ? 'اسم المختبرع' : 'Donor Name'}</th>
                                                                             <th>{isAr ? 'رقم الهاتف' : 'Phone'}</th>
                                                                             <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                             <th>{isAr ? 'الجنس' : 'Gender'}</th>
-                                                                            <th>{isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</th>
+                                                                            <th>{isAr ? 'المواد المختبرع بها' : 'Donated Materials'}</th>
                                                                             <th>{isAr ? 'حال الطلب' : 'Status'}</th>
-                                                                            <th>{isAr ? 'تاري التقديم' : 'Submitted'}</th>
+                                                                            <th>{isAr ? 'تاريخخ التقديم' : 'Submitted'}</th>
                                                                             {isAdminUser && <th>{isAr ? 'التفويض' : 'Delegation'}</th>}
                                                                             <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
                                                                         </tr>
@@ -5065,8 +5065,8 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                             <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                             <th>{isAr ? 'الجنس' : 'Gender'}</th>
                                                                             <th>{isAr ? 'المادة المحجوز' : 'Booked Material'}</th>
-                                                                            <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
-                                                                            <th>{isAr ? 'بريد المتبرع' : 'Donor Email'}</th>
+                                                                            <th>{isAr ? 'اسم المختبرع' : 'Donor Name'}</th>
+                                                                            <th>{isAr ? 'بريد المختبرع' : 'Donor Email'}</th>
                                                                             <th>{isAr ? 'حال الحجز' : 'Booking Status'}</th>
                                                                             <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
                                                                         </tr>
@@ -5177,7 +5177,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                 <th>{isAr ? 'الهاتف' : 'Phone'}</th>
                                                                                 <th>{isAr ? 'اسم المادة' : 'Material'}</th>
                                                                                 <th>{isAr ? 'الملاحظات' : 'Notes'}</th>
-                                                                                <th>{isAr ? 'تاري الإرسال' : 'Submitted At'}</th>
+                                                                                <th>{isAr ? 'تاريخخ الإرسال' : 'Submitted At'}</th>
                                                                                 <th>{isAr ? 'حال الطلب' : 'Status'}</th>
                                                                             </tr>
                                                                         </thead>
@@ -5247,8 +5247,8 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                 <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                                 <th>{isAr ? 'الجنس' : 'Gender'}</th>
                                                                                 <th>{isAr ? 'المادة المسلم' : 'Delivered Material'}</th>
-                                                                                <th>{isAr ? 'اسم المتبرع' : 'Donor Name'}</th>
-                                                                                <th>{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</th>
+                                                                                <th>{isAr ? 'اسم المختبرع' : 'Donor Name'}</th>
+                                                                                <th>{isAr ? 'هاتف المختبرع' : 'Donor Phone'}</th>
                                                                                 <th>{isAr ? 'حال التسليم' : 'Delivery Status'}</th>
                                                                                 <th>{isAr ? 'توقيت التسليم (بالثاني)' : 'Delivered At (with seconds)'}</th>
                                                                                 <th>{isAr ? 'الإجراءات' : 'Actions'}</th>
@@ -5402,9 +5402,9 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>#</th>
-                                                                                <th>{isAr ? 'المتبرع (الجه الأولى)' : 'Donor (First Party)'}</th>
-                                                                                <th>{isAr ? 'جنس المتبرع' : "Donor's Gender"}</th>
-                                                                                <th>{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</th>
+                                                                                <th>{isAr ? 'المختبرع (الجه الأولى)' : 'Donor (First Party)'}</th>
+                                                                                <th>{isAr ? 'جنس المختبرع' : "Donor's Gender"}</th>
+                                                                                <th>{isAr ? 'هاتف المختبرع' : 'Donor Phone'}</th>
                                                                                 <th>{isAr ? 'المادة' : 'Material'}</th>
                                                                                 <th>{isAr ? 'حال التسليم' : 'Delivery Status'}</th>
                                                                                 <th>{isAr ? 'الحاجز (الجه الثاني)' : 'Taker (Second Party)'}</th>
@@ -5425,7 +5425,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                                 {booking.donorGender === 'male' ? (isAr ? '♂️ شب' : '♂️ M') : (isAr ? '♀️ بنت' : '♀️ F')}
                                                                                             </span>
                                                                                         ) : (
-                                                                                            <span className="gender-badge gender-unknown" title={isAr ? 'جنس المتبرع غير مسجّل' : 'Donor gender not recorded'}>⚠️ ?</span>
+                                                                                            <span className="gender-badge gender-unknown" title={isAr ? 'جنس المختبرع غير مسجّل' : 'Donor gender not recorded'}>⚠️ ?</span>
                                                                                         )}
                                                                                     </td>
                                                                                     <td dir="ltr" className="phone-cell">{booking.donorPhone}</td>
@@ -5548,10 +5548,10 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                                         target="_blank"
                                                                                                         rel="noopener noreferrer"
                                                                                                         className="action-btn message-btn"
-                                                                                                        title={isAr ? 'مراسل المتبرع' : 'Message Donor'}
+                                                                                                        title={isAr ? 'مراسل المختبرع' : 'Message Donor'}
                                                                                                         style={{ marginRight: '4px' }}
                                                                                                     >
-                                                                                                        💬 {isAr ? 'المتبرع' : 'Donor'}
+                                                                                                        💬 {isAr ? 'المختبرع' : 'Donor'}
                                                                                                     </a>
                                                                                                     <a
                                                                                                         href={generateWhatsAppLink(booking, 'booker')}
@@ -5639,7 +5639,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     }}>
                                         <div style={{ fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                             <span>📋</span>
-                                            <span>{isAr ? 'كشوفات التوزيع اليومي للطباع (منسق - متبرع - حاجز):' : 'Daily distribution reports for printing:'}</span>
+                                            <span>{isAr ? 'كشوفات التوزيع اليومي للطباع (منسق - مختبرع - حاجز):' : 'Daily distribution reports for printing:'}</span>
                                         </div>
                                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                             {[
@@ -5784,7 +5784,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 <div className="schedule-inline-form">
                                                     {/* Donor Name (pre-filled & read-only for named quadrants) */}
                                                     <div>
-                                                        <label className="schedule-form-label">{isAr ? '* اسم المتبرع' : '* Donor Name'}</label>
+                                                        <label className="schedule-form-label">{isAr ? '* اسم المختبرع' : '* Donor Name'}</label>
                                                         <input
                                                             type="text"
                                                             value={isOther ? scheduleFormData.donorName : prefillDonorName}
@@ -5795,13 +5795,13 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     </div>
                                                     {/* Donor Phone */}
                                                     <div>
-                                                        <label className="schedule-form-label">{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</label>
+                                                        <label className="schedule-form-label">{isAr ? 'هاتف المختبرع' : 'Donor Phone'}</label>
                                                         <input type="tel" dir="ltr" value={scheduleFormData.donorPhone} onChange={e => setScheduleFormData(p => ({ ...p, donorPhone: e.target.value }))} placeholder="07xx-xxx-xxxx" className="schedule-form-input" />
                                                     </div>
                                                     {/* Booker Name */}
                                                     <div>
                                                         <label className="schedule-form-label">{isAr ? 'اسم الحاجز' : 'Booker Name'}</label>
-                                                        <input type="text" value={scheduleFormData.bookerName} onChange={e => setScheduleFormData(p => ({ ...p, bookerName: e.target.value }))} placeholder={isAr ? 'اسم الشص الحاجز...' : 'Booker...'} className="schedule-form-input" />
+                                                        <input type="text" value={scheduleFormData.bookerName} onChange={e => setScheduleFormData(p => ({ ...p, bookerName: e.target.value }))} placeholder={isAr ? 'اسم الشخص الحاجز...' : 'Booker...'} className="schedule-form-input" />
                                                     </div>
                                                     {/* Booker Phone */}
                                                     <div>
@@ -5815,7 +5815,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     </div>
                                                     {/* Pickup Date */}
                                                     <div>
-                                                        <label className="schedule-form-label">{isAr ? '* تاري الإحضار' : '* Pickup Date'}</label>
+                                                        <label className="schedule-form-label">{isAr ? '* تاريخخ الإحضار' : '* Pickup Date'}</label>
                                                         <input type="date" value={scheduleFormData.pickupDate} onChange={e => setScheduleFormData(p => ({ ...p, pickupDate: e.target.value }))} className="schedule-form-input" />
                                                     </div>
                                                     {/* Pickup Time */}
@@ -5989,10 +5989,10 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                 <td style={{ padding: '8px 4px', verticalAlign: 'top', fontSize: '0.78rem' }}>
                                                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
                                                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
-                                                                                            <span style={{ opacity: 0.6 }}>📦 {isAr ? 'متبرع:' : 'Donor:'}</span>
+                                                                                            <span style={{ opacity: 0.6 }}>📦 {isAr ? 'مختبرع:' : 'Donor:'}</span>
                                                                                             <strong style={{ color: 'var(--text-main)' }}>{schedule.donorName || '—'}</strong>
                                                                                             {schedule.donorPhone && (
-                                                                                                <a href={generateScheduleWhatsAppLink(schedule)} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#2ecc71', display: 'inline-flex', alignItems: 'center', gap: '2px', fontSize: '0.7rem', background: 'rgba(46,204,113,0.1)', padding: '1px 5px', borderRadius: '4px' }} title={isAr ? 'تذكير المتبرع' : 'Remind Donor'}>
+                                                                                                <a href={generateScheduleWhatsAppLink(schedule)} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#2ecc71', display: 'inline-flex', alignItems: 'center', gap: '2px', fontSize: '0.7rem', background: 'rgba(46,204,113,0.1)', padding: '1px 5px', borderRadius: '4px' }} title={isAr ? 'تذكير المختبرع' : 'Remind Donor'}>
                                                                                                     💬
                                                                                                 </a>
                                                                                             )}
@@ -6113,7 +6113,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 </div>
                                                 {otherList.length > 0 && (
                                                     <div style={{ marginTop: '25px' }}>
-                                                        {renderQuadrant('other', isAr ? 'متبرعون آرون' : 'Other Donors', '📦', otherList, 'linear-gradient(135deg, #7f8c8d, #95a5a6)', '')}
+                                                        {renderQuadrant('other', isAr ? 'مختبرعون آرون' : 'Other Donors', '📦', otherList, 'linear-gradient(135deg, #7f8c8d, #95a5a6)', '')}
                                                     </div>
                                                 )}
                                             </div>
@@ -6131,12 +6131,12 @@ Please contact us to coordinate the pickup.Thank you.`;
 
                                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                                     {[
-                                                        { key: 'donorName', label: isAr ? 'اسم المتبرع' : 'Donor Name', type: 'text' },
-                                                        { key: 'donorPhone', label: isAr ? 'هاتف المتبرع' : 'Donor Phone', type: 'tel', dir: 'ltr' },
+                                                        { key: 'donorName', label: isAr ? 'اسم المختبرع' : 'Donor Name', type: 'text' },
+                                                        { key: 'donorPhone', label: isAr ? 'هاتف المختبرع' : 'Donor Phone', type: 'tel', dir: 'ltr' },
                                                         { key: 'bookerName', label: isAr ? 'اسم الحاجز' : 'Booker Name', type: 'text' },
                                                         { key: 'bookerPhone', label: isAr ? 'هاتف الحاجز' : 'Booker Phone', type: 'tel', dir: 'ltr' },
                                                         { key: 'materialName', label: isAr ? 'اسم المادة' : 'Material Name', type: 'text' },
-                                                        { key: 'pickupDate', label: isAr ? 'تاري الإحضار' : 'Pickup Date', type: 'date' },
+                                                        { key: 'pickupDate', label: isAr ? 'تاريخخ الإحضار' : 'Pickup Date', type: 'date' },
                                                         { key: 'pickupTime', label: isAr ? 'وقت الإحضار' : 'Pickup Time', type: 'time' },
                                                     ].map(({ key, label, type, dir }) => (
                                                         <div key={key}>
@@ -6861,12 +6861,12 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         <div className="approval-request-content">
                                                             <p><strong>{isAr ? 'منسق الطلب' : 'Requester'}:</strong> {item.requestedByName}</p>
                                                             <p><strong>{isAr ? 'معرّف التبرع' : 'Donation ID'}:</strong> {item.donationId}</p>
-                                                            <p><strong>{isAr ? 'اسم المتبرع' : 'Donor'}:</strong> {item.donation?.studentName || '—'}</p>
+                                                            <p><strong>{isAr ? 'اسم المختبرع' : 'Donor'}:</strong> {item.donation?.studentName || '—'}</p>
                                                             {item.materialIndex !== null && item.materialIndex !== undefined && (
                                                                 <p><strong>{isAr ? 'رقم المادة' : 'Material #'}:</strong> {item.materialIndex + 1} {materialName ? `- ${materialName}` : ''}</p>
                                                             )}
                                                             <p><strong>{isAr ? 'الحال الحالي' : 'Current Status'}:</strong> {item.donation?.status || '—'}</p>
-                                                            <p><strong>{isAr ? 'تاري الطلب' : 'Requested at'}:</strong> {requestDate.toLocaleString(isAr ? 'ar-JO' : 'en-US')}</p>
+                                                            <p><strong>{isAr ? 'تاريخخ الطلب' : 'Requested at'}:</strong> {requestDate.toLocaleString(isAr ? 'ar-JO' : 'en-US')}</p>
                                                         </div>
                                                         <div className="approval-request-actions">
                                                             <button className="action-btn approve-btn" onClick={() => openAdminResponseModal(item.donationId, item)}>
@@ -7079,7 +7079,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                             <tr>
                                                                                 <th>#</th>
                                                                                 <th>{isAr ? 'المادة' : 'Material'}</th>
-                                                                                <th>{isAr ? 'المتبرع' : 'Donor'}</th>
+                                                                                <th>{isAr ? 'المختبرع' : 'Donor'}</th>
                                                                                 <th>{isAr ? 'الحاجز' : 'Booker'}</th>
                                                                                 <th>{isAr ? 'موعد التسليم' : 'Pickup Date & Time'}</th>
                                                                                 <th>{isAr ? 'المنسق' : 'Coordinator'}</th>
@@ -7411,7 +7411,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         {req.materialIndex !== null && req.materialIndex !== undefined && (
                                                             <p>{isAr ? `رقم المادة: ${req.materialIndex + 1}` : `Material #${req.materialIndex + 1}`}</p>
                                                         )}
-                                                        <p>{isAr ? `تاري الطلب: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('ar-JO')}` : `Requested at: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('en-US')}`}</p>
+                                                        <p>{isAr ? `تاريخخ الطلب: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('ar-JO')}` : `Requested at: ${new Date(req.requestedAt.seconds ? req.requestedAt.seconds * 1000 : req.requestedAt).toLocaleString('en-US')}`}</p>
                                                     </div>
                                                     <div className="request-actions">
                                                         <button className="action-btn approve-btn" onClick={() => handleApproveApprovalRequest(selectedDonationForRequests.id, req)}>
@@ -7507,10 +7507,10 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 </div>
                                 <p className="delegate-gender-notice">
                                     {donationToDelegate.studentGender === 'male'
-                                        ? (isAr ? 'ℹ️ هذا الطلب من متبرع ذكر، يُفضل تفويضه لمنسق الذكور.' : 'ℹ️ This is a male donor, recommended to delegate to male coordinator.')
+                                        ? (isAr ? 'ℹ️ هذا الطلب من مختبرع ذكر، يُفضل تفويضه لمنسق الذكور.' : 'ℹ️ This is a male donor, recommended to delegate to male coordinator.')
                                         : donationToDelegate.studentGender === 'female'
-                                            ? (isAr ? 'ℹ️ هذا الطلب من متبرع، يُفضل تفويضه لمنسق الإناث.' : 'ℹ️ This is a female donor, recommended to delegate to female coordinator.')
-                                            : (isAr ? '⚠️ لم يتم تحديد جنس المتبرع، يمكنك الاتيار يدوياً.' : '⚠️ Donor gender not specified, you can choose manually.')}
+                                            ? (isAr ? 'ℹ️ هذا الطلب من مختبرع، يُفضل تفويضه لمنسق الإناث.' : 'ℹ️ This is a female donor, recommended to delegate to female coordinator.')
+                                            : (isAr ? '⚠️ لم يتم تحديد جنس المختبرع، يمكنك الاختيار يدوياً.' : '⚠️ Donor gender not specified, you can choose manually.')}
                                 </p>
                             </div>
                         </div>
@@ -7529,7 +7529,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </h2>
                                     <p>
                                         {isAdminUser
-                                            ? (isAr ? 'تحديث معلومات المتبرع والمواد وحال الحجز بالكامل' : 'Update donor info, materials, and reservation status')
+                                            ? (isAr ? 'تحديث معلومات المختبرع والمواد وحال الحجز بالكامل' : 'Update donor info, materials, and reservation status')
                                             : (isAr ? 'سيتم إرسال التعديلات للإدار للمراجع والموافق قبل تطبيقها' : 'Changes will be sent to admin for review before being applied')}
                                     </p>
                                     {!isAdminUser && (
@@ -7540,7 +7540,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 </div>
                                 <form className="booking-form" onSubmit={handleSaveEditDonation}>
                                     <div className="form-group">
-                                        <label>{isAr ? 'اسم المتبرع' : 'Donor Name'}</label>
+                                        <label>{isAr ? 'اسم المختبرع' : 'Donor Name'}</label>
                                         <input
                                             type="text"
                                             required
@@ -7550,7 +7550,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>{isAr ? 'رقم هاتف المتبرع' : 'Donor Phone'}</label>
+                                        <label>{isAr ? 'رقم هاتف المختبرع' : 'Donor Phone'}</label>
                                         <input
                                             type="text"
                                             required
@@ -7561,7 +7561,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>{isAr ? 'جنس المتبرع' : 'Donor Gender'}</label>
+                                        <label>{isAr ? 'جنس المختبرع' : 'Donor Gender'}</label>
                                         <select
                                             value={selectedDonationForEdit.studentGender}
                                             onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentGender: e.target.value })}
@@ -8174,7 +8174,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         <span
                                             className="gender-hint-icon"
                                             title={isAr
-                                                ? 'اتيار الجنس يُمكّن المنسق المتص بقسمك (ذكور/إناث) من التواصل معك وتسليم المواد بشكل منظم وسريع'
+                                                ? 'اختيار الجنس يُمكّن المنسق المختص بقسمك (ذكور/إناث) من التواصل معك وتسليم المواد بشكل منظم وسريع'
                                                 : 'Selecting gender allows the right coordinator (male/female section) to contact you and deliver materials efficiently'}
                                         >
                                             i
@@ -8198,7 +8198,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <small className="gender-field-hint">
                                         {isAr
-                                            ? 'يُستخدم الجنس لتصنيف موادك وإيصالها للمنسق المتصل بقسمك لتسهيل عملية التسليم والتواصل'
+                                            ? 'يُستخدم الجنس لتصنيف موادك وإيصالها للمنسق المختصل بقسمك لتسهيل عملية التسليم والتواصل'
                                             : 'Gender is used to route your materials to the right coordinator for organized delivery and communication'}
                                     </small>
                                 </div>
@@ -8232,7 +8232,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </h4>
                                     <p className="disclaimer-content">
                                         {isAr
-                                            ? 'المواد التي يتم التبرع بها تصبح من ضمن المواد المحجوزة لدى الموقع، وتبقى تحت تصرف مسؤول الموقع أو المنسقين المعتمدين إلى حين انتهاء الحملة. يتم التواصل مع المتبرعين أو الحاجزين من قبل مسؤول الموقع أو المنسقين المعتمدين فقط. الموقع لا يتحمل مسؤولية أي تواصل يتم من قبل أي شخص آخر باسم الموقع.'
+                                            ? 'المواد التي يتم التبرع بها تصبح من ضمن المواد المحجوزة لدى الموقع، وتبقى تحت تصرف مسؤول الموقع أو المنسقين المعتمدين إلى حين انتهاء الحملة. يتم التواصل مع المختبرعين أو الحاجزين من قبل مسؤول الموقع أو المنسقين المعتمدين فقط. الموقع لا يتحمل مسؤولية أي تواصل يتم من قبل أي شخص آخر باسم الموقع.'
                                             : 'Donated materials become part of the reserved materials managed by the site and remain under the control of the site administrator or approved coordinators until the end of the campaign. Communication is carried out only by authorized coordinators or the site administrator. We disclaim responsibility for any communication by anyone else in the name of the website.'}
                                     </p>
                                     <p className="disclaimer-content" style={{ marginTop: '0.6rem', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: '0.6rem', fontWeight: 600 }}>
@@ -8403,7 +8403,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             <>
                                                 <p className="booking-info-text">
                                                     {isAr
-                                                        ? `الفترة الحالية مخصصة حصراً لجمع وتبرع المواد، على أن يبدأ حجزها بتاريخ ${new Date(systemSettings.bookingStartTime).toLocaleString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`
+                                                        ? `الفترة الحالية مخصصة حصراً لجمع وتبرع المواد، على أن يبدأ حجزها بتاريخخ ${new Date(systemSettings.bookingStartTime).toLocaleString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`
                                                         : `This period is exclusively for donations. Booking opens on ${new Date(systemSettings.bookingStartTime).toLocaleString('en-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`}
                                                 </p>
                                                 <input
@@ -8541,7 +8541,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 <span
                                                     className="gender-hint-icon"
                                                     title={isAr
-                                                        ? 'اتيار الجنس يساعد المنسق المتص بقسمك على التواصل معك وإتمام عملي الاستلام بشكل منظم'
+                                                        ? 'اختيار الجنس يساعد المنسق المختص بقسمك على التواصل معك وإتمام عملية الاستلام بشكل منظم'
                                                         : 'Selecting gender helps the right coordinator contact you to arrange material pickup'}
                                                 >
                                                     i
@@ -8634,11 +8634,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <button className="close-modal" onClick={() => { setShowEditModal(false); setSelectedDonationForEdit(null); }}>×</button>
                                     <div className="modal-header">
                                         <h2>✏️ {isAr ? 'تعديل بيانات طلب التبرع' : 'Edit Donation Record'}</h2>
-                                        <p>{isAr ? 'تحديث معلومات المتبرع والمواد وحال الحجز بالكامل' : 'Update donor info, materials, and reservation status'}</p>
+                                        <p>{isAr ? 'تحديث معلومات المختبرع والمواد وحال الحجز بالكامل' : 'Update donor info, materials, and reservation status'}</p>
                                     </div>
                                     <form className="booking-form" onSubmit={handleSaveEditDonation}>
                                         <div className="form-group">
-                                            <label>{isAr ? 'اسم المتبرع' : 'Donor Name'}</label>
+                                            <label>{isAr ? 'اسم المختبرع' : 'Donor Name'}</label>
                                             <input
                                                 type="text"
                                                 required
@@ -8648,7 +8648,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label>{isAr ? 'رقم هاتف المتبرع' : 'Donor Phone'}</label>
+                                            <label>{isAr ? 'رقم هاتف المختبرع' : 'Donor Phone'}</label>
                                             <input
                                                 type="text"
                                                 required
@@ -8659,7 +8659,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label>{isAr ? 'جنس المتبرع' : 'Donor Gender'}</label>
+                                            <label>{isAr ? 'جنس المختبرع' : 'Donor Gender'}</label>
                                             <select
                                                 value={selectedDonationForEdit.studentGender}
                                                 onChange={e => setSelectedDonationForEdit({ ...selectedDonationForEdit, studentGender: e.target.value })}
@@ -9022,7 +9022,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         </tr>
                                                         <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                                                             <td style={{ padding: '8px', fontWeight: 'bold', color: 'rgba(255,255,255,0.8)', width: '150px' }}>
-                                                                {isAr ? 'المتبرع:' : 'Donor:'}
+                                                                {isAr ? 'المختبرع:' : 'Donor:'}
                                                             </td>
                                                             <td style={{ padding: '8px' }}>
                                                                 {actionRequestData.donationDetails.donorNameAr || actionRequestData.donationDetails.donorNameEn}
@@ -9137,7 +9137,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                     marginBottom: '15px'
                                                 }}>
                                                     <p style={{ margin: '0 0 5px 0', color: 'rgba(255,255,255,0.7)', fontSize: '0.9em' }}>
-                                                        {messageRecipient.type === 'donor' ? (isAr ? 'المتبرع' : 'Donor') : (isAr ? 'الحاجز' : 'Booker')}
+                                                        {messageRecipient.type === 'donor' ? (isAr ? 'المختبرع' : 'Donor') : (isAr ? 'الحاجز' : 'Booker')}
                                                     </p>
                                                     <p style={{ margin: '0 0 3px 0', fontWeight: 'bold', color: 'white' }}>
                                                         {messageRecipient.name || '—'}
@@ -9276,7 +9276,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         </div>
                                         <p className="terms-item-content">
                                             {isAr
-                                                ? 'أتقدم بهذا الطلب بكامل إرادتي، وأؤكد أنني بحاجة فعلية وماسة للمادة (المواد) المطلوبة، وأن طلبي هذا يعبّر عن رغبتي الشخصية، ولا يحملني أي التزام مادي أو قانوني تجاه الجهة المنظمة أو المتبرعين.'
+                                                ? 'أتقدم بهذا الطلب بكامل إرادتي، وأؤكد أنني بحاجة فعلية وماسة للمادة (المواد) المطلوبة، وأن طلبي هذا يعبّر عن رغبتي الشخصية، ولا يحملني أي التزام مادي أو قانوني تجاه الجهة المنظمة أو المختبرعين.'
                                                 : 'I submit this request of my own free will and confirm that I have a genuine and pressing need for the requested material(s). This request reflects my personal desire and does not create any financial or legal obligation toward the organizing entity or donors.'}
                                         </p>
                                     </div>
@@ -9285,7 +9285,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <div className="terms-item">
                                         <div className="terms-item-header">
                                             <span className="terms-item-number">2.</span>
-                                            <h3>{isAr ? 'الالتزام بجدي الطلب' : 'Commitment to Request Seriousness'}</h3>
+                                            <h3>{isAr ? 'الالتزام بجدية الطلب' : 'Commitment to Request Seriousness'}</h3>
                                         </div>
                                         <p className="terms-item-content">
                                             {isAr
@@ -9324,11 +9324,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <div className="terms-item">
                                         <div className="terms-item-header">
                                             <span className="terms-item-number">5.</span>
-                                            <h3>{isAr ? 'المسؤولية تجاه المادة المتبرع بها' : 'Responsibility Toward Donated Material'}</h3>
+                                            <h3>{isAr ? 'المسؤولية تجاه المادة المختبرع بها' : 'Responsibility Toward Donated Material'}</h3>
                                         </div>
                                         <p className="terms-item-content">
                                             {isAr
-                                                ? '• أتعهد بعدم التصرف بالمادة (بيعاً، أو إهداءً، أو إتلافاً) دون الرجوع إلى الفريق المنظم، وفي حال عدم رغبتي فيها بعد تسلمها، يجب إعادتها إلى الفريق أو التنسيق معهم بشأنها.\n\n• لا يجوز إلغاء مادة تم التبرع بها فعلياً من قبل متبرع، دون إبلاغ الفريق بشكل رسمي، وإلا أتحمل أنا (الطالب) مسؤولية تعويض الفريق أو المتبرع عن أي ضرر ينتج عن ذلك.'
+                                                ? '• أتعهد بعدم التصرف بالمادة (بيعاً، أو إهداءً، أو إتلافاً) دون الرجوع إلى الفريق المنظم، وفي حال عدم رغبتي فيها بعد تسلمها، يجب إعادتها إلى الفريق أو التنسيق معهم بشأنها.\n\n• لا يجوز إلغاء مادة تم التبرع بها فعلياً من قبل مختبرع، دون إبلاغ الفريق بشكل رسمي، وإلا أتحمل أنا (الطالب) مسؤولية تعويض الفريق أو المختبرع عن أي ضرر ينتج عن ذلك.'
                                                 : '• I commit to not selling, gifting, or disposing of the material without consulting the organizing team. If I do not want it after receiving it, I must return it to the team or coordinate with them regarding it.\n\n• I cannot reject a material that has been genuinely donated without formally notifying the team. Otherwise, I (the student) assume responsibility for compensating the team or donor for any resulting damage.'}
                                         </p>
                                     </div>
@@ -9363,11 +9363,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <div className="terms-item">
                                         <div className="terms-item-header">
                                             <span className="terms-item-number">8.</span>
-                                            <h3>{isAr ? 'الالتزام بقوانين الجامعة والقوانين المحلي' : 'Compliance with University and Local Laws'}</h3>
+                                            <h3>{isAr ? 'الالتزام بقوانين الجامعة والقوانين المحلية' : 'Compliance with University and Local Laws'}</h3>
                                         </div>
                                         <p className="terms-item-content">
                                             {isAr
-                                                ? 'أتعهد بالالتزام بجميع قوانين الجامعة وأنظمتها، وكذلك القوانين المحلية المعمول بها. أفهم أن أي تجاوز أو مخالفات قد يؤدي إلى اتخاذ إجراءات تأديبية ضدي. الحملة غير مسؤولة عن أي قوانين قد ينتهكها المتبرع أو الحاجز.'
+                                                ? 'أتعهد بالالتزام بجميع قوانين الجامعة وأنظمتها، وكذلك القوانين المحليةة المعمول بها. أفهم أن أي تجاوز أو مخالفات قد يؤدي إلى اتخاذ إجراءات تأديبية ضدي. الحملة غير مسؤولة عن أي قوانين قد ينتهكها المختبرع أو الحاجز.'
                                                 : 'I commit to complying with all university regulations and laws, as well as applicable local laws. I understand that any violation may result in disciplinary action against me. The campaign is not responsible for any laws violated by donors or recipients.'}
                                         </p>
                                     </div>
@@ -9380,7 +9380,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         </div>
                                         <p className="terms-item-content">
                                             {isAr
-                                                ? 'يحتفظ فريق الحمل بالحق الكامل في:\n• رفض أي طلب دون تقديم أسباب واضح إذا رأوا أنه يتعارض مع أهداف الحمل\n• تعديل شروط الحمل أو مواعيد التسليم دون إشعار مسبق\n• إلغاء أي حجز إذا تبين عدم صدق الطلب أو وجود مالفات\n• الاحتفاظ بحق تتبع مسار المواد المتبرع بها'
+                                                ? 'يحتفظ فريق الحمل بالحق الكامل في:\n• رفض أي طلب دون تقديم أسباب واضح إذا رأوا أنه يتعارض مع أهداف الحمل\n• تعديل شروط الحمل أو مواعيد التسليم دون إشعار مسبق\n• إلغاء أي حجز إذا تبين عدم صدق الطلب أو وجود مالفات\n• الاحتفاظ بحق تتبع مسار المواد المختبرع بها'
                                                 : 'The campaign team reserves the right to:\n• Reject any request without clear justification if it conflicts with campaign objectives\n• Modify campaign terms or delivery dates without prior notice\n• Cancel any booking if the request proves to be fraudulent or in violation\n• Track the path of donated materials'}
                                         </p>
                                     </div>
@@ -9393,7 +9393,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         </div>
                                         <p className="terms-item-content">
                                             {isAr
-                                                ? 'أتعهد بعدم الدخول في نزاع أو جدال مع فريق الحملة أو المتبرعين بشأن المواد. أوافق على الالتزام بقرار فريق الحملة النهائي في أي حال. إذا كان لدي شكوى، سأقدمها بطريقة احترافية وسلمية عبر المنسق الرسمي فقط.'
+                                                ? 'أتعهد بعدم الدخول في نزاع أو جدال مع فريق الحملة أو المختبرعين بشأن المواد. أوافق على الالتزام بقرار فريق الحملة النهائي في أي حال. إذا كان لدي شكوى، سأقدمها بطريقة احترافية وسلمية عبر المنسق الرسمي فقط.'
                                                 : 'I commit to not engaging in disputes or arguments with the campaign team or donors regarding materials. My decision is to accept the campaign team\'s final decision in any dispute. If I have a complaint, I must submit it professionally and peacefully only through the official coordinator.'}
                                         </p>
                                     </div>
