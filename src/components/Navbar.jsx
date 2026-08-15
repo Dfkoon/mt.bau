@@ -71,6 +71,7 @@ const Navbar = ({ toggleSidebar }) => {
                 <li><a href="#/#suggestions">{t('nav.contact')}</a></li>
               </ul>
             </li>
+            <li><Link to="/schedule-builder" className={isActive('/schedule-builder') ? 'active' : ''}>{isAr ? 'الجدول الدراسي 🗓️' : 'Schedule Builder'}</Link></li>
             <li><Link to="/materials" className={isActive('/materials') ? 'active' : ''}>{t('nav.materials')}</Link></li>
             <li><Link to="/plans" className={isActive('/plans') ? 'active' : ''}>{t('nav.plans')}</Link></li>
             <li><Link to="/grading" className={isActive('/grading') ? 'active' : ''}>{t('nav.grading')}</Link></li>
