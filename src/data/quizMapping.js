@@ -34,7 +34,7 @@ export const courseNameToQuizMapping = {
     'Numerical Analysis Principles': 'numerical_analysis',
     'مبادئ التحليل العددي': 'numerical_analysis',
     'Discrete Mathematics': 'discrete_math',
-    'الرياضيات المنفصلةة': 'discrete_math',
+    'هياكل الرياضيات المنفصلةة': 'discrete_math',
     'Probability and Statistics': 'prob_stats',
     'الاحتمالات والإحصاء': 'prob_stats',
 
@@ -42,11 +42,11 @@ export const courseNameToQuizMapping = {
     'Computer Skills and E-Learning': 'comp_skills',
     'مهارات الحاسوب والتعليم الإلكتروني': 'comp_skills',
     'Applied English (2)': 'applied_english_102',
-    'لغة إنجليزية تطبيقية (2)': 'applied_english_102',
+    'الاللغة الإنجليزية التطبيقية (2)': 'applied_english_102',
     'Innovation, Entrepreneurship and Creativity': 'entrepreneurship',
     'الابتكار والريادة والإبداع': 'entrepreneurship',
     'Entrepreneurship and Innovation (English)': 'entrepreneurship',
-    'الريادة والابتكار (باللغة الإنجليزية)': 'entrepreneurship',
+    'الريادة والابتكار (بالاللغة الإنجليزية)': 'entrepreneurship',
     'Military Sciences': 'military_science',
     'العلوم العسكرية': 'military_science',
 

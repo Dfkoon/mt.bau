@@ -59,7 +59,7 @@ const CAREER_DATA = [
     },
     {
         majorId: 'datascience',
-        nameAr: 'علم البيانات والذكاء الاصطناعي',
+        nameAr: 'علم البيانات',
         nameEn: 'Data Science & AI',
         icon: '📊',
         color: '#3b82f6',
@@ -239,7 +239,7 @@ const MAJOR_DESCRIPTIONS = [
     },
     {
         id: 'datascience',
-        nameAr: 'علم البيانات والذكاء الاصطناعي',
+        nameAr: 'علم البيانات',
         nameEn: 'Data Science & AI',
         icon: '📊',
         color: '#3b82f6',

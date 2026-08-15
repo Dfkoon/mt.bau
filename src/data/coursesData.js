@@ -23,7 +23,7 @@ export const coursesData = {
         },
         {
             id: 3,
-            name: 'لغة إنجليزية تطبيقية (1)',
+            name: 'الاللغة الإنجليزية التطبيقية (1)',
             nameEn: 'Applied English (1)',
             icon: '🇬🇧',
             files: {
@@ -35,7 +35,7 @@ export const coursesData = {
         },
         {
             id: 4,
-            name: 'لغة إنجليزية تطبيقية (2)',
+            name: 'الاللغة الإنجليزية التطبيقية (2)',
             nameEn: 'Applied English (2)',
             icon: '🇬🇧',
             files: {
@@ -47,7 +47,7 @@ export const coursesData = {
         },
         {
             id: 5,
-            name: 'لغة عربية تطبيقية',
+            name: 'الاللغة العربية التطبيقية',
             nameEn: 'Applied Arabic',
             icon: '📖',
             files: {
@@ -85,7 +85,7 @@ export const coursesData = {
         },
         {
             id: 8,
-            name: 'المهارات الحياتي والعمل (باللغة الإنجليزية)',
+            name: 'المهارات الحياتي والعمل (بالاللغة الإنجليزية)',
             nameEn: 'Life Skills and Work (English)',
             icon: '🤝',
             files: {
@@ -94,7 +94,7 @@ export const coursesData = {
         },
         {
             id: 9,
-            name: 'الريادة والابتكار (باللغة الإنجليزية)',
+            name: 'الريادة والابتكار (بالاللغة الإنجليزية)',
             nameEn: 'Entrepreneurship and Innovation (English)',
             icon: '💡',
             files: {
@@ -1093,7 +1093,7 @@ export const coursesData = {
     supportingSciences: [
         {
             id: 1,
-            name: 'الرياضيات المنفصلةة',
+            name: 'هياكل الرياضيات المنفصلةة',
             nameEn: 'Discrete Mathematics',
             icon: '🔢',
             files: {
@@ -1445,7 +1445,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_adv_ai', 
-            name: 'الذكاء الاصطناعي المتقدم وتعلم الاله', 
+            name: 'الذكاء الاصطناعي المتقدم وتعلم الآلةه', 
             nameEn: 'Advanced AI & ML', 
             icon: '🤖', 
             files: { 
@@ -1478,7 +1478,7 @@ export const coursesData = {
         },
         { 
             id: 'cs_ml', 
-            name: 'تعلم الاله', 
+            name: 'تعلم الآلةه', 
             nameEn: 'Machine learning', 
             icon: '🤖', 
             files: { 
@@ -1713,7 +1713,7 @@ export const faculties = [
 export const categories = [
     { id: 'mandatoryUniversity', name: 'متطلبات الجامعة الإجبارية', nameEn: 'University Mandatory Requirements', color: '#d32f2f', faculty: 'all' },
     { id: 'optionalUniversity', name: 'متطلبات الجامعة الاختياري', nameEn: 'University Optional Requirements', color: '#1976d2', faculty: 'all' },
-    { id: 'mandatoryCollege', name: 'متطلبات الكليةةة الإجبارية', nameEn: 'College Mandatory Requirements', color: '#388e3c', faculty: 'ai' },
+    { id: 'mandatoryCollege', name: 'متطلبات الكلية الإجبارية', nameEn: 'College Mandatory Requirements', color: '#388e3c', faculty: 'ai' },
 
     // AI Specializations
     // DF
@@ -1732,11 +1732,11 @@ export const categories = [
     { id: 'ai_ds_mandatory', name: 'متطلبات التخصص الإجباري (DS)', nameEn: 'DS Mandatory Requirements', color: '#1565c0', faculty: 'ai', specialization: 'ds' },
     { id: 'ai_ds_elective', name: 'متطلبات التخصص الاختياري (DS)', nameEn: 'DS Elective Requirements', color: '#283593', faculty: 'ai', specialization: 'ds' },
 
-    { id: 'supportingSciences', name: 'علوم مساند', nameEn: 'Supporting Sciences', color: '#0097a7', faculty: 'ai' },
+    { id: 'supportingSciences', name: 'العلوم المساندة', nameEn: 'Supporting Sciences', color: '#0097a7', faculty: 'ai' },
     { id: 'labs', name: 'المختبرات', nameEn: 'Labs', color: '#5d4037', faculty: 'ai' },
     { id: 'remedial', name: 'مواد الاستدراكي', nameEn: 'Remedial Courses', color: '#616161', faculty: 'all' },
     // IT Faculty Categories
-    { id: 'it_mandatoryCollege', name: 'متطلبات الكليةة (IT)', nameEn: 'IT College Requirements', color: '#00695c', faculty: 'it' },
+    { id: 'it_mandatoryCollege', name: 'متطلبات الكلية (IT)', nameEn: 'IT College Requirements', color: '#00695c', faculty: 'it' },
     { id: 'it_cs_mandatory', name: 'متطلبات التخصص الإجباري (CS)', nameEn: 'CS Mandatory Requirements', color: '#2e7d32', faculty: 'it', specialization: 'cs' },
     { id: 'it_cs_elective', name: 'متطلبات التخصص الاختياري (CS)', nameEn: 'CS Elective Requirements', color: '#1b5e20', faculty: 'it', specialization: 'cs' },
     { id: 'it_cga_mandatory', name: 'متطلبات التخصص الإجباري (CGA)', nameEn: 'CGA Mandatory Requirements', color: '#6a1b9a', faculty: 'it', specialization: 'cga' },

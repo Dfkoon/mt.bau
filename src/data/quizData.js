@@ -689,7 +689,7 @@ export const quizData = {
     comp_skills: {
         id: 'comp_skills',
         title: 'Computer Skills',
-        titleAr: 'مهارات حاسوب والتعلم الالكتروني',
+        titleAr: 'مهارات حاسوب والتعلم الآلةكتروني',
         icon: '💻',
         color: '#00BCD4',
         forceEnglish: true,
@@ -1454,7 +1454,7 @@ export const quizData = {
     applied_english_102: {
         id: 'applied_english_102',
         title: 'Applied English 102',
-        titleAr: 'اللغة الإنجليزية التطبيقي 102',
+        titleAr: 'الاللغة الإنجليزية التطبيقي 102',
         icon: '🇬🇧',
         color: '#3F51B5',
         forceEnglish: true,
@@ -8899,7 +8899,7 @@ export const quizCategories = [
             { id: 'oop_quizzes', title: 'Quizzes', titleAr: 'كويزات' }
         ]
     },
-    { id: 'comp_skills', name: 'Computer Skills', nameAr: 'مهارات حاسوب والتعلم الالكتروني', icon: '💻', color: '#00BCD4' },
+    { id: 'comp_skills', name: 'Computer Skills', nameAr: 'مهارات حاسوب والتعلم الآلةكتروني', icon: '💻', color: '#00BCD4' },
     {
         id: 'digital_society',
         name: 'Digital Society',
@@ -8925,7 +8925,7 @@ export const quizCategories = [
         ]
     },
     { id: 'psych_basics', name: 'Principles of Psychology', nameAr: 'مبادئ علم النفس', icon: '🧠', color: '#E91E63' },
-    { id: 'applied_english_102', name: 'Applied English 102', nameAr: 'اللغة الإنجليزية التطبيقي 102', icon: '🇬🇧', color: '#3F51B5' },
+    { id: 'applied_english_102', name: 'Applied English 102', nameAr: 'الاللغة الإنجليزية التطبيقي 102', icon: '🇬🇧', color: '#3F51B5' },
     {
         id: 'comp_networks_1',
         name: 'Computer Networks 1',
@@ -8987,7 +8987,7 @@ export const quizCategories = [
     {
         id: 'entrepreneurship',
         name: 'Entrepreneurship & Innovation',
-        nameAr: 'الريادة والابتكار (باللغة الإنجليزية)',
+        nameAr: 'الريادة والابتكار (بالاللغة الإنجليزية)',
         icon: '🚀',
         color: '#FFC107',
         forceEnglish: true,

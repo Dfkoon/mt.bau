@@ -7701,7 +7701,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 className="form-input"
                                                 value={editCoordinatorNotes}
                                                 onChange={e => setEditCoordinatorNotes(e.target.value)}
-                                                placeholder={isAr ? 'مثال: حذف كتاب اللغة العربية بسبب تسليمه، أو تصحيح اسم الطالب...' : 'Example: Deleted Arabic Book because it was delivered, or corrected student name...'}
+                                                placeholder={isAr ? 'مثال: حذف كتاب الاللغة العربية بسبب تسليمه، أو تصحيح اسم الطالب...' : 'Example: Deleted Arabic Book because it was delivered, or corrected student name...'}
                                                 style={{
                                                     minHeight: '80px',
                                                     fontFamily: 'inherit',

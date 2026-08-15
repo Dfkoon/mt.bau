@@ -10,8 +10,8 @@ export const plansData = {
                     name: 'المواد الأساسي والجامعي',
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
-                        { id: 'arabic101', name: 'لغة عربية تطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'لغة إنجليزية تطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
@@ -21,7 +21,7 @@ export const plansData = {
                     name: 'المستوى الثاني (تأسيس)',
                     courses: [
                         { id: 'math102', name: 'التفاضل والتكامل (2)', nameEn: 'Calculus 2', credits: 3, prereq: 'math101' },
-                        { id: 'eng102', name: 'لغة إنجليزية تطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
+                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
                         { id: 'oop', name: 'البرمجة الموجهة للكائنات + مختبر', nameEn: 'OOP + Lab', credits: 4, prereq: 'comp_skills' },
                         { id: 'logic', name: 'تصميم المنطق الرقمي + مختبر', nameEn: 'Digital Logic + Lab', credits: 4 },
                         { id: 'sec_intro', name: 'مبادئ أمن المعلومات والفضاء الإلكتروني', nameEn: 'Security Principles', credits: 3 }
@@ -83,8 +83,8 @@ export const plansData = {
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
-                        { id: 'arabic101', name: 'لغة عربية تطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'لغة إنجليزية تطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
                 },
@@ -94,7 +94,7 @@ export const plansData = {
                     courses: [
                         { id: 'math102', name: 'التفاضل والتكامل (2)', nameEn: 'Calculus 2', credits: 3, prereq: 'math101' },
                         { id: 'comp_skills2', name: 'مهارات الحاسوب (2)', nameEn: 'Computer Skills 2', credits: 3, prereq: 'comp_skills' },
-                        { id: 'eng102', name: 'لغة إنجليزية تطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
+                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
                         { id: 'oop', name: 'البرمجة الموجهة للكائنات + مختبر', nameEn: 'OOP + Lab', credits: 4, prereq: 'comp_skills' },
                         { id: 'sec_intro', name: 'مبادئ أمن المعلومات والفضاء الإلكتروني', nameEn: 'Security Principles', credits: 3 }
                     ]
@@ -156,8 +156,8 @@ export const plansData = {
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
-                        { id: 'arabic101', name: 'لغة عربية تطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'لغة إنجليزية تطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
                 },
@@ -167,7 +167,7 @@ export const plansData = {
                     courses: [
                         { id: 'math102', name: 'التفاضل والتكامل (2)', nameEn: 'Calculus 2', credits: 3, prereq: 'math101' },
                         { id: 'comp_skills2', name: 'مهارات الحاسوب (2)', nameEn: 'Computer Skills 2', credits: 3, prereq: 'comp_skills' },
-                        { id: 'eng102', name: 'لغة إنجليزية تطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
+                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
                         { id: 'oop', name: 'البرمجة الموجهة للكائنات + مختبر', nameEn: 'OOP + Lab', credits: 4, prereq: 'comp_skills' },
                         { id: 'comp_net_sec', name: 'أمن الحاسوب والشبكات', nameEn: 'Computer & Network Security', credits: 3 }
                     ]
@@ -228,8 +228,8 @@ export const plansData = {
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 },
-                        { id: 'arabic101', name: 'لغة عربية تطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'لغة إنجليزية تطبيقية (1)', nameEn: 'Applied English 1', credits: 3 }
+                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 }
                     ]
                 },
                 {
@@ -240,7 +240,7 @@ export const plansData = {
                         { id: 'linear_alg', name: 'الجبر الطي', nameEn: 'Linear Algebra', credits: 3, prereq: 'math102' },
                         { id: 'stats', name: 'الاحتمالات والإحصاء', nameEn: 'Probability & Statistics', credits: 3, prereq: 'math102' },
                         { id: 'comp_skills2', name: 'مهارات الحاسوب (2) لطلبة الكليات العلميةةة + مختبر', nameEn: 'Computer Skills 2 (Scientific) + Lab', credits: 3, prereq: 'comp_skills' },
-                        { id: 'eng102', name: 'لغة إنجليزية تطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
+                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
                     ]
                 },
                 {
@@ -299,8 +299,8 @@ export const plansData = {
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات حاسوب وتعلم الكتروني', nameEn: 'Computer Skills', credits: 3 },
-                        { id: 'eng101', name: 'لغة إنجليزية تطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
-                        { id: 'arabic101', name: 'لغة عربية تطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
                 },
@@ -312,7 +312,7 @@ export const plansData = {
                         { id: 'comp_skills2', name: 'مهارات حاسوب (2)', nameEn: 'Computer Skills 2', credits: 3, prereq: 'comp_skills' },
                         { id: 'intro_vr', name: 'مقدمة إلى الواقع الافتراضي', nameEn: 'Intro to VR', credits: 3 },
                         { id: 'math_graphics', name: 'الرياضيات للرسم بالحاسوب', nameEn: 'Math for Computer Graphics', credits: 3, prereq: 'math101' },
-                        { id: 'eng102', name: 'لغة إنجليزية تطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
+                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
                     ]
                 },
                 {
