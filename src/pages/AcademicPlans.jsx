@@ -140,6 +140,74 @@ const CAREER_DATA = [
             { ar: 'مهندس نظم السيارات والتنقل الذكي', en: 'Autonomous & Smart Mobility Engineer' },
             { ar: 'أخصائي إدراك الأصوات والوجوه والرؤية السلوكية', en: 'Voice, Face & Perception Specialist' },
         ]
+    },
+    {
+        majorId: 'cga',
+        nameAr: 'الرسم الحاسوبي والرسوم المتحركة',
+        nameEn: 'Computer Graphics & Animation',
+        icon: '🎨',
+        color: '#ec4899',
+        accentBg: 'rgba(236, 72, 153, 0.08)',
+        badgeText: '6 مهن متوقعة',
+        careers: [
+            { ar: 'مصمم رسومات ثنائية وثلاثية الأبعاد (2D/3D Graphic Designer)', en: '2D/3D Graphic Designer' },
+            { ar: 'مبرمج ومصمم رسوم متحركة (Animator)', en: '2D/3D Animator' },
+            { ar: 'مطور خدع بصرية ومؤثرات رقمية (VFX Artist)', en: 'VFX & Effects Artist' },
+            { ar: 'مصمم ومطور ألعاب إلكترونية (Game Designer)', en: 'Game Designer & Developer' },
+            { ar: 'مصمم واجهات وتجربة المستخدم (UI/UX Designer)', en: 'UI/UX Designer' },
+            { ar: 'مخرج ومصمم وسائط تفاعلية (Interactive Media Producer)', en: 'Interactive Media Producer' },
+        ]
+    },
+    {
+        majorId: 'cs',
+        nameAr: 'علم الحاسوب',
+        nameEn: 'Computer Science',
+        icon: '💻',
+        color: '#6366f1',
+        accentBg: 'rgba(99, 102, 241, 0.08)',
+        badgeText: '6 مهن متوقعة',
+        careers: [
+            { ar: 'مطور برمجيات وتطبيقات (Software Developer)', en: 'Software & Mobile Developer' },
+            { ar: 'مهندس حاسوب ونظم تشغيل (Systems Engineer)', en: 'Systems & OS Engineer' },
+            { ar: 'مبرمج ومطور مواقع ويب (Web Developer)', en: 'Web Developer' },
+            { ar: 'مهندس ذكاء اصطناعي وخوارزميات (AI & Algorithm Engineer)', en: 'AI & Algorithm Engineer' },
+            { ar: 'مدير ومدقق قواعد بيانات وشبكات (Database Administrator)', en: 'Database Administrator' },
+            { ar: 'باحث في علوم وتطبيقات الحاسوب (Computer Science Researcher)', en: 'Computer Science Researcher' },
+        ]
+    },
+    {
+        majorId: 'cis',
+        nameAr: 'نظم المعلومات الحاسوبية',
+        nameEn: 'Computer Information Systems (CIS)',
+        icon: '🗄️',
+        color: '#06b6d4',
+        accentBg: 'rgba(6, 182, 212, 0.08)',
+        badgeText: '6 مهن متوقعة',
+        careers: [
+            { ar: 'محلل ونظم معلومات ومشاريع (Systems Analyst)', en: 'Systems Analyst' },
+            { ar: 'مدير ومسؤول قواعد البيانات (Database Administrator)', en: 'Database Administrator' },
+            { ar: 'محلل ونظم أعمال وتطوير تقني (Business Systems Analyst)', en: 'Business Systems Analyst' },
+            { ar: 'أخصائي وتكامل نظم معلومات المؤسسات (ERP Specialist)', en: 'ERP & Enterprise Systems Specialist' },
+            { ar: 'مدير مشاريع تكنولوجيا المعلومات (IT Project Manager)', en: 'IT Project Manager' },
+            { ar: 'مستشار حلول تكنولوجيا المعلومات (IT Solutions Consultant)', en: 'IT Solutions Consultant' },
+        ]
+    },
+    {
+        majorId: 'se',
+        nameAr: 'هندسة البرمجيات',
+        nameEn: 'Software Engineering',
+        icon: '⚙️',
+        color: '#8b5cf6',
+        accentBg: 'rgba(139, 92, 246, 0.08)',
+        badgeText: '6 مهن متوقعة',
+        careers: [
+            { ar: 'مهندس برمجيات (Software Engineer)', en: 'Software Engineer' },
+            { ar: 'مهندس جودة واختبار برمجيات (Software QA Engineer)', en: 'Software QA & Testing Engineer' },
+            { ar: 'مهندس معمارية برمجيات (Software Architect)', en: 'Software Architect' },
+            { ar: 'مهندس وتطوير البنية التحتية (DevOps Engineer)', en: 'DevOps Engineer' },
+            { ar: 'مطور تطبيقات شامله وحاسوب (Full Stack Developer)', en: 'Full Stack Developer' },
+            { ar: 'مدير دورة حياة البرمجيات ومشاريع Agile (Software Project Manager)', en: 'Software Project Manager' },
+        ]
     }
 ];
 
@@ -289,10 +357,17 @@ const AcademicPlans = () => {
         }
     ];
 
-    // New Plans (2025/2026)
+    // State for Faculty Filter: 'all', 'ai', 'abdullah_ghazi'
+    const [selectedFaculty, setSelectedFaculty] = useState('all');
+
+    // New Plans (2025/2026) - Faculty of AI & Prince Abdullah Bin Ghazi Faculty
     const newPlans = [
+        // Faculty of AI
         {
             id: 'new-1',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'أمن المعلومات والفضاء الإلكتروني',
             nameEn: 'Info & Cyber Security',
             icon: '🛡️',
@@ -302,6 +377,9 @@ const AcademicPlans = () => {
         },
         {
             id: 'new-2',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'علم البيانات',
             nameEn: 'Data Science',
             icon: '📊',
@@ -311,6 +389,9 @@ const AcademicPlans = () => {
         },
         {
             id: 'new-3',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'التحقيقات الجنائية الرقمية',
             nameEn: 'Digital Forensics',
             icon: '🔍',
@@ -320,6 +401,9 @@ const AcademicPlans = () => {
         },
         {
             id: 'new-4',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'الذكاء الاصطناعي والروبوتات',
             nameEn: 'AI & Robotics',
             icon: '🤖',
@@ -329,16 +413,71 @@ const AcademicPlans = () => {
         },
         {
             id: 'new-5',
+            faculty: 'ai',
+            facultyAr: 'كلية الذكاء الاصطناعي',
+            facultyEn: 'Faculty of AI',
             name: 'الواقع الافتراضي',
             nameEn: 'Virtual Reality',
             icon: '🥽',
             image: vrTreeNew,
             color: '#9C27B0',
             status: 'active'
+        },
+        // Prince Abdullah Bin Ghazi Faculty of IT
+        {
+            id: 'abg-1',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'الرسم الحاسوبي والرسوم المتحركة',
+            nameEn: 'Computer Graphics & Animation',
+            icon: '🎨',
+            color: '#ec4899',
+            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
+            status: 'active'
+        },
+        {
+            id: 'abg-2',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'علم الحاسوب',
+            nameEn: 'Computer Science',
+            icon: '💻',
+            color: '#6366f1',
+            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
+            status: 'active'
+        },
+        {
+            id: 'abg-3',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'نظم المعلومات الحاسوبية',
+            nameEn: 'Computer Information Systems (CIS)',
+            icon: '🗄️',
+            color: '#06b6d4',
+            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
+            status: 'active'
+        },
+        {
+            id: 'abg-4',
+            faculty: 'abdullah_ghazi',
+            facultyAr: 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات',
+            facultyEn: 'Prince Abdullah Bin Ghazi Faculty of IT',
+            name: 'هندسة البرمجيات',
+            nameEn: 'Software Engineering',
+            icon: '⚙️',
+            color: '#8b5cf6',
+            driveFolder: 'https://drive.google.com/drive/folders/1c-yWR8x12SlOS5PkEgZlaAzajlDW-XAA',
+            status: 'active'
         }
     ];
 
-    const currentPlans = planType === 'new' ? newPlans : oldPlans;
+    const currentPlans = (planType === 'new' ? newPlans : oldPlans).filter(p => {
+        if (selectedFaculty === 'all') return true;
+        return p.faculty === selectedFaculty;
+    });
 
     const openModal = (plan) => {
         if (plan.status === 'construction') {
@@ -416,6 +555,28 @@ const AcademicPlans = () => {
                     </p>
                 </div>
 
+                {/* Faculty Selector Tabs */}
+                <div className="faculty-filter-tabs">
+                    <button
+                        className={`faculty-tab-btn ${selectedFaculty === 'all' ? 'active' : ''}`}
+                        onClick={() => setSelectedFaculty('all')}
+                    >
+                        🌟 {isAr ? 'جميع الكليات' : 'All Faculties'}
+                    </button>
+                    <button
+                        className={`faculty-tab-btn ${selectedFaculty === 'ai' ? 'active' : ''}`}
+                        onClick={() => setSelectedFaculty('ai')}
+                    >
+                        🤖 {isAr ? 'كلية الذكاء الاصطناعي' : 'Faculty of AI'}
+                    </button>
+                    <button
+                        className={`faculty-tab-btn ${selectedFaculty === 'abdullah_ghazi' ? 'active' : ''}`}
+                        onClick={() => setSelectedFaculty('abdullah_ghazi')}
+                    >
+                        💻 {isAr ? 'كلية الأمير عبد الله بن غازي لتكنولوجيا المعلومات' : 'Prince Abdullah Bin Ghazi Faculty of IT'}
+                    </button>
+                </div>
+
                 <div className="plans-grid">
                     {currentPlans.map(plan => (
                         <div
@@ -424,6 +585,11 @@ const AcademicPlans = () => {
                             onClick={() => openModal(plan)}
                             style={{ '--plan-color': plan.color }}
                         >
+                            {plan.facultyAr && (
+                                <span className="plan-faculty-tag" style={{ background: plan.color + '22', color: plan.color, border: `1px solid ${plan.color}55` }}>
+                                    {isAr ? plan.facultyAr : plan.facultyEn}
+                                </span>
+                            )}
                             <div className="plan-icon">{plan.icon}</div>
                             <h3 className="plan-name">{isAr ? plan.name : plan.nameEn}</h3>
                             <p className="plan-name-en">{isAr ? plan.nameEn : plan.name}</p>
@@ -437,7 +603,9 @@ const AcademicPlans = () => {
                             <button className="view-btn">
                                 {plan.status === 'construction'
                                     ? (isAr ? 'قريباً' : 'Coming Soon')
-                                    : (t('plans.btn.view') + ' 👁️')}
+                                    : plan.driveFolder
+                                        ? (isAr ? '📂 عرض مجلد Google Drive' : '📂 Open Drive Folder')
+                                        : (t('plans.btn.view') + ' 👁️')}
                             </button>
                         </div>
                     ))}
@@ -630,6 +798,17 @@ const AcademicPlans = () => {
                                 />
                             )}
                             <div className="image-actions">
+                                {selectedPlan.driveFolder && (
+                                    <a
+                                        href={selectedPlan.driveFolder}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="drive-folder-btn"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        📂 {isAr ? 'فتح مجلد الخطة الشجرية على Google Drive' : 'Open Tree Plan Folder on Google Drive'} ↗
+                                    </a>
+                                )}
                                 {selectedPlan.image && (
                                     <>
                                         <a
