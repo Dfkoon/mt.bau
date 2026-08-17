@@ -323,3 +323,22 @@ body[dir="ltr"] .dropdown-menu {
         gap: 15px;
     }
 }
+
+/* Watcher Highlight Badge */
+.watcher-badge-pill {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin-right: 5px;
+    margin-left: 3px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(1.06); }
+}

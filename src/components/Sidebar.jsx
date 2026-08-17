@@ -35,6 +35,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <li><Link to="/quiz" onClick={toggleSidebar}>{t('nav.quiz')}</Link></li>
                     <li><Link to="/calendar" onClick={toggleSidebar}>{t('nav.calendar')}</Link></li>
                     <li><Link to="/exchange" onClick={toggleSidebar}>{t('nav.exchange')}</Link></li>
+                    <li><Link to="/watcher" onClick={toggleSidebar} style={{ fontWeight: 800, color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><span>{t('nav.watcher')}</span> <span className="watcher-badge-pill">مُباشر</span></Link></li>
+
 
                     <li><Link to="/faq" onClick={toggleSidebar}>{t('nav.faq')}</Link></li>
 
