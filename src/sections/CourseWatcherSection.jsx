@@ -123,7 +123,7 @@ const CourseWatcherSection = () => {
               <span>{isAr ? 'دخول الطلاب لمُراقب الجريدة' : 'Student Course Watcher Portal'}</span>
             </Link>
             <a 
-              href="http://127.0.0.1:5050/student" 
+              href="https://bau-course-watcher.onrender.com/student" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="btn-cws-secondary"

@@ -8,8 +8,8 @@ const CourseWatcherPage = () => {
   const isAr = language === 'ar';
   const [activeTab, setActiveTab] = useState('embed');
 
-  // Backend student URL (local or deployed)
-  const studentPortalUrl = 'http://127.0.0.1:5050/student';
+  // Backend student URL (live Render deployment)
+  const studentPortalUrl = 'https://bau-course-watcher.onrender.com/student';
 
   return (
     <div className="watcher-page-container">
