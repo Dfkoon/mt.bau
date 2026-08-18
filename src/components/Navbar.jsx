@@ -77,7 +77,7 @@ const Navbar = ({ toggleSidebar }) => {
             <li><Link to="/quiz" className={isActive('/quiz') ? 'active' : ''}>{t('nav.quiz')}</Link></li>
             <li><Link to="/calendar" className={isActive('/calendar') ? 'active' : ''}>{t('nav.calendar')}</Link></li>
             <li><Link to="/exchange" className={isActive('/exchange') ? 'active' : ''}>{t('nav.exchange')}</Link></li>
-            <li><Link to="/watcher" className={isActive('/watcher') ? 'active watcher-highlight' : 'watcher-highlight'}>{t('nav.watcher')} <span className="watcher-badge-pill">مُباشر</span></Link></li>
+            <li><Link to="/watcher" className={isActive('/watcher') ? 'active watcher-highlight' : 'watcher-highlight'}>{t('nav.watcher')} <span className="watcher-badge-pill">مباشر</span></Link></li>
 
 
             <li className="nav-item dropdown-parent">

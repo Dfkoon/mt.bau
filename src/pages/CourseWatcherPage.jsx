@@ -32,7 +32,7 @@ const CourseWatcherPage = () => {
             transition={{ delay: 0.1 }}
           >
             {isAr ? (
-              <>مُراقب <span className="highlight-text">الجريدة</span> والمواد المفتوحة</>
+              <>مراقب <span className="highlight-text">الجريدة</span> والمواد المفتوحة</>
             ) : (
               <>BAU Course <span className="highlight-text">Watcher</span></>
             )}
@@ -61,7 +61,7 @@ const CourseWatcherPage = () => {
               rel="noopener noreferrer" 
               className="btn-hero-watcher-primary"
             >
-              🚀 {isAr ? 'فتح المُراقب في نافذة جديدة' : 'Open Watcher Portal'}
+              🚀 {isAr ? 'فتح المراقب في نافذة جديدة' : 'Open Watcher Portal'}
             </a>
             <button 
               onClick={() => setActiveTab('guide')} 

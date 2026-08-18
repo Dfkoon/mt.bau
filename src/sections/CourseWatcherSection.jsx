@@ -52,7 +52,7 @@ const CourseWatcherSection = () => {
           transition={{ duration: 0.5 }}
         >
           <span className="cws-dot"></span>
-          <span>{isAr ? 'مُباشر ⚡ نظام مُراقب الجريدة الآلي — جامعة البلقاء' : 'LIVE ⚡ BAU Course Watcher System'}</span>
+          <span>{isAr ? 'مباشر ⚡ نظام مراقب الجريدة الآلي — جامعة البلقاء' : 'LIVE ⚡ BAU Course Watcher System'}</span>
         </motion.div>
 
         {/* Section Heading */}
@@ -64,7 +64,7 @@ const CourseWatcherSection = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           {isAr ? (
-            <>لا تفوت فرصتك بتسجيل موادة المفضلة مع <span className="highlight">مُراقب الجريدة</span></>
+            <>لا تفوت فرصتك بتسجيل موادك المفضلة مع <span className="highlight">مراقب الجريدة</span></>
           ) : (
             <>Never Miss Your Course Seats With <span className="highlight">BAU Course Watcher</span></>
           )}
@@ -120,7 +120,7 @@ const CourseWatcherSection = () => {
           <div className="cws-cta-buttons">
             <Link to="/watcher" className="btn-cws-primary">
               <span className="btn-icon">🎓</span>
-              <span>{isAr ? 'دخول الطلاب لمُراقب الجريدة' : 'Student Course Watcher Portal'}</span>
+              <span>{isAr ? 'دخول الطلاب لمراقب الجريدة' : 'Student Course Watcher Portal'}</span>
             </Link>
             <a 
               href="https://bau-course-watcher.onrender.com/student" 
@@ -129,7 +129,7 @@ const CourseWatcherSection = () => {
               className="btn-cws-secondary"
             >
               <span className="btn-icon">🚀</span>
-              <span>{isAr ? 'الرابط المباشر للمُراقب' : 'Direct Watcher Portal'}</span>
+              <span>{isAr ? 'الرابط المباشر للمراقب' : 'Direct Watcher Portal'}</span>
             </a>
           </div>
         </motion.div>
