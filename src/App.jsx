@@ -51,7 +51,6 @@ import DailyMotivation from './components/DailyMotivation';
 import BackToTopBtn from './components/BackToTopBtn';
 import KeyboardShortcutsHelp from './components/KeyboardShortcutsHelp';
 import NoticeBoard from './components/NoticeBoard';
-import MaintenanceBanner from './components/MaintenanceBanner';
 
 const HomePage = () => {
   const location = useLocation();
@@ -176,7 +175,6 @@ function App() {
 
   return (
     <>
-      <MaintenanceBanner />
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       <LegacyAdminRedirect />
       <Router>
