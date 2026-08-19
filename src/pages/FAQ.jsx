@@ -36,22 +36,6 @@ const FAQ = () => {
 
     return (
         <div className="faq-page">
-            {/* Coming Soon Overlay */}
-            <div className="coming-soon-overlay">
-                <div className="coming-soon-box">
-                    <div className="coming-soon-icon-large">🚀</div>
-                    <h1>{language === 'ar' ? 'قريباً' : 'Coming Soon'}</h1>
-                    <p>
-                        {language === 'ar'
-                            ? 'نعمل حالياً على بناء قاعد الأسئلة الشائعة لتغطي كاف استفساراتكم.'
-                            : 'We are building the FAQ database to cover all your questions.'}
-                    </p>
-                    <div className="coming-soon-badge">
-                        {language === 'ar' ? 'تحت الصيان' : 'Under Maintenance'}
-                    </div>
-                </div>
-            </div>
-
             <div className="content-blur-wrapper">
                 <div className="faq-hero" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1454165833767-026cc35a1651?auto=format&fit=crop&q=80')` }}>
                     <div className="hero-overlay"></div>
