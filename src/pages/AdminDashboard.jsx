@@ -18,7 +18,6 @@ import { createWorker } from 'tesseract.js';
 import AdminAnalytics from '../components/admin/AdminAnalytics';
 import AdminGeneral from '../components/admin/AdminGeneral';
 import AdminFeedback from '../components/admin/AdminFeedback';
-import AdminCourses from '../components/admin/AdminCourses';
 import AdminReports from '../components/admin/AdminReports';
 import AdminContributions from '../components/admin/AdminContributions';
 import AdminActivityLog from '../components/admin/AdminActivityLog';
@@ -1759,7 +1758,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     {
       groupLabel: isAr ? 'الشؤون الأكاديمية والمحتوى' : 'Academic & Content',
       items: [
-        { id: 'courses', icon: '📚', label: isAr ? 'إدارة المواد الدراسية' : 'Manage Courses' },
         { id: 'quizzes', icon: '📝', label: isAr ? 'بنك الاختبارات' : 'Quizzes Bank' },
         { id: 'contributions', icon: '📥', label: isAr ? 'مساهمات الطلاب' : 'Student Contributions' },
       ]
@@ -1919,11 +1917,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             {/* TAB: Feedback & Suggestions */}
             {/* ══════════════════════════════════════════════════════ */}
             {activeTab === 'feedback' && <AdminFeedback />}
-
-            {/* ══════════════════════════════════════════════════════ */}
-            {/* TAB: Academic Courses */}
-            {/* ══════════════════════════════════════════════════════ */}
-            {activeTab === 'courses' && <AdminCourses />}
 
             {/* ══════════════════════════════════════════════════════ */}
             {/* TAB: Question Reports */}
