@@ -2594,7 +2594,7 @@ const Quiz = () => {
                                     return part.subParts.map(subPart => {
                                         const subPartData = quizData[subPart.id];
                                         const staticCount = subPartData?.questions?.length || 0;
-                                        const dynamicCount = dbSubjectQuestions.filter(q => q.partId === subPart.id && !q.deleted).length;
+                                        const dynamicCount = dbSubjectQuestions.filter(q => String(q.partId || '').trim().toLowerCase() === String(subPart.id || '').trim().toLowerCase() && !q.deleted).length;
                                         const totalCount = staticCount + dynamicCount;
                                         const hasQuestions = totalCount > 0;
                                         return (
@@ -2619,7 +2619,7 @@ const Quiz = () => {
                                 // Handle regular parts
                                 const partData = quizData[part.id];
                                 const staticQCount = partData?.questions?.length || 0;
-                                const dynamicQCount = dbSubjectQuestions.filter(q => q.partId === part.id && !q.deleted).length;
+                                const dynamicQCount = dbSubjectQuestions.filter(q => String(q.partId || '').trim().toLowerCase() === String(part.id || '').trim().toLowerCase() && !q.deleted).length;
                                 const totalQCount = staticQCount + dynamicQCount;
                                 const hasQuestions = totalQCount > 0;
                                 const hasSubParts = (partData?.parts?.length > 0) || (part.isGroup && part.subParts?.length > 0);
