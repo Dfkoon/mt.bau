@@ -341,7 +341,12 @@ const StudyMaterials = () => {
                                     </div>
 
                                     {(() => {
-                                        const activeFiles = Object.entries(course.files || {}).filter(([_, url]) => url && url.trim().length > 0);
+                                        const activeFiles = Object.entries(course.files || {})
+                                            .map(([type, val]) => {
+                                                const fileUrl = typeof val === 'string' ? val.trim() : (val && typeof val.url === 'string' ? val.url.trim() : '');
+                                                return [type, fileUrl];
+                                            })
+                                            .filter(([_, fileUrl]) => Boolean(fileUrl));
                                         const hasActiveFiles = activeFiles.length > 0;
                                         const quizId = getQuizForCourse(course);
 

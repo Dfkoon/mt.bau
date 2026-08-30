@@ -11,7 +11,6 @@ import { sendAdminNotification } from '../services/notificationService';
 import emailjs from '@emailjs/browser';
 import QRBookingCard from '../components/QRBookingCard';
 import MaterialStatusChecker from '../components/MaterialStatusChecker';
-import AdminNotificationBell from '../components/AdminNotificationBell';
 import './MaterialExchange.css';
 
 
@@ -4646,7 +4645,6 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 </div>
                             </div>
                             <div className="dashboard-header-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <AdminNotificationBell />
                                 <button className="dashboard-refresh-btn" onClick={handleDashboardRefresh} title={isAr ? 'تحديث' : 'Refresh'}>
                                     🔄
                                 </button>

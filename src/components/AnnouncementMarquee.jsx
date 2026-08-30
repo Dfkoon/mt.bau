@@ -14,7 +14,9 @@ const AnnouncementMarquee = () => {
         ];
 
         const normalizeDate = (dateStr) => {
-            const [startDate] = dateStr.split('-').map(str => str.trim());
+            if (!dateStr || typeof dateStr !== 'string') return null;
+            const [startDate] = dateStr.split('-').map(str => (typeof str === 'string' ? str.trim() : ''));
+            if (!startDate) return null;
             const [year, month, day] = startDate.split('/').map(Number);
             if (!year || !month || !day) return null;
             return new Date(year, month - 1, day);
@@ -39,7 +41,7 @@ const AnnouncementMarquee = () => {
         : [
             t('marquee.text1'),
             t('marquee.text2')
-        ].filter(msg => msg && msg.trim() !== '');
+        ].filter(msg => typeof msg === 'string' && msg.trim() !== '');
 
     // Build a single row of items with separators
     const renderItems = () => messages.map((msg, index) => (

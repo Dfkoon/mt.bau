@@ -24,16 +24,11 @@ import AdminContributions from '../components/admin/AdminContributions';
 import AdminActivityLog from '../components/admin/AdminActivityLog';
 import AdminChatFAQ from '../components/admin/AdminChatFAQ';
 import AdminCoordinators from '../components/admin/AdminCoordinators';
-import AdminVolunteers from '../components/admin/AdminVolunteers';
 import AdminCoordinatorApplications from '../components/admin/AdminCoordinatorApplications';
 import AdminCourseStatusManager from '../components/AdminCourseStatusManager';
 import AdminNotices from '../components/admin/AdminNotices';
-import AdminHomepagePromos from '../components/admin/AdminHomepagePromos';
 import AdminServiceRequests from '../components/admin/AdminServiceRequests';
-import AdminDeletedItems from '../components/admin/AdminDeletedItems';
-import AdminNotificationBell from '../components/AdminNotificationBell';
 import MaterialExchange from './MaterialExchange';
-import { archiveItem } from '../services/deletedItemsService';
 import './AdminDashboard.css';
 
 // ── CAPTCHA helpers ──────────────────────────────────────────────────
@@ -574,10 +569,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const deleteSuggestion = async (id) => {
     if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسالة؟' : 'Delete this message?')) return;
     try {
-      const suggestion = suggestions.find(item => item.id === id);
-      await archiveItem({ originalCollection: 'suggestions', originalId: id, itemData: suggestion || { id }, reason: 'suggestion-deletion' });
-      toast.success(isAr ? 'تم نقل الرسالة إلى المحذوفات' : 'Message moved to deleted items');
-    } catch { toast.error(isAr ? 'خطأ في الأرشفة' : 'Archive error'); }
+      await deleteDoc(doc(db, 'suggestions', id));
+      toast.success(isAr ? 'تم حذف الرسالة' : 'Message deleted');
+    } catch { toast.error(isAr ? 'خطأ في الحذف' : 'Delete error'); }
   };
 
   const toggleTestimonialApproval = async (id, current) => {
@@ -600,9 +594,8 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const deleteReport = async (id) => {
     if (!window.confirm(isAr ? 'حذف هذا البلاغ؟' : 'Delete this report?')) return;
     try {
-      const report = reports.find(item => item.id === id);
-      await archiveItem({ originalCollection: 'question_reports', originalId: id, itemData: report || { id }, reason: 'question-report-deletion' });
-      toast.success(isAr ? 'تم نقل البلاغ إلى المحذوفات' : 'Report moved to deleted items');
+      await deleteDoc(doc(db, 'question_reports', id));
+      toast.success(isAr ? 'تم حذف البلاغ' : 'Report deleted');
     } catch (err) {
       console.error('Error deleting report:', err);
       toast.error((isAr ? 'تعذر الحذف: ' : 'Error: ') + (err.message || err));
@@ -1761,7 +1754,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         { id: 'analytics', icon: '📊', label: isAr ? 'لوحة الإحصائيات' : 'Analytics Dashboard' },
         { id: 'activity', icon: '⚡', label: isAr ? 'سجل النشاط المباشر' : 'Live Activity Log' },
         { id: 'notices', icon: '📢', label: isAr ? 'لوحة الإعلانات' : 'Notice Board' },
-        { id: 'homepage_promos', icon: '🎓', label: isAr ? 'عروض الصفحة الرئيسية' : 'Homepage Promos' },
       ]
     },
     {
@@ -1775,7 +1767,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     {
       groupLabel: isAr ? 'فريق العمل والتطوع' : 'Staff & Volunteers',
       items: [
-        { id: 'volunteers', icon: '🤝', label: isAr ? 'بوابة المتطوعين (RBAC)' : 'Volunteers (RBAC)' },
         { id: 'coordinators', icon: '👔', label: isAr ? 'إدارة المنسقين' : 'Coordinators' },
         { id: 'coordinator_apps', icon: '📋', label: isAr ? 'طلبات الانضمام' : 'Join Applications' },
       ]
@@ -1793,7 +1784,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       items: [
         { id: 'reports', icon: '🚩', label: isAr ? 'بلاغات الأسئلة' : 'Question Reports' },
         { id: 'feedback', icon: '⭐', label: isAr ? 'التقييمات والآراء' : 'Feedback & Reviews' },
-        { id: 'deleted_items', icon: '🗑️', label: isAr ? 'المحذوفات والأرشيف' : 'Deleted Items & Archive' },
         { id: 'general', icon: '⚙️', label: isAr ? 'الإعدادات العامة' : 'General Settings' },
       ]
     },
@@ -1841,7 +1831,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
               {/* Right Profile & Logout */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <AdminNotificationBell />
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(255,255,255,0.06)', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.12)' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></div>
                   <span style={{ fontSize: '0.8rem', color: '#f8fafc', fontWeight: 700 }}>{isAr ? 'المدير العام (Admin)' : 'System Admin'}</span>
@@ -1919,7 +1908,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             {/* TAB: Notice Board */}
             {/* ══════════════════════════════════════════════════════ */}
             {activeTab === 'notices' && <AdminNotices />}
-            {activeTab === 'homepage_promos' && <AdminHomepagePromos />}
 
             {/* ══════════════════════════════════════════════════════ */}
             {/* TAB: Service Requests */}
@@ -1931,7 +1919,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             {/* TAB: Feedback & Suggestions */}
             {/* ══════════════════════════════════════════════════════ */}
             {activeTab === 'feedback' && <AdminFeedback />}
-            {activeTab === 'deleted_items' && <AdminDeletedItems />}
 
             {/* ══════════════════════════════════════════════════════ */}
             {/* TAB: Academic Courses */}
@@ -1957,11 +1944,6 @@ const AdminDashboard = ({ isEmbedded = false }) => {
             {activeTab === 'chatfaq' && <AdminChatFAQ />}
 
             {activeTab === 'coordinators' && <AdminCoordinators />}
-
-            {/* ══════════════════════════════════════════════════════ */}
-            {/* TAB: Volunteers Management */}
-            {/* ══════════════════════════════════════════════════════ */}
-            {activeTab === 'volunteers' && <AdminVolunteers />}
 
             {/* ══════════════════════════════════════════════════════ */}
             {/* TAB: Donations — Full MaterialExchange embedded */}

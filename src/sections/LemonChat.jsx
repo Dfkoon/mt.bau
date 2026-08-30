@@ -256,11 +256,15 @@ const LemonChat = () => {
 
                         {hasFiles ? (
                             <div className="chat-card-actions">
-                                {Object.entries(course.files).slice(0, 3).map(([type, url]) => (
+                                {Object.entries(course.files)
+                                    .map(([type, val]) => [type, typeof val === 'string' ? val : (val?.url || '')])
+                                    .filter(([_, url]) => Boolean(url))
+                                    .slice(0, 3)
+                                    .map(([type, url]) => (
                                     <a href={url} target="_blank" rel="noreferrer" key={type} className="chat-action-btn">
                                         {type === 'pdf' ? (isAr ? '📄 ملف PDF' : '📄 PDF') :
                                             type === 'video' ? (isAr ? '🎥 فيديو' : '🎥 Video') :
-                                                (isAr ? '🔗 رابط' : '🔗 Link')}
+                                                 (isAr ? '🔗 رابط' : '🔗 Link')}
                                     </a>
                                 ))}
                                 <button
