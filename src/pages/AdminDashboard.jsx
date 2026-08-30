@@ -24,7 +24,6 @@ import AdminActivityLog from '../components/admin/AdminActivityLog';
 import AdminChatFAQ from '../components/admin/AdminChatFAQ';
 import AdminCoordinators from '../components/admin/AdminCoordinators';
 import AdminCoordinatorApplications from '../components/admin/AdminCoordinatorApplications';
-import AdminCourseStatusManager from '../components/AdminCourseStatusManager';
 import AdminNotices from '../components/admin/AdminNotices';
 import AdminServiceRequests from '../components/admin/AdminServiceRequests';
 import MaterialExchange from './MaterialExchange';

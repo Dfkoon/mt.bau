@@ -10,7 +10,6 @@ import { collection, onSnapshot } from 'firebase/firestore';
 import { getQuizForCourse } from '../data/quizMapping';
 import { logMaterialDownload } from '../services/analyticsService';
 import StarRating from '../components/StarRating';
-import CourseDifficultyRater from '../components/CourseDifficultyRater';
 import './StudyMaterials.css';
 import '../pages/AcademicPlans.css';
 
@@ -413,10 +412,6 @@ const StudyMaterials = () => {
                                                         <StarRating
                                                             itemId={`material-${courseUniqueId}`}
                                                             itemTitle={language === 'ar' ? course.name : (course.nameEn || course.name)}
-                                                        />
-                                                        <CourseDifficultyRater
-                                                            courseId={courseUniqueId}
-                                                            courseName={language === 'ar' ? course.name : (course.nameEn || course.name)}
                                                         />
                                                     </div>
                                                 </div>

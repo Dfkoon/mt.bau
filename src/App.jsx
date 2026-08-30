@@ -18,7 +18,6 @@ import WeeklyTip from './sections/WeeklyTip';
 import Testimonials from './sections/Testimonials';
 import SuggestionsSection from './sections/SuggestionsSection';
 import GraduationPromo from './sections/GraduationPromo';
-import CourseWatcherSection from './sections/CourseWatcherSection';
 import Footer from './components/Footer';
 import PageTitleUpdater from './components/PageTitleUpdater';
 
@@ -28,7 +27,6 @@ import Quiz from './pages/Quiz';
 import AcademicCalendar from './pages/AcademicCalendar';
 import GradingSystem from './pages/GradingSystem';
 import MaterialExchange from './pages/MaterialExchange';
-import CourseWatcherPage from './pages/CourseWatcherPage';
 import AdminDashboard from './pages/AdminDashboard';
 import SecureGateway from './pages/SecureGateway';
 import FAQ from './pages/FAQ';
@@ -85,7 +83,6 @@ const HomePage = () => {
       <LemonChat />
       <UpcomingEvents />
       <GraduationPromo />
-      <CourseWatcherSection />
       {/* <NewsSection /> */}
       <WeeklyTip />
       <ProjectsSection />
@@ -226,7 +223,6 @@ function App() {
                   <Route path="/calendar" element={<AcademicCalendar />} />
                   <Route path="/grading" element={<GradingSystem />} />
                   <Route path="/exchange" element={<MaterialExchange />} />
-                  <Route path="/watcher" element={<CourseWatcherPage />} />
 
 
                   <Route path="/faq" element={<FAQ />} />
