@@ -24,11 +24,16 @@ import AdminContributions from '../components/admin/AdminContributions';
 import AdminActivityLog from '../components/admin/AdminActivityLog';
 import AdminChatFAQ from '../components/admin/AdminChatFAQ';
 import AdminCoordinators from '../components/admin/AdminCoordinators';
+import AdminVolunteers from '../components/admin/AdminVolunteers';
 import AdminCoordinatorApplications from '../components/admin/AdminCoordinatorApplications';
 import AdminCourseStatusManager from '../components/AdminCourseStatusManager';
 import AdminNotices from '../components/admin/AdminNotices';
+import AdminHomepagePromos from '../components/admin/AdminHomepagePromos';
 import AdminServiceRequests from '../components/admin/AdminServiceRequests';
+import AdminDeletedItems from '../components/admin/AdminDeletedItems';
+import AdminNotificationBell from '../components/AdminNotificationBell';
 import MaterialExchange from './MaterialExchange';
+import { archiveItem } from '../services/deletedItemsService';
 import './AdminDashboard.css';
 
 // ── CAPTCHA helpers ──────────────────────────────────────────────────
@@ -435,11 +440,27 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       setQManageQuestions([]);
       return;
     }
+    const getLocalQs = (pid) => {
+      try {
+        const raw = localStorage.getItem('koon_local_quiz_questions');
+        if (!raw) return [];
+        return Object.values(JSON.parse(raw)).filter(q => q.partId === pid);
+      } catch (e) { return []; }
+    };
+
     // Listen for Firestore questions (for this part AND any sub-parts)
     const q = query(collection(db, 'quiz_questions'), where('partId', '==', selectedPartId));
     const unsubQuestions = onSnapshot(q, async (snap) => {
       const list = [];
       snap.forEach(d => list.push(d.data()));
+
+      // Merge localStorage dynamic questions
+      const localQs = getLocalQs(selectedPartId);
+      localQs.forEach(lq => {
+        if (!list.some(qItem => String(qItem.id) === String(lq.id))) {
+          list.push(lq);
+        }
+      });
 
       // Also load question_edits deleted markers for this part
       try {
@@ -458,7 +479,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       } catch (e) { /* ignore edits load error */ }
 
       setQManageQuestions(list);
-    }, err => console.error('Questions read error:', err));
+    }, err => {
+      console.warn('Questions read error:', err);
+      setQManageQuestions(getLocalQs(selectedPartId));
+    });
 
     return () => unsubQuestions();
   }, [selectedPartId, loggedIn]);
@@ -466,10 +490,27 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   // ── Load questions for selected sub-part ──
   useEffect(() => {
     if (!selectedSubPartId || !loggedIn) return;
+
+    const getLocalQs = (pid) => {
+      try {
+        const raw = localStorage.getItem('koon_local_quiz_questions');
+        if (!raw) return [];
+        return Object.values(JSON.parse(raw)).filter(q => q.partId === pid);
+      } catch (e) { return []; }
+    };
+
     const q = query(collection(db, 'quiz_questions'), where('partId', '==', selectedSubPartId));
     const unsubSubQ = onSnapshot(q, async (snap) => {
       const list = [];
       snap.forEach(d => list.push(d.data()));
+
+      const localQs = getLocalQs(selectedSubPartId);
+      localQs.forEach(lq => {
+        if (!list.some(qItem => String(qItem.id) === String(lq.id))) {
+          list.push(lq);
+        }
+      });
+
       try {
         const editsSnap = await getDocs(query(collection(db, 'question_edits'), where('partId', '==', selectedSubPartId)));
         const deletedIds = new Set();
@@ -484,7 +525,10 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         });
       } catch (e) { /* ignore */ }
       setQManageQuestions(list);
-    }, err => console.error('Sub-questions read error:', err));
+    }, err => {
+      console.warn('Sub-questions read error:', err);
+      setQManageQuestions(getLocalQs(selectedSubPartId));
+    });
     return () => unsubSubQ();
   }, [selectedSubPartId, loggedIn]);
 
@@ -529,7 +573,11 @@ const AdminDashboard = ({ isEmbedded = false }) => {
 
   const deleteSuggestion = async (id) => {
     if (!window.confirm(isAr ? 'هل تريد حذف هذه الرسالة؟' : 'Delete this message?')) return;
-    try { await deleteDoc(doc(db, 'suggestions', id)); toast.success(''); } catch { toast.error('خطأ'); }
+    try {
+      const suggestion = suggestions.find(item => item.id === id);
+      await archiveItem({ originalCollection: 'suggestions', originalId: id, itemData: suggestion || { id }, reason: 'suggestion-deletion' });
+      toast.success(isAr ? 'تم نقل الرسالة إلى المحذوفات' : 'Message moved to deleted items');
+    } catch { toast.error(isAr ? 'خطأ في الأرشفة' : 'Archive error'); }
   };
 
   const toggleTestimonialApproval = async (id, current) => {
@@ -552,8 +600,9 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const deleteReport = async (id) => {
     if (!window.confirm(isAr ? 'حذف هذا البلاغ؟' : 'Delete this report?')) return;
     try {
-      await deleteDoc(doc(db, 'question_reports', id));
-      toast.success(isAr ? 'تم حذف البلاغ' : 'Report deleted');
+      const report = reports.find(item => item.id === id);
+      await archiveItem({ originalCollection: 'question_reports', originalId: id, itemData: report || { id }, reason: 'question-report-deletion' });
+      toast.success(isAr ? 'تم نقل البلاغ إلى المحذوفات' : 'Report moved to deleted items');
     } catch (err) {
       console.error('Error deleting report:', err);
       toast.error((isAr ? 'تعذر الحذف: ' : 'Error: ') + (err.message || err));
@@ -694,7 +743,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   const staticSubParts = selectedPartData?.parts || []; // sub-parts defined in quizData.js
   const dbPartObj = qManageParts.find(p => p.id === selectedPartId);
   const dbSubParts = (dbPartObj?.isGroup && dbPartObj?.subParts) ? dbPartObj.subParts : [];
-  
+
   const subPartsMap = new Map();
   staticSubParts.forEach(sp => subPartsMap.set(sp.id, { ...sp }));
   dbSubParts.forEach(sp => {
@@ -1446,11 +1495,12 @@ const AdminDashboard = ({ isEmbedded = false }) => {
     try {
       const qId = questionForm.id || `q_${Date.now()}`;
       const targetPartId = effectivePartId || selectedPartId;
+      const actualSubjectId = selectedSubjectId || (activeSubject ? activeSubject.id : '');
       const docRef = doc(db, 'quiz_questions', `${targetPartId}_${qId}`);
       const docData = {
         id: qId,
         partId: targetPartId,
-        subjectId: selectedSubjectId,
+        subjectId: actualSubjectId,
         type: questionForm.type,
         questionAr: questionForm.questionAr.trim(),
         questionEn: questionForm.questionEn.trim(),
@@ -1471,6 +1521,22 @@ const AdminDashboard = ({ isEmbedded = false }) => {
       } else {
         docData.correctAnswer = questionForm.correctAnswer;
       }
+
+      // Save to localStorage immediately
+      try {
+        const localQs = JSON.parse(localStorage.getItem('koon_local_quiz_questions') || '{}');
+        localQs[`${targetPartId}_${qId}`] = { ...docData, createdAt: new Date().toISOString() };
+        localStorage.setItem('koon_local_quiz_questions', JSON.stringify(localQs));
+      } catch (err) { }
+
+      // Update state immediately
+      setQManageQuestions(prev => {
+        const localFormatted = { ...docData, createdAt: new Date().toISOString() };
+        const exists = prev.some(q => String(q.id) === String(qId));
+        if (exists) return prev.map(q => String(q.id) === String(qId) ? localFormatted : q);
+        return [...prev, localFormatted];
+      });
+
       await setDoc(docRef, docData);
       toast.success(isAr ? ' تم حفظ السؤال بنجاح' : ' Question saved successfully');
       setShowQuestionModal(false);
@@ -1497,6 +1563,16 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         });
         toast.success(isAr ? ' تم حذف السؤال' : ' Question deleted');
       } else {
+        // Remove from localStorage
+        try {
+          const localQs = JSON.parse(localStorage.getItem('koon_local_quiz_questions') || '{}');
+          delete localQs[`${partIdForQuery}_${qId}`];
+          localStorage.setItem('koon_local_quiz_questions', JSON.stringify(localQs));
+        } catch (e) { }
+
+        // Remove from state immediately
+        setQManageQuestions(prev => prev.filter(q => String(q.id) !== String(qId)));
+
         // Hard-delete dynamic question
         await deleteDoc(doc(db, 'quiz_questions', `${partIdForQuery}_${qId}`));
         toast.success(isAr ? ' تم حذف السؤال' : ' Question deleted');
@@ -1678,309 +1754,370 @@ const AdminDashboard = ({ isEmbedded = false }) => {
   // ────────────────────────────────────────────────────────────────────
   // DASHBOARD
   // ────────────────────────────────────────────────────────────────────
-  const tabs = [
-    { id: 'analytics', label: isAr ? 'الإحصائيات' : 'Analytics' },
-    { id: 'notices', label: isAr ? '📢 الإعلانات' : '📢 Notices' },
-    { id: 'service_requests', label: isAr ? '🛠️ طلبات الخدمات' : '🛠️ Service Requests' },
-    { id: 'coordinator_apps', label: isAr ? 'طلبات الانضمام' : 'Coordinator Applications' },
-    { id: 'general', label: isAr ? 'الإدارة العامة' : 'General' },
-    { id: 'donations', label: isAr ? 'إدارة التبرعات' : 'Donations' },
-    { id: 'quizzes', label: isAr ? 'الاختبارات' : 'Quizzes' },
-    { id: 'feedback', label: isAr ? 'الآراء والتقييمات' : 'Feedback & Testimonials' },
-    { id: 'courses', label: isAr ? 'إدارة المواد الدراسيةة' : 'Manage Courses' },
-    { id: 'reports', label: isAr ? 'البلاغات' : 'Reports' },
-    { id: 'contributions', label: isAr ? 'المساهمةات' : 'Contributions' },
-    { id: 'activity', label: isAr ? 'سجل النشاط' : 'Activity' },
-    { id: 'chatfaq', label: isAr ? 'نشمي والأسئلة الشائعة' : 'Nashmi & FAQ' },
-    { id: 'coordinators', label: isAr ? 'المنسقون' : 'Coordinators' },
+  const tabGroups = [
+    {
+      groupLabel: isAr ? 'الرئيسية والمؤشرات' : 'Main & Metrics',
+      items: [
+        { id: 'analytics', icon: '📊', label: isAr ? 'لوحة الإحصائيات' : 'Analytics Dashboard' },
+        { id: 'activity', icon: '⚡', label: isAr ? 'سجل النشاط المباشر' : 'Live Activity Log' },
+        { id: 'notices', icon: '📢', label: isAr ? 'لوحة الإعلانات' : 'Notice Board' },
+        { id: 'homepage_promos', icon: '🎓', label: isAr ? 'عروض الصفحة الرئيسية' : 'Homepage Promos' },
+      ]
+    },
+    {
+      groupLabel: isAr ? 'الشؤون الأكاديمية والمحتوى' : 'Academic & Content',
+      items: [
+        { id: 'courses', icon: '📚', label: isAr ? 'إدارة المواد الدراسية' : 'Manage Courses' },
+        { id: 'quizzes', icon: '📝', label: isAr ? 'بنك الاختبارات' : 'Quizzes Bank' },
+        { id: 'contributions', icon: '📥', label: isAr ? 'مساهمات الطلاب' : 'Student Contributions' },
+      ]
+    },
+    {
+      groupLabel: isAr ? 'فريق العمل والتطوع' : 'Staff & Volunteers',
+      items: [
+        { id: 'volunteers', icon: '🤝', label: isAr ? 'بوابة المتطوعين (RBAC)' : 'Volunteers (RBAC)' },
+        { id: 'coordinators', icon: '👔', label: isAr ? 'إدارة المنسقين' : 'Coordinators' },
+        { id: 'coordinator_apps', icon: '📋', label: isAr ? 'طلبات الانضمام' : 'Join Applications' },
+      ]
+    },
+    {
+      groupLabel: isAr ? 'الخدمات والعمليات' : 'Services & Operations',
+      items: [
+        { id: 'donations', icon: '🔄', label: isAr ? 'تبادل الكتب والمواد' : 'Book Exchange' },
+        { id: 'service_requests', icon: '🛠️', label: isAr ? 'طلبات الخدمات' : 'Service Requests' },
+        { id: 'chatfaq', icon: '💬', label: isAr ? 'نشمي والأسئلة الشائعة' : 'Nashmi & FAQ' },
+      ]
+    },
+    {
+      groupLabel: isAr ? 'النظام والملاحظات' : 'System & Feedback',
+      items: [
+        { id: 'reports', icon: '🚩', label: isAr ? 'بلاغات الأسئلة' : 'Question Reports' },
+        { id: 'feedback', icon: '⭐', label: isAr ? 'التقييمات والآراء' : 'Feedback & Reviews' },
+        { id: 'deleted_items', icon: '🗑️', label: isAr ? 'المحذوفات والأرشيف' : 'Deleted Items & Archive' },
+        { id: 'general', icon: '⚙️', label: isAr ? 'الإعدادات العامة' : 'General Settings' },
+      ]
+    },
   ];
+
+  const allFlatTabs = tabGroups.flatMap(g => g.items);
+  const currentTabObj = allFlatTabs.find(t => t.id === activeTab);
 
   return (
     <>
       <div className={isEmbedded ? "admin-dashboard-embedded" : "admin-dashboard-page"} style={isEmbedded ? { paddingTop: 0 } : {}}>
 
-        {/* ── Fixed Top Admin Navbar ── */}
+        {/* ── Fixed Top Admin Header Bar ── */}
         {!isEmbedded && (
-          <nav className="admin-top-navbar">
-            <div className="admin-navbar-container">
-              <div className="admin-navbar-logo">
-                <button className="admin-sidebar-toggle" onClick={() => setSidebarOpen(prev => !prev)}>
-                  {sidebarOpen ? '☰' : '☰'}
+          <nav className="admin-top-navbar" style={{ position: 'fixed', top: 0, left: 0, right: 0, height: '72px', background: '#0f172a', borderBottom: '1px solid rgba(255,255,255,0.1)', zIndex: 1000, display: 'flex', alignItems: 'center' }}>
+            <div className="admin-navbar-container" style={{ width: '100%', maxWidth: '1600px', margin: '0 auto', padding: '0 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', direction: 'rtl' }}>
+              <div className="admin-navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <button
+                  className="admin-sidebar-toggle"
+                  onClick={() => setSidebarOpen(prev => !prev)}
+                  style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '1.2rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  title={sidebarOpen ? (isAr ? 'تصغير القائمة' : 'Collapse') : (isAr ? 'توسيع القائمة' : 'Expand')}
+                >
+                  ☰
                 </button>
-                <span>{tabs.find(t => t.id === activeTab)?.label || (isAr ? 'لوحة التحكم الشامل' : 'Admin Dashboard')}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span style={{ fontSize: '1.4rem' }}>🛡️</span>
+                  <div>
+                    <span style={{ fontWeight: 900, fontSize: '1.1rem', color: '#ffffff' }}>{isAr ? 'مكانك الجامعي' : 'Makanak Al-Jamii'}</span>
+                    <span style={{ fontSize: '0.72rem', color: '#93c5fd', marginRight: '0.5rem', background: 'rgba(59,130,246,0.2)', padding: '2px 8px', borderRadius: '12px', border: '1px solid rgba(59,130,246,0.4)', fontWeight: 700 }}>
+                      Enterprise v2.5
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <button className="admin-navbar-logout-btn" onClick={() => {
-                sessionStorage.removeItem('exchange_staff');
-                setAdminUsername('');
-                setAdminPwd('');
-                setLoginErr('');
-                genCaptcha();
-                setLoggedIn(false);
-              }}>
-                {isAr ? 'روج' : 'Logout'}
-              </button>
+              {/* Middle Breadcrumb */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#94a3b8', fontSize: '0.9rem' }} className="admin-breadcrumb-hide-mobile">
+                <span>{isAr ? 'لوحة التحكم' : 'Dashboard'}</span>
+                <span>/</span>
+                <span style={{ color: '#60a5fa', fontWeight: 700 }}>
+                  {currentTabObj?.icon} {currentTabObj?.label || (isAr ? 'الرئيسية' : 'Home')}
+                </span>
+              </div>
+
+              {/* Right Profile & Logout */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <AdminNotificationBell />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', background: 'rgba(255,255,255,0.06)', padding: '6px 14px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.12)' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }}></div>
+                  <span style={{ fontSize: '0.8rem', color: '#f8fafc', fontWeight: 700 }}>{isAr ? 'المدير العام (Admin)' : 'System Admin'}</span>
+                </div>
+
+                <button
+                  className="admin-navbar-logout-btn"
+                  style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)', padding: '0.5rem 1.1rem', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                  onClick={() => {
+                    sessionStorage.removeItem('exchange_staff');
+                    setAdminUsername('');
+                    setAdminPwd('');
+                    setLoginErr('');
+                    genCaptcha();
+                    setLoggedIn(false);
+                  }}
+                >
+                  <span>🚪</span>
+                  <span>{isAr ? 'تسجيل الخروج' : 'Logout'}</span>
+                </button>
+              </div>
             </div>
           </nav>
         )}
 
-        <div className={isEmbedded ? "" : `admin-dashboard-inner${sidebarOpen ? ' sidebar-open' : ' sidebar-closed'}`}>
+        <div className={isEmbedded ? "" : "admin-dashboard-container"}>
           {!isEmbedded && (
-            <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+            <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'collapsed'}`}>
               <div className="admin-sidebar-header">
-                <h3>{isAr ? 'القائمة' : 'Menu'}</h3>
+                <h3>{isAr ? 'نظام التحكم الشامل' : 'Navigation'}</h3>
                 <button className="admin-sidebar-close" onClick={() => setSidebarOpen(false)}>×</button>
               </div>
-              <ul className="admin-sidebar-links">
-                {tabs.map(t => (
-                  <li key={t.id}>
-                    <button
-                      className={`admin-sidebar-btn ${activeTab === t.id ? 'active' : ''}`}
-                      onClick={() => setActiveTab(t.id)}
-                    >
-                      {t.label}
-                    </button>
-                  </li>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                {tabGroups.map((group, gIdx) => (
+                  <div key={gIdx} className="admin-sidebar-group">
+                    <div className="admin-sidebar-group-title">
+                      {group.groupLabel}
+                    </div>
+                    <ul className="admin-sidebar-links">
+                      {group.items.map(t => {
+                        const isActive = activeTab === t.id;
+                        return (
+                          <li key={t.id}>
+                            <button
+                              className={`admin-sidebar-btn ${isActive ? 'active' : ''}`}
+                              onClick={() => setActiveTab(t.id)}
+                            >
+                              <span style={{ fontSize: '1.15rem' }}>{t.icon}</span>
+                              <span style={{ flex: 1 }}>{t.label}</span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 ))}
-              </ul>
+              </div>
+
+              {/* Sidebar footer info */}
+              <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--adm-divider)', textAlign: 'center', fontSize: '0.72rem', color: 'var(--adm-muted)' }}>
+                <span>Makanak Al-Jamii Engine © 2026</span>
+              </div>
             </aside>
           )}
 
           {/* ── Main Tab Content Container ── */}
-          <main className="admin-main-content">
-            {/* ── KPI Cards ── */}
-            {activeTab === 'analytics' && (
-              <div className="admin-kpi-row">
-              <div className="admin-kpi-card">
-                <div className="kpi-icon">🌐</div>
-                <div className="kpi-value">{totalVisits}</div>
-                <div className="kpi-label">{isAr ? 'إجمالي الزيارات' : 'Total Page Views'}</div>
+          <main className="admin-main-canvas">
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Analytics */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'analytics' && <AdminAnalytics />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Notice Board */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'notices' && <AdminNotices />}
+            {activeTab === 'homepage_promos' && <AdminHomepagePromos />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Service Requests */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'coordinator_apps' && <AdminCoordinatorApplications />}
+            {activeTab === 'service_requests' && <AdminServiceRequests />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Feedback & Suggestions */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'feedback' && <AdminFeedback />}
+            {activeTab === 'deleted_items' && <AdminDeletedItems />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Academic Courses */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'courses' && <AdminCourses />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Question Reports */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'reports' && <AdminReports />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Student Contributions */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'contributions' && <AdminContributions />}
+
+            {/* TAB: Student Activity Log */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'activity' && <AdminActivityLog />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Nashmi Chat & FAQ Management */}
+            {activeTab === 'chatfaq' && <AdminChatFAQ />}
+
+            {activeTab === 'coordinators' && <AdminCoordinators />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Volunteers Management */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'volunteers' && <AdminVolunteers />}
+
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Donations — Full MaterialExchange embedded */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'donations' && (
+              <div className="admin-donations-embed">
+                <MaterialExchange isEmbedded={true} />
               </div>
+            )}
 
-              <div className="admin-kpi-card">
-                <div className="kpi-icon">📚</div>
-                <div className="kpi-value">{materialViews}</div>
-                <div className="kpi-label">{isAr ? 'فتح مواد دراسية' : 'Material Opens'}</div>
-              </div>
-              <div className="admin-kpi-card">
-                <div className="kpi-icon">✅</div>
-                <div className="kpi-value">{quizCompletions}</div>
-                <div className="kpi-label">{isAr ? 'اختبارات مكتملة' : 'Quizzes Completed'}</div>
-              </div>
-              <div className="admin-kpi-card">
-                <div className="kpi-icon">💬</div>
-                <div className="kpi-value">{suggestions.length}</div>
-                <div className="kpi-label">{isAr ? 'رسائل واقتراحات' : 'Suggestions'}</div>
-              </div>
-              <div className="admin-kpi-card">
-                <div className="kpi-icon">🚩</div>
-                <div className="kpi-value">{reports.filter(r => r.status === 'pending').length}</div>
-                <div className="kpi-label">{isAr ? 'بلاغات معلقة' : 'Pending Reports'}</div>
-              </div>
-            </div>
-          )}
+            {activeTab === 'general' && <AdminGeneral />}
 
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Analytics */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'analytics' && <AdminAnalytics />}
+            {/* ══════════════════════════════════════════════════════ */}
+            {/* TAB: Quizzes Management */}
+            {/* ══════════════════════════════════════════════════════ */}
+            {activeTab === 'quizzes' && (
 
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Notice Board */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'notices' && <AdminNotices />}
+              <div className="admin-panel-section quizzes-management-section">
+                <div className="qmanage-layout">
 
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Service Requests */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'coordinator_apps' && <AdminCoordinatorApplications />}
-          {activeTab === 'service_requests' && <AdminServiceRequests />}
-
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Feedback & Suggestions */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'feedback' && <AdminFeedback />}
-
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Academic Courses */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'courses' && <AdminCourses />}
-
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Question Reports */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'reports' && <AdminReports />}
-
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Student Contributions */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'contributions' && <AdminContributions />}
-
-          {/* TAB: Student Activity Log */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'activity' && <AdminActivityLog />}
-
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Nashmi Chat & FAQ Management */}
-          {activeTab === 'chatfaq' && <AdminChatFAQ />}
-
-          {activeTab === 'coordinators' && <AdminCoordinators />}
-
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Donations — Full MaterialExchange embedded */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'donations' && (
-            <div className="admin-donations-embed">
-              <MaterialExchange isEmbedded={true} />
-            </div>
-          )}
-
-          {activeTab === 'general' && <AdminGeneral />}
-
-          {/* ══════════════════════════════════════════════════════ */}
-          {/* TAB: Quizzes Management */}
-          {/* ══════════════════════════════════════════════════════ */}
-          {activeTab === 'quizzes' && (
-
-            <div className="admin-panel-section quizzes-management-section">
-              <div className="qmanage-layout">
-
-                {/* Column 1: Subjects List */}
-                <div className="qmanage-column subjects-col">
-                  <div className="qmanage-col-header">
-                    <h4> {isAr ? 'المواد الدراسية' : 'Subjects'}</h4>
-                    <button className="qmanage-add-btn" onClick={() => {
-                      // Reset to add-mode before opening modal
-                      setEditingSubjectOriginalId(null);
-                      setSubjectForm({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
-                      setShowAddSubjectModal(true);
-                    }}>
-                      {isAr ? 'مادة جديدة' : 'New Subject'}
-                    </button>
-                  </div>
-                  <div className="qmanage-list">
-                    {allSubjects.map(sub => (
-                      <div
-                        key={sub.id}
-                        className={`qmanage-item-card ${selectedSubjectId === sub.id ? 'active' : ''}`}
-                        onClick={() => {
-                          setSelectedSubjectId(sub.id);
-                          setSelectedPartId('');
-                        }}
-                      >
-                        <span className="qmanage-item-icon">{sub.icon || ''}</span>
-                        <div className="qmanage-item-info">
-                          <span className="qmanage-item-name">{isAr ? sub.nameAr : sub.name}</span>
-                          <span className="qmanage-item-id">ID: {sub.id}</span>
-                        </div>
-                        <div style={{ display: 'flex', gap: '0.3rem', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
-                          {/* Edit subject */}
-                          <button
-                            className="qmanage-q-action-btn"
-                            title={isAr ? 'تعديل المادة' : 'Edit Subject'}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingSubjectOriginalId(sub.id); // track original ID for edit mode
-                              setSubjectForm({
-                                id: sub.id,
-                                name: sub.name || '',
-                                nameAr: sub.nameAr || '',
-                                icon: sub.icon || '',
-                                color: sub.color || '#6366F1',
-                                languageMode: sub.languageMode || 'both',
-                              });
-                              setShowAddSubjectModal(true);
-                            }}
-                          >✏️</button>
-                          {/* Delete subject — available for ALL subjects */}
-                          <button
-                            className="qmanage-item-delete-btn"
-                            onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
-                            title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
-                          >
-
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Column 2: Quiz Parts */}
-                <div className="qmanage-column parts-col">
-                  <div className="qmanage-col-header">
-                    <h4> {isAr ? 'الأجزاء / الاختبارات' : 'Quizzes / Parts'}</h4>
-                    {selectedSubjectId ? (
-                      <button className="qmanage-add-btn" onClick={() => setShowAddPartModal(true)}>
-                        {isAr ? 'اختبار جديد' : 'New Quiz'}
+                  {/* Column 1: Subjects List */}
+                  <div className="qmanage-column subjects-col">
+                    <div className="qmanage-col-header">
+                      <h4> {isAr ? 'المواد الدراسية' : 'Subjects'}</h4>
+                      <button className="qmanage-add-btn" onClick={() => {
+                        // Reset to add-mode before opening modal
+                        setEditingSubjectOriginalId(null);
+                        setSubjectForm({ id: '', name: '', nameAr: '', icon: '', color: '#6366F1', languageMode: 'both' });
+                        setShowAddSubjectModal(true);
+                      }}>
+                        {isAr ? 'مادة جديدة' : 'New Subject'}
                       </button>
-                    ) : (
-                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {isAr ? 'اختر مادة أولاً' : 'Select a subject first'}
-                      </span>
-                    )}
-                  </div>
-                  <div className="qmanage-list">
-                    {selectedSubjectId ? (
-                      allParts.length === 0 ? (
-                        <div className="qmanage-empty">{isAr ? 'لا توجد اختبارات مضاف بعد' : 'No quiz parts yet'}</div>
-                      ) : (
-                        allParts.map(part => (
-                          <div
-                            key={part.id}
-                            className={`qmanage-item-card ${selectedPartId === part.id ? 'active' : ''}`}
-                            onClick={() => setSelectedPartId(part.id)}
-                          >
-                            <div className="qmanage-item-info">
-                              <span className="qmanage-item-name">{isAr ? part.titleAr : part.title}</span>
-                              <span className="qmanage-item-id">ID: {part.id}</span>
-                              {part.durationMinutes && <span className="qmanage-item-id">⏱ {part.durationMinutes} {isAr ? 'د' : 'min'}</span>}
-                              {part.passMark != null && <span className="qmanage-item-id">🎯 {part.passMark}</span>}
-                            </div>
-                            <div style={{ display: 'flex', gap: '0.3rem', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
-                              {/* Edit part */}
-                              <button
-                                className="qmanage-q-action-btn"
-                                title={isAr ? 'تعديل الجزء' : 'Edit Part'}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setPartForm({
-                                    id: part.id,
-                                    title: part.title || '',
-                                    titleAr: part.titleAr || '',
-                                    isGroup: part.isGroup || false,
-                                    durationMinutes: part.durationMinutes || 30,
-                                    passMark: part.passMark != null ? part.passMark : '',
-                                  });
-                                  setShowAddPartModal(true);
-                                }}
-                              >✏️</button>
-                              {/* Delete part — allow for any part (soft-hide for static, hard-delete for dynamic) */}
-                              <button
-                                className="qmanage-item-delete-btn"
-                                onClick={(e) => { e.stopPropagation(); deletePart(part.id); }}
-                                title={isAr ? 'حذف الجزء بالكامل' : 'Delete entire part'}
-                              >
-
-                              </button>
-                            </div>
+                    </div>
+                    <div className="qmanage-list">
+                      {allSubjects.map(sub => (
+                        <div
+                          key={sub.id}
+                          className={`qmanage-item-card ${selectedSubjectId === sub.id ? 'active' : ''}`}
+                          onClick={() => {
+                            setSelectedSubjectId(sub.id);
+                            setSelectedPartId('');
+                          }}
+                        >
+                          <span className="qmanage-item-icon">{sub.icon || ''}</span>
+                          <div className="qmanage-item-info">
+                            <span className="qmanage-item-name">{isAr ? sub.nameAr : sub.name}</span>
+                            <span className="qmanage-item-id">ID: {sub.id}</span>
                           </div>
-                        ))
-                      )
-                    ) : (
-                      <div className="qmanage-empty">{isAr ? 'يرجى اختيار مادة من اليمين' : 'Please select a subject from left'}</div>
-                    )}
-                  </div>
-                </div>
+                          <div style={{ display: 'flex', gap: '0.3rem', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
+                            {/* Edit subject */}
+                            <button
+                              className="qmanage-q-action-btn"
+                              title={isAr ? 'تعديل المادة' : 'Edit Subject'}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingSubjectOriginalId(sub.id); // track original ID for edit mode
+                                setSubjectForm({
+                                  id: sub.id,
+                                  name: sub.name || '',
+                                  nameAr: sub.nameAr || '',
+                                  icon: sub.icon || '',
+                                  color: sub.color || '#6366F1',
+                                  languageMode: sub.languageMode || 'both',
+                                });
+                                setShowAddSubjectModal(true);
+                              }}
+                            >✏️</button>
+                            {/* Delete subject — available for ALL subjects */}
+                            <button
+                              className="qmanage-item-delete-btn"
+                              onClick={(e) => { e.stopPropagation(); deleteSubject(sub.id); }}
+                              title={isAr ? 'حذف المادة بالكامل' : 'Delete entire subject'}
+                            >
 
-                {/* Column 3: Questions List / Sub-parts navigator */}
-                <div className="qmanage-column questions-col">
-                  <div className="qmanage-col-header">
-                    <h4>
-                      {isGroupPart && !selectedSubPartId
-                        ? (isAr ? '📂 الأجزاء المصغرة' : '📂 Sub-parts')
-                        : isGroupPart && selectedSubPartId
-                          ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Column 2: Quiz Parts */}
+                  <div className="qmanage-column parts-col">
+                    <div className="qmanage-col-header">
+                      <h4> {isAr ? 'الأجزاء / الاختبارات' : 'Quizzes / Parts'}</h4>
+                      {selectedSubjectId ? (
+                        <button className="qmanage-add-btn" onClick={() => setShowAddPartModal(true)}>
+                          {isAr ? 'اختبار جديد' : 'New Quiz'}
+                        </button>
+                      ) : (
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                          {isAr ? 'اختر مادة أولاً' : 'Select a subject first'}
+                        </span>
+                      )}
+                    </div>
+                    <div className="qmanage-list">
+                      {selectedSubjectId ? (
+                        allParts.length === 0 ? (
+                          <div className="qmanage-empty">{isAr ? 'لا توجد اختبارات مضاف بعد' : 'No quiz parts yet'}</div>
+                        ) : (
+                          allParts.map(part => (
+                            <div
+                              key={part.id}
+                              className={`qmanage-item-card ${selectedPartId === part.id ? 'active' : ''}`}
+                              onClick={() => setSelectedPartId(part.id)}
+                            >
+                              <div className="qmanage-item-info">
+                                <span className="qmanage-item-name">{isAr ? part.titleAr : part.title}</span>
+                                <span className="qmanage-item-id">ID: {part.id}</span>
+                                {part.durationMinutes && <span className="qmanage-item-id">⏱ {part.durationMinutes} {isAr ? 'د' : 'min'}</span>}
+                                {part.passMark != null && <span className="qmanage-item-id">🎯 {part.passMark}</span>}
+                              </div>
+                              <div style={{ display: 'flex', gap: '0.3rem', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
+                                {/* Edit part */}
+                                <button
+                                  className="qmanage-q-action-btn"
+                                  title={isAr ? 'تعديل الجزء' : 'Edit Part'}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setPartForm({
+                                      id: part.id,
+                                      title: part.title || '',
+                                      titleAr: part.titleAr || '',
+                                      isGroup: part.isGroup || false,
+                                      durationMinutes: part.durationMinutes || 30,
+                                      passMark: part.passMark != null ? part.passMark : '',
+                                    });
+                                    setShowAddPartModal(true);
+                                  }}
+                                >✏️</button>
+                                {/* Delete part — allow for any part (soft-hide for static, hard-delete for dynamic) */}
+                                <button
+                                  className="qmanage-item-delete-btn"
+                                  onClick={(e) => { e.stopPropagation(); deletePart(part.id); }}
+                                  title={isAr ? 'حذف الجزء بالكامل' : 'Delete entire part'}
+                                >
+
+                                </button>
+                              </div>
+                            </div>
+                          ))
+                        )
+                      ) : (
+                        <div className="qmanage-empty">{isAr ? 'يرجى اختيار مادة من اليمين' : 'Please select a subject from left'}</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Column 3: Questions List / Sub-parts navigator */}
+                  <div className="qmanage-column questions-col">
+                    <div className="qmanage-col-header">
+                      <h4>
+                        {isGroupPart && !selectedSubPartId
+                          ? (isAr ? '📂 الأجزاء المصغرة' : '📂 Sub-parts')
+                          : isGroupPart && selectedSubPartId
+                            ? <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                               <button
                                 onClick={() => setSelectedSubPartId('')}
                                 style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', color: 'var(--adm-accent)', padding: 0 }}
@@ -1988,113 +2125,113 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                               >← </button>
                               {isAr ? 'أسئلة الجزء' : 'Part Questions'}
                             </span>
-                          : (isAr ? 'أسئلة الاختبار' : 'Questions List')
-                      }
-                    </h4>
-                    {/* Add Question button — shown when we have an effective part for questions */}
-                    {effectivePartId ? (
-                      <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
-                        {isAr ? 'إضافة سؤال' : 'New Question'}
-                      </button>
-                    ) : selectedPartId && !isGroupPart ? (
-                      <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
-                        {isAr ? 'إضافة سؤال' : 'New Question'}
-                      </button>
-                    ) : !selectedPartId ? (
-                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                        {isAr ? 'اختر اختباراً أولاً' : 'Select a quiz first'}
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="qmanage-list">
-                    {selectedPartId ? (
-                      isGroupPart && !selectedSubPartId ? (
-                        // ── Group part: show sub-parts navigator ──
-                        allSubPartsList.length === 0 ? (
-                          <div className="qmanage-empty">{isAr ? 'لا توجد أجزاء مصغرة' : 'No sub-parts yet'}</div>
-                        ) : (
-                          allSubPartsList.map(sp => {
-                            const spData = staticBaseQuizData[sp.id] || staticExtraQuizData[sp.id] || {};
-                            const spStaticCount = spData.questions?.length || 0;
-                            return (
-                              <div
-                                key={sp.id}
-                                className={`qmanage-item-card ${selectedSubPartId === sp.id ? 'active' : ''}`}
-                                onClick={() => setSelectedSubPartId(sp.id)}
-                                style={{ cursor: 'pointer' }}
-                              >
-                                <span className="qmanage-item-icon">📄</span>
-                                <div className="qmanage-item-info">
-                                  <span className="qmanage-item-name">{isAr ? (sp.titleAr || sp.title) : (sp.title || sp.titleAr)}</span>
-                                  <span className="qmanage-item-id">
-                                    {spStaticCount} {isAr ? 'سؤال' : 'questions'} • ID: {sp.id}
-                                  </span>
+                            : (isAr ? 'أسئلة الاختبار' : 'Questions List')
+                        }
+                      </h4>
+                      {/* Add Question button — shown when we have an effective part for questions */}
+                      {effectivePartId ? (
+                        <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
+                          {isAr ? 'إضافة سؤال' : 'New Question'}
+                        </button>
+                      ) : selectedPartId && !isGroupPart ? (
+                        <button className="qmanage-add-btn" onClick={() => openQuestionModal()}>
+                          {isAr ? 'إضافة سؤال' : 'New Question'}
+                        </button>
+                      ) : !selectedPartId ? (
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                          {isAr ? 'اختر اختباراً أولاً' : 'Select a quiz first'}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="qmanage-list">
+                      {selectedPartId ? (
+                        isGroupPart && !selectedSubPartId ? (
+                          // ── Group part: show sub-parts navigator ──
+                          allSubPartsList.length === 0 ? (
+                            <div className="qmanage-empty">{isAr ? 'لا توجد أجزاء مصغرة' : 'No sub-parts yet'}</div>
+                          ) : (
+                            allSubPartsList.map(sp => {
+                              const spData = staticBaseQuizData[sp.id] || staticExtraQuizData[sp.id] || {};
+                              const spStaticCount = spData.questions?.length || 0;
+                              return (
+                                <div
+                                  key={sp.id}
+                                  className={`qmanage-item-card ${selectedSubPartId === sp.id ? 'active' : ''}`}
+                                  onClick={() => setSelectedSubPartId(sp.id)}
+                                  style={{ cursor: 'pointer' }}
+                                >
+                                  <span className="qmanage-item-icon">📄</span>
+                                  <div className="qmanage-item-info">
+                                    <span className="qmanage-item-name">{isAr ? (sp.titleAr || sp.title) : (sp.title || sp.titleAr)}</span>
+                                    <span className="qmanage-item-id">
+                                      {spStaticCount} {isAr ? 'سؤال' : 'questions'} • ID: {sp.id}
+                                    </span>
+                                  </div>
+                                  <span style={{ fontSize: '0.8rem', color: 'var(--adm-accent)' }}>→</span>
                                 </div>
-                                <span style={{ fontSize: '0.8rem', color: 'var(--adm-accent)' }}>→</span>
+                              );
+                            })
+                          )
+                        ) : allQuestions.length === 0 ? (
+                          <div className="qmanage-empty">{isAr ? 'لا توجد أسئلة في هذا الجزء بعد' : 'No questions in this part yet'}</div>
+                        ) : (
+                          allQuestions.map((q, idx) => (
+                            <div key={q.id || idx} className="qmanage-question-card">
+                              <div className="qmanage-question-card-header">
+                                <span className="qmanage-q-badge">Q{idx + 1}</span>
+                                <span className="qmanage-q-badge badge-points">{q.marks || 1} pt</span>
+                                {q.isDynamic && <span className="qmanage-q-badge badge-db">Db</span>}
+
+                                <div style={{ marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto', display: 'flex', gap: '0.4rem' }}>
+                                  <button className="qmanage-q-action-btn" onClick={() => openQuestionModal(q)} title={isAr ? 'تعديل السؤال' : 'Edit Question'}></button>
+                                  {/* Delete button for ALL questions — static uses soft-delete, dynamic uses hard-delete */}
+                                  <button
+                                    className="qmanage-q-action-btn delete"
+                                    onClick={() => deleteQuestion(q.id, q.isStatic && !q.isDynamic)}
+                                    title={isAr ? 'حذف السؤال' : 'Delete Question'}
+                                  ></button>
+                                </div>
                               </div>
-                            );
-                          })
+                              <div className="qmanage-question-card-body">
+                                {q.codeBlock && renderCodeBlock(q.codeBlock)}
+                                <p className="qmanage-q-text text-ar">{q.questionAr || '—'}</p>
+                                <p className="qmanage-q-text text-en">{q.questionEn || '—'}</p>
+                                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem', marginBottom: '0.4rem' }}>
+                                  {q.image && (
+                                    <div className="qmanage-q-img-preview" style={{ flex: '1 1 auto', maxWidth: '200px', margin: 0 }}>
+                                      <img src={q.image} alt="Question visual 1" style={{ width: '100%', borderRadius: '6px' }} />
+                                    </div>
+                                  )}
+                                  {q.image2 && (
+                                    <div className="qmanage-q-img-preview" style={{ flex: '1 1 auto', maxWidth: '200px', margin: 0 }}>
+                                      <img src={q.image2} alt="Question visual 2" style={{ width: '100%', borderRadius: '6px' }} />
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="qmanage-q-options">
+                                  {q.options?.map(opt => (
+                                    <div key={opt.id} className={`qmanage-q-option ${q.correctAnswer === opt.id ? 'correct' : ''}`}>
+                                      <span className="opt-marker">{opt.id.toUpperCase()}</span>
+                                      <span className="opt-text" dangerouslySetInnerHTML={{ __html: isAr ? (opt.textAr || opt.textEn) : opt.textEn }} />
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          ))
                         )
-                      ) : allQuestions.length === 0 ? (
-                        <div className="qmanage-empty">{isAr ? 'لا توجد أسئلة في هذا الجزء بعد' : 'No questions in this part yet'}</div>
                       ) : (
-                        allQuestions.map((q, idx) => (
-                          <div key={q.id || idx} className="qmanage-question-card">
-                            <div className="qmanage-question-card-header">
-                              <span className="qmanage-q-badge">Q{idx + 1}</span>
-                              <span className="qmanage-q-badge badge-points">{q.marks || 1} pt</span>
-                              {q.isDynamic && <span className="qmanage-q-badge badge-db">Db</span>}
-
-                              <div style={{ marginRight: isAr ? 'auto' : '0', marginLeft: isAr ? '0' : 'auto', display: 'flex', gap: '0.4rem' }}>
-                                <button className="qmanage-q-action-btn" onClick={() => openQuestionModal(q)} title={isAr ? 'تعديل السؤال' : 'Edit Question'}></button>
-                                {/* Delete button for ALL questions — static uses soft-delete, dynamic uses hard-delete */}
-                                <button
-                                  className="qmanage-q-action-btn delete"
-                                  onClick={() => deleteQuestion(q.id, q.isStatic && !q.isDynamic)}
-                                  title={isAr ? 'حذف السؤال' : 'Delete Question'}
-                                ></button>
-                              </div>
-                            </div>
-                            <div className="qmanage-question-card-body">
-                              {q.codeBlock && renderCodeBlock(q.codeBlock)}
-                              <p className="qmanage-q-text text-ar">{q.questionAr || '—'}</p>
-                              <p className="qmanage-q-text text-en">{q.questionEn || '—'}</p>
-                              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem', marginBottom: '0.4rem' }}>
-                                {q.image && (
-                                  <div className="qmanage-q-img-preview" style={{ flex: '1 1 auto', maxWidth: '200px', margin: 0 }}>
-                                    <img src={q.image} alt="Question visual 1" style={{ width: '100%', borderRadius: '6px' }} />
-                                  </div>
-                                )}
-                                {q.image2 && (
-                                  <div className="qmanage-q-img-preview" style={{ flex: '1 1 auto', maxWidth: '200px', margin: 0 }}>
-                                    <img src={q.image2} alt="Question visual 2" style={{ width: '100%', borderRadius: '6px' }} />
-                                  </div>
-                                )}
-                              </div>
-                              <div className="qmanage-q-options">
-                                {q.options?.map(opt => (
-                                  <div key={opt.id} className={`qmanage-q-option ${q.correctAnswer === opt.id ? 'correct' : ''}`}>
-                                    <span className="opt-marker">{opt.id.toUpperCase()}</span>
-                                    <span className="opt-text" dangerouslySetInnerHTML={{ __html: isAr ? (opt.textAr || opt.textEn) : opt.textEn }} />
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                      )
-                    ) : (
-                      <div className="qmanage-empty">{isAr ? 'يرجى اختيار جزء/اختبار لعرض أسئلته' : 'Please select a quiz to see questions'}</div>
-                    )}
+                        <div className="qmanage-empty">{isAr ? 'يرجى اختيار جزء/اختبار لعرض أسئلته' : 'Please select a quiz to see questions'}</div>
+                      )}
+                    </div>
                   </div>
-                </div>
 
+                </div>
               </div>
-            </div>
-          )}
-        </main>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
 
       {/* ══ Question Edit Modal ══ */}
       {editingReport && (
@@ -2476,7 +2613,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
         </div>
       )}
 
-          {/* ══ Add Subject Modal ══ */}
+      {/* ══ Add Subject Modal ══ */}
       {showAddSubjectModal && (
         <div className="qedit-overlay" onClick={() => { setShowAddSubjectModal(false); setEditingSubjectOriginalId(null); }}>
           <div className="qedit-modal" onClick={e => e.stopPropagation()}>
@@ -3226,7 +3363,7 @@ const AdminDashboard = ({ isEmbedded = false }) => {
                               onMouseDown={e => { e.preventDefault(); undoOptionChange(idx, 'textEn'); }}
                               title={isAr ? 'تراجع (Ctrl+Z)' : 'Undo (Ctrl+Z)'}
                               style={{ fontSize: '0.8rem', padding: '0.15rem 0.38rem', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.06)', borderRadius: '4px', cursor: 'pointer', color: 'inherit' }}>
-                              
+
                             </button>
                             <span style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.15)', margin: '0 0.1rem' }} />
                             {/* Bold / Italic / Underline / Code */}

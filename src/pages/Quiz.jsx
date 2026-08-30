@@ -398,12 +398,30 @@ const Quiz = () => {
             setDbCurrentQuestions([]);
             return;
         }
+
+        const getLocalCurrentQs = () => {
+            try {
+                const raw = localStorage.getItem('koon_local_quiz_questions');
+                if (!raw) return [];
+                return Object.values(JSON.parse(raw)).filter(q => q.partId === quizId);
+            } catch (e) { return []; }
+        };
+
         const q = query(collection(db, 'quiz_questions'), where('partId', '==', quizId));
         const unsubCurrentQs = onSnapshot(q, (snap) => {
             const list = [];
             snap.forEach(d => list.push(d.data()));
+            const localQs = getLocalCurrentQs();
+            localQs.forEach(lq => {
+                if (!list.some(qItem => String(qItem.id) === String(lq.id))) {
+                    list.push(lq);
+                }
+            });
             setDbCurrentQuestions(list);
-        }, console.error);
+        }, (err) => {
+            console.warn('Quiz.jsx: dbCurrentQuestions fetch warning:', err?.message);
+            setDbCurrentQuestions(getLocalCurrentQs());
+        });
 
         return () => unsubCurrentQs();
     }, [quizId]);
@@ -461,24 +479,48 @@ const Quiz = () => {
         return cats.filter(cat => !cat.deleted && !cat.hidden);
     }, [dbSubjects, dbParts]);
 
-    // Load all questions for the current subject (to count questions per part on subject landing page)
+    // Active category dynamically synced with mergedCategories
+    const activeCategory = useMemo(() => {
+        if (!selectedCategory) return null;
+        return mergedCategories.find(c => c.id === selectedCategory.id) || selectedCategory;
+    }, [selectedCategory, mergedCategories]);
+
+    // Load all questions from Firestore and localStorage (to count questions per part on subject landing page)
     useEffect(() => {
-        const subjectId = quizId || selectedCategory?.id;
-        if (!subjectId) {
+        const targetSubject = activeCategory;
+        const subjectId = quizId || targetSubject?.id;
+        if (!subjectId && !targetSubject) {
             setDbSubjectQuestions([]);
             return;
         }
-        const q = query(collection(db, 'quiz_questions'), where('subjectId', '==', subjectId));
-        const unsubSubjectQuestions = onSnapshot(q, (snap) => {
+
+        const getLocalQs = () => {
+            try {
+                const raw = localStorage.getItem('koon_local_quiz_questions');
+                if (!raw) return [];
+                const allLocal = Object.values(JSON.parse(raw));
+                const partIds = new Set((targetSubject?.parts || []).map(p => p.id));
+                return allLocal.filter(q => (subjectId && q.subjectId === subjectId) || partIds.has(q.partId));
+            } catch (e) { return []; }
+        };
+
+        const unsubAllQuestions = onSnapshot(collection(db, 'quiz_questions'), (snap) => {
             const list = [];
             snap.forEach(d => list.push(d.data()));
+            const localQs = getLocalQs();
+            localQs.forEach(lq => {
+                if (!list.some(qItem => String(qItem.id) === String(lq.id) && qItem.partId === lq.partId)) {
+                    list.push(lq);
+                }
+            });
             setDbSubjectQuestions(list);
-        }, console.error);
+        }, (err) => {
+            console.warn('Quiz.jsx: quiz_questions snapshot warning:', err?.message);
+            setDbSubjectQuestions(getLocalQs());
+        });
 
-        return () => unsubSubjectQuestions();
-        // Use selectedCategory?.id (string) not the object reference to avoid unnecessary re-runs
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [quizId, selectedCategory?.id]);
+        return () => unsubAllQuestions();
+    }, [quizId, activeCategory?.id]);
 
     // Merge base quiz data with extra quizzes
     const quizData = useMemo(() => ({ ...baseQuizData, ...extraQuizData }), [baseQuizData]);
@@ -2527,22 +2569,22 @@ const Quiz = () => {
             </section>
 
             <div className="quiz-selection-container">
-                {selectedCategory ? (
+                {activeCategory ? (
                     <div className="parts-selection fade-in">
                         <button className="back-btn" onClick={() => setSelectedCategory(null)}>
                             {language === 'ar' ? '← العودة للمواد' : '← Back to Subjects'}
                         </button>
                         <h2 className="selection-title">
-                            {language === 'ar' ? selectedCategory.nameAr : selectedCategory.name}
+                            {language === 'ar' ? activeCategory.nameAr : activeCategory.name}
                         </h2>
                         <div className="quiz-categories-grid">
-                            {[...selectedCategory.parts].reverse().map(part => {
+                            {[...(activeCategory.parts || [])].reverse().map(part => {
                                 // Handle accordion/group structure
                                 if (part.isGroup && part.subParts) {
                                     return part.subParts.map(subPart => {
                                         const subPartData = quizData[subPart.id];
                                         const staticCount = subPartData?.questions?.length || 0;
-                                        const dynamicCount = dbSubjectQuestions.filter(q => q.partId === subPart.id).length;
+                                        const dynamicCount = dbSubjectQuestions.filter(q => q.partId === subPart.id && !q.deleted).length;
                                         const totalCount = staticCount + dynamicCount;
                                         const hasQuestions = totalCount > 0;
                                         return (
@@ -2551,9 +2593,9 @@ const Quiz = () => {
                                                 to={hasQuestions ? `/quiz/${subPart.id}` : '#'}
                                                 onClick={(e) => !hasQuestions && e.preventDefault()}
                                                 className={`quiz-category-card glass-card ${!hasQuestions ? 'disabled-quiz-card' : ''}`}
-                                                style={{ '--category-color': selectedCategory.color }}
+                                                style={{ '--category-color': activeCategory.color }}
                                             >
-                                                <div className="category-icon">{selectedCategory.icon}</div>
+                                                <div className="category-icon">{activeCategory.icon}</div>
                                                 <h3>{language === 'ar' ? subPart.titleAr : subPart.title}</h3>
                                                 <p>{totalCount} {language === 'ar' ? 'أسئلة' : 'Questions'}</p>
                                                 <span className="start-btn">
@@ -2567,10 +2609,10 @@ const Quiz = () => {
                                 // Handle regular parts
                                 const partData = quizData[part.id];
                                 const staticQCount = partData?.questions?.length || 0;
-                                const dynamicQCount = dbSubjectQuestions.filter(q => q.partId === part.id).length;
+                                const dynamicQCount = dbSubjectQuestions.filter(q => q.partId === part.id && !q.deleted).length;
                                 const totalQCount = staticQCount + dynamicQCount;
                                 const hasQuestions = totalQCount > 0;
-                                const hasSubParts = partData?.parts?.length > 0;
+                                const hasSubParts = (partData?.parts?.length > 0) || (part.isGroup && part.subParts?.length > 0);
                                 // Also allow navigation for DB-only parts (e.g. a newly created quiz part with questions but no static data)
                                 const isAvailable = hasQuestions || hasSubParts || part.fromDb;
 
@@ -2580,13 +2622,13 @@ const Quiz = () => {
                                         to={isAvailable ? `/quiz/${part.id}` : '#'}
                                         onClick={(e) => !isAvailable && e.preventDefault()}
                                         className={`quiz-category-card glass-card ${!isAvailable ? 'disabled-quiz-card' : ''}`}
-                                        style={{ '--category-color': selectedCategory.color }}
+                                        style={{ '--category-color': activeCategory.color }}
                                     >
-                                        <div className="category-icon">{selectedCategory.icon}</div>
+                                        <div className="category-icon">{activeCategory.icon}</div>
                                         <h3>{language === 'ar' ? part.titleAr : part.title}</h3>
                                         <p>
                                             {hasSubParts
-                                                ? `${partData.parts.length} ${language === 'ar' ? 'أجزاء' : 'Parts'}`
+                                                ? `${(partData?.parts || part.subParts || []).length} ${language === 'ar' ? 'أجزاء' : 'Parts'}`
                                                 : `${totalQCount} ${t('quiz.selection.questions')}`
                                             }
                                         </p>
