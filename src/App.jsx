@@ -27,7 +27,6 @@ import Quiz from './pages/Quiz';
 import AcademicCalendar from './pages/AcademicCalendar';
 import GradingSystem from './pages/GradingSystem';
 import MaterialExchange from './pages/MaterialExchange';
-import AdminDashboard from './pages/AdminDashboard';
 import SecureGateway from './pages/SecureGateway';
 import FAQ from './pages/FAQ';
 import AboutUs from './pages/AboutUs';
@@ -196,9 +195,6 @@ function App() {
 
           {/* 🔒 Isolated coordinator gateway - completely hidden from site, no navbar/footer/sidebar */}
           <Route path="/portal" element={<SecureGateway />} />
-
-          {/* 🔒 Isolated admin dashboard - no public navbar/footer/sidebar */}
-          <Route path="/admin" element={<AdminDashboard />} />
 
           {/* All other pages wrapped in site layout */}
           <Route path="*" element={
