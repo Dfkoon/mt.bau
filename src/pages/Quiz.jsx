@@ -289,6 +289,53 @@ const triggerHaptic = () => {
     }
 };
 
+const ICON_MAP = {
+    monitor: '💻',
+    laptop: '💻',
+    code: '👨‍💻',
+    globe: '🌐',
+    briefcase: '💼',
+    brain: '🧠',
+    flag: '🇯🇴',
+    wifi: '📡',
+    gear: '⚙️',
+    mosque: '🕌',
+    calculator: '📐',
+    math: '📐',
+    lock: '🔒',
+    rocket: '🚀',
+    chart: '📊',
+    robot: '🤖',
+    eye: '👁️',
+    scale: '⚖️',
+    scroll: '📜',
+    grid: '🔲',
+    folder: '🗂️',
+    database: '🗄️',
+    medal: '🎖️',
+    search: '🔍',
+    shield: '👾',
+    book: '📚',
+    layers: '🪁',
+    sigma: '🧮',
+    phone: '📱',
+    detective: '🕵️',
+    linux: '🐧',
+    pickaxe: '⛏️',
+    cloud: '☁️',
+    abacus: '🧮'
+};
+
+const renderCategoryIcon = (icon) => {
+    if (!icon) return '📚';
+    if (typeof icon === 'string') {
+        const clean = icon.trim().toLowerCase();
+        if (ICON_MAP[clean]) return ICON_MAP[clean];
+        return icon;
+    }
+    return icon;
+};
+
 const Quiz = () => {
     const { language, t } = useLanguage();
     const { quizId } = useParams();
@@ -436,8 +483,18 @@ const Quiz = () => {
         };
         const localPartsObj = getLocalPartsMap();
 
+        const isMatchingSubject = (s1, s2) => {
+            if (!s1 || !s2) return false;
+            const id1 = String(s1.id || s1).trim().toLowerCase().replace(/[-_]/g, '');
+            const id2 = String(s2.id || s2).trim().toLowerCase().replace(/[-_]/g, '');
+            if (id1 === id2) return true;
+            if (s1.nameAr && s2.nameAr && s1.nameAr.trim() === s2.nameAr.trim()) return true;
+            if (s1.name && s2.name && s1.name.trim().toLowerCase() === s2.name.trim().toLowerCase()) return true;
+            return false;
+        };
+
         let cats = quizCategories.map(cat => {
-            const dbSub = dbSubjects.find(s => String(s.id).toLowerCase() === String(cat.id).toLowerCase());
+            const dbSub = dbSubjects.find(s => isMatchingSubject(s, cat));
             const baseCat = dbSub ? { ...cat, ...dbSub } : cat;
 
             const staticParts = baseCat.parts || [];
@@ -445,9 +502,7 @@ const Quiz = () => {
             staticParts.forEach(p => partsMap.set(p.id, { ...p }));
 
             // 1. Merge Firestore DB parts for this subject
-            const matchingDbParts = dbParts.filter(p => 
-                String(p.subjectId || '').toLowerCase() === String(cat.id).toLowerCase()
-            );
+            const matchingDbParts = dbParts.filter(p => isMatchingSubject(p.subjectId, cat.id));
             matchingDbParts.forEach(dp => {
                 if (partsMap.has(dp.id)) {
                     partsMap.set(dp.id, { ...partsMap.get(dp.id), ...dp });
@@ -458,7 +513,7 @@ const Quiz = () => {
 
             // 2. Merge local storage parts for this subject
             Object.values(localPartsObj).forEach(lp => {
-                if (String(lp.subjectId || '').toLowerCase() === String(cat.id).toLowerCase()) {
+                if (isMatchingSubject(lp.subjectId, cat.id)) {
                     if (partsMap.has(lp.id)) {
                         partsMap.set(lp.id, { ...partsMap.get(lp.id), ...lp });
                     } else if (!lp.hidden && !lp.deleted) {
@@ -476,9 +531,9 @@ const Quiz = () => {
 
         // Add completely new subjects from Firestore
         dbSubjects.forEach(sub => {
-            const exists = cats.some(c => String(c.id).toLowerCase() === String(sub.id).toLowerCase());
+            const exists = cats.some(c => isMatchingSubject(c, sub));
             if (!exists) {
-                const subParts = dbParts.filter(p => String(p.subjectId || '').toLowerCase() === String(sub.id).toLowerCase() && !p.hidden && !p.deleted);
+                const subParts = dbParts.filter(p => isMatchingSubject(p.subjectId, sub.id) && !p.hidden && !p.deleted);
                 cats.push({ ...sub, parts: subParts });
             }
         });
@@ -488,8 +543,8 @@ const Quiz = () => {
             const raw = localStorage.getItem('koon_local_quiz_subjects');
             if (raw) {
                 Object.values(JSON.parse(raw)).forEach(lSub => {
-                    if (!cats.some(c => String(c.id).toLowerCase() === String(lSub.id).toLowerCase())) {
-                        const localParts = Object.values(localPartsObj).filter(p => String(p.subjectId || '').toLowerCase() === String(lSub.id).toLowerCase() && !p.hidden && !p.deleted);
+                    if (!cats.some(c => isMatchingSubject(c, lSub))) {
+                        const localParts = Object.values(localPartsObj).filter(p => isMatchingSubject(p.subjectId, lSub.id) && !p.hidden && !p.deleted);
                         cats.push({ ...lSub, parts: localParts });
                     }
                 });
@@ -1166,7 +1221,7 @@ const Quiz = () => {
                                             className={`quiz-category-card glass-card ${!hasQuestions ? 'disabled-quiz-card' : ''}`}
                                             style={{ '--category-color': currentQuiz.color }}
                                         >
-                                            <div className="category-icon">{part.icon || currentQuiz.icon}</div>
+                                            <div className="category-icon">{renderCategoryIcon(part.icon || currentQuiz.icon)}</div>
                                             <h3>{language === 'ar' ? part.titleAr : part.title}</h3>
                                             <p>{totalQuestionsCount} {t('quiz.selection.questions')}</p>
                                             <span className="start-btn">
@@ -2605,7 +2660,7 @@ const Quiz = () => {
                                                 className={`quiz-category-card glass-card ${!hasQuestions ? 'disabled-quiz-card' : ''}`}
                                                 style={{ '--category-color': activeCategory.color }}
                                             >
-                                                <div className="category-icon">{activeCategory.icon}</div>
+                                                <div className="category-icon">{renderCategoryIcon(activeCategory.icon)}</div>
                                                 <h3>{language === 'ar' ? subPart.titleAr : subPart.title}</h3>
                                                 <p>{totalCount} {language === 'ar' ? 'أسئلة' : 'Questions'}</p>
                                                 <span className="start-btn">
@@ -2634,7 +2689,7 @@ const Quiz = () => {
                                         className={`quiz-category-card glass-card ${!isAvailable ? 'disabled-quiz-card' : ''}`}
                                         style={{ '--category-color': activeCategory.color }}
                                     >
-                                        <div className="category-icon">{activeCategory.icon}</div>
+                                        <div className="category-icon">{renderCategoryIcon(activeCategory.icon)}</div>
                                         <h3>{language === 'ar' ? part.titleAr : part.title}</h3>
                                         <p>
                                             {hasSubParts
@@ -2712,7 +2767,7 @@ const Quiz = () => {
                                                 }
                                             }}
                                         >
-                                            <span className="chip-icon-mini">{category.icon}</span>
+                                            <span className="chip-icon-mini">{renderCategoryIcon(category.icon)}</span>
                                             <span className="chip-text">{language === 'ar' ? category.nameAr : category.name}</span>
                                             <span className="chip-count">
                                                 {index + 1}
@@ -2746,7 +2801,7 @@ const Quiz = () => {
                                                 onClick={() => setSelectedCategory(category)}
                                             >
                                                 {category.isNew && <span className="new-badge">NEW</span>}
-                                                <div className="category-icon">{category.icon}</div>
+                                                <div className="category-icon">{renderCategoryIcon(category.icon)}</div>
                                                 <h3>{language === 'ar' ? category.nameAr : category.name}</h3>
                                                 <p>{category.parts.length} {language === 'ar' ? 'أجزاء' : 'Parts'}</p>
                                                 <span className="start-btn">{language === 'ar' ? 'عرض الأجزاء' : 'View Parts'}</span>
@@ -2764,7 +2819,7 @@ const Quiz = () => {
                                             style={{ '--category-color': category.color }}
                                         >
                                             {category.isNew && <span className="new-badge">NEW</span>}
-                                            <div className="category-icon">{category.icon}</div>
+                                            <div className="category-icon">{renderCategoryIcon(category.icon)}</div>
                                             <h3>{language === 'ar' ? category.nameAr : category.name}</h3>
                                             <p>
                                                 {totalQCount} {t('quiz.selection.questions')}
