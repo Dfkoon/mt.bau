@@ -29,16 +29,30 @@ const StudyMaterials = () => {
     const [localCoursesData, setLocalCoursesData] = useState(coursesData);
 
     useEffect(() => {
-        const unsub = onSnapshot(collection(db, 'academic_courses'), (snap) => {
-            const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const getLocalCourses = () => {
+            try {
+                const raw = localStorage.getItem('koon_local_academic_courses');
+                return raw ? Object.values(JSON.parse(raw)) : [];
+            } catch (e) { return []; }
+        };
+
+        const processList = (cloudDocs = []) => {
+            const localList = getLocalCourses();
+            const combined = [...cloudDocs];
+            localList.forEach(lc => {
+                if (!combined.some(c => String(c.id) === String(lc.id))) {
+                    combined.push(lc);
+                }
+            });
 
             const newData = {};
             Object.keys(coursesData).forEach(catId => {
                 newData[catId] = [...coursesData[catId]];
             });
 
-            list.forEach(dbC => {
+            combined.forEach(dbC => {
                 const catId = dbC.category;
+                if (!catId) return;
                 if (!newData[catId]) newData[catId] = [];
 
                 const idx = newData[catId].findIndex(c => String(c.id) === String(dbC.id));
@@ -55,15 +69,21 @@ const StudyMaterials = () => {
                     };
                     if (idx > -1) {
                         newData[catId][idx] = mapped;
-                    } else if (dbC.custom) {
+                    } else {
                         newData[catId].push(mapped);
                     }
                 }
             });
 
             setLocalCoursesData(newData);
+        };
+
+        const unsub = onSnapshot(collection(db, 'academic_courses'), (snap) => {
+            const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            processList(list);
         }, (err) => {
             console.error("Error fetching db courses in materials page:", err);
+            processList([]);
         });
         return () => unsub();
     }, []);

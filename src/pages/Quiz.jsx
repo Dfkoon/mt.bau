@@ -426,23 +426,44 @@ const Quiz = () => {
         return () => unsubCurrentQs();
     }, [quizId]);
 
-    // Merge base quiz categories (static) with custom subjects & parts from DB
+    // Merge base quiz categories (static) with custom subjects & parts from DB and local storage
     const mergedCategories = useMemo(() => {
+        const getLocalPartsMap = () => {
+            try {
+                const raw = localStorage.getItem('koon_local_quiz_parts');
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) { return {}; }
+        };
+        const localPartsObj = getLocalPartsMap();
+
         let cats = quizCategories.map(cat => {
-            // Find any DB/Firestore update for this subject
-            const dbSub = dbSubjects.find(s => s.id === cat.id);
+            const dbSub = dbSubjects.find(s => String(s.id).toLowerCase() === String(cat.id).toLowerCase());
             const baseCat = dbSub ? { ...cat, ...dbSub } : cat;
 
             const staticParts = baseCat.parts || [];
             const partsMap = new Map();
             staticParts.forEach(p => partsMap.set(p.id, { ...p }));
 
-            const matchingDbParts = dbParts.filter(p => p.subjectId === cat.id);
+            // 1. Merge Firestore DB parts for this subject
+            const matchingDbParts = dbParts.filter(p => 
+                String(p.subjectId || '').toLowerCase() === String(cat.id).toLowerCase()
+            );
             matchingDbParts.forEach(dp => {
                 if (partsMap.has(dp.id)) {
                     partsMap.set(dp.id, { ...partsMap.get(dp.id), ...dp });
-                } else {
+                } else if (!dp.hidden && !dp.deleted) {
                     partsMap.set(dp.id, dp);
+                }
+            });
+
+            // 2. Merge local storage parts for this subject
+            Object.values(localPartsObj).forEach(lp => {
+                if (String(lp.subjectId || '').toLowerCase() === String(cat.id).toLowerCase()) {
+                    if (partsMap.has(lp.id)) {
+                        partsMap.set(lp.id, { ...partsMap.get(lp.id), ...lp });
+                    } else if (!lp.hidden && !lp.deleted) {
+                        partsMap.set(lp.id, { ...lp, fromDb: true });
+                    }
                 }
             });
 
@@ -455,9 +476,9 @@ const Quiz = () => {
 
         // Add completely new subjects from Firestore
         dbSubjects.forEach(sub => {
-            const exists = cats.some(c => c.id === sub.id);
+            const exists = cats.some(c => String(c.id).toLowerCase() === String(sub.id).toLowerCase());
             if (!exists) {
-                const subParts = dbParts.filter(p => p.subjectId === sub.id && !p.hidden && !p.deleted);
+                const subParts = dbParts.filter(p => String(p.subjectId || '').toLowerCase() === String(sub.id).toLowerCase() && !p.hidden && !p.deleted);
                 cats.push({ ...sub, parts: subParts });
             }
         });
@@ -467,9 +488,8 @@ const Quiz = () => {
             const raw = localStorage.getItem('koon_local_quiz_subjects');
             if (raw) {
                 Object.values(JSON.parse(raw)).forEach(lSub => {
-                    if (!cats.some(c => c.id === lSub.id)) {
-                        const rawParts = localStorage.getItem('koon_local_quiz_parts');
-                        const localParts = rawParts ? Object.values(JSON.parse(rawParts)).filter(p => p.subjectId === lSub.id && !p.hidden && !p.deleted) : [];
+                    if (!cats.some(c => String(c.id).toLowerCase() === String(lSub.id).toLowerCase())) {
+                        const localParts = Object.values(localPartsObj).filter(p => String(p.subjectId || '').toLowerCase() === String(lSub.id).toLowerCase() && !p.hidden && !p.deleted);
                         cats.push({ ...lSub, parts: localParts });
                     }
                 });
@@ -482,25 +502,15 @@ const Quiz = () => {
     // Active category dynamically synced with mergedCategories
     const activeCategory = useMemo(() => {
         if (!selectedCategory) return null;
-        return mergedCategories.find(c => c.id === selectedCategory.id) || selectedCategory;
+        return mergedCategories.find(c => String(c.id).toLowerCase() === String(selectedCategory.id).toLowerCase()) || selectedCategory;
     }, [selectedCategory, mergedCategories]);
 
     // Load all questions from Firestore and localStorage (to count questions per part on subject landing page)
     useEffect(() => {
-        const targetSubject = activeCategory;
-        const subjectId = quizId || targetSubject?.id;
-        if (!subjectId && !targetSubject) {
-            setDbSubjectQuestions([]);
-            return;
-        }
-
         const getLocalQs = () => {
             try {
                 const raw = localStorage.getItem('koon_local_quiz_questions');
-                if (!raw) return [];
-                const allLocal = Object.values(JSON.parse(raw));
-                const partIds = new Set((targetSubject?.parts || []).map(p => p.id));
-                return allLocal.filter(q => (subjectId && q.subjectId === subjectId) || partIds.has(q.partId));
+                return raw ? Object.values(JSON.parse(raw)) : [];
             } catch (e) { return []; }
         };
 
@@ -520,7 +530,7 @@ const Quiz = () => {
         });
 
         return () => unsubAllQuestions();
-    }, [quizId, activeCategory?.id]);
+    }, [quizId, selectedCategory?.id]);
 
     // Merge base quiz data with extra quizzes
     const quizData = useMemo(() => ({ ...baseQuizData, ...extraQuizData }), [baseQuizData]);
