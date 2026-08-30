@@ -2726,7 +2726,14 @@ const Quiz = () => {
                         {filteredCategories.length > 0 ? (
                             <div className="quiz-categories-grid">
                                 {[...filteredCategories].reverse().map(category => {
-                                    const hasQuestions = quizData[category.id]?.questions?.length > 0;
+                                    const staticQCount = quizData[category.id]?.questions?.length || 0;
+                                    const dynamicQCount = dbSubjectQuestions.filter(q => 
+                                        (String(q.subjectId || '').trim().toLowerCase() === String(category.id || '').trim().toLowerCase() ||
+                                         String(q.partId || '').trim().toLowerCase() === String(category.id || '').trim().toLowerCase()) &&
+                                        !q.deleted
+                                    ).length;
+                                    const totalQCount = staticQCount + dynamicQCount;
+                                    const hasQuestions = totalQCount > 0;
                                     const hasParts = category.parts && category.parts.length > 0;
 
                                     if (hasParts) {
@@ -2760,7 +2767,7 @@ const Quiz = () => {
                                             <div className="category-icon">{category.icon}</div>
                                             <h3>{language === 'ar' ? category.nameAr : category.name}</h3>
                                             <p>
-                                                {quizData[category.id]?.questions?.length || 0} {t('quiz.selection.questions')}
+                                                {totalQCount} {t('quiz.selection.questions')}
                                             </p>
                                             <span className="start-btn">
                                                 {hasQuestions
