@@ -103,6 +103,16 @@ const StudyProgressSection = () => (
   </div>
 );
 
+const MaintenanceScreen = ({ message }) => (
+  <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '24px', background: '#f8fafc', direction: 'rtl' }}>
+    <div style={{ width: 'min(100%, 620px)', padding: '40px 32px', textAlign: 'center', background: '#fff', border: '1px solid #fde68a', borderRadius: '20px', boxShadow: '0 18px 50px rgba(15, 23, 42, 0.10)' }}>
+      <div style={{ fontSize: '48px', marginBottom: '12px' }}>🚧</div>
+      <h1 style={{ margin: '0 0 12px', color: '#172033', fontSize: 'clamp(24px, 5vw, 34px)' }}>الموقع تحت الصيانة</h1>
+      <p style={{ margin: 0, color: '#64748b', fontSize: '16px', lineHeight: 1.8 }}>{message || 'المنصة تحت الصيانة، نعود قريباً!'}</p>
+    </div>
+  </div>
+);
+
 const LegacyAdminRedirect = () => {
   React.useEffect(() => {
     const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -122,6 +132,8 @@ function App() {
   const [showFeedbackPopup, setShowFeedbackPopup] = React.useState(false);
   const [feedbackPopupEnabled, setFeedbackPopupEnabled] = React.useState(false);
   const [feedbackPopupLoaded, setFeedbackPopupLoaded] = React.useState(false);
+  const [maintenanceMode, setMaintenanceMode] = React.useState(false);
+  const [maintenanceMessage, setMaintenanceMessage] = React.useState('');
 
   // Splash screen disabled
   const [showSplash] = React.useState(false);
@@ -138,6 +150,8 @@ function App() {
         if (settingsDoc.exists()) {
           const data = settingsDoc.data();
           setFeedbackPopupEnabled(data.feedbackPopupEnabled ?? true);
+          setMaintenanceMode(data.maintenance_mode === true);
+          setMaintenanceMessage(data.maintenance_message || '');
         } else {
           setFeedbackPopupEnabled(true);
         }
@@ -199,44 +213,46 @@ function App() {
           {/* All other pages wrapped in site layout */}
           <Route path="*" element={
             <div className="app-container">
-              <Navbar toggleSidebar={toggleSidebar} />
-              <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+              {maintenanceMode ? <MaintenanceScreen message={maintenanceMessage} /> : <>
+                <Navbar toggleSidebar={toggleSidebar} />
+                <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-              <FeedbackPopup
-                isOpen={showFeedbackPopup}
-                onClose={handleClosePopup}
-              />
+                <FeedbackPopup
+                  isOpen={showFeedbackPopup}
+                  onClose={handleClosePopup}
+                />
 
-              <CookieConsent />
+                <CookieConsent />
 
-              <main>
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/materials" element={<StudyMaterials />} />
-                  <Route path="/plans" element={<AcademicPlans />} />
-                  <Route path="/quiz" element={<Quiz />} />
-                  <Route path="/quiz/:quizId" element={<Quiz />} />
-                  <Route path="/calendar" element={<AcademicCalendar />} />
-                  <Route path="/grading" element={<GradingSystem />} />
-                  <Route path="/exchange" element={<MaterialExchange />} />
+                <main>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/materials" element={<StudyMaterials />} />
+                    <Route path="/plans" element={<AcademicPlans />} />
+                    <Route path="/quiz" element={<Quiz />} />
+                    <Route path="/quiz/:quizId" element={<Quiz />} />
+                    <Route path="/calendar" element={<AcademicCalendar />} />
+                    <Route path="/grading" element={<GradingSystem />} />
+                    <Route path="/exchange" element={<MaterialExchange />} />
 
 
-                  <Route path="/faq" element={<FAQ />} />
-                  <Route path="/about" element={<AboutUs />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/about" element={<AboutUs />} />
 
-                  <Route path="/legal" element={<Legal />} />
-                </Routes>
-              </main>
+                    <Route path="/legal" element={<Legal />} />
+                  </Routes>
+                </main>
 
-              {/* Back to top button */}
-              <BackToTopBtn />
-              {/* Keyboard shortcuts help modal (press ?) */}
-              <KeyboardShortcutsHelp />
-              {/* Reading scroll progress bar */}
-              <ReadingProgressBar />
-              {/* Admin notice board (Firebase-driven) */}
-              <NoticeBoard />
-              <Footer />
+                {/* Back to top button */}
+                <BackToTopBtn />
+                {/* Keyboard shortcuts help modal (press ?) */}
+                <KeyboardShortcutsHelp />
+                {/* Reading scroll progress bar */}
+                <ReadingProgressBar />
+                {/* Admin notice board (Firebase-driven) */}
+                <NoticeBoard />
+                <Footer />
+              </>}
             </div>
           } />
         </Routes>
