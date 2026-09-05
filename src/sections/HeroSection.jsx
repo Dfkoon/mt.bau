@@ -70,16 +70,13 @@ const HeroSection = () => {
         };
 
         const updateQuizCount = (snapshot) => {
-            const dynamicSubjects = snapshot.docs.map(quizDoc => quizDoc.id);
-            let localParts = [];
-            try {
-                localParts = Object.keys(JSON.parse(localStorage.getItem('koon_local_quiz_subjects') || '{}'));
-            } catch { /* Ignore malformed local quiz data. */ }
+            const dynamicSubjects = snapshot.docs ? snapshot.docs.map(quizDoc => quizDoc.id) : [];
 
+            // Firestore is the live source of truth for quiz subjects.
+            // Local storage is only kept as a last-resort fallback if the network is unavailable.
             const subjectIds = new Set([
                 ...quizCategories.map(category => category.id),
                 ...dynamicSubjects,
-                ...localParts,
             ]);
             setHeroQuizzesCount(subjectIds.size);
         };

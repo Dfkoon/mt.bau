@@ -10,7 +10,15 @@ const Navbar = ({ toggleSidebar }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isStaffLogged, setIsStaffLogged] = useState(false);
 
-  const { t, language } = useLanguage();
+  let languageContext = null;
+  try {
+    languageContext = useLanguage();
+  } catch (e) {
+    console.warn('Navbar: LanguageContext not found, using defaults');
+    languageContext = { t: (key) => key, language: 'ar' };
+  }
+
+  const { t, language } = languageContext;
   const location = useLocation();
   const isAr = language === 'ar';
 

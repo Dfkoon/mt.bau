@@ -336,6 +336,12 @@ const renderCategoryIcon = (icon) => {
     return icon;
 };
 
+const normalizeQuizId = (value) => String(value ?? '')
+    .normalize('NFKC')
+    .trim()
+    .toLocaleLowerCase()
+    .replace(/[\s_-]+/g, '');
+
 const Quiz = () => {
     const { language, t } = useLanguage();
     const { quizId } = useParams();
@@ -365,13 +371,15 @@ const Quiz = () => {
     const [dbParts, setDbParts] = useState([]);
     const [dbPartsLoaded, setDbPartsLoaded] = useState(false);
     const [dbCurrentQuestions, setDbCurrentQuestions] = useState([]);
+    const [dbCurrentQuestionsLoaded, setDbCurrentQuestionsLoaded] = useState(false);
     const [dbSubjectQuestions, setDbSubjectQuestions] = useState([]);
 
     // AI grading for essay / short-answer questions
     const [aiGrading, setAiGrading] = useState(false);
     const [aiGradingResults, setAiGradingResults] = useState({});
 
-    // Load custom subjects and parts from Firestore (with localStorage fallback)
+    // Firestore is the authoritative source for quiz subjects/parts.
+    // Local storage is retained only as a last-resort offline fallback if Firestore is unavailable.
     useEffect(() => {
         const getLocalSubs = () => {
             try {
@@ -389,12 +397,7 @@ const Quiz = () => {
         const unsubSubjects = onSnapshot(collection(db, 'quiz_subjects'), (snap) => {
             const cloudList = [];
             snap.forEach(d => cloudList.push(d.data()));
-            const localSubs = getLocalSubs();
-            const combined = [...cloudList];
-            localSubs.forEach(ls => {
-                if (!combined.some(c => c.id === ls.id)) combined.push(ls);
-            });
-            setDbSubjects(combined);
+            setDbSubjects(cloudList);
         }, (err) => {
             console.warn('Quiz.jsx: quiz_subjects fetch warning:', err?.message);
             setDbSubjects(getLocalSubs());
@@ -403,12 +406,7 @@ const Quiz = () => {
         const unsubParts = onSnapshot(collection(db, 'quiz_parts'), (snap) => {
             const cloudList = [];
             snap.forEach(d => cloudList.push({ ...d.data(), fromDb: true }));
-            const localParts = getLocalParts();
-            const combined = [...cloudList];
-            localParts.forEach(lp => {
-                if (!combined.some(c => c.id === lp.id)) combined.push({ ...lp, fromDb: true });
-            });
-            setDbParts(combined);
+            setDbParts(cloudList);
             setDbPartsLoaded(true);
         }, (err) => {
             console.warn('Quiz.jsx: quiz_parts fetch warning:', err?.message);
@@ -439,10 +437,11 @@ const Quiz = () => {
         return () => unsubEdits();
     }, [quizId]);
 
-    // Load dynamic questions for the current quizId
+    // Load dynamic questions for the current quizId. Firestore is the authoritative source.
     useEffect(() => {
         if (!quizId) {
             setDbCurrentQuestions([]);
+            setDbCurrentQuestionsLoaded(true);
             return;
         }
 
@@ -450,30 +449,33 @@ const Quiz = () => {
             try {
                 const raw = localStorage.getItem('koon_local_quiz_questions');
                 if (!raw) return [];
-                return Object.values(JSON.parse(raw)).filter(q => q.partId === quizId);
+                return Object.values(JSON.parse(raw)).filter(q => normalizeQuizId(q.partId) === normalizeQuizId(quizId));
             } catch (e) { return []; }
         };
 
-        const q = query(collection(db, 'quiz_questions'), where('partId', '==', quizId));
-        const unsubCurrentQs = onSnapshot(q, (snap) => {
+        setDbCurrentQuestionsLoaded(false);
+
+        const unsubCurrentQs = onSnapshot(collection(db, 'quiz_questions'), (snap) => {
             const list = [];
-            snap.forEach(d => list.push(d.data()));
-            const localQs = getLocalCurrentQs();
-            localQs.forEach(lq => {
-                if (!list.some(qItem => String(qItem.id) === String(lq.id))) {
-                    list.push(lq);
+            snap.forEach(d => {
+                const q = { ...d.data(), firestoreId: d.id };
+                const questionPartId = q.partId || q.quizId || d.id.split('_')[0];
+                if (normalizeQuizId(questionPartId) === normalizeQuizId(quizId)) {
+                    list.push({ ...q, partId: questionPartId });
                 }
             });
             setDbCurrentQuestions(list);
+            setDbCurrentQuestionsLoaded(true);
         }, (err) => {
             console.warn('Quiz.jsx: dbCurrentQuestions fetch warning:', err?.message);
             setDbCurrentQuestions(getLocalCurrentQs());
+            setDbCurrentQuestionsLoaded(true);
         });
 
         return () => unsubCurrentQs();
     }, [quizId]);
 
-    // Merge base quiz categories (static) with custom subjects & parts from DB and local storage
+    // Merge base quiz categories (static) with custom subjects & parts from the live Firestore dataset.
     const mergedCategories = useMemo(() => {
         const getLocalPartsMap = () => {
             try {
@@ -511,17 +513,6 @@ const Quiz = () => {
                 }
             });
 
-            // 2. Merge local storage parts for this subject
-            Object.values(localPartsObj).forEach(lp => {
-                if (isMatchingSubject(lp.subjectId, cat.id)) {
-                    if (partsMap.has(lp.id)) {
-                        partsMap.set(lp.id, { ...partsMap.get(lp.id), ...lp });
-                    } else if (!lp.hidden && !lp.deleted) {
-                        partsMap.set(lp.id, { ...lp, fromDb: true });
-                    }
-                }
-            });
-
             const finalParts = Array.from(partsMap.values()).filter(p => !p.hidden && !p.deleted);
             return {
                 ...baseCat,
@@ -538,19 +529,6 @@ const Quiz = () => {
             }
         });
 
-        // Also directly read localStorage to ensure offline-added subjects always show
-        try {
-            const raw = localStorage.getItem('koon_local_quiz_subjects');
-            if (raw) {
-                Object.values(JSON.parse(raw)).forEach(lSub => {
-                    if (!cats.some(c => isMatchingSubject(c, lSub))) {
-                        const localParts = Object.values(localPartsObj).filter(p => isMatchingSubject(p.subjectId, lSub.id) && !p.hidden && !p.deleted);
-                        cats.push({ ...lSub, parts: localParts });
-                    }
-                });
-            }
-        } catch (e) {}
-
         return cats.filter(cat => !cat.deleted && !cat.hidden);
     }, [dbSubjects, dbParts]);
 
@@ -560,7 +538,7 @@ const Quiz = () => {
         return mergedCategories.find(c => String(c.id).toLowerCase() === String(selectedCategory.id).toLowerCase()) || selectedCategory;
     }, [selectedCategory, mergedCategories]);
 
-    // Load all questions from Firestore and localStorage (to count questions per part on subject landing page)
+    // Load all questions from Firestore. Local storage is only used as an offline fallback on failure.
     useEffect(() => {
         const getLocalQs = () => {
             try {
@@ -572,12 +550,6 @@ const Quiz = () => {
         const unsubAllQuestions = onSnapshot(collection(db, 'quiz_questions'), (snap) => {
             const list = [];
             snap.forEach(d => list.push(d.data()));
-            const localQs = getLocalQs();
-            localQs.forEach(lq => {
-                if (!list.some(qItem => String(qItem.id) === String(lq.id) && qItem.partId === lq.partId)) {
-                    list.push(lq);
-                }
-            });
             setDbSubjectQuestions(list);
         }, (err) => {
             console.warn('Quiz.jsx: quiz_questions snapshot warning:', err?.message);
@@ -594,12 +566,14 @@ const Quiz = () => {
     const currentQuiz = useMemo(() => {
         if (!quizId) return null;
 
+        const normalizedQuizId = normalizeQuizId(quizId);
+
         // Priority 1: Check if quizId matches a DB part (leaf quiz) — do this FIRST
         // This prevents a part ID accidentally matching a subject in mergedCategories
-        const dbPartInfo = dbParts.find(p => p.id === quizId);
+        const dbPartInfo = dbParts.find(p => normalizeQuizId(p.id) === normalizedQuizId);
 
         // Priority 2: Check static merged categories (subjects) — only if quizId is NOT a DB part
-        const matchedCat = !dbPartInfo ? mergedCategories.find(c => c.id === quizId) : null;
+        const matchedCat = !dbPartInfo ? mergedCategories.find(c => normalizeQuizId(c.id) === normalizedQuizId) : null;
 
         let baseQuiz = null;
 
@@ -618,12 +592,14 @@ const Quiz = () => {
         } else if (quizData[quizId]) {
             // It's a static quiz from quizData
             baseQuiz = { ...quizData[quizId] };
+        } else if (quizData[normalizedQuizId]) {
+            baseQuiz = { ...quizData[normalizedQuizId] };
         } else {
             // Check if it matches a part inside any category of mergedCategories (e.g. static part with no static questions but has dynamic questions)
             let foundPart = null;
             for (const cat of mergedCategories) {
                 if (cat.parts) {
-                    const p = cat.parts.find(part => part.id === quizId);
+                    const p = cat.parts.find(part => normalizeQuizId(part.id) === normalizedQuizId);
                     if (p) {
                         foundPart = p;
                         break;
@@ -643,7 +619,7 @@ const Quiz = () => {
                 // Last resort: check in subParts of grouped parts
                 for (const p of dbParts) {
                     if (p.isGroup && p.subParts) {
-                        const subPart = p.subParts.find(sp => sp.id === quizId);
+                        const subPart = p.subParts.find(sp => normalizeQuizId(sp.id) === normalizedQuizId);
                         if (subPart) {
                             baseQuiz = {
                                 ...subPart,
@@ -1158,14 +1134,34 @@ const Quiz = () => {
         }
     };
 
+    const staticQuizExists = !!(quizId && (quizData[quizId] || quizData[normalizeQuizId(quizId)]));
+
     // If quizId is set but quiz hasn't resolved yet (dbParts still loading) — show spinner
-    if (quizId && !currentQuiz && !dbPartsLoaded) {
+    if (quizId && !currentQuiz && !dbPartsLoaded && !staticQuizExists) {
         return (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '1rem' }}>
                 <div style={{ width: 52, height: 52, border: '5px solid #e0e0e0', borderTop: '5px solid #9c27b0', borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
                 <p style={{ color: '#9c27b0', fontWeight: 600, fontSize: '1.1rem' }}>
                     {language === 'ar' ? 'جارٍ تحميل الاختبار…' : 'Loading quiz…'}
                 </p>
+            </div>
+        );
+    }
+
+    if (quizId && !currentQuiz) {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', gap: '1rem', textAlign: 'center', padding: '2rem' }}>
+                <div style={{ fontSize: '2.5rem' }}>😕</div>
+                <h3 style={{ margin: 0, color: '#1f2937' }}>
+                    {language === 'ar' ? 'لم يتم العثور على الاختبار المطلوب' : 'The requested quiz was not found'}
+                </h3>
+                <button
+                    className="clear-results-btn"
+                    onClick={() => navigate('/quiz')}
+                    style={{ marginTop: '0.5rem' }}
+                >
+                    {language === 'ar' ? 'العودة إلى الاختبارات' : 'Back to quizzes'}
+                </button>
             </div>
         );
     }
@@ -1391,48 +1387,48 @@ const Quiz = () => {
                         {/* ── Smart Performance Analysis Card ── */}
                         {(() => {
                             const correct = score;
-                            const wrong   = Object.keys(userAnswers).filter(qid => {
+                            const wrong = Object.keys(userAnswers).filter(qid => {
                                 const q = currentQuiz.questions.find(x => x.id === qid);
                                 return q && userAnswers[qid] !== undefined && userAnswers[qid] !== q.correctAnswer;
                             }).length;
                             const skipped = totalQuestions - Object.keys(userAnswers).length;
-                            const pct     = Math.round(percentage);
-                            const msgAr   = pct >= 90 ? '🏆 ممتاز! أداء رائع جداً — استمر بهذا المستوى!'
-                                          : pct >= 75 ? '🌟 جيد جداً! أنت على المسار الصحيح.'
-                                          : pct >= 50 ? '💪 جيد! قليل من المراجعة وسوف تصل للقمة.'
-                                          : '📚 لا تستسلم! راجع الأسئلة الخاطئة وحاول مجدداً.';
-                            const msgEn   = pct >= 90 ? '🏆 Excellent! Outstanding performance — keep it up!'
-                                          : pct >= 75 ? '🌟 Very Good! You are on the right track.'
-                                          : pct >= 50 ? "💪 Good! A bit more review and you'll reach the top."
-                                          : '📚 Keep going! Review the wrong answers and try again.';
+                            const pct = Math.round(percentage);
+                            const msgAr = pct >= 90 ? '🏆 ممتاز! أداء رائع جداً — استمر بهذا المستوى!'
+                                : pct >= 75 ? '🌟 جيد جداً! أنت على المسار الصحيح.'
+                                    : pct >= 50 ? '💪 جيد! قليل من المراجعة وسوف تصل للقمة.'
+                                        : '📚 لا تستسلم! راجع الأسئلة الخاطئة وحاول مجدداً.';
+                            const msgEn = pct >= 90 ? '🏆 Excellent! Outstanding performance — keep it up!'
+                                : pct >= 75 ? '🌟 Very Good! You are on the right track.'
+                                    : pct >= 50 ? "💪 Good! A bit more review and you'll reach the top."
+                                        : '📚 Keep going! Review the wrong answers and try again.';
                             const barColor = pct >= 75 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#e02b20';
                             return (
-                                <div className="no-print" style={{ margin:'1.5rem 0', padding:'20px 24px', borderRadius:'14px', background:'linear-gradient(135deg,rgba(156,39,176,0.06),rgba(233,30,99,0.04))', border:'1px solid rgba(156,39,176,0.15)' }}>
-                                    <h4 style={{ fontWeight:800, fontSize:'1rem', marginBottom:'16px' }}>
+                                <div className="no-print" style={{ margin: '1.5rem 0', padding: '20px 24px', borderRadius: '14px', background: 'linear-gradient(135deg,rgba(156,39,176,0.06),rgba(233,30,99,0.04))', border: '1px solid rgba(156,39,176,0.15)' }}>
+                                    <h4 style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '16px' }}>
                                         📊 {language === 'ar' ? 'تحليل أدائك' : 'Performance Analysis'}
                                     </h4>
-                                    <div style={{ marginBottom:'16px' }}>
-                                        <div style={{ display:'flex', justifyContent:'space-between', fontSize:'0.8rem', fontWeight:700, marginBottom:'6px', opacity:0.7 }}>
+                                    <div style={{ marginBottom: '16px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 700, marginBottom: '6px', opacity: 0.7 }}>
                                             <span>{language === 'ar' ? 'النتيجة الإجمالية' : 'Overall Score'}</span>
-                                            <span style={{ color:barColor, fontWeight:900 }}>{pct}%</span>
+                                            <span style={{ color: barColor, fontWeight: 900 }}>{pct}%</span>
                                         </div>
-                                        <div style={{ height:'10px', borderRadius:'50px', background:'rgba(0,0,0,0.08)', overflow:'hidden' }}>
-                                            <div style={{ height:'100%', width:`${pct}%`, borderRadius:'50px', background:`linear-gradient(90deg,${barColor},${barColor}cc)`, transition:'width 0.8s ease', boxShadow:`0 0 10px ${barColor}66` }} />
+                                        <div style={{ height: '10px', borderRadius: '50px', background: 'rgba(0,0,0,0.08)', overflow: 'hidden' }}>
+                                            <div style={{ height: '100%', width: `${pct}%`, borderRadius: '50px', background: `linear-gradient(90deg,${barColor},${barColor}cc)`, transition: 'width 0.8s ease', boxShadow: `0 0 10px ${barColor}66` }} />
                                         </div>
                                     </div>
-                                    <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'10px', marginBottom:'16px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '10px', marginBottom: '16px' }}>
                                         {[
-                                            { label: language==='ar'?'✅ صحيح':'✅ Correct',  val:correct, color:'#10b981', bg:'rgba(16,185,129,0.08)'   },
-                                            { label: language==='ar'?'❌ خاطئ':'❌ Wrong',    val:wrong,   color:'#e02b20', bg:'rgba(224,43,32,0.08)'    },
-                                            { label: language==='ar'?'⏭️ متروك':'⏭️ Skipped',val:skipped, color:'#9ca3af', bg:'rgba(156,163,175,0.08)'  },
-                                        ].map((s,i) => (
-                                            <div key={i} style={{ textAlign:'center', padding:'10px 6px', borderRadius:'10px', background:s.bg, border:`1px solid ${s.color}22` }}>
-                                                <div style={{ fontSize:'1.5rem', fontWeight:900, color:s.color }}>{s.val}</div>
-                                                <div style={{ fontSize:'0.72rem', fontWeight:700, opacity:0.7, marginTop:'2px' }}>{s.label}</div>
+                                            { label: language === 'ar' ? '✅ صحيح' : '✅ Correct', val: correct, color: '#10b981', bg: 'rgba(16,185,129,0.08)' },
+                                            { label: language === 'ar' ? '❌ خاطئ' : '❌ Wrong', val: wrong, color: '#e02b20', bg: 'rgba(224,43,32,0.08)' },
+                                            { label: language === 'ar' ? '⏭️ متروك' : '⏭️ Skipped', val: skipped, color: '#9ca3af', bg: 'rgba(156,163,175,0.08)' },
+                                        ].map((s, i) => (
+                                            <div key={i} style={{ textAlign: 'center', padding: '10px 6px', borderRadius: '10px', background: s.bg, border: `1px solid ${s.color}22` }}>
+                                                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: s.color }}>{s.val}</div>
+                                                <div style={{ fontSize: '0.72rem', fontWeight: 700, opacity: 0.7, marginTop: '2px' }}>{s.label}</div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div style={{ padding:'10px 14px', borderRadius:'10px', background:`${barColor}11`, border:`1px solid ${barColor}33`, fontSize:'0.88rem', fontWeight:700, color:barColor }}>
+                                    <div style={{ padding: '10px 14px', borderRadius: '10px', background: `${barColor}11`, border: `1px solid ${barColor}33`, fontSize: '0.88rem', fontWeight: 700, color: barColor }}>
                                         {language === 'ar' ? msgAr : msgEn}
                                     </div>
                                 </div>
@@ -1474,9 +1470,9 @@ const Quiz = () => {
                                             });
                                             isCorrect = correctCount === subQuestions.length;
                                             earnedMarks = (correctCount / (subQuestions.length || 1)) * (q.marks || 1.00);
-                                            statusText = isCorrect 
-                                                ? (language === 'ar' ? 'صحيح' : 'Correct') 
-                                                : correctCount > 0 
+                                            statusText = isCorrect
+                                                ? (language === 'ar' ? 'صحيح' : 'Correct')
+                                                : correctCount > 0
                                                     ? (language === 'ar' ? 'صحيح جزئياً' : 'Partially correct')
                                                     : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
                                         } else if (q.type === 'multi_select') {
@@ -1492,9 +1488,9 @@ const Quiz = () => {
                                             }
                                             earnedMarks = earned;
                                             isCorrect = earned === qMarks;
-                                            statusText = earned === qMarks 
-                                                ? (language === 'ar' ? 'صحيح' : 'Correct') 
-                                                : earned > 0 
+                                            statusText = earned === qMarks
+                                                ? (language === 'ar' ? 'صحيح' : 'Correct')
+                                                : earned > 0
                                                     ? (language === 'ar' ? 'صحيح جزئياً' : 'Partially correct')
                                                     : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
                                         } else if (q.type === 'text' || q.type === 'short_answer' || q.type === 'fill') {
@@ -1656,8 +1652,8 @@ const Quiz = () => {
                                                                     const isCorrectOption = correct.includes(o.id);
                                                                     const labelClass = isSelected && isCorrectOption ? 'moodle-correct-text'
                                                                         : isSelected && !isCorrectOption ? 'moodle-wrong-text'
-                                                                        : !isSelected && isCorrectOption ? 'moodle-correct-text'
-                                                                        : '';
+                                                                            : !isSelected && isCorrectOption ? 'moodle-correct-text'
+                                                                                : '';
                                                                     return (
                                                                         <div key={o.id} className="moodle-radio-display">
                                                                             <input type="checkbox" checked={isSelected} readOnly style={{ accentColor: '#6366f1' }} />
@@ -1962,14 +1958,31 @@ const Quiz = () => {
         const isArabicContent = subjectLangMode === 'ar';
         const displayLang = isEnglishContent ? 'en' : isArabicContent ? 'ar' : language;
 
-        // Guard: questions may not be loaded yet (Firebase async)
-        if (!question) {
+        // Guard: questions may not be loaded yet (Firebase async). Only keep a loading state when
+        // the quiz has no known cached/static data for the current question set. This avoids the
+        // refresh flicker caused by Firestore snapshots arriving after the page is already ready.
+        const hasKnownQuestionPayload = Boolean(currentQuiz?.questions?.length) || dbCurrentQuestions.length > 0;
+        if (!question && !dbCurrentQuestionsLoaded && !hasKnownQuestionPayload) {
             return (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '1rem' }}>
                     <div className="loading-spinner" style={{ width: 48, height: 48, border: '4px solid #e0e0e0', borderTop: '4px solid #9c27b0', borderRadius: '50%', animation: 'spin 0.9s linear infinite' }} />
                     <p style={{ color: '#9c27b0', fontWeight: 600, fontSize: '1.1rem' }}>
                         {language === 'ar' ? 'جارٍ تحميل الأسئلة…' : 'Loading questions…'}
                     </p>
+                </div>
+            );
+        }
+
+        if (!question) {
+            return (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '1rem', textAlign: 'center', padding: '2rem' }}>
+                    <div style={{ fontSize: '2.5rem' }}>📭</div>
+                    <h3 style={{ margin: 0, color: '#1f2937' }}>
+                        {language === 'ar' ? 'لا توجد أسئلة في هذا الاختبار حالياً' : 'There are no questions in this quiz yet'}
+                    </h3>
+                    <button className="clear-results-btn" onClick={() => navigate('/quiz')} style={{ marginTop: '0.5rem' }}>
+                        {language === 'ar' ? 'العودة إلى الاختبارات' : 'Back to quizzes'}
+                    </button>
                 </div>
             );
         }
@@ -2037,9 +2050,9 @@ const Quiz = () => {
 
                         {/* ── Quiz Progress Bar ── */}
                         {(() => {
-                            const total     = currentQuiz.questions.length;
-                            const answered  = Object.keys(userAnswers).length;
-                            const pct       = total > 0 ? Math.round((answered / total) * 100) : 0;
+                            const total = currentQuiz.questions.length;
+                            const answered = Object.keys(userAnswers).length;
+                            const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
                             return (
                                 <div className="quiz-top-progress-wrap no-print">
                                     <div className="quiz-top-progress-meta">
@@ -2177,7 +2190,7 @@ const Quiz = () => {
                                             boxShadow: quizNotes[question.id] && quizNotes[question.id].trim() ? '0 2px 8px rgba(211, 47, 47, 0.3)' : 'none'
                                         }}
                                     >
-                                         {language === 'ar' ? 'إرسال الملاحظ مع البلاغ' : 'Send Note with Report'}
+                                        {language === 'ar' ? 'إرسال الملاحظ مع البلاغ' : 'Send Note with Report'}
                                     </button>
                                 </div>
                             </div>
@@ -2399,7 +2412,7 @@ const Quiz = () => {
                                                         background: '#fff',
                                                         color: '#212529',
                                                         fontSize: '0.95rem'
-                                                     }}
+                                                    }}
                                                 />
                                                 {question.correctAnswer && showResults && (
                                                     <div style={{ color: '#495057', fontSize: '0.95rem' }}>
@@ -2450,7 +2463,7 @@ const Quiz = () => {
                             </div>
                         </div>
 
-                                                 <div className="quiz-footer moodle-quiz-footer no-print">
+                        <div className="quiz-footer moodle-quiz-footer no-print">
                             <div className="footer-controls">
                                 <button
                                     className="nav-btn exit-quiz-btn"
@@ -2782,9 +2795,9 @@ const Quiz = () => {
                             <div className="quiz-categories-grid">
                                 {[...filteredCategories].reverse().map(category => {
                                     const staticQCount = quizData[category.id]?.questions?.length || 0;
-                                    const dynamicQCount = dbSubjectQuestions.filter(q => 
+                                    const dynamicQCount = dbSubjectQuestions.filter(q =>
                                         (String(q.subjectId || '').trim().toLowerCase() === String(category.id || '').trim().toLowerCase() ||
-                                         String(q.partId || '').trim().toLowerCase() === String(category.id || '').trim().toLowerCase()) &&
+                                            String(q.partId || '').trim().toLowerCase() === String(category.id || '').trim().toLowerCase()) &&
                                         !q.deleted
                                     ).length;
                                     const totalQCount = staticQCount + dynamicQCount;

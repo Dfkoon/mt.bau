@@ -44,7 +44,11 @@ export default defineConfig(({ command }) => ({
       },
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,ttf}'],
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024
+        globIgnores: [
+          '**/*.{jpg,jpeg,gif,webp,avif,mp4,mov,webm,mp3,wav,ogg,zip,rar,pdf}',
+          '**/assets/**/*.{jpg,jpeg,gif,webp,avif,mp4,mov,webm}'
+        ],
+        maximumFileSizeToCacheInBytes: 7 * 1024 * 1024
       },
       devOptions: {
         enabled: false
