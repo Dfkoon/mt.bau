@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 import FileUploader from '../components/FileUploader';
-import SmartAdvisor from '../components/SmartAdvisor';
 import toast from 'react-hot-toast';
 import './AcademicPlans.css';
 
@@ -787,9 +786,6 @@ const AcademicPlans = () => {
                     </div>
                 </div>
             </section>
-
-            {/* Smart Advisor Section */}
-            <SmartAdvisor />
 
             {/* Info Banner */}
             <div className="info-banner glass-card" style={{ marginTop: '5rem' }}>

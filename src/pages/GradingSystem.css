@@ -276,8 +276,8 @@
 }
 
 .comparison-table .diff-val {
-    color: #ffffff;
-    font-weight: 600;
+    color: var(--primary) !important;
+    font-weight: 800;
 }
 
 .new-weight-header {

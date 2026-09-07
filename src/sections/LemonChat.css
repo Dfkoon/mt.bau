@@ -304,6 +304,27 @@
     gap: 6px;
 }
 
+.chat-calendar-results {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+}
+
+.chat-calendar-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 10px;
+    background: rgba(var(--primary-rgb), 0.06);
+    color: var(--text-main);
+}
+
+.chat-calendar-item strong {
+    color: var(--primary);
+    white-space: nowrap;
+}
+
 [data-theme="light"] .chat-action-btn {
     background: #f8f9fa;
 }

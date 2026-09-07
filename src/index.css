@@ -2,6 +2,7 @@
 
 
 :root {
+  --site-font: 'IBM Plex Sans Arabic', sans-serif;
   --primary: #d32f2f;
   --primary-rgb: 211, 47, 47;
   --primary-light: #ff6659;
@@ -53,7 +54,27 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Tajawal', 'Outfit', sans-serif;
+  font-family: var(--site-font) !important;
+}
+
+body,
+button,
+input,
+textarea,
+select,
+option {
+  font-family: var(--site-font) !important;
+}
+
+code,
+pre,
+kbd,
+samp,
+code *,
+pre *,
+kbd *,
+samp * {
+  font-family: monospace !important;
 }
 
 /* ── Global Autofill Fix ──────────────────────────────────────────────

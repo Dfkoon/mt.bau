@@ -30,14 +30,14 @@ const translations = {
 
         // Academic Calendar Page
         'calendar.hero.title': 'التقويم الأكاديمي',
-        'calendar.hero.subtitle': 'التقويم الجامعي 2026/2025 - جامعة البلقاء التطبيقيةة',
+        'calendar.hero.subtitle': 'التقويم الجامعي 2026/2027 - جامعة البلقاء التطبيقية',
         'calendar.hero.note': 'وحدة القبول والتسجيل',
         'calendar.stats.total': 'إجمالي الأحداث',
         'calendar.stats.exams': 'امتحانات',
         'calendar.stats.holidays': 'عطل رسمية',
         'calendar.stats.deadlines': 'مواعيد نهائية',
-        'calendar.upcoming.title': '🔔 أحداث قادمة قريباً',
-        'calendar.search.placeholder': 'ابحث عن حدث أو تاريخخ...',
+        'calendar.upcoming.title': 'أحداث قادمة قريباً',
+        'calendar.search.placeholder': 'ابحث عن حدث أو تاريخ...',
         'calendar.actions.print': 'طباعة التقويم',
         'calendar.filters.all': 'الكل',
         'calendar.filters.exams': 'امتحانات',
@@ -45,7 +45,7 @@ const translations = {
         'calendar.filters.deadlines': 'مواعيد هامة',
         'calendar.no_results.title': 'لم يتم العثور على نتائج',
         'calendar.no_results.text': 'جرب تغيير خيارات البحث أو الفلتر',
-        'calendar.note.title': '📌 ملاحظة',
+        'calendar.note.title': 'ملاحظة',
         'calendar.note.text': '* تحدد أيام السبت لمناقشة مشاريع التخرج.\nالتواريخ المذكورة قابلة للتعديل حسب الظروف الطارئة.',
 
         // Quiz Page
@@ -378,13 +378,13 @@ const translations = {
 
         // Academic Calendar Page
         'calendar.hero.title': 'Academic Calendar',
-        'calendar.hero.subtitle': 'University Calendar 2025/2026 - Al-Balqa Applied University',
+        'calendar.hero.subtitle': 'University Calendar 2026/2027 - Al-Balqa Applied University',
         'calendar.hero.note': 'Admissions and Registration Unit',
         'calendar.stats.total': 'Total Events',
         'calendar.stats.exams': 'Exams',
         'calendar.stats.holidays': 'Official Holidays',
         'calendar.stats.deadlines': 'Deadlines',
-        'calendar.upcoming.title': '🔔 Upcoming Events',
+        'calendar.upcoming.title': 'Upcoming Events',
         'calendar.search.placeholder': 'Search for event or date...',
         'calendar.actions.print': 'Print Calendar',
         'calendar.filters.all': 'All',
@@ -393,7 +393,7 @@ const translations = {
         'calendar.filters.deadlines': 'Deadlines',
         'calendar.no_results.title': 'No results found',
         'calendar.no_results.text': 'Try changing search or filter options',
-        'calendar.note.title': '📌 Important Note',
+        'calendar.note.title': 'Important Note',
         'calendar.note.text': '* Saturdays are designated for graduation project discussions.\nThe dates mentioned are subject to change according to emergency circumstances.',
 
         // Quiz Page

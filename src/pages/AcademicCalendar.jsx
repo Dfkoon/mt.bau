@@ -6,12 +6,26 @@ import './AcademicCalendar.css';
 
 const AcademicCalendar = () => {
     const { language, t } = useLanguage();
-    const [selectedSemester, setSelectedSemester] = useState('summerSemester');
+    const [selectedSemester, setSelectedSemester] = useState('firstSemester');
     const [searchQuery, setSearchQuery] = useState('');
     const [filterType, setFilterType] = useState('all'); // all, exams, holidays, deadlines
-    const [viewMode, setViewMode] = useState('list'); // list, grid
 
     const currentSemester = academicCalendarData[selectedSemester];
+
+    const eventTypeLabels = {
+        ar: {
+            academic: 'أكاديمي',
+            exam: 'امتحان',
+            holiday: 'عطلة',
+            deadline: 'موعد مهم'
+        },
+        en: {
+            academic: 'Academic',
+            exam: 'Exam',
+            holiday: 'Holiday',
+            deadline: 'Important date'
+        }
+    };
 
     // Helper to parse date string for comparison (simplified)
     const parseEventDate = (dateStr) => {
@@ -59,17 +73,6 @@ const AcademicCalendar = () => {
         });
     }, [currentSemester, searchQuery, filterType, language]);
 
-    // Statistics
-    const stats = useMemo(() => {
-        if (!currentSemester) return { total: 0, exams: 0, holidays: 0, deadlines: 0 };
-        return {
-            total: currentSemester.events.length,
-            exams: currentSemester.events.filter(e => e.type === 'exam').length,
-            holidays: currentSemester.events.filter(e => e.type === 'holiday').length,
-            deadlines: currentSemester.events.filter(e => e.type === 'deadline').length
-        };
-    }, [currentSemester]);
-
     // Upcoming Events (Top 3)
     const upcomingEvents = useMemo(() => {
         if (!currentSemester) return [];
@@ -92,7 +95,7 @@ const AcademicCalendar = () => {
             <section className="calendar-hero" style={{ backgroundImage: `url(${calendarHero})` }}>
                 <div className="hero-overlay"></div>
                 <div className="hero-content">
-                    <h1 className="hero-title">{t('calendar.hero.title')} 📅</h1>
+                    <h1 className="hero-title">{t('calendar.hero.title')}</h1>
                     <p className="hero-subtitle">
                         {t('calendar.hero.subtitle')}
                     </p>
@@ -100,45 +103,12 @@ const AcademicCalendar = () => {
                 </div>
             </section>
 
-            {/* Statistics Cards */}
-            <div className="statistics-container">
-                <div className="stat-card premium-card" data-aos="fade-up" data-aos-delay="100">
-                    <div className="stat-icon-wrapper">📊</div>
-                    <div className="stat-info">
-                        <div className="stat-value">{stats.total}</div>
-                        <div className="stat-label">{t('calendar.stats.total')}</div>
-                    </div>
-                </div>
-                <div className="stat-card premium-card" data-aos="fade-up" data-aos-delay="200">
-                    <div className="stat-icon-wrapper">📝</div>
-                    <div className="stat-info">
-                        <div className="stat-value">{stats.exams}</div>
-                        <div className="stat-label">{t('calendar.stats.exams')}</div>
-                    </div>
-                </div>
-                <div className="stat-card premium-card" data-aos="fade-up" data-aos-delay="300">
-                    <div className="stat-icon-wrapper">🎉</div>
-                    <div className="stat-info">
-                        <div className="stat-value">{stats.holidays}</div>
-                        <div className="stat-label">{t('calendar.stats.holidays')}</div>
-                    </div>
-                </div>
-                <div className="stat-card premium-card" data-aos="fade-up" data-aos-delay="400">
-                    <div className="stat-icon-wrapper">⏰</div>
-                    <div className="stat-info">
-                        <div className="stat-value">{stats.deadlines}</div>
-                        <div className="stat-label">{t('calendar.stats.deadlines')}</div>
-                    </div>
-                </div>
-            </div>
-
             {/* Central Control Dashboard */}
             <div className="control-dashboard glass-card" data-aos="fade-up">
                 {/* Upcoming Quick View */}
                 {upcomingEvents.length > 0 && (
                     <div className="quick-upcoming">
                         <div className="quick-header">
-                            <span className="pulse-icon">🔔</span>
                             <h4>{t('calendar.upcoming.title')}</h4>
                         </div>
                         <div className="quick-events-track">
@@ -156,7 +126,6 @@ const AcademicCalendar = () => {
 
                 <div className="dashboard-main-controls">
                     <div className="search-box">
-                        <span className="search-icon-glass">🔍</span>
                         <input
                             type="text"
                             placeholder={t('calendar.search.placeholder')}
@@ -187,24 +156,8 @@ const AcademicCalendar = () => {
                     </div>
 
                     <div className="view-actions">
-                        <div className="view-switch">
-                            <button
-                                className={`view-mode-btn ${viewMode === 'list' ? 'active' : ''}`}
-                                onClick={() => setViewMode('list')}
-                                title={t('calendar.view.list')}
-                            >
-                                📋
-                            </button>
-                            <button
-                                className={`view-mode-btn ${viewMode === 'grid' ? 'active' : ''}`}
-                                onClick={() => setViewMode('grid')}
-                                title={t('calendar.view.grid')}
-                            >
-                                📅
-                            </button>
-                        </div>
-                        <button className="icon-action-btn print-btn" onClick={handlePrint} title={t('calendar.actions.print')}>
-                            🖨️
+                        <button className="print-btn" onClick={handlePrint} title={t('calendar.actions.print')}>
+                            {language === 'ar' ? 'طباعة التقويم' : 'Print calendar'}
                         </button>
                     </div>
                 </div>
@@ -223,7 +176,6 @@ const AcademicCalendar = () => {
                         }}
                         style={{ '--accent-color': semester.color }}
                     >
-                        <span className="nav-icon">{semester.icon}</span>
                         <span className="nav-text">
                             {language === 'ar' ? semester.name : (semester.nameEn || semester.name)}
                         </span>
@@ -240,54 +192,46 @@ const AcademicCalendar = () => {
 
                 {filteredEvents.length === 0 ? (
                     <div className="no-results">
-                        <span className="no-results-icon">📭</span>
                         <h3>{t('calendar.no_results.title')}</h3>
                         <p>{t('calendar.no_results.text')}</p>
                     </div>
                 ) : (
-                    <>
-                        {viewMode === 'list' ? (
-                            <div className="events-timeline">
+                    <div className="calendar-table-wrap">
+                        <table className="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>{language === 'ar' ? 'التاريخ' : 'Date'}</th>
+                                    <th>{language === 'ar' ? 'اليوم' : 'Day'}</th>
+                                    <th>{language === 'ar' ? 'نوع الحدث' : 'Type'}</th>
+                                    <th>{language === 'ar' ? 'الحدث' : 'Event'}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {filteredEvents.map((event, index) => (
-                                    <div key={index} className="event-card glass-card">
-                                        <div className="event-date-badge" style={{ '--event-color': currentSemester.color }}>
-                                            <div className="date-text">{event.date}</div>
-                                            <div className="day-text">
-                                                {language === 'ar' ? event.day : (event.dayEn || event.day)}
-                                            </div>
-                                        </div>
-                                        <div className="event-content">
-                                            <p className="event-description">
-                                                {language === 'ar' ? event.event : (event.eventEn || event.event)}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="calendar-grid">
-                                {filteredEvents.map((event, index) => (
-                                    <div key={index} className="calendar-event-card glass-card">
-                                        <div className="calendar-event-date" style={{ color: currentSemester.color }}>
-                                            {event.date}
-                                        </div>
-                                        <div className="calendar-event-day">
+                                    <tr key={`${event.date}-${index}`}>
+                                        <td className="calendar-table-date">{event.date}</td>
+                                        <td className="calendar-table-day">
                                             {language === 'ar' ? event.day : (event.dayEn || event.day)}
-                                        </div>
-                                        <p className="calendar-event-text">
+                                        </td>
+                                        <td>
+                                            <span className={`event-type event-type-${event.type}`}>
+                                                {eventTypeLabels[language]?.[event.type] || eventTypeLabels.en[event.type]}
+                                            </span>
+                                        </td>
+                                        <td className="calendar-table-event">
                                             {language === 'ar' ? event.event : (event.eventEn || event.event)}
-                                        </p>
-                                    </div>
+                                        </td>
+                                    </tr>
                                 ))}
-                            </div>
-                        )}
-                    </>
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
 
             {/* Info Banner */}
             <div className="info-banner glass-card">
-                <h3>📌 {t('calendar.note.title')}</h3>
+                <h3>{t('calendar.note.title')}</h3>
                 <p>
                     {t('calendar.note.text').split('\n').map((line, i) => (
                         <React.Fragment key={i}>

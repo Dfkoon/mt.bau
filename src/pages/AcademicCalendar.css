@@ -7,13 +7,13 @@
 /* Hero Section - Premium Refinement */
 .calendar-hero {
     position: relative;
-    min-height: 440px;
+    min-height: 380px;
     display: flex;
     align-items: center;
     justify-content: center;
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: scroll;
     overflow: hidden;
     margin-bottom: 2rem;
 }
@@ -46,23 +46,24 @@
     position: relative;
     z-index: 10;
     text-align: center;
-    padding: 2rem;
+    width: min(100% - 2rem, 980px);
+    padding: 2rem 1rem;
     margin-top: 20px;
     /* Space for fixed navbar */
 }
 
 .hero-title {
-    font-size: clamp(2.8rem, 8vw, 4.5rem);
+    font-size: 4rem;
     font-weight: 900;
     color: #ffffff;
     margin-bottom: 1.2rem;
-    letter-spacing: -1.5px;
+    letter-spacing: 0;
     text-shadow: none;
     line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-size: 1.35rem;
     color: rgba(255, 255, 255, 0.7);
     max-width: 800px;
     margin: 0 auto 0.8rem;
@@ -663,6 +664,139 @@
     color: #1a1a2e;
 }
 
+.calendar-table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.calendar-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    direction: rtl;
+    text-align: right;
+}
+
+.calendar-table th {
+    padding: 1rem 1.25rem;
+    background: #172033;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.calendar-table th:first-child {
+    border-top-right-radius: 17px;
+}
+
+.calendar-table th:last-child {
+    border-top-left-radius: 17px;
+}
+
+.calendar-table td {
+    padding: 1.1rem 1.25rem;
+    border-bottom: 1px solid #edf0f2;
+    color: #263244;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    vertical-align: middle;
+}
+
+.calendar-table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.calendar-table tbody tr:hover {
+    background: #fff6f6;
+}
+
+.calendar-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.calendar-table-date {
+    width: 150px;
+    direction: ltr;
+    text-align: right;
+    color: var(--primary) !important;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.calendar-table-day {
+    width: 145px;
+    color: #64748b !important;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.calendar-table-event {
+    min-width: 330px;
+    font-weight: 600;
+}
+
+.event-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 86px;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.event-type-academic {
+    background: #e8f1ff;
+    color: #2563eb;
+}
+
+.event-type-exam {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.event-type-holiday {
+    background: #ecfdf3;
+    color: #15803d;
+}
+
+.event-type-deadline {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+[data-theme="dark"] .calendar-table-wrap {
+    background: #111827;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .calendar-table th {
+    background: #0b1220;
+}
+
+[data-theme="dark"] .calendar-table td {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    color: #e5e7eb;
+}
+
+[data-theme="dark"] .calendar-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .calendar-table tbody tr:hover {
+    background: rgba(211, 47, 47, 0.12);
+}
+
+[data-theme="dark"] .calendar-table-day {
+    color: #94a3b8 !important;
+}
+
 /* Info Banner Refined */
 .info-banner {
     max-width: 1000px;
@@ -726,8 +860,26 @@
 }
 
 @media (max-width: 768px) {
-    .statistics-container {
-        grid-template-columns: repeat(2, 1fr);
+    .calendar-hero {
+        min-height: 320px;
+    }
+
+    .hero-content {
+        margin-top: 10px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    .hero-note {
+        font-size: 0.8rem;
+        letter-spacing: 1px;
     }
 
     .semester-header h2 {
@@ -736,5 +888,72 @@
 
     .control-dashboard {
         padding: 1.5rem;
+    }
+
+    .calendar-container {
+        padding-inline: 1rem;
+    }
+
+    .calendar-table th,
+    .calendar-table td {
+        padding: 0.85rem 0.9rem;
+    }
+}
+
+@media print {
+    @page {
+        margin: 12mm;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    .calendar-table-wrap,
+    .calendar-table-wrap * {
+        visibility: visible !important;
+    }
+
+    .calendar-table-wrap {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        overflow: visible;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: #ffffff;
+    }
+
+    .calendar-table {
+        width: 100%;
+        min-width: 0;
+        font-size: 10pt;
+    }
+
+    .calendar-table thead {
+        display: table-header-group;
+    }
+
+    .calendar-table th {
+        background: #172033 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .calendar-table td {
+        padding: 7pt 8pt;
+        color: #172033 !important;
+    }
+
+    .calendar-table tr {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .event-type {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }

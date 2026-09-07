@@ -1,47 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import ScrollToTop from './components/ScrollToTop';
 import { Toaster } from 'react-hot-toast';
-import HeroSection from './sections/HeroSection';
-import AnnouncementMarquee from './components/AnnouncementMarquee';
-import LemonChat from './sections/LemonChat';
-import UpcomingEvents from './sections/UpcomingEvents';
-import NewsSection from './sections/NewsSection';
-import ProjectsSection from './sections/ProjectsSection';
-import ServicesSection from './sections/ServicesSection';
-import RequestServicesSection from './sections/RequestServicesSection';
-import FeatureShowcase from './sections/FeatureShowcase';
-import UsefulSitesSection from './sections/UsefulSitesSection';
-import WeeklyTip from './sections/WeeklyTip';
-import Testimonials from './sections/Testimonials';
-import SuggestionsSection from './sections/SuggestionsSection';
-import GraduationPromo from './sections/GraduationPromo';
-import Footer from './components/Footer';
+const HeroSection = React.lazy(() => import('./sections/HeroSection'));
+const AnnouncementMarquee = React.lazy(() => import('./components/AnnouncementMarquee'));
+const LemonChat = React.lazy(() => import('./sections/LemonChat'));
+const UpcomingEvents = React.lazy(() => import('./sections/UpcomingEvents'));
+const ProjectsSection = React.lazy(() => import('./sections/ProjectsSection'));
+const ServicesSection = React.lazy(() => import('./sections/ServicesSection'));
+const RequestServicesSection = React.lazy(() => import('./sections/RequestServicesSection'));
+const UsefulSitesSection = React.lazy(() => import('./sections/UsefulSitesSection'));
+const WeeklyTip = React.lazy(() => import('./sections/WeeklyTip'));
+const Testimonials = React.lazy(() => import('./sections/Testimonials'));
+const SuggestionsSection = React.lazy(() => import('./sections/SuggestionsSection'));
+const GraduationPromo = React.lazy(() => import('./sections/GraduationPromo'));
+const Footer = React.lazy(() => import('./components/Footer'));
 import PageTitleUpdater from './components/PageTitleUpdater';
 
-import StudyMaterials from './pages/StudyMaterials';
-import AcademicPlans from './pages/AcademicPlans';
-import Quiz from './pages/Quiz';
-import AcademicCalendar from './pages/AcademicCalendar';
-import GradingSystem from './pages/GradingSystem';
-import MaterialExchange from './pages/MaterialExchange';
-import SecureGateway from './pages/SecureGateway';
-import FAQ from './pages/FAQ';
-import AboutUs from './pages/AboutUs';
-
-import Legal from './pages/Legal';
+const StudyMaterials = React.lazy(() => import('./pages/StudyMaterials'));
+const AcademicPlans = React.lazy(() => import('./pages/AcademicPlans'));
+const Quiz = React.lazy(() => import('./pages/Quiz'));
+const AcademicCalendar = React.lazy(() => import('./pages/AcademicCalendar'));
+const GradingSystem = React.lazy(() => import('./pages/GradingSystem'));
+const MaterialExchange = React.lazy(() => import('./pages/MaterialExchange'));
+const SecureGateway = React.lazy(() => import('./pages/SecureGateway'));
+const FAQ = React.lazy(() => import('./pages/FAQ'));
+const AboutUs = React.lazy(() => import('./pages/AboutUs'));
+const Legal = React.lazy(() => import('./pages/Legal'));
 import './index.css';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './config/firebase';
 
-import FeedbackPopup from './components/FeedbackPopup';
 import CookieConsent from './components/CookieConsent';
 import SplashScreen from './components/SplashScreen';
 
-import ReportModal from './components/ReportModal';
-import InstallPWAButton from './components/InstallPWAButton';
+const ReportModal = React.lazy(() => import('./components/ReportModal'));
 import StudyProgressTracker from './components/StudyProgressTracker';
 import ReadingProgressBar from './components/ReadingProgressBar';
 import DailyMotivation from './components/DailyMotivation';
@@ -129,9 +124,6 @@ const LegacyAdminRedirect = () => {
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
-  const [showFeedbackPopup, setShowFeedbackPopup] = React.useState(false);
-  const [feedbackPopupEnabled, setFeedbackPopupEnabled] = React.useState(false);
-  const [feedbackPopupLoaded, setFeedbackPopupLoaded] = React.useState(false);
   const [maintenanceMode, setMaintenanceMode] = React.useState(false);
   const [maintenanceMessage, setMaintenanceMessage] = React.useState('');
 
@@ -149,46 +141,22 @@ function App() {
         const settingsDoc = await getDoc(doc(db, 'system_configs', 'global_settings'));
         if (settingsDoc.exists()) {
           const data = settingsDoc.data();
-          setFeedbackPopupEnabled(data.feedbackPopupEnabled ?? true);
           setMaintenanceMode(data.maintenance_mode === true);
           setMaintenanceMessage(data.maintenance_message || '');
-        } else {
-          setFeedbackPopupEnabled(true);
         }
       } catch (err) {
-        console.warn('Failed to load feedback popup setting:', err);
-        setFeedbackPopupEnabled(true);
-      } finally {
-        setFeedbackPopupLoaded(true);
+        console.warn('Failed to load site settings:', err);
       }
     };
 
     loadSettings();
   }, []);
 
-  React.useEffect(() => {
-    if (!feedbackPopupLoaded || !feedbackPopupEnabled) return;
-    const hasSeenPopup = localStorage.getItem('koon_rated_v1');
-    if (hasSeenPopup) return;
-
-    const timer = window.setTimeout(() => {
-      setShowFeedbackPopup(true);
-    }, 180000);
-
-    return () => window.clearTimeout(timer);
-  }, [feedbackPopupLoaded, feedbackPopupEnabled]);
-
-  const handleClosePopup = () => {
-    setShowFeedbackPopup(false);
-    localStorage.setItem('koon_rated_v1', 'true');
-  };
-
   return (
     <>
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       <LegacyAdminRedirect />
       <Router>
-        <InstallPWAButton isAr={true} />
         <ScrollToTop />
         <PageTitleUpdater />
         <Toaster
@@ -203,59 +171,56 @@ function App() {
             },
           }}
         />
-        <Routes>
-          {/* Standalone report page - no navbar/footer */}
-          <Route path="/report" element={<ReportModal />} />
+        <React.Suspense fallback={<div className="route-loading">جاري تحميل الصفحة...</div>}>
+          <Routes>
+            {/* Standalone report page - no navbar/footer */}
+            <Route path="/report" element={<ReportModal />} />
 
-          {/* 🔒 Isolated coordinator gateway - completely hidden from site, no navbar/footer/sidebar */}
-          <Route path="/portal" element={<SecureGateway />} />
+            {/* 🔒 Isolated coordinator gateway - completely hidden from site, no navbar/footer/sidebar */}
+            <Route path="/portal" element={<SecureGateway />} />
 
-          {/* All other pages wrapped in site layout */}
-          <Route path="*" element={
-            <div className="app-container">
-              {maintenanceMode ? <MaintenanceScreen message={maintenanceMessage} /> : <>
-                <Navbar toggleSidebar={toggleSidebar} />
-                <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+            {/* All other pages wrapped in site layout */}
+            <Route path="*" element={
+              <div className="app-container">
+                {maintenanceMode ? <MaintenanceScreen message={maintenanceMessage} /> : <>
+                  <Navbar toggleSidebar={toggleSidebar} />
+                  <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-                <FeedbackPopup
-                  isOpen={showFeedbackPopup}
-                  onClose={handleClosePopup}
-                />
+                  <CookieConsent />
 
-                <CookieConsent />
-
-                <main>
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/materials" element={<StudyMaterials />} />
-                    <Route path="/plans" element={<AcademicPlans />} />
-                    <Route path="/quiz" element={<Quiz />} />
-                    <Route path="/quiz/:quizId" element={<Quiz />} />
-                    <Route path="/calendar" element={<AcademicCalendar />} />
-                    <Route path="/grading" element={<GradingSystem />} />
-                    <Route path="/exchange" element={<MaterialExchange />} />
+                  <main>
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/materials" element={<StudyMaterials />} />
+                      <Route path="/plans" element={<AcademicPlans />} />
+                      <Route path="/quiz" element={<Quiz />} />
+                      <Route path="/quiz/:quizId" element={<Quiz />} />
+                      <Route path="/calendar" element={<AcademicCalendar />} />
+                      <Route path="/grading" element={<GradingSystem />} />
+                      <Route path="/exchange" element={<MaterialExchange />} />
 
 
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/about" element={<AboutUs />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/about" element={<AboutUs />} />
 
-                    <Route path="/legal" element={<Legal />} />
-                  </Routes>
-                </main>
+                      <Route path="/legal" element={<Legal />} />
+                    </Routes>
+                  </main>
 
-                {/* Back to top button */}
-                <BackToTopBtn />
-                {/* Keyboard shortcuts help modal (press ?) */}
-                <KeyboardShortcutsHelp />
-                {/* Reading scroll progress bar */}
-                <ReadingProgressBar />
-                {/* Admin notice board (Firebase-driven) */}
-                <NoticeBoard />
-                <Footer />
-              </>}
-            </div>
-          } />
-        </Routes>
+                  {/* Back to top button */}
+                  <BackToTopBtn />
+                  {/* Keyboard shortcuts help modal (press ?) */}
+                  <KeyboardShortcutsHelp />
+                  {/* Reading scroll progress bar */}
+                  <ReadingProgressBar />
+                  {/* Admin notice board (Firebase-driven) */}
+                  <NoticeBoard />
+                  <Footer />
+                </>}
+              </div>
+            } />
+          </Routes>
+        </React.Suspense>
 
       </Router>
     </>

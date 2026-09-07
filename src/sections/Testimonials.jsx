@@ -5,6 +5,14 @@ import { subscribeToApprovedTestimonials } from '../services/testimonialsService
 import TestimonialForm from '../components/TestimonialForm';
 import './Testimonials.css';
 
+const assetUrl = (source) => {
+    if (!source) return `${import.meta.env.BASE_URL}assets/avatars/flork_cool.png`;
+    if (/^(https?:|data:|blob:)/i.test(source)) return source;
+    return `${import.meta.env.BASE_URL}${source.replace(/^\/+/, '')}`;
+};
+
+const fallbackAvatar = () => assetUrl('assets/avatars/flork_cool.png');
+
 const fallbackTestimonials = {
     ar: [
         {
@@ -12,21 +20,21 @@ const fallbackTestimonials = {
             author: "أحمد إسماعيل",
             gender: "male",
             major: "هندس البرمجيات",
-            avatar: "/assets/avatars/flork_cool.png"
+            avatar: 'assets/avatars/flork_cool.png'
         },
         {
             quote: "الموقع ساعدني كثير في دراستي! المواد منظم والملصات واضح. شكراً للفريق المتطوع 💙",
             author: "أحمد محمود",
             gender: "male",
             major: "التحقيقات الجنائي الرقمي",
-            avatar: "/assets/avatars/flork_crying.png"
+            avatar: 'assets/avatars/flork_crying.png'
         },
         {
             quote: "أفضل مصدر للمواد الدراسي! التقويم الأكاديمي والاتبارات التفاعلي سهلت علي الدراس كثير 🎓",
             author: "سار العلي",
             gender: "female",
             major: "علوم الحاسوب",
-            avatar: "/assets/avatars/flork_heart.png"
+            avatar: 'assets/avatars/flork_heart.png'
         }
     ],
     en: [
@@ -34,19 +42,19 @@ const fallbackTestimonials = {
             quote: "Whoever made this site is an artist! The themes are truly awesome and the effort is clear. Premium user experience! 🚀",
             author: "Ahmad Ismaeel",
             major: "Software Engineering",
-            avatar: "/assets/avatars/flork_cool.png"
+            avatar: 'assets/avatars/flork_cool.png'
         },
         {
             quote: "This website helped me a lot in my studies! The materials are organized and summaries are clear. Thanks to the volunteer team 💙",
             author: "Ahmad Mahmoud",
             major: "Digital Forensics",
-            avatar: "/assets/avatars/flork_crying.png"
+            avatar: 'assets/avatars/flork_crying.png'
         },
         {
             quote: "Best source for study materials! The academic calendar and interactive quizzes made studying much easier 🎓",
             author: "Sarah Al-Ali",
             major: "Computer Science",
-            avatar: "/assets/avatars/flork_heart.png"
+            avatar: 'assets/avatars/flork_heart.png'
         }
     ]
 };
@@ -108,14 +116,14 @@ const Testimonials = () => {
     // Use Firebase testimonials if available, otherwise use fallback
     // Merge Firebase testimonials with fallback ones
     const florkMaleAvatars = [
-        '/assets/avatars/flork_cool.png',
-        '/assets/avatars/flork_cool_v2.png',
-        '/assets/avatars/flork_crying.png'
+        'assets/avatars/flork_cool.png',
+        'assets/avatars/flork_cool_v2.png',
+        'assets/avatars/flork_crying.png'
     ];
     const florkFemaleAvatars = [
-        '/assets/avatars/flork_heart.png',
-        '/assets/avatars/flork_female_grad.png',
-        '/assets/avatars/flork_female_cool.png'
+        'assets/avatars/flork_heart.png',
+        'assets/avatars/flork_female_grad.png',
+        'assets/avatars/flork_female_cool.png'
     ];
 
     const testimonials = [
@@ -123,16 +131,16 @@ const Testimonials = () => {
         ...(fallbackTestimonials[language] || fallbackTestimonials.ar)
     ].map((t, idx) => {
         let avatar = t.avatar;
-        if (!avatar || !avatar.startsWith('/assets/avatars/flork')) {
-            const isFemale = t.gender === 'female' || 
-                            (t.role && t.role.toLowerCase().includes('female')) || 
-                            (t.author && t.author.includes('طالب'));
+        if (!avatar || (!avatar.startsWith('/assets/avatars/flork') && !avatar.startsWith('assets/avatars/flork'))) {
+            const isFemale = t.gender === 'female' ||
+                (t.role && t.role.toLowerCase().includes('female')) ||
+                (t.author && t.author.includes('طالب'));
             const avatarList = isFemale ? florkFemaleAvatars : florkMaleAvatars;
             avatar = avatarList[idx % avatarList.length];
         }
         return {
             ...t,
-            avatar
+            avatar: assetUrl(avatar)
         };
     });
 
@@ -260,7 +268,7 @@ const Testimonials = () => {
                                 className={`avatar-preview ${i === activeIndex ? 'active' : ''}`}
                                 whileHover={{ scale: 1.1, opacity: 1 }}
                             >
-                                <img src={t.avatar} alt={t.author} />
+                                <img src={t.avatar} alt={t.author} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = fallbackAvatar(); }} />
                             </motion.div>
                         ))}
                     </motion.div>
@@ -296,6 +304,7 @@ const Testimonials = () => {
                                             src={t.avatar}
                                             alt={t.author}
                                             className="author-avatar"
+                                            onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = fallbackAvatar(); }}
                                             animate={{
                                                 opacity: i === activeIndex ? 1 : 0,
                                                 zIndex: i === activeIndex ? 1 : 0,

@@ -244,12 +244,10 @@
 }
 
 .hero-title .highlight {
-    color: #ff3344 !important;
-    background: linear-gradient(135deg, #ff4d4d, #dc2626);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.8));
+    color: #ffffff !important;
+    background: none;
+    -webkit-text-fill-color: #ffffff;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.75));
 }
 
 .hero-subtitle {

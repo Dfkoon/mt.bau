@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { nashmiData } from '../data/nashmiData';
 import { coursesData } from '../data/coursesData';
+import { quizData, quizCategories } from '../data/quizData';
+import { academicCalendarData } from '../data/calendarData';
 import { chatWithNashmi } from '../services/aiService';
 import { db } from '../config/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -105,6 +107,72 @@ const LemonChat = () => {
         return null;
     };
 
+    const findQuiz = (query) => {
+        const normQuery = normalizeText(query);
+        const asksForQuiz = ['اختبار', 'اختبارات', 'كويز', 'كويزات', 'اسئله', 'اسئل', 'سنوات', 'امتحان'].some(term => normQuery.includes(term));
+        if (!asksForQuiz) return null;
+
+        let bestMatch = null;
+        let maxScore = 0;
+
+        quizCategories.forEach(category => {
+            const categoryTarget = `${category.nameAr || ''} ${category.name || ''}`;
+            const categoryScore = calculateScore(query, categoryTarget);
+
+            (category.parts || []).forEach(part => {
+                const quiz = quizData[part.id];
+                if (!quiz) return;
+                const partTarget = `${categoryTarget} ${part.titleAr || ''} ${part.title || ''}`;
+                const score = categoryScore + calculateScore(query, partTarget);
+                if (score > maxScore) {
+                    maxScore = score;
+                    bestMatch = {
+                        type: 'quiz_card',
+                        data: {
+                            id: part.id,
+                            subjectAr: category.nameAr,
+                            subjectEn: category.name,
+                            titleAr: part.titleAr || quiz.titleAr,
+                            titleEn: part.title || quiz.title,
+                            questionCount: Array.isArray(quiz.questions) ? quiz.questions.length : 0
+                        },
+                        textAr: `لقيت لك اختبار **${part.titleAr || quiz.titleAr || 'اختبار المادة'}** لمادة **${category.nameAr}** 👇`,
+                        textEn: `I found **${part.title || quiz.title || 'the quiz'}** for **${category.name}** 👇`
+                    };
+                }
+            });
+        });
+
+        return maxScore >= 10 ? bestMatch : null;
+    };
+
+    const findCalendarEvents = (query) => {
+        const normQuery = normalizeText(query);
+        const asksForCalendar = ['موعد', 'مواعيد', 'تقويم', 'امتحان', 'امتحانات', 'تسجيل', 'انسحاب', 'سحب', 'اضاف', 'عطله', 'دوام', 'تدريس'].some(term => normQuery.includes(term));
+        if (!asksForCalendar) return null;
+
+        const terms = normQuery.split(' ').filter(word => word.length >= 3 && !['متي', 'متى', 'شو', 'وين', 'عن', 'في', 'هو'].includes(word));
+        const events = Object.values(academicCalendarData).flatMap(semester =>
+            (semester.events || []).map(event => ({ ...event, semester: semester.name, semesterEn: semester.nameEn }))
+        );
+        let matchingEvents = events.filter(event => {
+            const target = normalizeText(`${event.event} ${event.date} ${event.day}`);
+            return terms.length === 0 || terms.some(term => target.includes(term));
+        }).slice(0, 6);
+
+        if (!matchingEvents.length && asksForCalendar) {
+            matchingEvents = events.slice(0, 5);
+        }
+
+        if (!matchingEvents.length) return null;
+        return {
+            type: 'calendar_card',
+            data: { events: matchingEvents },
+            textAr: 'هاي أقرب المواعيد المطابقة من التقويم الجامعي 👇',
+            textEn: 'Here are the matching dates from the academic calendar 👇'
+        };
+    };
+
     const findBestMatch = (query) => {
         const normQuery = normalizeText(query);
         let bestMatch = null;
@@ -137,14 +205,28 @@ const LemonChat = () => {
             });
         });
 
-        // 2. Course Materials (High Confidence)
+        // 2. Quiz lookup with a direct quiz link
+        const quizResult = findQuiz(query);
+        if (quizResult && maxScore < 120) {
+            maxScore = 120;
+            bestMatch = quizResult;
+        }
+
+        // 3. Academic calendar lookup
+        const calendarResult = findCalendarEvents(query);
+        if (calendarResult && maxScore < 110) {
+            maxScore = 110;
+            bestMatch = calendarResult;
+        }
+
+        // 4. Course Materials (High Confidence)
         const materialResult = findMaterial(query);
         if (materialResult && maxScore < 90) {
             maxScore = 90;
             bestMatch = materialResult;
         }
 
-        // 3. Fallback for material / summary / quiz requests when not found in database
+        // 5. Fallback for material / summary / quiz requests when not found in database
         const isMaterialQuery = ['ملص', 'دوسي', 'كتاب', 'سلايدات', 'شرح', 'مادة', 'امتحان', 'امتحانات'].some(w => normQuery.includes(w));
         if (!materialResult && isMaterialQuery && maxScore < 90) {
             maxScore = 95;
@@ -155,7 +237,7 @@ const LemonChat = () => {
             };
         }
 
-        // 4. Nashmi Persona (Social/General) - ONLY FOR EXACT MATCHES OR VERY HIGH CONFIDENCE
+        // 6. Nashmi Persona (Social/General) - ONLY FOR EXACT MATCHES OR VERY HIGH CONFIDENCE
         if (!bestMatch) {
             nashmiData.forEach(item => {
                 item.keywords.forEach(k => {
@@ -261,12 +343,12 @@ const LemonChat = () => {
                                     .filter(([_, url]) => Boolean(url))
                                     .slice(0, 3)
                                     .map(([type, url]) => (
-                                    <a href={url} target="_blank" rel="noreferrer" key={type} className="chat-action-btn">
-                                        {type === 'pdf' ? (isAr ? '📄 ملف PDF' : '📄 PDF') :
-                                            type === 'video' ? (isAr ? '🎥 فيديو' : '🎥 Video') :
-                                                 (isAr ? '🔗 رابط' : '🔗 Link')}
-                                    </a>
-                                ))}
+                                        <a href={url} target="_blank" rel="noreferrer" key={type} className="chat-action-btn">
+                                            {type === 'pdf' ? (isAr ? '📄 ملف PDF' : '📄 PDF') :
+                                                type === 'video' ? (isAr ? '🎥 فيديو' : '🎥 Video') :
+                                                    (isAr ? '🔗 رابط' : '🔗 Link')}
+                                        </a>
+                                    ))}
                                 <button
                                     onClick={() => navigate('/materials')}
                                     className="chat-action-btn primary"
@@ -282,7 +364,54 @@ const LemonChat = () => {
             );
         }
 
-        // 2. Page Link Render
+        // 2. Interactive quiz card
+        if (msg.type === 'quiz_card') {
+            const quiz = msg.data;
+            return (
+                <div className="chat-rich-content">
+                    <p>{(isAr ? msg.textAr : msg.textEn).split('**').map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part)}</p>
+                    <div className="chat-course-card glass-card">
+                        <div className="chat-card-header">
+                            <span className="chat-card-icon">📝</span>
+                            <div>
+                                <h4>{isAr ? quiz.subjectAr : quiz.subjectEn}</h4>
+                                <span className="chat-card-badge">{isAr ? quiz.titleAr : quiz.titleEn}</span>
+                            </div>
+                        </div>
+                        <div className="chat-card-actions">
+                            <button onClick={() => navigate(`/quiz/${quiz.id}`)} className="chat-action-btn primary">
+                                {isAr ? 'فتح الاختبار مباشرة' : 'Open quiz directly'}
+                            </button>
+                            <button onClick={() => navigate('/quiz')} className="chat-action-btn">
+                                {isAr ? `بنك الأسئلة (${quiz.questionCount})` : `Question bank (${quiz.questionCount})`}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // 3. Academic calendar results
+        if (msg.type === 'calendar_card') {
+            return (
+                <div className="chat-rich-content">
+                    <p>{isAr ? msg.textAr : msg.textEn}</p>
+                    <div className="chat-calendar-results">
+                        {msg.data.events.map((event, index) => (
+                            <div className="chat-calendar-item" key={`${event.date}-${index}`}>
+                                <strong>{event.date}</strong>
+                                <span>{isAr ? event.event : (event.eventEn || event.event)}</span>
+                            </div>
+                        ))}
+                        <button onClick={() => navigate('/calendar')} className="chat-action-btn primary">
+                            {isAr ? 'فتح التقويم الجامعي' : 'Open academic calendar'}
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        // 4. Page Link Render
         if (msg.type === 'page_card') {
             const page = msg.data;
             return (
