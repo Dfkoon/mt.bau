@@ -3,14 +3,14 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/mt.bau/favicon.png" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Hussien Koon / Makanak Al-Jami'i Team" />
   <meta name="description"
     content="مكانك الجامعي - المنصة الرسمية لطلاب جامعة البلقاء التطبيقية. مصادر تعليمية، خطط دراسية، وأدوات ذكية." />
   <meta name="copyright" content="© 2026 Makanak Al-Jami'i Project. All rights reserved." />
   <meta name="theme-color" content="#020b18" />
-  <link rel="manifest" href="/mt.bau/manifest.json" />
+  <link rel="manifest" href="/manifest.json" />
 
   <!-- SEO / Social Media -->
   <meta property="og:title" content="مكانك الجامعي | Makanak Al-Jami'i" />
@@ -27,12 +27,27 @@
 
   <title>مكانك الجامعي | Makanak Al-Jami'i</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script type="module" crossorigin src="/mt.bau/assets/index-DwUlhGHr.js"></script>
-  <link rel="stylesheet" crossorigin href="/mt.bau/assets/index-C_AvtfDe.css">
-<link rel="manifest" href="/mt.bau/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/mt.bau/registerSW.js"></script></head>
+</head>
 
 <body>
   <div id="root"></div>
+  <script>
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const cacheResetKey = 'makanak-local-cache-reset-v2';
+      if (!sessionStorage.getItem(cacheResetKey)) {
+        sessionStorage.setItem(cacheResetKey, '1');
+        Promise.all([
+          window.navigator.serviceWorker?.getRegistrations().then(registrations =>
+            Promise.all(registrations.map(registration => registration.unregister()))
+          ),
+          window.caches?.keys().then(cacheNames =>
+            Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)))
+          )
+        ]).then(() => window.location.reload());
+      }
+    }
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>
