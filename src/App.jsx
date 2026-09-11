@@ -171,7 +171,17 @@ function App() {
             },
           }}
         />
-        <React.Suspense fallback={<div className="route-loading">جاري تحميل الصفحة...</div>}>
+        <React.Suspense fallback={
+          <div className="page-loading-screen">
+            <div className="page-loading-inner">
+              <div className="page-loading-spinner">
+                <div className="spinner-ring"></div>
+                <div className="spinner-ring spinner-ring-2"></div>
+              </div>
+              <p className="page-loading-text">جاري تحميل الصفحة...</p>
+            </div>
+          </div>
+        }>
           <Routes>
             {/* Standalone report page - no navbar/footer */}
             <Route path="/report" element={<ReportModal />} />

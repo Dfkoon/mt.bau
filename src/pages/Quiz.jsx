@@ -1203,10 +1203,11 @@ const Quiz = () => {
                                     const partId = part.id;
                                     const partData = quizData[partId];
 
-                                    // Sum static questions + dynamic questions from DB
-                                    const dbQuestionsCount = dbSubjectQuestions.filter(q => q.partId === partId).length;
-                                    const staticQuestionsCount = partData?.questions?.length || 0;
-                                    const totalQuestionsCount = staticQuestionsCount + dbQuestionsCount;
+                                    // If DB questions exist for this part, show ONLY DB count (matches admin view).
+                                    // Fallback to static count if no DB questions exist.
+                                    const dbQuestionsCount = dbSubjectQuestions.filter(q => q.partId === partId && !q.deleted).length;
+                                    const staticQuestionsCount = partData?.questions?.filter(q => !q.deleted)?.length || 0;
+                                    const totalQuestionsCount = dbQuestionsCount > 0 ? dbQuestionsCount : staticQuestionsCount;
                                     const hasQuestions = totalQuestionsCount > 0;
 
                                     return (
@@ -2661,9 +2662,9 @@ const Quiz = () => {
                                 if (part.isGroup && part.subParts) {
                                     return part.subParts.map(subPart => {
                                         const subPartData = quizData[subPart.id];
-                                        const staticCount = subPartData?.questions?.length || 0;
+                                        const staticCount = subPartData?.questions?.filter(q => !q.deleted)?.length || 0;
                                         const dynamicCount = dbSubjectQuestions.filter(q => String(q.partId || '').trim().toLowerCase() === String(subPart.id || '').trim().toLowerCase() && !q.deleted).length;
-                                        const totalCount = staticCount + dynamicCount;
+                                        const totalCount = dynamicCount > 0 ? dynamicCount : staticCount;
                                         const hasQuestions = totalCount > 0;
                                         return (
                                             <Link
@@ -2686,9 +2687,10 @@ const Quiz = () => {
 
                                 // Handle regular parts
                                 const partData = quizData[part.id];
-                                const staticQCount = partData?.questions?.length || 0;
+                                const staticQCount = partData?.questions?.filter(q => !q.deleted)?.length || 0;
                                 const dynamicQCount = dbSubjectQuestions.filter(q => String(q.partId || '').trim().toLowerCase() === String(part.id || '').trim().toLowerCase() && !q.deleted).length;
-                                const totalQCount = staticQCount + dynamicQCount;
+                                // Show DB count if DB questions exist, otherwise show static count
+                                const totalQCount = dynamicQCount > 0 ? dynamicQCount : staticQCount;
                                 const hasQuestions = totalQCount > 0;
                                 const hasSubParts = (partData?.parts?.length > 0) || (part.isGroup && part.subParts?.length > 0);
                                 // Also allow navigation for DB-only parts (e.g. a newly created quiz part with questions but no static data)
@@ -2794,13 +2796,14 @@ const Quiz = () => {
                         {filteredCategories.length > 0 ? (
                             <div className="quiz-categories-grid">
                                 {[...filteredCategories].reverse().map(category => {
-                                    const staticQCount = quizData[category.id]?.questions?.length || 0;
+                                    const staticQCount = quizData[category.id]?.questions?.filter(q => !q.deleted)?.length || 0;
                                     const dynamicQCount = dbSubjectQuestions.filter(q =>
                                         (String(q.subjectId || '').trim().toLowerCase() === String(category.id || '').trim().toLowerCase() ||
                                             String(q.partId || '').trim().toLowerCase() === String(category.id || '').trim().toLowerCase()) &&
                                         !q.deleted
                                     ).length;
-                                    const totalQCount = staticQCount + dynamicQCount;
+                                    // Show DB count if DB questions exist, otherwise show static count
+                                    const totalQCount = dynamicQCount > 0 ? dynamicQCount : staticQCount;
                                     const hasQuestions = totalQCount > 0;
                                     const hasParts = category.parts && category.parts.length > 0;
 

@@ -1756,34 +1756,7 @@ export const quizData = {
         "icon": "pencil",
         "color": "#1B3A2E",
         "forceEnglish": false,
-        "questions": [
-            {
-                "id": 8381,
-                "type": "mcq",
-                "questionAr": "ما هيا عاصمة الاردن ؟",
-                "questionEn": "",
-                "options": [
-                    {
-                        "text": "عمان ",
-                        "correct": true
-                    },
-                    {
-                        "text": "عُمان ",
-                        "correct": false
-                    },
-                    {
-                        "text": "السلط ",
-                        "correct": false
-                    },
-                    {
-                        "text": "الكرك ",
-                        "correct": false
-                    }
-                ],
-                "correctAnswer": "",
-                "marks": 1
-            }
-        ]
+        "questions": []
     },
     "part_ek9gua": {
         "id": "part_ek9gua",

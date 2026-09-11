@@ -40,3 +40,53 @@
 .read-the-docs {
   color: #888;
 }
+
+/* ── Page Loading Screen ─────────────────────────── */
+.page-loading-screen {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+.page-loading-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+.page-loading-spinner {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.spinner-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3.5px solid transparent; border-top-color: #d32f2f;
+  animation: spin 1s linear infinite;
+}
+.spinner-ring-2 {
+  inset: 10px;
+  border: 3.5px solid transparent; border-top-color: #f59e0b;
+  animation-duration: 0.75s;
+  animation-direction: reverse;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.page-loading-text {
+  color: #0f172a; font-weight: 700;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  margin: 0;
+  animation: pulse-text 1.5s ease-in-out infinite;
+}
+@keyframes pulse-text {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

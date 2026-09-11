@@ -5,7 +5,13 @@ const ThemeContext = createContext();
 export const useTheme = () => {
     const context = useContext(ThemeContext);
     if (!context) {
-        throw new Error('useTheme must be used within ThemeProvider');
+        return {
+            theme: document.documentElement.getAttribute('data-theme') || 'light',
+            setTheme: (newTheme) => {
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            }
+        };
     }
     return context;
 };
