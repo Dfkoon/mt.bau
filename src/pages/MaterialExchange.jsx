@@ -4387,16 +4387,6 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                 </div>
                                 <div className="form-group full-width">
-                                    <label className="terms-label agreement-checkbox" style={{ marginTop: '0' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={!!formData.hideContactInfo}
-                                            onChange={e => setFormData(prev => ({ ...prev, hideContactInfo: e.target.checked }))}
-                                        />
-                                        {isAr ? 'أرغب في إخفاء بياناتي عن الطرف الآخر (المتبرع/الحاجز) عند التسليم' : 'I want to hide my data from the other party (donor/booker) during delivery'}
-                                    </label>
-                                </div>
-                                <div className="form-group full-width">
                                     <label>{isAr ? 'المواد المتوفرة' : 'Available Materials'}</label>
 
                                     <div className="materials-guidance-box">
@@ -4928,20 +4918,20 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         </ul>
                                     )}
                                 </div>
-                                <div className="form-group" style={{ marginTop: '0.5rem' }}>
-                                    <label className="terms-label agreement-checkbox" style={{ margin: '0' }}>
+                                <label className="terms-label agreement-checkbox" style={{ margin: '0.8rem 0 0.25rem' }}>
+                                    <input type="checkbox" checked={agreedToBookingTerms} onChange={e => setAgreedToBookingTerms(e.target.checked)} />
+                                    {isAr ? 'أوافق على الشروط والأحكام' : 'I agree to the terms and conditions'}
+                                </label>
+                                <div className="form-group" style={{ marginTop: '0.2rem' }}>
+                                    <label className="terms-label agreement-checkbox" style={{ margin: '0', fontWeight: 500, color: '#475569' }}>
                                         <input
                                             type="checkbox"
                                             checked={!!bookingData.hideContactInfo}
                                             onChange={e => setBookingData(prev => ({ ...prev, hideContactInfo: e.target.checked }))}
                                         />
-                                        {isAr ? 'أرغب في إخفاء بياناتي عن الطرف الآخر (المتبرع/الحاجز) عند التسليم' : 'I want to hide my data from the other party (donor/booker) during delivery'}
+                                        {isAr ? 'اختياري: أريد إخفاء بياناتي عن الطرف الآخر عند التسليم' : 'Optional: hide my details from the other party during delivery'}
                                     </label>
                                 </div>
-                                <label className="terms-label agreement-checkbox" style={{ margin: '0.8rem 0' }}>
-                                    <input type="checkbox" checked={agreedToBookingTerms} onChange={e => setAgreedToBookingTerms(e.target.checked)} />
-                                    {isAr ? 'أوافق على الشروط والأحكام' : 'I agree to the terms and conditions'}
-                                </label>
                                 <button type="submit" className="submit-btn full-width" disabled={loading || !agreedToBookingTerms}>{loading ? (isAr ? 'جاري الحجز...' : 'Booking...') : (isAr ? 'تأكيد الحجز' : 'Confirm Booking')}</button>
                             </form>
                         </div>
