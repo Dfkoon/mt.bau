@@ -1,18 +1,18 @@
 export const exchangeData = {
     "items": [
         {
-            "id": 104,
-            "donor_name": "محمد محمود",
+            "id": 105,
+            "donor_name": "حسين الديات",
             "donor_phone": "0782934685",
-            "material_name": "عربي تطبيقي",
+            "material_name": "مفاهيم اقتصادية",
             "course_code": "",
-            "faculty": "",
-            "status": "reserved",
-            "booker_name": "محمد محمد",
+            "faculty": "كلية الذكاء الاصطناعي",
+            "status": "approved",
+            "booker_name": "",
             "pickup_date": "",
             "pickup_time": "",
             "notes": "",
-            "updated_at": "2026-08-25 12:59:39"
+            "updated_at": "2026-09-13 15:05:20"
         },
         {
             "id": 90,

@@ -1,25 +1,135 @@
 import React, { useState } from 'react';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import {
     findDonationsByPhone,
-    findBookingsByPhone,
-    getDonationRecords,
-    getBookingRecords
+    findBookingsByPhone
 } from '../utils/exchangeLocalStorage';
 import './MaterialStatusChecker.css';
 
 /**
  * Material Status Checker Component
  * Allows users to check the status of their donations and bookings
- * Clean, professional, emoji-free UI with full Light & Dark mode support
+ * Real-time lookup against Firestore collection 'materialDonations'
  */
 const MaterialStatusChecker = ({ isAr }) => {
     const [phoneInput, setPhoneInput] = useState('');
     const [nameInput, setNameInput] = useState('');
     const [searchResults, setSearchResults] = useState(null);
     const [hasSearched, setHasSearched] = useState(false);
-    const [activeResultTab, setActiveResultTab] = useState('donations');
+    const [searching, setSearching] = useState(false);
+    const [activeResultTab, setActiveResultTab] = useState('bookings');
 
-    const handleSearch = (e) => {
+    const searchFirestore = async (rawPhone) => {
+        const cleanDigits = String(rawPhone).trim().replace(/\D/g, '');
+        const basePhone = cleanDigits.replace(/^(00962|962|0)/, '');
+
+        const matchesPhone = (val) => {
+            if (!val) return false;
+            const testDigits = String(val).trim().replace(/\D/g, '').replace(/^(00962|962|0)/, '');
+            if (!testDigits || !basePhone) return false;
+            return testDigits === basePhone || testDigits.endsWith(basePhone) || basePhone.endsWith(testDigits);
+        };
+
+        const donationsFound = [];
+        const bookingsFound = [];
+
+        try {
+            const q = query(collection(db, 'materialDonations'), orderBy('createdAt', 'desc'));
+            const snapshot = await getDocs(q);
+
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                if (data.deleted) return;
+
+                const isDonor = matchesPhone(data.phoneNumber) || 
+                                matchesPhone(data.confirmPhoneNumber) || 
+                                matchesPhone(data.alternatePhone) || 
+                                matchesPhone(data.donorPhone);
+
+                // 1. إذا كان صاحب الطلب هو المتبرع
+                if (isDonor) {
+                    const rawMaterials = data.materials || (data.itemName ? [data.itemName] : (data.materialName ? [data.materialName] : []));
+                    const studentName = data.studentName || data.donorName || (isAr ? 'طالب متبرع' : 'Donor');
+
+                    if (rawMaterials.length > 0) {
+                        const matChips = rawMaterials.map(m => typeof m === 'object' ? (m.name || '') : m).filter(Boolean);
+                        let mainStatus = data.status || 'submitted';
+                        const hasReserved = rawMaterials.some(m => typeof m === 'object' && (m.status === 'reserved' || m.takerInfo));
+                        if (hasReserved) mainStatus = 'booked';
+
+                        donationsFound.push({
+                            id: docSnap.id,
+                            studentName: studentName,
+                            phoneNumber: data.phoneNumber || data.donorPhone || '',
+                            materials: matChips,
+                            status: mainStatus,
+                            submittedAt: data.createdAt?.toDate?.()?.toISOString?.() || data.createdAt || new Date().toISOString()
+                        });
+                    }
+                }
+
+                // 2. البحث عن حجوزات (سواء داخل مصفوفة materials أو على مستوى المستند)
+                const materialsList = data.materials || [];
+                materialsList.forEach((m, idx) => {
+                    if (typeof m !== 'object' || !m) return;
+                    const taker = m.takerInfo || {};
+                    const isBooker = matchesPhone(taker.phone);
+                    if (isBooker && (m.status === 'reserved' || m.status === 'completed' || data.status === 'reserved')) {
+                        bookingsFound.push({
+                            id: `booking-${docSnap.id}-${idx}`,
+                            name: taker.name || (isAr ? 'طالب حاجز' : 'Booker'),
+                            phoneNumber: taker.phone || '',
+                            materialName: m.name || data.materialName || '',
+                            donorName: data.studentName || data.donorName || '',
+                            donorPhone: data.phoneNumber || data.donorPhone || '',
+                            status: m.status === 'completed' ? 'completed' : 'booked',
+                            bookedAt: taker.bookedAt?.toDate?.()?.toISOString?.() || taker.bookedAt || data.updatedAt || data.createdAt || new Date().toISOString()
+                        });
+                    }
+                });
+
+                // حجوزات مباشرة تمت من لوحة التحكم
+                if (data.bookerPhone && matchesPhone(data.bookerPhone)) {
+                    bookingsFound.push({
+                        id: `booking-admin-${docSnap.id}`,
+                        name: data.bookerName || (isAr ? 'طالب حاجز' : 'Booker'),
+                        phoneNumber: data.bookerPhone,
+                        materialName: data.materialName || '',
+                        donorName: data.donorName || data.studentName || '',
+                        donorPhone: data.donorPhone || data.phoneNumber || '',
+                        status: data.status === 'completed' ? 'completed' : 'booked',
+                        bookedAt: data.bookedAt || data.updatedAt || data.createdAt || new Date().toISOString()
+                    });
+                }
+            });
+        } catch (err) {
+            console.warn('Firestore lookup error in MaterialStatusChecker:', err);
+        }
+
+        // دمج مع الذاكرة المحلية كاحتياط
+        try {
+            const lsDonations = findDonationsByPhone(cleanDigits);
+            lsDonations.forEach(ls => {
+                if (!donationsFound.some(d => d.id === ls.id)) {
+                    donationsFound.push(ls);
+                }
+            });
+            const lsBookings = findBookingsByPhone(cleanDigits);
+            lsBookings.forEach(lb => {
+                if (!bookingsFound.some(b => b.materialName === lb.materialName)) {
+                    bookingsFound.push(lb);
+                }
+            });
+        } catch (e) {}
+
+        return {
+            donations: donationsFound,
+            bookings: bookingsFound
+        };
+    };
+
+    const handleSearch = async (e) => {
         e.preventDefault();
 
         const cleanPhone = phoneInput.trim().replace(/\D/g, '');
@@ -28,22 +138,38 @@ const MaterialStatusChecker = ({ isAr }) => {
             return;
         }
 
-        const donations = findDonationsByPhone(cleanPhone);
-        const bookings = findBookingsByPhone(cleanPhone);
+        setSearching(true);
+        try {
+            const results = await searchFirestore(cleanPhone);
 
-        setSearchResults({
-            donations: donations.filter(d =>
+            const filteredDonations = results.donations.filter(d =>
                 !nameInput.trim() || (d.studentName && d.studentName.toLowerCase().includes(nameInput.toLowerCase()))
-            ),
-            bookings: bookings.filter(b =>
+            );
+            const filteredBookings = results.bookings.filter(b =>
                 !nameInput.trim() || (b.name && b.name.toLowerCase().includes(nameInput.toLowerCase()))
-            ),
-            phone: cleanPhone,
-            name: nameInput.trim()
-        });
+            );
 
-        setHasSearched(true);
-        setActiveResultTab('donations');
+            setSearchResults({
+                donations: filteredDonations,
+                bookings: filteredBookings,
+                phone: cleanPhone,
+                name: nameInput.trim()
+            });
+
+            // اختر التبويب الأنسب تلقائياً
+            if (filteredBookings.length > 0) {
+                setActiveResultTab('bookings');
+            } else if (filteredDonations.length > 0) {
+                setActiveResultTab('donations');
+            } else {
+                setActiveResultTab('bookings');
+            }
+        } catch (err) {
+            console.error('Search error:', err);
+        } finally {
+            setSearching(false);
+            setHasSearched(true);
+        }
     };
 
     const handleClearSearch = () => {
@@ -55,6 +181,11 @@ const MaterialStatusChecker = ({ isAr }) => {
 
     const getStatusBadge = (status) => {
         const statusMap = {
+            pending: { 
+                label: isAr ? 'قيد المراجعة والتدقيق' : 'Under Review', 
+                bg: 'rgba(217, 119, 6, 0.12)', 
+                color: '#d97706' 
+            },
             submitted: { 
                 label: isAr ? 'قيد المراجعة والتدقيق' : 'Under Review', 
                 bg: 'rgba(217, 119, 6, 0.12)', 
@@ -74,6 +205,11 @@ const MaterialStatusChecker = ({ isAr }) => {
                 label: isAr ? 'مكتمل — تم الاستلام' : 'Completed — Delivered', 
                 bg: 'rgba(22, 163, 74, 0.12)', 
                 color: '#16a34a' 
+            },
+            reserved: { 
+                label: isAr ? 'محجوز رسمياً' : 'Booked', 
+                bg: 'rgba(79, 70, 229, 0.12)', 
+                color: '#4f46e5' 
             },
             booked: { 
                 label: isAr ? 'محجوز رسمياً' : 'Booked', 
@@ -170,12 +306,18 @@ const MaterialStatusChecker = ({ isAr }) => {
                 </div>
 
                 <div className="status-actions-row">
-                    <button type="submit" className="status-btn-search">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="18" height="18">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                        <span>{isAr ? 'استعلام عن الحالة' : 'Check Status'}</span>
+                    <button type="submit" className="status-btn-search" disabled={searching}>
+                        {searching ? (
+                            <span>⏳ {isAr ? 'جاري الاستعلام...' : 'Searching...'}</span>
+                        ) : (
+                            <>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="18" height="18">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <span>{isAr ? 'استعلام عن الحالة' : 'Check Status'}</span>
+                            </>
+                        )}
                     </button>
                     {hasSearched && (
                         <button type="button" onClick={handleClearSearch} className="status-btn-clear">
@@ -207,82 +349,21 @@ const MaterialStatusChecker = ({ isAr }) => {
                     <div className="status-tabs-nav">
                         <button
                             type="button"
-                            className={`status-tab-btn ${activeResultTab === 'donations' ? 'active' : ''}`}
-                            onClick={() => setActiveResultTab('donations')}
-                        >
-                            <span>{isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</span>
-                            <span className="status-tab-count">{searchResults.donations.length}</span>
-                        </button>
-                        <button
-                            type="button"
                             className={`status-tab-btn ${activeResultTab === 'bookings' ? 'active' : ''}`}
                             onClick={() => setActiveResultTab('bookings')}
                         >
                             <span>{isAr ? 'المواد المحجوزة' : 'Booked Materials'}</span>
                             <span className="status-tab-count">{searchResults.bookings.length}</span>
                         </button>
+                        <button
+                            type="button"
+                            className={`status-tab-btn ${activeResultTab === 'donations' ? 'active' : ''}`}
+                            onClick={() => setActiveResultTab('donations')}
+                        >
+                            <span>{isAr ? 'المواد المتبرع بها' : 'Donated Materials'}</span>
+                            <span className="status-tab-count">{searchResults.donations.length}</span>
+                        </button>
                     </div>
-
-                    {/* Donations Tab */}
-                    {activeResultTab === 'donations' && (
-                        <div className="status-tab-content">
-                            {searchResults.donations.length > 0 ? (
-                                <div className="status-cards-grid">
-                                    {searchResults.donations.map((donation, idx) => {
-                                        const statusInfo = getStatusBadge(donation.status || 'submitted');
-                                        return (
-                                            <div key={idx} className="status-item-card">
-                                                <div className="status-card-top">
-                                                    <h4 className="status-card-name">
-                                                        {donation.studentName || (isAr ? 'متبرع' : 'Donor')}
-                                                    </h4>
-                                                    <span 
-                                                        className="status-pill" 
-                                                        style={{ backgroundColor: statusInfo.bg, color: statusInfo.color }}
-                                                    >
-                                                        <span className="status-pill-dot"></span>
-                                                        <span>{statusInfo.label}</span>
-                                                    </span>
-                                                </div>
-
-                                                <div className="status-card-body">
-                                                    <div className="status-info-cell">
-                                                        <span className="cell-title">{isAr ? 'رقم التواصل' : 'Phone'}</span>
-                                                        <span className="cell-value" dir="ltr">{donation.phoneNumber || donation.phone || '—'}</span>
-                                                    </div>
-
-                                                    <div className="status-info-cell">
-                                                        <span className="cell-title">{isAr ? 'تاريخ التقديم' : 'Submission Date'}</span>
-                                                        <span className="cell-value">{formatDate(donation.submittedAt)}</span>
-                                                    </div>
-
-                                                    <div className="status-info-cell" style={{ gridColumn: '1 / -1' }}>
-                                                        <span className="cell-title">{isAr ? 'المواد المدرجة بالتبرع' : 'Donated Materials'}</span>
-                                                        <div className="status-materials-tags">
-                                                            {donation.materials && donation.materials.length > 0 ? (
-                                                                donation.materials.map((material, mIdx) => (
-                                                                    <span key={mIdx} className="status-material-chip">
-                                                                        {material.name || material}
-                                                                    </span>
-                                                                ))
-                                                            ) : (
-                                                                <span className="cell-value">{isAr ? 'غير محدد' : 'None'}</span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <div className="status-empty-box">
-                                    <h4>{isAr ? 'لا توجد تبرعات مسجلة بهذا الرقم' : 'No donations found'}</h4>
-                                    <p>{isAr ? 'تأكد من كتابة نفس رقم الهاتف الذي استخدمته عند إرسال نموذج التبرع.' : 'Please ensure you entered the same phone number used during submission.'}</p>
-                                </div>
-                            )}
-                        </div>
-                    )}
 
                     {/* Bookings Tab */}
                     {activeResultTab === 'bookings' && (
@@ -308,19 +389,26 @@ const MaterialStatusChecker = ({ isAr }) => {
 
                                                 <div className="status-card-body">
                                                     <div className="status-info-cell">
-                                                        <span className="cell-title">{isAr ? 'المادة المحجوزة' : 'Booked Material'}</span>
-                                                        <span className="cell-value">{booking.materialName}</span>
+                                                        <span className="cell-title">📚 {isAr ? 'المادة المحجوزة' : 'Booked Material'}</span>
+                                                        <span className="cell-value" style={{ fontWeight: '700', color: '#38bdf8' }}>{booking.materialName}</span>
                                                     </div>
 
                                                     <div className="status-info-cell">
-                                                        <span className="cell-title">{isAr ? 'تاريخ الحجز' : 'Booking Date'}</span>
+                                                        <span className="cell-title">📅 {isAr ? 'تاريخ الحجز' : 'Booking Date'}</span>
                                                         <span className="cell-value">{formatDate(booking.bookedAt)}</span>
                                                     </div>
 
                                                     {booking.donorName && (
                                                         <div className="status-info-cell">
-                                                            <span className="cell-title">{isAr ? 'المتبرع' : 'Donor'}</span>
+                                                            <span className="cell-title">👤 {isAr ? 'المتبرع' : 'Donor'}</span>
                                                             <span className="cell-value">{booking.donorName}</span>
+                                                        </div>
+                                                    )}
+
+                                                    {booking.donorPhone && (
+                                                        <div className="status-info-cell">
+                                                            <span className="cell-title">📱 {isAr ? 'هاتف المتبرع' : 'Donor Phone'}</span>
+                                                            <span className="cell-value" dir="ltr">{booking.donorPhone}</span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -332,6 +420,67 @@ const MaterialStatusChecker = ({ isAr }) => {
                                 <div className="status-empty-box">
                                     <h4>{isAr ? 'لا توجد حجوزات مسجلة بهذا الرقم' : 'No bookings found'}</h4>
                                     <p>{isAr ? 'تأكد من كتابة نفس رقم الهاتف الذي استخدمته عند إتمام حجز المادة.' : 'Please ensure you entered the same phone number used when booking.'}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Donations Tab */}
+                    {activeResultTab === 'donations' && (
+                        <div className="status-tab-content">
+                            {searchResults.donations.length > 0 ? (
+                                <div className="status-cards-grid">
+                                    {searchResults.donations.map((donation, idx) => {
+                                        const statusInfo = getStatusBadge(donation.status || 'submitted');
+                                        return (
+                                            <div key={idx} className="status-item-card">
+                                                <div className="status-card-top">
+                                                    <h4 className="status-card-name">
+                                                        {donation.studentName}
+                                                    </h4>
+                                                    <span 
+                                                        className="status-pill" 
+                                                        style={{ backgroundColor: statusInfo.bg, color: statusInfo.color }}
+                                                    >
+                                                        <span className="status-pill-dot"></span>
+                                                        <span>{statusInfo.label}</span>
+                                                    </span>
+                                                </div>
+
+                                                <div className="status-card-body">
+                                                    <div className="status-info-cell">
+                                                        <span className="cell-title">📱 {isAr ? 'رقم الهاتف' : 'Phone'}</span>
+                                                        <span className="cell-value" dir="ltr">{donation.phoneNumber || '—'}</span>
+                                                    </div>
+
+                                                    <div className="status-info-cell">
+                                                        <span className="cell-title">📅 {isAr ? 'تاريخ التقديم' : 'Submitted Date'}</span>
+                                                        <span className="cell-value">{formatDate(donation.submittedAt)}</span>
+                                                    </div>
+
+                                                    <div className="status-info-cell" style={{ gridColumn: '1 / -1' }}>
+                                                        <span className="cell-title">📚 {isAr ? 'المواد المدرجة بالتبرع' : 'Donated Materials'}</span>
+                                                        <div className="status-materials-tags">
+                                                            {donation.materials && donation.materials.length > 0 ? (
+                                                                donation.materials.map((material, mIdx) => (
+                                                                    <span key={mIdx} className="status-material-chip">
+                                                                        {material.name || material}
+                                                                    </span>
+                                                                ))
+                                                            ) : (
+                                                                <span className="cell-value">{isAr ? 'غير محدد' : 'None'}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="status-empty-box">
+                                    <h4>{isAr ? 'لا توجد تبرعات مسجلة بهذا الرقم' : 'No donations found'}</h4>
+                                    <p>{isAr ? 'تأكد من كتابة نفس رقم الهاتف الذي استخدمته عند إرسال نموذج التبرع.' : 'Please ensure you entered the same phone number used during submission.'}</p>
                                 </div>
                             )}
                         </div>
