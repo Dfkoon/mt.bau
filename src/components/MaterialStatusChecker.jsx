@@ -42,10 +42,10 @@ const MaterialStatusChecker = ({ isAr }) => {
                 const data = docSnap.data();
                 if (data.deleted) return;
 
-                const isDonor = matchesPhone(data.phoneNumber) || 
-                                matchesPhone(data.confirmPhoneNumber) || 
-                                matchesPhone(data.alternatePhone) || 
-                                matchesPhone(data.donorPhone);
+                const isDonor = matchesPhone(data.phoneNumber) ||
+                    matchesPhone(data.confirmPhoneNumber) ||
+                    matchesPhone(data.alternatePhone) ||
+                    matchesPhone(data.donorPhone);
 
                 // 1. إذا كان صاحب الطلب هو المتبرع
                 if (isDonor) {
@@ -55,8 +55,13 @@ const MaterialStatusChecker = ({ isAr }) => {
                     if (rawMaterials.length > 0) {
                         const matChips = rawMaterials.map(m => typeof m === 'object' ? (m.name || '') : m).filter(Boolean);
                         let mainStatus = data.status || 'submitted';
-                        const hasReserved = rawMaterials.some(m => typeof m === 'object' && (m.status === 'reserved' || m.takerInfo));
-                        if (hasReserved) mainStatus = 'booked';
+                        const hasCancelled = rawMaterials.some(m => typeof m === 'object' && (m.bookingStatus === 'cancelled' || m.status === 'cancelled' || m.cancelledAt || m.status === 'rejected'));
+                        const hasRejected = rawMaterials.some(m => typeof m === 'object' && (m.bookingStatus === 'rejected' || m.status === 'rejected'));
+                        const hasReserved = rawMaterials.some(m => typeof m === 'object' && (m.status === 'reserved' || m.takerInfo) && !(m.bookingStatus === 'cancelled' || m.status === 'cancelled' || m.cancelledAt));
+
+                        if (hasCancelled) mainStatus = 'cancelled';
+                        else if (hasRejected) mainStatus = 'rejected';
+                        else if (hasReserved) mainStatus = 'booked';
 
                         donationsFound.push({
                             id: docSnap.id,
@@ -75,7 +80,10 @@ const MaterialStatusChecker = ({ isAr }) => {
                     if (typeof m !== 'object' || !m) return;
                     const taker = m.takerInfo || {};
                     const isBooker = matchesPhone(taker.phone);
-                    if (isBooker && (m.status === 'reserved' || m.status === 'completed' || data.status === 'reserved')) {
+                    const bookingStatus = m.bookingStatus || m.status || '';
+                    const isCancelledBooking = bookingStatus === 'cancelled' || bookingStatus === 'rejected' || m.cancelledAt;
+                    const isRelevantBooking = isBooker && (m.status === 'reserved' || m.status === 'completed' || bookingStatus === 'cancelled' || bookingStatus === 'rejected' || data.status === 'reserved');
+                    if (isRelevantBooking) {
                         bookingsFound.push({
                             id: `booking-${docSnap.id}-${idx}`,
                             name: taker.name || (isAr ? 'طالب حاجز' : 'Booker'),
@@ -83,7 +91,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                             materialName: m.name || data.materialName || '',
                             donorName: data.studentName || data.donorName || '',
                             donorPhone: data.phoneNumber || data.donorPhone || '',
-                            status: m.status === 'completed' ? 'completed' : 'booked',
+                            status: isCancelledBooking ? (bookingStatus === 'rejected' ? 'rejected' : 'cancelled') : (m.status === 'completed' ? 'completed' : 'booked'),
                             bookedAt: taker.bookedAt?.toDate?.()?.toISOString?.() || taker.bookedAt || data.updatedAt || data.createdAt || new Date().toISOString()
                         });
                     }
@@ -91,6 +99,7 @@ const MaterialStatusChecker = ({ isAr }) => {
 
                 // حجوزات مباشرة تمت من لوحة التحكم
                 if (data.bookerPhone && matchesPhone(data.bookerPhone)) {
+                    const directStatus = data.status === 'completed' ? 'completed' : (data.status === 'cancelled' || data.status === 'rejected' ? data.status : 'booked');
                     bookingsFound.push({
                         id: `booking-admin-${docSnap.id}`,
                         name: data.bookerName || (isAr ? 'طالب حاجز' : 'Booker'),
@@ -98,7 +107,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                         materialName: data.materialName || '',
                         donorName: data.donorName || data.studentName || '',
                         donorPhone: data.donorPhone || data.phoneNumber || '',
-                        status: data.status === 'completed' ? 'completed' : 'booked',
+                        status: directStatus,
                         bookedAt: data.bookedAt || data.updatedAt || data.createdAt || new Date().toISOString()
                     });
                 }
@@ -121,7 +130,7 @@ const MaterialStatusChecker = ({ isAr }) => {
                     bookingsFound.push(lb);
                 }
             });
-        } catch (e) {}
+        } catch (e) { }
 
         return {
             donations: donationsFound,
@@ -180,48 +189,59 @@ const MaterialStatusChecker = ({ isAr }) => {
     };
 
     const getStatusBadge = (status) => {
+        const safeStatus = String(status || '').toLowerCase();
         const statusMap = {
-            pending: { 
-                label: isAr ? 'قيد المراجعة والتدقيق' : 'Under Review', 
-                bg: 'rgba(217, 119, 6, 0.12)', 
-                color: '#d97706' 
+            pending: {
+                label: isAr ? 'قيد المراجعة' : 'Under Review',
+                bg: 'rgba(217, 119, 6, 0.12)',
+                color: '#d97706'
             },
-            submitted: { 
-                label: isAr ? 'قيد المراجعة والتدقيق' : 'Under Review', 
-                bg: 'rgba(217, 119, 6, 0.12)', 
-                color: '#d97706' 
+            submitted: {
+                label: isAr ? 'قيد المراجعة' : 'Under Review',
+                bg: 'rgba(217, 119, 6, 0.12)',
+                color: '#d97706'
             },
-            approved: { 
-                label: isAr ? 'معتمد — جاهز للتسليم' : 'Approved — Ready', 
-                bg: 'rgba(37, 99, 235, 0.12)', 
-                color: '#2563eb' 
+            approved: {
+                label: isAr ? 'متاح' : 'Available',
+                bg: 'rgba(37, 99, 235, 0.12)',
+                color: '#2563eb'
             },
-            rejected: { 
-                label: isAr ? 'تم الإلغاء / مرفوض' : 'Cancelled / Rejected', 
-                bg: 'rgba(220, 38, 38, 0.12)', 
-                color: '#dc2626' 
+            available: {
+                label: isAr ? 'متاح' : 'Available',
+                bg: 'rgba(37, 99, 235, 0.12)',
+                color: '#2563eb'
             },
-            completed: { 
-                label: isAr ? 'مكتمل — تم الاستلام' : 'Completed — Delivered', 
-                bg: 'rgba(22, 163, 74, 0.12)', 
-                color: '#16a34a' 
+            rejected: {
+                label: isAr ? 'مرفوض / ملغى' : 'Rejected / Cancelled',
+                bg: 'rgba(220, 38, 38, 0.12)',
+                color: '#dc2626'
             },
-            reserved: { 
-                label: isAr ? 'محجوز رسمياً' : 'Booked', 
-                bg: 'rgba(79, 70, 229, 0.12)', 
-                color: '#4f46e5' 
+            cancelled: {
+                label: isAr ? 'ملغى' : 'Cancelled',
+                bg: 'rgba(220, 38, 38, 0.12)',
+                color: '#dc2626'
             },
-            booked: { 
-                label: isAr ? 'محجوز رسمياً' : 'Booked', 
-                bg: 'rgba(79, 70, 229, 0.12)', 
-                color: '#4f46e5' 
+            completed: {
+                label: isAr ? 'تم الاستلام' : 'Completed',
+                bg: 'rgba(22, 163, 74, 0.12)',
+                color: '#16a34a'
+            },
+            reserved: {
+                label: isAr ? 'محجوز' : 'Booked',
+                bg: 'rgba(79, 70, 229, 0.12)',
+                color: '#4f46e5'
+            },
+            booked: {
+                label: isAr ? 'محجوز' : 'Booked',
+                bg: 'rgba(79, 70, 229, 0.12)',
+                color: '#4f46e5'
             }
         };
 
-        return statusMap[status] || { 
-            label: status, 
-            bg: 'rgba(100, 116, 139, 0.12)', 
-            color: '#64748b' 
+        return statusMap[safeStatus] || {
+            label: status || (isAr ? 'غير محدد' : 'Unknown'),
+            bg: 'rgba(100, 116, 139, 0.12)',
+            color: '#64748b'
         };
     };
 
@@ -308,25 +328,13 @@ const MaterialStatusChecker = ({ isAr }) => {
                 <div className="status-actions-row">
                     <button type="submit" className="status-btn-search" disabled={searching}>
                         {searching ? (
-                            <span>⏳ {isAr ? 'جاري الاستعلام...' : 'Searching...'}</span>
+                            <span>{isAr ? 'جاري الاستعلام...' : 'Searching...'}</span>
                         ) : (
-                            <>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="18" height="18">
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                                <span>{isAr ? 'استعلام عن الحالة' : 'Check Status'}</span>
-                            </>
+                            <span>{isAr ? 'استعلام عن الحالة' : 'Check Status'}</span>
                         )}
                     </button>
                     {hasSearched && (
                         <button type="button" onClick={handleClearSearch} className="status-btn-clear">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                                <path d="M21 3v5h-5"></path>
-                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                                <path d="M3 21v-5h5"></path>
-                            </svg>
                             <span>{isAr ? 'بحث جديد' : 'New Search'}</span>
                         </button>
                     )}
@@ -378,8 +386,8 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     <h4 className="status-card-name">
                                                         {booking.name || (isAr ? 'طالب حاجز' : 'Booker')}
                                                     </h4>
-                                                    <span 
-                                                        className="status-pill" 
+                                                    <span
+                                                        className="status-pill"
                                                         style={{ backgroundColor: statusInfo.bg, color: statusInfo.color }}
                                                     >
                                                         <span className="status-pill-dot"></span>
@@ -389,25 +397,25 @@ const MaterialStatusChecker = ({ isAr }) => {
 
                                                 <div className="status-card-body">
                                                     <div className="status-info-cell">
-                                                        <span className="cell-title">📚 {isAr ? 'المادة المحجوزة' : 'Booked Material'}</span>
+                                                        <span className="cell-title">{isAr ? 'المادة المحجوزة' : 'Booked Material'}</span>
                                                         <span className="cell-value" style={{ fontWeight: '700', color: '#38bdf8' }}>{booking.materialName}</span>
                                                     </div>
 
                                                     <div className="status-info-cell">
-                                                        <span className="cell-title">📅 {isAr ? 'تاريخ الحجز' : 'Booking Date'}</span>
+                                                        <span className="cell-title">{isAr ? 'تاريخ الحجز' : 'Booking Date'}</span>
                                                         <span className="cell-value">{formatDate(booking.bookedAt)}</span>
                                                     </div>
 
                                                     {booking.donorName && (
                                                         <div className="status-info-cell">
-                                                            <span className="cell-title">👤 {isAr ? 'المتبرع' : 'Donor'}</span>
+                                                            <span className="cell-title">{isAr ? 'المتبرع' : 'Donor'}</span>
                                                             <span className="cell-value">{booking.donorName}</span>
                                                         </div>
                                                     )}
 
                                                     {booking.donorPhone && (
                                                         <div className="status-info-cell">
-                                                            <span className="cell-title">📱 {isAr ? 'هاتف المتبرع' : 'Donor Phone'}</span>
+                                                            <span className="cell-title">{isAr ? 'هاتف المتبرع' : 'Donor Phone'}</span>
                                                             <span className="cell-value" dir="ltr">{booking.donorPhone}</span>
                                                         </div>
                                                     )}
@@ -438,8 +446,8 @@ const MaterialStatusChecker = ({ isAr }) => {
                                                     <h4 className="status-card-name">
                                                         {donation.studentName}
                                                     </h4>
-                                                    <span 
-                                                        className="status-pill" 
+                                                    <span
+                                                        className="status-pill"
                                                         style={{ backgroundColor: statusInfo.bg, color: statusInfo.color }}
                                                     >
                                                         <span className="status-pill-dot"></span>
@@ -449,17 +457,17 @@ const MaterialStatusChecker = ({ isAr }) => {
 
                                                 <div className="status-card-body">
                                                     <div className="status-info-cell">
-                                                        <span className="cell-title">📱 {isAr ? 'رقم الهاتف' : 'Phone'}</span>
+                                                        <span className="cell-title">{isAr ? 'رقم الهاتف' : 'Phone'}</span>
                                                         <span className="cell-value" dir="ltr">{donation.phoneNumber || '—'}</span>
                                                     </div>
 
                                                     <div className="status-info-cell">
-                                                        <span className="cell-title">📅 {isAr ? 'تاريخ التقديم' : 'Submitted Date'}</span>
+                                                        <span className="cell-title">{isAr ? 'تاريخ التقديم' : 'Submitted Date'}</span>
                                                         <span className="cell-value">{formatDate(donation.submittedAt)}</span>
                                                     </div>
 
                                                     <div className="status-info-cell" style={{ gridColumn: '1 / -1' }}>
-                                                        <span className="cell-title">📚 {isAr ? 'المواد المدرجة بالتبرع' : 'Donated Materials'}</span>
+                                                        <span className="cell-title">{isAr ? 'المواد المدرجة بالتبرع' : 'Donated Materials'}</span>
                                                         <div className="status-materials-tags">
                                                             {donation.materials && donation.materials.length > 0 ? (
                                                                 donation.materials.map((material, mIdx) => (

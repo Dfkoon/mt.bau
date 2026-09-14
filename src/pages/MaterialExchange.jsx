@@ -984,21 +984,27 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         try {
             const q = query(collection(db, 'materialDonations'), orderBy('createdAt', 'desc'));
             const snapshot = await getDocs(q);
-            const donationsData = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            const donationsData = snapshot.docs
+                .map(d => ({ id: d.id, ...d.data() }))
+                .filter(donation => !donation.deleted);
             const materialsList = donationsData.flatMap(donation => {
                 const materials = donation.materials || (donation.itemName ? [donation.itemName] : (donation.materialName ? [{ name: donation.materialName, status: donation.status, bookerName: donation.bookerName, bookerPhone: donation.bookerPhone }] : []));
                 return materials.map((m, idx) => {
                     const materialObj = typeof m === 'object' && m !== null ? { ...m } : { name: m, status: donation.status };
                     const itemStatus = materialObj.status || (materialObj.takerInfo || donation.bookerName ? 'reserved' : (donation.status || 'approved'));
+                    const bookingStatus = materialObj.bookingStatus || materialObj.status || donation.status;
                     materialObj.status = itemStatus;
-                    const isReserved = itemStatus === 'reserved' || itemStatus === 'completed' || donation.status === 'reserved' || Boolean(materialObj.takerInfo) || Boolean(donation.bookerName);
+                    const isCancelled = ['cancelled', 'rejected'].includes(String(bookingStatus).toLowerCase()) || ['cancelled', 'rejected'].includes(String(materialObj.bookingStatus || '').toLowerCase()) || Boolean(materialObj.cancelledAt);
+                    const isReserved = !isCancelled && (itemStatus === 'reserved' || itemStatus === 'completed' || donation.status === 'reserved' || (Boolean(materialObj.takerInfo) && !isCancelled) || Boolean(donation.bookerName));
                     return {
                         ...donation,
                         materialItem: materialObj,
                         originalIndex: idx,
                         uniqueKey: `${donation.id}-${idx}`,
                         materialName: materialObj.name || donation.materialName,
-                        isReserved: isReserved
+                        isReserved: isReserved,
+                        bookingStatus: materialObj.bookingStatus || null,
+                        cancelledAt: materialObj.cancelledAt || null
                     };
                 });
             });
@@ -2707,8 +2713,10 @@ Please contact us to coordinate the pickup.Thank you.`;
             const materials = [...(data.materials || [])];
             if (materials[materialIndex]) {
                 materials[materialIndex].status = 'approved';
+                materials[materialIndex].bookingStatus = 'cancelled';
+                materials[materialIndex].cancelledAt = new Date();
+                materials[materialIndex].cancelledBy = loggedInUser?.username || 'admin';
                 materials[materialIndex].hideFromCounterparty = false;
-                delete materials[materialIndex].takerInfo;
             }
 
             let overallStatus = 'pending';
@@ -2729,7 +2737,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                 status: overallStatus,
                 lastUpdated: new Date()
             });
-            toast.success(isAr ? 'تم إلغاء الحجز بنجاح وإعاد المادة للمستودع 🔓' : 'Booking cancelled and material returned to pool 🔓');
+            toast.success(isAr ? 'تم إلغاء الحجز بنجاح وإعاد المادة للمستودع' : 'Booking cancelled and material returned to pool');
             fetchAllDonations();
 
             addAuditLog(
