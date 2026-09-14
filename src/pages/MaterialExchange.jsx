@@ -2924,8 +2924,9 @@ Please contact us to coordinate the pickup.Thank you.`;
             const donorName = don ? don.studentName : '';
             await moveToDeletedItems('materialDonations', donationId, don, 'donation-deletion');
             toast.success(isAr ? 'تم نقل التبرع إلى المحذوفات' : 'Donation moved to deleted items');
-            fetchAllDonations();
-            fetchDeletedItems();
+            await fetchAllDonations();
+            await fetchDonations();
+            await fetchDeletedItems();
 
             addAuditLog(
                 `نقل تبرع الطالب (${donorName}) إلى المحذوفات`,
@@ -3017,6 +3018,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     { donationId, requestId: request.requestId }
                 );
                 await fetchAllDonations();
+                await fetchDonations();
                 await fetchDeletedItems();
                 return;
             }
@@ -3396,7 +3398,10 @@ Please contact us to coordinate the pickup.Thank you.`;
             await updateDoc(doc(db, 'deletedItems', item.id), { restored: true, restoredAt: serverTimestamp(), restoredBy: loggedInUser?.username || 'admin' });
             toast.success(isAr ? 'تمت استعادة العنصر بنجاح' : 'Item restored successfully');
             fetchDeletedItems();
-            if (item.originalCollection === 'materialDonations') fetchAllDonations();
+            if (item.originalCollection === 'materialDonations') {
+                await fetchAllDonations();
+                await fetchDonations();
+            }
             if (item.originalCollection === 'deliverySchedules') fetchDeliverySchedules();
         } catch (e) {
             console.error('Error restoring deleted item:', e);
