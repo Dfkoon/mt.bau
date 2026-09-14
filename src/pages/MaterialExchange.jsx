@@ -107,7 +107,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const isAr = language === 'ar';
 
     // ── PUBLIC STATE ─────────────────────────────────────────────
-    const [formData, setFormData] = useState({ studentName: '', phoneNumber: '', confirmPhoneNumber: '', email: '', studentGender: '', deliveryWeek: '', deliveryWeekCustom: '', materials: [], hideContactInfo: false });
+    const [formData, setFormData] = useState({ studentName: '', phoneNumber: '', confirmPhoneNumber: '', email: '', studentGender: '', deliveryWeek: '', deliveryWeekCustom: '', materials: [], hideContactInfo: false, shareContactForDelivery: false });
     const [currentMaterial, setCurrentMaterial] = useState({ name: '', description: '' });
     const [allMaterials, setAllMaterials] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -183,7 +183,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
-    const [bookingData, setBookingData] = useState({ name: '', phone: '', confirmPhone: '', gender: '', hideContactInfo: false });
+    const [bookingData, setBookingData] = useState({ name: '', phone: '', confirmPhone: '', gender: '', hideContactInfo: false, shareContactForDelivery: false });
     const [preRequestForm, setPreRequestForm] = useState({ type: 'donate', studentName: '', phoneNumber: '', materialName: '', notes: '', agreedToPreRequestTerms: false });
     const [hasViewedTerms, setHasViewedTerms] = useState(false);
     const [preRequests, setPreRequests] = useState([]);
@@ -1346,6 +1346,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 deliveryWeekCustom: formData.deliveryWeekCustom?.trim() || '',
                 materials: formData.materials,
                 hideContactInfo: !!formData.hideContactInfo,
+                shareContactForDelivery: !!formData.shareContactForDelivery,
                 status: 'pending',
                 createdAt: serverTimestamp()
             };
@@ -1371,7 +1372,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             ]);
 
             toast.success(isAr ? 'تم نشر المواد بنجاح' : 'Materials published successfully');
-            setFormData({ studentName: '', phoneNumber: '', confirmPhoneNumber: '', email: '', studentGender: '', deliveryWeek: '', deliveryWeekCustom: '', materials: [], hideContactInfo: false });
+            setFormData({ studentName: '', phoneNumber: '', confirmPhoneNumber: '', email: '', studentGender: '', deliveryWeek: '', deliveryWeekCustom: '', materials: [], hideContactInfo: false, shareContactForDelivery: false });
             setAgreedToTerms(false);
             setHasReadDonationTerms(false);
             generateDonationCaptcha();
@@ -1575,6 +1576,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                     studentGender: bookingData.gender,
                     hideFromCounterparty: !!bookingData.hideContactInfo,
                     hideBookerInfo: !!bookingData.hideContactInfo,
+                    shareContactForDelivery: !!bookingData.shareContactForDelivery,
                     bookedAt: new Date()
                 };
                 const allReserved = updatedMaterials.every(m => {
@@ -1648,7 +1650,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 donorName: selectedMaterial?.donorName || 'مختبرع',
                 coordinatorName: selectedMaterial?.studentGender === 'male' ? (systemSettings.ahmadNameAr || 'أحمد') : (systemSettings.saraNameAr || 'سار')
             });
-            setBookingData({ name: '', phone: '', confirmPhone: '', gender: '', hideContactInfo: false });
+            setBookingData({ name: '', phone: '', confirmPhone: '', gender: '', hideContactInfo: false, shareContactForDelivery: false });
             generateBookingCaptcha();
             fetchDonations();
         } catch (error) {
@@ -4318,6 +4320,11 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <p>{isAr ? 'شارك موادك الدراسية مع زملائك بصورة مهنية.' : 'Share your academic materials with peers in a professional way.'}</p>
                         </div>
 
+                        <div className="campaign-free-badge" aria-label={isAr ? 'حملة مجانية' : 'Free campaign'}>
+                            <span>{isAr ? 'حملة' : 'Free'}</span>
+                            <span>{isAr ? 'مجانية' : 'Campaign'}</span>
+                        </div>
+
                         {!settingsLoaded ? (
                             <div className="campaign-suspension-notice" style={{ opacity: 0.5 }}>
                                 <p>{isAr ? 'جاري تحميل الإعدادات...' : 'Loading settings...'}</p>
@@ -4546,6 +4553,16 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     )}
                                 </div>
                                 <label className="terms-label agreement-checkbox"><input type="checkbox" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} />{isAr ? 'أوافق على الشروط والأحكام' : 'I agree to the terms and conditions'}</label>
+                                <label className="terms-label agreement-checkbox" style={{ marginTop: '0.6rem', background: 'rgba(59,130,246,0.08)', borderColor: 'rgba(59,130,246,0.22)' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={!!formData.shareContactForDelivery}
+                                        onChange={e => setFormData(prev => ({ ...prev, shareContactForDelivery: e.target.checked, hideContactInfo: e.target.checked ? false : prev.hideContactInfo }))}
+                                    />
+                                    {isAr
+                                        ? 'أوافق على مشاركة بياناتي مع الحاجز/المتبرع أثناء التسليم فقط للعرض عبر باركود التسليم، ولا يتم امتلاك البيانات الشخصية إطلاقاً.'
+                                        : 'I agree to share my contact details with the booker/donor during delivery only for viewing via the delivery QR code. My personal data is never owned or used beyond the official handover process.'}
+                                </label>
                                 <button type="submit" className="submit-btn" disabled={loading || !agreedToTerms}>{loading ? (isAr ? 'جارٍ الإرسال...' : 'Submitting...') : (isAr ? 'نشر المواد' : 'Publish Materials')}</button>
                             </form>
                         )}
@@ -4935,12 +4952,22 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     <input type="checkbox" checked={agreedToBookingTerms} onChange={e => setAgreedToBookingTerms(e.target.checked)} />
                                     {isAr ? 'أوافق على الشروط والأحكام' : 'I agree to the terms and conditions'}
                                 </label>
+                                <label className="terms-label agreement-checkbox" style={{ margin: '0.4rem 0 0.25rem', background: 'rgba(59,130,246,0.08)', borderColor: 'rgba(59,130,246,0.22)' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={!!bookingData.shareContactForDelivery}
+                                        onChange={e => setBookingData(prev => ({ ...prev, shareContactForDelivery: e.target.checked, hideContactInfo: e.target.checked ? false : prev.hideContactInfo }))}
+                                    />
+                                    {isAr
+                                        ? 'أوافق على مشاركة بياناتي مع المتبرع/الحاجز أثناء التسليم فقط للعرض عبر باركود التسليم، ولا يتم امتلاك البيانات الشخصية إطلاقاً.'
+                                        : 'I agree to share my contact details with the donor/booker during delivery only for viewing via the delivery QR code. My personal data is never owned or used beyond the official handover process.'}
+                                </label>
                                 <div className="form-group" style={{ marginTop: '0.2rem' }}>
                                     <label className="terms-label agreement-checkbox" style={{ margin: '0', fontWeight: 500, color: '#475569' }}>
                                         <input
                                             type="checkbox"
                                             checked={!!bookingData.hideContactInfo}
-                                            onChange={e => setBookingData(prev => ({ ...prev, hideContactInfo: e.target.checked }))}
+                                            onChange={e => setBookingData(prev => ({ ...prev, hideContactInfo: e.target.checked, shareContactForDelivery: e.target.checked ? false : prev.shareContactForDelivery }))}
                                         />
                                         {isAr ? 'اختياري: أريد إخفاء بياناتي عن الطرف الآخر عند التسليم' : 'Optional: hide my details from the other party during delivery'}
                                     </label>
