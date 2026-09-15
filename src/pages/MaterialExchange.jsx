@@ -1538,7 +1538,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             return;
         }
 
-        setShowTermsConfirmModal('booking');
+        proceedSubmitBooking();
     };
 
     const proceedSubmitBooking = async () => {
@@ -1577,8 +1577,8 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                     email: bookingData.email?.trim() || '',
                     gender: bookingData.gender,
                     studentGender: bookingData.gender,
-                    hideFromCounterparty: !!bookingData.hideContactInfo,
-                    hideBookerInfo: !!bookingData.hideContactInfo,
+                    hideFromCounterparty: !bookingData.shareContactForDelivery,
+                    hideBookerInfo: !bookingData.shareContactForDelivery,
                     shareContactForDelivery: !!bookingData.shareContactForDelivery,
                     bookedAt: new Date()
                 };
@@ -4318,16 +4318,14 @@ Please contact us to coordinate the pickup.Thank you.`;
                 </section>
                 <div className="exchange-main-container">
                     <section className="add-material-section glass-card">
-                        <div className="section-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'space-between' }}>
-                            <div style={{ flex: 1 }}>
-                                <h2>{isAr ? 'تبرع الآن بالمواد' : 'Donate Materials'}</h2>
-                                <p>{isAr ? 'شارك موادك الدراسية مع زملائك بصورة مهنية.' : 'Share your academic materials with peers in a professional way.'}</p>
-                            </div>
+                        <div className="section-header">
+                            <h2>{isAr ? 'تبرع الآن بالمواد' : 'Donate Materials'}</h2>
+                            <p>{isAr ? 'شارك موادك الدراسية مع زملائك بصورة مهنية.' : 'Share your academic materials with peers in a professional way.'}</p>
+                        </div>
 
-                            <div className="campaign-free-badge" aria-label={isAr ? 'حملة مجانية' : 'Free campaign'}>
-                                <span>{isAr ? 'حملة' : 'Free'}</span>
-                                <span>{isAr ? 'مجانية' : 'Campaign'}</span>
-                            </div>
+                        <div className="campaign-free-badge" aria-label={isAr ? 'حملة مجانية' : 'Free campaign'}>
+                            <span>{isAr ? 'حملة' : 'Free'}</span>
+                            <span>{isAr ? 'مجانية' : 'Campaign'}</span>
                         </div>
 
                         {!settingsLoaded ? (
@@ -4967,16 +4965,6 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         ? 'أوافق على مشاركة بياناتي مع المتبرع/الحاجز أثناء التسليم فقط للعرض عبر باركود التسليم، ولا يتم امتلاك البيانات الشخصية إطلاقاً.'
                                         : 'I agree to share my contact details with the donor/booker during delivery only for viewing via the delivery QR code. My personal data is never owned or used beyond the official handover process.'}
                                 </label>
-                                <div className="form-group" style={{ marginTop: '0.2rem' }}>
-                                    <label className="terms-label agreement-checkbox" style={{ margin: '0', fontWeight: 500, color: '#475569' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={!!bookingData.hideContactInfo}
-                                            onChange={e => setBookingData(prev => ({ ...prev, hideContactInfo: e.target.checked, shareContactForDelivery: e.target.checked ? false : prev.shareContactForDelivery }))}
-                                        />
-                                        {isAr ? 'اختياري: أريد إخفاء بياناتي عن الطرف الآخر عند التسليم' : 'Optional: hide my details from the other party during delivery'}
-                                    </label>
-                                </div>
                                 <button type="submit" className="submit-btn full-width" disabled={loading || !agreedToBookingTerms}>{loading ? (isAr ? 'جاري الحجز...' : 'Booking...') : (isAr ? 'تأكيد الحجز' : 'Confirm Booking')}</button>
                             </form>
                         </div>
