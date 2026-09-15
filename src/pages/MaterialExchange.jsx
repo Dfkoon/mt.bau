@@ -979,6 +979,10 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         return result;
     };
 
+    const hasDataSharingConsent = (record) => (
+        record?.shareContactForDelivery === true || record?.shareContactForDelivery === 'true'
+    );
+
     const fetchDonations = async () => {
         setLoading(true);
         try {
@@ -1023,6 +1027,44 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const q = query(collection(db, 'materialDonations'), orderBy('createdAt', 'desc'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const donationsData = snapshot.docs
+                .map(d => ({ id: d.id, ...d.data() }))
+                .filter(donation => !donation.deleted && donation.status !== 'deleted' && donation.status !== 'cancelled');
+            const materialsList = donationsData.flatMap(donation => {
+                const materials = donation.materials || (donation.itemName ? [donation.itemName] : (donation.materialName ? [{ name: donation.materialName, status: donation.status, bookerName: donation.bookerName, bookerPhone: donation.bookerPhone }] : []));
+                return materials.filter(m => {
+                    const st = typeof m === 'object' && m !== null ? m.status : donation.status;
+                    return st !== 'deleted' && st !== 'cancelled';
+                }).map((m, idx) => {
+                    const materialObj = typeof m === 'object' && m !== null ? { ...m } : { name: m, status: donation.status };
+                    const itemStatus = materialObj.status || (materialObj.takerInfo || donation.bookerName ? 'reserved' : (donation.status || 'approved'));
+                    const bookingStatus = materialObj.bookingStatus || materialObj.status || donation.status;
+                    materialObj.status = itemStatus;
+                    const isCancelled = ['cancelled', 'rejected'].includes(String(bookingStatus).toLowerCase()) || ['cancelled', 'rejected'].includes(String(materialObj.bookingStatus || '').toLowerCase()) || Boolean(materialObj.cancelledAt);
+                    const isReserved = !isCancelled && (itemStatus === 'reserved' || itemStatus === 'completed' || donation.status === 'reserved' || (Boolean(materialObj.takerInfo) && !isCancelled) || Boolean(donation.bookerName));
+                    return {
+                        ...donation,
+                        materialItem: materialObj,
+                        originalIndex: idx,
+                        uniqueKey: `${donation.id}-${idx}`,
+                        materialName: materialObj.name || donation.materialName,
+                        isReserved,
+                        bookingStatus: materialObj.bookingStatus || null,
+                        cancelledAt: materialObj.cancelledAt || null
+                    };
+                });
+            });
+            setAllMaterials(materialsList);
+        }, (error) => {
+            console.error('Error listening for donations:', error);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const fetchAllDonations = async () => {
         setDashboardLoading(true);
@@ -5874,6 +5916,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                             <th>{isAr ? 'رقم الهاتف' : 'Phone'}</th>
                                                                             <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                             <th>{isAr ? 'الجنس' : 'Gender'}</th>
+                                                                            <th>{isAr ? 'موافقة مشاركة البيانات' : 'Data Sharing Consent'}</th>
                                                                             <th>{isAr ? 'المواد المختبرع بها' : 'Donated Materials'}</th>
                                                                             <th>{isAr ? 'حال الطلب' : 'Status'}</th>
                                                                             <th>{isAr ? 'تاريخخ التقديم' : 'Submitted'}</th>
@@ -5893,6 +5936,13 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                     <td>
                                                                                         <span className={`gender-badge gender-${donation.studentGender}`}>
                                                                                             {donation.studentGender === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                                                        </span>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span className={`status-badge ${hasDataSharingConsent(donation) ? 'status-approved' : 'status-pending'}`}>
+                                                                                            {hasDataSharingConsent(donation)
+                                                                                                ? (isAr ? '✅ وافق' : '✅ Consented')
+                                                                                                : (isAr ? '🚫 لم يوافق' : '🚫 Not consented')}
                                                                                         </span>
                                                                                     </td>
                                                                                     <td className="materials-cell">
@@ -5995,6 +6045,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                             <th>{isAr ? 'هاتف الحاجز' : 'Booker Phone'}</th>
                                                                             <th>{isAr ? 'البريد الإلكتروني' : 'Email'}</th>
                                                                             <th>{isAr ? 'الجنس' : 'Gender'}</th>
+                                                                            <th>{isAr ? 'موافقة مشاركة البيانات' : 'Data Sharing Consent'}</th>
                                                                             <th>{isAr ? 'المادة المحجوز' : 'Booked Material'}</th>
                                                                             <th>{isAr ? 'اسم المختبرع' : 'Donor Name'}</th>
                                                                             <th>{isAr ? 'بريد المختبرع' : 'Donor Email'}</th>
@@ -6012,6 +6063,13 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                                                 <td>
                                                                                     <span className={`gender-badge gender-${booking.takerInfo?.gender || booking.donorGender}`}>
                                                                                         {(booking.takerInfo?.gender || booking.donorGender) === 'male' ? (isAr ? '♂️ ذكر' : '♂️ Male') : (isAr ? '♀️ أنثى' : '♀️ Female')}
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <span className={`status-badge ${hasDataSharingConsent(booking.takerInfo) ? 'status-approved' : 'status-pending'}`}>
+                                                                                        {hasDataSharingConsent(booking.takerInfo)
+                                                                                            ? (isAr ? '✅ وافق' : '✅ Consented')
+                                                                                            : (isAr ? '🚫 لم يوافق' : '🚫 Not consented')}
                                                                                     </span>
                                                                                 </td>
                                                                                 <td className="materials-cell">
