@@ -238,6 +238,9 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [editCoordinatorNotes, setEditCoordinatorNotes] = useState('');
     const [showDelegateModal, setShowDelegateModal] = useState(false);
     const [donationToDelegate, setDonationToDelegate] = useState(null);
+    const [showMessageComposer, setShowMessageComposer] = useState(false);
+    const [messageRecipient, setMessageRecipient] = useState({});
+    const [messageText, setMessageText] = useState('');
     const [showApprovalRequestsModal, setShowApprovalRequestsModal] = useState(false);
     const [selectedDonationForRequests, setSelectedDonationForRequests] = useState(null);
 
@@ -672,6 +675,23 @@ const MaterialExchange = ({ isEmbedded = false }) => {
 
     // Derived at top level so useEffect hooks can access it
     const isAdminUser = loggedInUser?.role === 'admin';
+
+    const isCoordinatorApprovedToEdit = (donation) => !isAdminUser && (donation.adminApprovalRequests || []).some(req => req.type === 'editDonation' && req.requestedBy === loggedInUser?.username && req.status === 'approved');
+    const hasPendingApprovalRequest = (donation, type) => (donation.adminApprovalRequests || []).some(req => req.type === type && req.status === 'pending');
+
+    const handleUpdateDelegation = async (donationId, coordinatorUsername) => {
+        try {
+            await updateDoc(doc(db, 'materialDonations', donationId), {
+                delegatedTo: coordinatorUsername,
+                publishedToCoordinators: Boolean(coordinatorUsername),
+                lastUpdated: new Date()
+            });
+            await fetchAllDonations();
+        } catch (error) {
+            console.error('Error updating delegation:', error);
+            toast.error(isAr ? 'فشل تحديث المنسق' : 'Failed to update coordinator');
+        }
+    };
 
     useEffect(() => {
         if (loggedInUser) {
@@ -5150,8 +5170,6 @@ Please contact us to coordinate the pickup.Thank you.`;
         };
         const isAdminUser = loggedInUser.role === 'admin';
         const canViewArchive = loggedInUser && (isAdminUser || loggedInUser.role === 'coordinator');
-        const isCoordinatorApprovedToEdit = (donation) => !isAdminUser && (donation.adminApprovalRequests || []).some(req => req.type === 'editDonation' && req.requestedBy === loggedInUser.username && req.status === 'approved');
-        const hasPendingApprovalRequest = (donation, type) => (donation.adminApprovalRequests || []).some(req => req.type === type && req.status === 'pending');
         const totalDonations = allDonations.length;
         const pendingDonations = allDonations.filter(d => d.status === 'pending');
         const approvedDonations = allDonations.filter(d => d.status === 'approved');

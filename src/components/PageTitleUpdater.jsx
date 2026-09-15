@@ -5,14 +5,7 @@ import { logPageView } from '../services/analyticsService';
 
 const PageTitleUpdater = () => {
     const location = useLocation();
-    let languageContext = null;
-    try {
-        languageContext = useLanguage();
-    } catch (e) {
-        console.warn('PageTitleUpdater: LanguageContext not found. Make sure LanguageProvider wraps the app.');
-    }
-    const t = languageContext?.t || ((key) => key);
-    const language = languageContext?.language || 'ar';
+    const { t, language } = useLanguage();
 
     useEffect(() => {
         const path = location.pathname;

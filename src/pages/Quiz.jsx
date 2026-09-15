@@ -6,6 +6,7 @@ import { extraQuizData } from '../data/quizDataExtra';
 import FileUploader from '../components/FileUploader';
 import { submitQuestionReport, updateQuestionReportNote } from '../services/quizReportService';
 import { logQuizCompletion } from '../services/analyticsService';
+import { gradeEssayAnswer } from '../services/aiService';
 import { db } from '../config/firebase';
 import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
 import toast from 'react-hot-toast';
