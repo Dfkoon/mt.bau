@@ -986,10 +986,13 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             const snapshot = await getDocs(q);
             const donationsData = snapshot.docs
                 .map(d => ({ id: d.id, ...d.data() }))
-                .filter(donation => !donation.deleted);
+                .filter(donation => !donation.deleted && donation.status !== 'deleted' && donation.status !== 'cancelled');
             const materialsList = donationsData.flatMap(donation => {
                 const materials = donation.materials || (donation.itemName ? [donation.itemName] : (donation.materialName ? [{ name: donation.materialName, status: donation.status, bookerName: donation.bookerName, bookerPhone: donation.bookerPhone }] : []));
-                return materials.map((m, idx) => {
+                return materials.filter(m => {
+                    const st = typeof m === 'object' && m !== null ? m.status : donation.status;
+                    return st !== 'deleted' && st !== 'cancelled';
+                }).map((m, idx) => {
                     const materialObj = typeof m === 'object' && m !== null ? { ...m } : { name: m, status: donation.status };
                     const itemStatus = materialObj.status || (materialObj.takerInfo || donation.bookerName ? 'reserved' : (donation.status || 'approved'));
                     const bookingStatus = materialObj.bookingStatus || materialObj.status || donation.status;
@@ -4315,14 +4318,16 @@ Please contact us to coordinate the pickup.Thank you.`;
                 </section>
                 <div className="exchange-main-container">
                     <section className="add-material-section glass-card">
-                        <div className="section-header">
-                            <h2>{isAr ? 'تبرع الآن بالمواد' : 'Donate Materials'}</h2>
-                            <p>{isAr ? 'شارك موادك الدراسية مع زملائك بصورة مهنية.' : 'Share your academic materials with peers in a professional way.'}</p>
-                        </div>
+                        <div className="section-header" style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'space-between' }}>
+                            <div style={{ flex: 1 }}>
+                                <h2>{isAr ? 'تبرع الآن بالمواد' : 'Donate Materials'}</h2>
+                                <p>{isAr ? 'شارك موادك الدراسية مع زملائك بصورة مهنية.' : 'Share your academic materials with peers in a professional way.'}</p>
+                            </div>
 
-                        <div className="campaign-free-badge" aria-label={isAr ? 'حملة مجانية' : 'Free campaign'}>
-                            <span>{isAr ? 'حملة' : 'Free'}</span>
-                            <span>{isAr ? 'مجانية' : 'Campaign'}</span>
+                            <div className="campaign-free-badge" aria-label={isAr ? 'حملة مجانية' : 'Free campaign'}>
+                                <span>{isAr ? 'حملة' : 'Free'}</span>
+                                <span>{isAr ? 'مجانية' : 'Campaign'}</span>
+                            </div>
                         </div>
 
                         {!settingsLoaded ? (
