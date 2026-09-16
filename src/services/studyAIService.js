@@ -16,18 +16,18 @@ const MODEL = "llama-3.3-70b-versatile";
 
 const buildQuizPrompt = (text, lang, count, type) => {
     const langNote = lang === 'ar'
-        ? 'اكتب الأسئلة والإجابات بالاللغة العربية الفصحى.'
+        ? 'اكتب الأسئلة والإجابات باللغة العربية الفصحى.'
         : 'Write all questions and answers in English.';
 
     const typeInstructions = {
         mcq: lang === 'ar'
-            ? `أنشئ ${count} سؤال اختيار متعدد (MCQ). لكل سؤال: نص السؤال، 4 يارات (A/B/C/D)، والإجاب الصحيح.`
+            ? `أنشئ ${count} سؤال اختيار من متعدد (MCQ). لكل سؤال: نص السؤال، 4 خيارات (A/B/C/D)، والإجابة الصحيحة.`
             : `Generate ${count} multiple choice questions (MCQ). For each: question text, 4 options (A/B/C/D), correct answer.`,
         tf: lang === 'ar'
-            ? `أنشئ ${count} سؤال صح أو خطأ. لكل سؤال: عبار وإجاب (صح/خطأ) مع شرح قصير.`
+            ? `أنشئ ${count} سؤالاً من نوع صح أو خطأ. لكل سؤال: عبارة وإجابة (صح/خطأ) مع شرح قصير.`
             : `Generate ${count} True/False questions. For each: statement, answer (True/False), brief explanation.`,
         essay: lang === 'ar'
-            ? `أنشئ ${count} سؤال مقالي. لكل سؤال: نص السؤال ونموذج إجاب كامل.`
+            ? `أنشئ ${count} سؤالاً مقالياً. لكل سؤال: نص السؤال ونموذج إجابة كاملة.`
             : `Generate ${count} essay questions. For each: question text and a complete model answer.`,
         mixed: lang === 'ar'
             ? `أنشئ ${count} سؤال متنوع (مزيج من MCQ وصح/خطأ ومقالي). وضح نوع كل سؤال.`
@@ -38,7 +38,7 @@ const buildQuizPrompt = (text, lang, count, type) => {
 
 ${typeInstructions[type]}
 
-أرجع النتيج بصيغ JSON فقط بدون أي نص ارجه. الصيغ:
+أعد النتيجة بصيغة JSON فقط، من دون أي نص إضافي. الصيغة:
 {
   "questions": [
     {
@@ -60,16 +60,16 @@ ${text.slice(0, 6000)}
 
 const buildSummaryPrompt = (text, lang) => {
     if (lang === 'ar') {
-        return `أنت بير أكاديمي متخصص في تلخيص المواد الجامعي.
-قم بتليص النص التالي بالاللغة العربية الفصحى بشكل منظم وشامل.
+        return `أنت خبير أكاديمي متخصص في تلخيص المواد الجامعية.
+      قم بتلخيص النص التالي باللغة العربية الفصحى بشكل منظم وشامل.
 
 أرجع النتيج بصيغ JSON فقط:
 {
-  "title": "عنوان مناسب للماد",
-  "overview": "فقر تمهيدي قصير (2-3 جمل)",
-  "keyPoints": ["نقط رئيسي 1", "نقط رئيسي 2", ...],
+  "title": "عنوان مناسب للمادة",
+  "overview": "فقرة تمهيدية قصيرة (2-3 جمل)",
+  "keyPoints": ["نقاط رئيسية 1", "نقاط رئيسية 2", ...],
   "definitions": [{"term": "المصطلح", "definition": "التعريف"}, ...],
-  "conclusion": "لاص تامي"
+  "conclusion": "خلاصة نهائية"
 }
 
 النص:

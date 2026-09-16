@@ -40,7 +40,7 @@ const FAQ = () => {
                 <div className="faq-hero" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1454165833767-026cc35a1651?auto=format&fit=crop&q=80')` }}>
                     <div className="hero-overlay"></div>
                     <h1>{language === 'ar' ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'}</h1>
-                    <p>{language === 'ar' ? 'اعثر على أجوب لأكثر الأسئلة تكراراً' : 'Find answers to common questions'}</p>
+                    <p>{language === 'ar' ? 'اعثر على أجوبة عن أكثر الأسئلة تكراراً' : 'Find answers to common questions'}</p>
 
                     <div className="faq-search">
                         <input
@@ -56,7 +56,7 @@ const FAQ = () => {
                 <div className="faq-content">
                     {categories.length === 0 ? (
                         <div className="no-results">
-                            <p>{language === 'ar' ? 'لا توجد نتائج مطابق لبحثك' : 'No results found matching your search'}</p>
+                            <p>{language === 'ar' ? 'لا توجد نتائج مطابقة لبحثك' : 'No results found matching your search'}</p>
                         </div>
                     ) : (
                         categories.map(catKey => {

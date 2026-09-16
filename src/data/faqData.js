@@ -31,7 +31,7 @@ export const faqData = {
     },
 
     makruma: {
-        title: { ar: 'المكرمة الملكية / مكرم الجيش (الجسيم)', en: 'Royal Grant / Military Grant (Jasim)' },
+        title: { ar: 'المكرمة الملكية / مكرمة الجيش', en: 'Royal Grant / Military Grant' },
         questions: [
             {
                 id: 'm1',
@@ -83,7 +83,7 @@ export const faqData = {
             {
                 id: 'n1',
                 q: { ar: 'كيف أعادل شهادتي الأجنبية؟', en: 'How do I get my foreign certificate equivalency?' },
-                a: { ar: 'تقدَّم طلب معادلة عبر وزارة التربية/الجهة المختصة وتهيئ المستندات المطلوبة (أصل الشهادة، كشف الدرجات، ترجمة مصدقة). تختلف الإجراءات حسب نوع الشهادة.', en: 'Submit an equivalency request to the Ministry of Education or competent authority with required documents (original certificate, transcript, certified translation). Procedures vary by certificate type.' }
+                a: { ar: 'يُقدَّم طلب المعادلة إلى وزارة التربية والتعليم أو الجهة المختصة، مع تجهيز المستندات المطلوبة (أصل الشهادة، وكشف الدرجات، وترجمة مصدقة). وتختلف الإجراءات حسب نوع الشهادة.', en: 'Submit an equivalency request to the Ministry of Education or competent authority with required documents (original certificate, transcript, certified translation). Procedures vary by certificate type.' }
             },
             {
                 id: 'n2',
@@ -114,8 +114,22 @@ export const faqData = {
         ]
     },
 
+    medical_excuses: {
+        title: { ar: 'الأعذار المرضية', en: 'Medical Excuses' },
+        questions: [
+            {
+                id: 'me1',
+                q: { ar: 'ما إجراءات وشروط تقديم العذر المرضي؟', en: 'What are the procedures and requirements for submitting a medical excuse?' },
+                a: {
+                    ar: 'إجراءات وشروط تقديم العذر المرضي:\n\n1. الشروط الزمنية:\n- تاريخ الإجازة: يجب أن يطابق تاريخ الامتحان المعلن تماماً، ولا تُقبل الإجازات القبلية أو البعدية.\n- مهلة التقديم: يجب تقديم الطلب خلال 72 ساعة عمل رسمي من تاريخ الامتحان، ولا تُحسب العطل الرسمية.\n\n2. الوثائق والمرفقات المطلوبة:\n- الخدمات الطبية: إجازة بختم الطبيب وختم السجلات الطبية.\n- مستشفيات أو مراكز وزارة الصحة: الإجازة المرضية والوصل المالي.\n- المراكز الخاصة: إجازة مختومة وتقرير طبي مختوم.\n\n3. النتيجة والمتابعة:\n- رفع الطلب لا يعني قبوله النهائي.\n- ستصلك رسالة نصية (SMS) بقرار اللجان أو بأي ملاحظات طبية.\n- يتحمل الطالب كامل المسؤولية عن استكمال الأوراق، وتُلغى الطلبات الناقصة أو المتأخرة تلقائياً.',
+                    en: 'Medical excuse submission procedures and requirements:\n\n1. Time requirements:\n- Leave date: It must exactly match the announced exam date; leave issued before or after the exam date is not accepted.\n- Submission deadline: Submit the request within 72 official working hours from the exam date; official holidays are not counted.\n\n2. Required documents and attachments:\n- Medical services: Leave document stamped by the doctor and the medical records department.\n- Ministry of Health hospitals or centers: Medical leave document and payment receipt.\n- Private centers: Stamped leave document and stamped medical report.\n\n3. Outcome and follow-up:\n- Submitting the request does not mean it has been finally approved.\n- You will receive an SMS with the committee decision or any medical notes.\n- The student is fully responsible for completing the documents; incomplete or late requests are automatically cancelled.'
+                }
+            }
+        ]
+    },
+
     transfers: {
-        title: { ar: 'الانتقالات والمفااضلات', en: 'Transfers & Selection' },
+        title: { ar: 'التحويلات والمفاضلات', en: 'Transfers & Selection' },
         questions: [
             {
                 id: 't1',
@@ -130,7 +144,7 @@ export const faqData = {
         questions: [
             {
                 id: 'c1',
-                q: { ar: 'أين أراجع اذا احتجت مساعدة مباشرة؟', en: 'Where can I get direct help?' },
+                q: { ar: 'أين أراجع إذا احتجت إلى مساعدة مباشرة؟', en: 'Where can I get direct help?' },
                 a: { ar: 'توجه إلى مكتب القبول والتسجيل في الجامعة أو استخدم صفحة "اتصل بنا" في الموقع لإرسال استفسارك وسنحاول توجيهك للجهة المناسبة.', en: 'Visit the university admissions office or use the website’s "Contact Us" page to send your inquiry; we will direct you to the appropriate authority.' }
             }
         ]

@@ -1100,7 +1100,7 @@ const Quiz = () => {
             // Report already exists -> update studentNote in Firestore
             const res = await updateQuestionReportNote(existingReportId, noteText);
             if (res.success) {
-                toast.success(language === 'ar' ? 'تم حفظ وتحديث الملاحظ' : 'Note updated', { icon: '📝' });
+                toast.success(language === 'ar' ? 'تم حفظ الملاحظة وتحديثها' : 'Note updated', { icon: '📝' });
             }
         } else {
             // Report not sent yet -> flag the question and send report with studentNote
@@ -1130,7 +1130,7 @@ const Quiz = () => {
                 if (res.id) {
                     setReportDocIds(prev => ({ ...prev, [qId]: res.id }));
                 }
-                toast.success(language === 'ar' ? 'تم إرسال الملاحظ مع البلاغ' : 'Note sent with report', { icon: '' });
+                toast.success(language === 'ar' ? 'تم إرسال الملاحظة مع البلاغ' : 'Note sent with report', { icon: '' });
             }
         }
     };
@@ -1193,7 +1193,7 @@ const Quiz = () => {
                                     }
                                 }}
                             >
-                                {language === 'ar' ? '← العود' : '← Back'}
+                                {language === 'ar' ? '← العودة' : '← Back'}
                             </button>
                             <h2 className="selection-title">
                                 {language === 'ar' ? (currentQuiz.titleAr || currentQuiz.title) : currentQuiz.title}
@@ -2856,7 +2856,7 @@ const Quiz = () => {
                                 <h3>{language === 'ar' ? 'نعتذر، لم يتم العثور على المادة' : 'Sorry, no subject found'}</h3>
                                 <p>
                                     {language === 'ar'
-                                        ? 'نحن نعمل باستمرار على إضاف مواد جديد. إذا كنت تبحث عن مادة محدد، يمكنك مراسلتنا لاقتراحها!'
+                                        ? 'نحن نعمل باستمرار على إضافة مواد جديدة. إذا كنت تبحث عن مادة محددة، يمكنك مراسلتنا لاقتراحها!'
                                         : "We are constantly adding new materials. If you're looking for a specific subject, please suggest it to us!"
                                     }
                                 </p>

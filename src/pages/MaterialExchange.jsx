@@ -1176,7 +1176,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             ? new Date(schedule.pickupDate + 'T00:00:00').toLocaleDateString(isAr ? 'ar-JO' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
             : '';
         const msg = isAr
-            ? `السلام عليكم ${schedule.bookerName || ''}،\n\nنُذكّرك بأن مادة "${schedule.materialName}" ستكون جاهز للاستلام ${dateStr ? `يوم ${dateStr}` : 'قريباً'}.\n\nيرجى الحضور في الوقت المحدد.\n\nشكراً — فريق حمل تبادل المواد 📚`
+            ? `السلام عليكم ${schedule.bookerName || ''}،\n\nنُذكّرك بأن مادة "${schedule.materialName}" ستكون جاهزة للاستلام ${dateStr ? `يوم ${dateStr}` : 'قريباً'}.\n\nيرجى الحضور في الوقت المحدد.\n\nشكراً — فريق حملة تبادل المواد 📚`
             : `Hello ${schedule.bookerName || ''},\n\nReminder: "${schedule.materialName}" will be ready for pickup ${dateStr ? `on ${dateStr}` : 'soon'}.\n\nPlease come at the scheduled time.\n\nThank you — Material Exchange Team 📚`;
         return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     };
@@ -1283,7 +1283,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         let msg = schedule.reminderMessage && schedule.reminderMessage.trim()
             ? schedule.reminderMessage.trim()
             : (isAr
-                ? `السلام عليكم ${schedule.donorName}،\n\nنُذكّرك بضرور إحضار مادة "${schedule.materialName}" ${dateStr ? `يوم ${dateStr}` : ''} وتسليمها للمنسق ${coordinator}.\n\nشكراً لتعاونك — فريق حمل تبادل المواد 📚`
+                ? `السلام عليكم ${schedule.donorName}،\n\nنُذكّرك بضرورة إحضار مادة "${schedule.materialName}" ${dateStr ? `يوم ${dateStr}` : ''} وتسليمها للمنسق ${coordinator}.\n\nشكراً لتعاونك — فريق حملة تبادل المواد 📚`
                 : `Hello ${schedule.donorName},\n\nThis is a reminder to bring "${schedule.materialName}" ${dateStr ? `on ${dateStr}` : ''} and hand it over to coordinator ${coordinator}.\n\nThank you — Material Exchange Team 📚`);
         return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
     };
@@ -2860,7 +2860,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     { donationId: selectedDonationForEdit.id, donorName: selectedDonationForEdit.studentName }
                 );
 
-                toast.success(isAr ? '📨 تم إرسال طلب التعديل — بانتظار موافق الإدار' : '📨 Edit request sent — Waiting for admin approval');
+                toast.success(isAr ? '📨 تم إرسال طلب التعديل — بانتظار موافقة الإدارة' : '📨 Edit request sent — Waiting for admin approval');
                 toast.info(isAr ? 'لم تتغير البيانات بعد — ستُطبّق عند موافق الأدمن' : 'Data not changed yet — will apply upon admin approval');
 
                 setShowEditModal(false);
@@ -3039,7 +3039,7 @@ Please contact us to coordinate the pickup.Thank you.`;
             );
         } catch (error) {
             console.error('Error requesting admin approval:', error);
-            toast.error(isAr ? 'فشل إرسال طلب الموافق' : 'Failed to request admin approval');
+            toast.error(isAr ? 'فشل إرسال طلب الموافقة' : 'Failed to request admin approval');
         }
     };
 
@@ -3348,7 +3348,7 @@ Please contact us to coordinate the pickup.Thank you.`;
         try {
             const settingsRef = doc(db, 'system_configs', 'global_settings');
             await setDoc(settingsRef, { campaignPhase: newPhase }, { merge: true });
-            toast.success(isAr ? 'تم تحديث حال الحمل بنجاح ✅' : 'Campaign status updated successfully ✅');
+            toast.success(isAr ? 'تم تحديث حالة الحملة بنجاح ✅' : 'Campaign status updated successfully ✅');
 
             addAuditLog(
                 `غيّر حال مرحل الحمل إلى (${newPhase === 'suspended' ? 'موقوف 🛑' : newPhase === 'collection' ? 'جمع وتبرع 📥' : 'تبادل وحجز 🔄'})`,
@@ -3357,7 +3357,7 @@ Please contact us to coordinate the pickup.Thank you.`;
             );
         } catch (error) {
             console.error('Error updating campaign phase:', error);
-            toast.error(isAr ? 'فشل تحديث حال الحمل' : 'Failed to update campaign status');
+            toast.error(isAr ? 'فشل تحديث حالة الحملة' : 'Failed to update campaign status');
         }
     };
 
@@ -4714,7 +4714,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     {false && <section className="pre-request-section glass-card">
                         <div className="section-header">
                             <h2>{isAr ? 'طلبات مسبقة' : 'Pre-Requests'}</h2>
-                            <p>{isAr ? 'إذا كنت ترغب في التبرع بمواد أو تحتاج مادة معينة، أرسل طلباً مسبقاً. الطلبات تظهر فقط للطاقم الإداري في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are visible only to administrative staff in the control panel.'}</p>
+                            <p>{isAr ? 'إذا كنت ترغب في التبرع بمواد أو تحتاج إلى مادة معينة، أرسل طلباً مسبقاً. تظهر الطلبات للطاقم الإداري فقط في لوحة التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are visible only to administrative staff in the control panel.'}</p>
                         </div>
 
                         <form className="pre-request-form" onSubmit={handlePreRequestSubmit}>
@@ -4842,7 +4842,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                     {false && <section className="join-coordinator-section glass-card">
                         <div className="section-header">
                             <h2>{isAr ? 'طلب انضمام لفريق التنسيق' : 'Join the Coordination Team'}</h2>
-                            <p>{isAr ? 'إذا كنت ترغب في المشارك في ترتيب وتنسيق حمل تبادل المواد، قدّم طلبك هنا.' : 'If you want to help organize and coordinate the material exchange campaign, submit your application here.'}</p>
+                            <p>{isAr ? 'إذا كنت ترغب في المشاركة في ترتيب وتنسيق حملة تبادل المواد، قدّم طلبك هنا.' : 'If you want to help organize and coordinate the material exchange campaign, submit your application here.'}</p>
                         </div>
 
                         <form className="join-coordinator-form" onSubmit={handleCoordinatorApplicationSubmit}>
@@ -4880,7 +4880,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                 rows="5"
                                 value={coordinatorApplicationForm.motivation}
                                 onChange={(e) => setCoordinatorApplicationForm(prev => ({ ...prev, motivation: e.target.value }))}
-                                placeholder={isAr ? 'لماذا ترغب في الانضمام؟ اذكر برتك أو طموحك.' : 'Why do you want to join? Share your experience or motivation.'}
+                                placeholder={isAr ? 'لماذا ترغب في الانضمام؟ اذكر خبرتك أو طموحك.' : 'Why do you want to join? Share your experience or motivation.'}
                                 required
                             ></textarea>
 
@@ -9513,7 +9513,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <h2>
                                 📝 {isAr ? 'طلبات مسبق' : 'Pre-Requests'}
                             </h2>
-                            <p>{isAr ? 'إذا كنت ترغب في التبرع بماد أو تحتاج مادة معين، أرسل طلباً مسبقاً. الطلبات لا تُعرض للجمهور، بل تظهر للطاقم فقط في لوح التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are not shown publicly and are visible only to staff in the control panel.'}</p>
+                            <p>{isAr ? 'إذا كنت ترغب في التبرع بمادة أو تحتاج إلى مادة معينة، أرسل طلباً مسبقاً. لا تُعرض الطلبات للجمهور، بل تظهر للطاقم فقط في لوحة التحكم.' : 'If you want to donate a material or need one, submit a pre-request. Requests are not shown publicly and are visible only to staff in the control panel.'}</p>
                         </div>
 
                         <form className="pre-request-form" onSubmit={handlePreRequestSubmit}>

@@ -23,7 +23,7 @@ export const coursesData = {
         },
         {
             id: 3,
-            name: 'الاللغة الإنجليزية التطبيقية (1)',
+            name: 'اللغة الإنجليزية التطبيقية (1)',
             nameEn: 'Applied English (1)',
             icon: '🇬🇧',
             files: {
@@ -35,7 +35,7 @@ export const coursesData = {
         },
         {
             id: 4,
-            name: 'الاللغة الإنجليزية التطبيقية (2)',
+            name: 'اللغة الإنجليزية التطبيقية (2)',
             nameEn: 'Applied English (2)',
             icon: '🇬🇧',
             files: {
@@ -47,7 +47,7 @@ export const coursesData = {
         },
         {
             id: 5,
-            name: 'الاللغة العربية التطبيقية',
+            name: 'اللغة العربية التطبيقية',
             nameEn: 'Applied Arabic',
             icon: '📖',
             files: {
@@ -85,7 +85,7 @@ export const coursesData = {
         },
         {
             id: 8,
-            name: 'المهارات الحياتي والعمل (بالاللغة الإنجليزية)',
+            name: 'المهارات الحياتية والعمل (باللغة الإنجليزية)',
             nameEn: 'Life Skills and Work (English)',
             icon: '🤝',
             files: {
@@ -94,7 +94,7 @@ export const coursesData = {
         },
         {
             id: 9,
-            name: 'الريادة والابتكار (بالاللغة الإنجليزية)',
+            name: 'الريادة والابتكار (باللغة الإنجليزية)',
             nameEn: 'Entrepreneurship and Innovation (English)',
             icon: '💡',
             files: {

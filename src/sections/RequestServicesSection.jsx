@@ -9,10 +9,10 @@ const SERVICES = [
   {
     id: 'summary',
     icon: '📝',
-    label: 'ملص مادة',
+    label: 'ملخّص مادة',
     color: '#d32f2f',
     colorLight: 'rgba(211,47,47,0.08)',
-    description: 'احصل على ملص احترافي لأي مادة دراسي',
+    description: 'احصل على ملخّص احترافي لأي مادة دراسية',
     fields: ['studentName', 'studentPhone', 'subject', 'materialLink', 'notes'],
   },
   {
@@ -21,36 +21,36 @@ const SERVICES = [
     label: 'إنشاء أسئلة',
     color: '#1565c0',
     colorLight: 'rgba(21,101,192,0.08)',
-    description: 'نصمم لك أسئلة مناسب لمادتك ونمطك المطلوب',
+    description: 'نصمّم لك أسئلة مناسبة لمادتك وبالنمط المطلوب',
     fields: ['studentName', 'studentPhone', 'subject', 'questionStyle', 'questionCount', 'notes'],
   },
   {
     id: 'idea',
     icon: '💡',
-    label: 'اقتراح فكر',
+    label: 'اقتراح فكرة',
     color: '#e65100',
     colorLight: 'rgba(230,81,0,0.08)',
-    description: 'شارك فكرتك البرمجي ونساعدك على تطويرها',
+    description: 'شارك فكرتك البرمجية وسنساعدك على تطويرها',
     fields: ['studentName', 'studentPhone', 'ideaTitle', 'ideaDetails', 'techStack', 'notes'],
   },
   {
     id: 'other',
     icon: '🚀',
-    label: 'طلب آر',
+    label: 'طلب آخر',
     color: '#2e7d32',
     colorLight: 'rgba(46,125,50,0.08)',
-    description: 'أي طلب آر تريده من فريقنا',
+    description: 'أي طلب آخر تريده من فريقنا',
     fields: ['studentName', 'studentPhone', 'requestTitle', 'requestDetails', 'notes'],
   },
 ];
 
 const QUESTION_STYLES = [
   'اختيار من متعدد (MCQ)',
-  'صح وطأ',
-  'أسئلة مقالي',
-  'أسئلة قصير',
+  'صح وخطأ',
+  'أسئلة مقالية',
+  'أسئلة قصيرة',
   'حل مسائل / تمارين',
-  'متلط',
+  'مختلط',
 ];
 
 /* ─── Field Helper Component ─────────────────────── */
@@ -87,11 +87,11 @@ export default function RequestServicesSection() {
     e.preventDefault();
 
     if (!form.studentName?.trim()) {
-      toast.error('يرجى كتاب اسمك الكريم');
+      toast.error('يرجى كتابة اسمك الكريم');
       return;
     }
     if (!form.studentPhone?.trim()) {
-      toast.error('يرجى كتاب رقم التواصل (واتساب)');
+      toast.error('يرجى كتابة رقم التواصل (واتساب)');
       return;
     }
 
@@ -104,11 +104,11 @@ export default function RequestServicesSection() {
       return;
     }
     if (service.id === 'idea' && (!form.ideaTitle?.trim() || !form.ideaDetails?.trim())) {
-      toast.error('يرجى كتاب عنوان الفكر وتفاصيلها');
+      toast.error('يرجى كتابة عنوان الفكرة وتفاصيلها');
       return;
     }
     if (service.id === 'other' && (!form.requestTitle?.trim() || !form.requestDetails?.trim())) {
-      toast.error('يرجى كتاب عنوان الطلب وتفاصيله');
+      toast.error('يرجى كتابة عنوان الطلب وتفاصيله');
       return;
     }
 
@@ -159,7 +159,7 @@ export default function RequestServicesSection() {
         <div className="rss-badge">✨ خدمات الفريق</div>
         <h2 className="rss-title">اطلب ما تحتاجه</h2>
         <p className="rss-subtitle">
-          سواء ملص مادة، إنشاء أسئلة، أو اقتراح فكر — نحن هنا لمساعدتك
+          سواء أكان طلبك ملخّص مادة أو إنشاء أسئلة أو اقتراح فكرة، فنحن هنا لمساعدتك
         </p>
       </div>
 
@@ -277,7 +277,7 @@ export default function RequestServicesSection() {
                 {/* ── IDEA fields ── */}
                 {service.id === 'idea' && <>
                   <Field label="عنوان الفكر" required>
-                    <input className="rss-input" placeholder="مثال: تطبيق لإدار الجدول الدراسي..." required
+                    <input className="rss-input" placeholder="مثال: تطبيق لإدارة الجدول الدراسي..." required
                       value={form.ideaTitle || ''} onChange={e => set('ideaTitle', e.target.value)} />
                   </Field>
                   <Field label="تفاصيل الفكر" required>

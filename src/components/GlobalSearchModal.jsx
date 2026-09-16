@@ -144,7 +144,7 @@ const GlobalSearchModal = ({ isOpen, onClose }) => {
           {filteredItems.length === 0 ? (
             <div className="no-search-results">
               <span className="no-results-icon">🔎</span>
-              <p>{isAr ? 'لم نجد نتائج مطابق لبحثك' : 'No matching results found'}</p>
+              <p>{isAr ? 'لم نجد نتائج مطابقة لبحثك' : 'No matching results found'}</p>
               <small>{isAr ? 'جرب البحث عن اسم مادة، حساب معدل، أو أسئلة' : 'Try searching for subject name, GPA, or quiz'}</small>
             </div>
           ) : (
