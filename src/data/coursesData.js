@@ -340,7 +340,7 @@ export const coursesData = {
         },
         {
             id: 'df_privacy',
-            name: 'صوصي وحماي بيانات',
+            name: 'الخصوصية وحماية البيانات',
             nameEn: 'Privacy and Data Protection',
             icon: '🛡️',
             files: {
@@ -456,7 +456,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم وارزميات',
+            name: 'تحليل وتصميم وخوارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -696,7 +696,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم وارزميات',
+            name: 'تحليل وتصميم وخوارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -848,7 +848,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم وارزميات',
+            name: 'تحليل وتصميم وخوارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -905,7 +905,7 @@ export const coursesData = {
                 pdf: 'https://drive.google.com/drive/folders/17DxuxkT399lsoqaz44aFqoV5tuU_kO4r?usp=sharing'
             }
         },
-        // --- مواد متطلب تخصص إجباري لجميع التخصصات (ما عدا تحليل وتصميم وارزميات) ---
+        // --- مواد متطلب تخصص إجباري لجميع التخصصات (ما عدا تحليل وتصميم وخوارزميات) ---
         {
             id: 'shared_logic',
             name: 'تصميم المنطق الرقمي',
@@ -1056,7 +1056,7 @@ export const coursesData = {
         },
         {
             id: 'shared_algo',
-            name: 'تحليل وتصميم وارزميات',
+            name: 'تحليل وتصميم وخوارزميات',
             nameEn: 'Algorithms Analysis and Design',
             icon: '🔢',
             files: {
@@ -1196,7 +1196,7 @@ export const coursesData = {
         },
         {
             id: 4,
-            name: 'مختبر هياكل بيانات ووارزميات',
+            name: 'مختبر هياكل بيانات وخوارزميات',
             nameEn: 'Data Structures and Algorithms Lab',
             icon: '🗄️',
             files: {
@@ -1519,7 +1519,7 @@ export const coursesData = {
         { id: 'it_java', name: 'البرمجة بلغة جافا', nameEn: 'Java Programming', icon: '☕', files: { link: 'https://drive.google.com/drive/folders/1JlIgreD_q6FxLpbSwJIth53d9l_lLSLD' } },
         { id: 'it_dig_logic', name: 'المنطق الرقمي', nameEn: 'Digital Logic', icon: '🔢', files: { link: 'https://drive.google.com/drive/folders/1aCH9nAOFgo0_PYWaOLTguM3e_ElKIolC' } },
         { id: 'it_web', name: 'برمجة تطبيقات الانترنت', nameEn: 'Internet Application Programming (Web)', icon: '🌐', files: { link: 'https://drive.google.com/drive/folders/1XWbawq_YnOXAsnyw_YM5FJigITsq6GgM' } },
-        { id: 'it_algo', name: 'تحليل وتصميم الوارزميات', nameEn: 'Analysis and Design of Algorithms', icon: '', files: { link: 'https://drive.google.com/drive/folders/1NWyuxqjIuWleQbPRvo2IKG_jG1slGX__' } },
+        { id: 'it_algo', name: 'تحليل وتصميم الخوارزميات', nameEn: 'Analysis and Design of Algorithms', icon: '', files: { link: 'https://drive.google.com/drive/folders/1NWyuxqjIuWleQbPRvo2IKG_jG1slGX__' } },
         { id: 'it_cis_dig_logic', name: 'تحليل وتصميم المنطق الرقمي (CIS)', nameEn: 'Digital Logic Analysis and Design (CIS)', icon: '🔧', files: { link: 'https://drive.google.com/drive/folders/1V3HL-CHf9xWQvxNnUueCWDEBjyXDGiGF' } },
         { id: 'it_db1', name: 'تصميم وإدار قواعد البيانات ١', nameEn: 'Database Design and Management 1', icon: '🗄️', files: { link: 'https://drive.google.com/drive/folders/1T-9SAFHdRnzaXq0HipJ2d0lmWFNtu3pO' } },
         { id: 'it_net_principles', name: 'مبادئ شبكات الحاسوب', nameEn: 'Computer Networking Principles', icon: '🔗', files: { link: 'https://drive.google.com/drive/folders/16hJ9pIK8M14_aLNMh8KrnIpOqU4wBEW5' } },
@@ -1592,7 +1592,7 @@ export const coursesData = {
     it_se_mandatory: [
         { id: 'se_tv', name: 'الإتبار والتحقق من البرمجيات', nameEn: 'Software Testing and Verification', icon: '🧪', files: { link: 'https://drive.google.com/drive/folders/1PderD-1ZNioJ03R2PdukH0D0FnolFHzt' } },
         { id: 'se_refs', name: 'المتطلبات الهندسي والمواصفات الرسمي', nameEn: 'Requirement Engineering & Formal Specs', icon: '📑', files: { link: 'https://drive.google.com/drive/folders/1jDDLTsqKu-F6AgOMUjgP6_2ITD_vsNix' } },
-        { id: 'se_ppm', name: 'تطيط وإدار مشاريع البرمجيات', nameEn: 'Software Project Planning & Mngmt', icon: '📅', files: { link: 'https://drive.google.com/drive/folders/1RkSR8fOWK4NH9qsCgsqL7bWmUsNNW2H0' } },
+        { id: 'se_ppm', name: 'تخطيط وإدارة مشاريع البرمجيات', nameEn: 'Software Project Planning & Mngmt', icon: '📅', files: { link: 'https://drive.google.com/drive/folders/1RkSR8fOWK4NH9qsCgsqL7bWmUsNNW2H0' } },
         { id: 'se_cd', name: 'تطوير مكونات البرمجيات', nameEn: 'Software Component Development', icon: '🧱', files: { link: 'https://drive.google.com/drive/folders/1XglX3HSITlbj_iciAVaSdMNNv9ehXghn' } },
         { id: 'se_pse', name: 'مبادئ هندس البرمجيات', nameEn: 'Principles of Software Engineering', icon: '🏗️', files: { link: 'https://drive.google.com/drive/folders/1mlK66pjzJ1RVT5mmv3CNTpMb3nMHmWW3' } },
         { id: 'se_arch_bh', name: 'معماري الحاسوب (د. باسم الحديدي)', nameEn: 'Computer Architecture (Dr. Basem)', icon: '🏛️', files: { link: 'https://drive.google.com/drive/folders/1X3N41chCfR4OhWf6LR3SUCTSxFVMuT8n' } },

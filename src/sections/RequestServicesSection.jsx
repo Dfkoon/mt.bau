@@ -282,7 +282,7 @@ export default function RequestServicesSection() {
                   </Field>
                   <Field label="تفاصيل الفكر" required>
                     <textarea className="rss-textarea" rows={5} required
-                      placeholder="اشرح فكرتك بالتفصيل: ما المشكل التي تحلها؟ من هم المستدمون؟ ما المميزات الأساسي؟"
+                      placeholder="اشرح فكرتك بالتفصيل: ما المشكلة التي تحلها؟ من هم المستخدمون؟ ما المميزات الأساسية؟"
                       value={form.ideaDetails || ''} onChange={e => set('ideaDetails', e.target.value)} />
                   </Field>
                   <Field label="التقنيات المفضل (اختياري)">

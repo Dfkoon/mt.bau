@@ -10,8 +10,8 @@ export const plansData = {
                     name: 'المواد الأساسي والجامعي',
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
-                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'اللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'اللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
@@ -21,7 +21,7 @@ export const plansData = {
                     name: 'المستوى الثاني (تأسيس)',
                     courses: [
                         { id: 'math102', name: 'التفاضل والتكامل (2)', nameEn: 'Calculus 2', credits: 3, prereq: 'math101' },
-                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
+                        { id: 'eng102', name: 'اللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
                         { id: 'oop', name: 'البرمجة الموجهة للكائنات + مختبر', nameEn: 'OOP + Lab', credits: 4, prereq: 'comp_skills' },
                         { id: 'logic', name: 'تصميم المنطق الرقمي + مختبر', nameEn: 'Digital Logic + Lab', credits: 4 },
                         { id: 'sec_intro', name: 'مبادئ أمن المعلومات والفضاء الإلكتروني', nameEn: 'Security Principles', credits: 3 }
@@ -42,7 +42,7 @@ export const plansData = {
                     id: 4,
                     name: 'المستوى الرابع (تحقيقات متقدم)',
                     courses: [
-                        { id: 'algorithms', name: 'تصميم وتحليل الوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
+                        { id: 'algorithms', name: 'تصميم وتحليل الخوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
                         { id: 'db_design', name: 'تصميم وإدار قواعد البيانات + مختبر', nameEn: 'DB Design + Lab', credits: 4 },
                         { id: 'net_sec', name: 'أمن شبكات + مختبر', nameEn: 'Network Security + Lab', credits: 4, prereq: 'networks1' },
                         { id: 'net_forensics', name: 'تحقيقات جنائي في الشبكات', nameEn: 'Network Forensics', credits: 3, prereq: 'networks1' },
@@ -56,7 +56,7 @@ export const plansData = {
                         { id: 'data_recovery', name: 'استعاد البيانات + مختبر', nameEn: 'Data Recovery + Lab', credits: 4, prereq: 'os_forensics' },
                         { id: 'db_forensics', name: 'التحقيقات الجنائي لقواعد البيانات', nameEn: 'Database Forensics', credits: 3, prereq: 'db_design' },
                         { id: 'mobile_forensics', name: 'تحقيقات الأجهزة النقالة', nameEn: 'Mobile Forensics', credits: 3, prereq: 'net_forensics' },
-                        { id: 'privacy', name: 'صوصي وحماي بيانات', nameEn: 'Data Privacy', credits: 3, prereq: 'sec_intro' },
+                        { id: 'privacy', name: 'الخصوصية وحماية البيانات', nameEn: 'Data Privacy', credits: 3, prereq: 'sec_intro' },
                         { id: 'justice', name: 'التحقيقات الجنائي الرقمي والعدال الجنائي', nameEn: 'DF & Criminal Justice', credits: 3 }
                     ]
                 },
@@ -83,8 +83,8 @@ export const plansData = {
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
-                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'اللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'اللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
                 },
@@ -94,7 +94,7 @@ export const plansData = {
                     courses: [
                         { id: 'math102', name: 'التفاضل والتكامل (2)', nameEn: 'Calculus 2', credits: 3, prereq: 'math101' },
                         { id: 'comp_skills2', name: 'مهارات الحاسوب (2)', nameEn: 'Computer Skills 2', credits: 3, prereq: 'comp_skills' },
-                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
+                        { id: 'eng102', name: 'اللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
                         { id: 'oop', name: 'البرمجة الموجهة للكائنات + مختبر', nameEn: 'OOP + Lab', credits: 4, prereq: 'comp_skills' },
                         { id: 'sec_intro', name: 'مبادئ أمن المعلومات والفضاء الإلكتروني', nameEn: 'Security Principles', credits: 3 }
                     ]
@@ -125,7 +125,7 @@ export const plansData = {
                     id: 5,
                     name: 'الفصل الخامس',
                     courses: [
-                        { id: 'algorithms', name: 'تصميم وتحليل الوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
+                        { id: 'algorithms', name: 'تصميم وتحليل الخوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
                         { id: 'crypto_basics', name: 'أساسيات التشفير + مختبر', nameEn: 'Cryptography Basics + Lab', credits: 4, prereq: 'num_theory' },
                         { id: 'secure_se', name: 'هندس البرمجيات الآمن', nameEn: 'Secure Software Engineering', credits: 3 },
                         { id: 'ai_intro', name: 'مقدمة في الذكاء الاصطناعي', nameEn: 'AI Intro', credits: 3 },
@@ -156,8 +156,8 @@ export const plansData = {
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
-                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'اللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'اللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
                 },
@@ -167,7 +167,7 @@ export const plansData = {
                     courses: [
                         { id: 'math102', name: 'التفاضل والتكامل (2)', nameEn: 'Calculus 2', credits: 3, prereq: 'math101' },
                         { id: 'comp_skills2', name: 'مهارات الحاسوب (2)', nameEn: 'Computer Skills 2', credits: 3, prereq: 'comp_skills' },
-                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
+                        { id: 'eng102', name: 'اللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' },
                         { id: 'oop', name: 'البرمجة الموجهة للكائنات + مختبر', nameEn: 'OOP + Lab', credits: 4, prereq: 'comp_skills' },
                         { id: 'comp_net_sec', name: 'أمن الحاسوب والشبكات', nameEn: 'Computer & Network Security', credits: 3 }
                     ]
@@ -188,7 +188,7 @@ export const plansData = {
                     name: 'الفصل الرابع',
                     courses: [
                         { id: 'adv_ds', name: 'هياكل بيانات متقدم + مختبر', nameEn: 'Advanced Data Structures + Lab', credits: 4, prereq: 'ds' },
-                        { id: 'algorithms', name: 'تصميم وتحليل الوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
+                        { id: 'algorithms', name: 'تصميم وتحليل الخوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
                         { id: 'data_mining', name: 'تنقيب البيانات + مختبر', nameEn: 'Data Mining + Lab', credits: 4, prereq: 'stats' },
                         { id: 'data_analysis', name: 'تحليل البيانات', nameEn: 'Data Analysis', credits: 3, prereq: 'stats' },
                         { id: 'descriptive_analysis', name: 'مبادئ التحليل الوصفي', nameEn: 'Descriptive Analysis Principles', credits: 3 }
@@ -228,8 +228,8 @@ export const plansData = {
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات الحاسوب والتعليم الإلكتروني', nameEn: 'Computer Skills', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 },
-                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
-                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 }
+                        { id: 'arabic101', name: 'اللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'اللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 }
                     ]
                 },
                 {
@@ -240,7 +240,7 @@ export const plansData = {
                         { id: 'linear_alg', name: 'الجبر الطي', nameEn: 'Linear Algebra', credits: 3, prereq: 'math102' },
                         { id: 'stats', name: 'الاحتمالات والإحصاء', nameEn: 'Probability & Statistics', credits: 3, prereq: 'math102' },
                         { id: 'comp_skills2', name: 'مهارات الحاسوب (2) لطلبة الكليات العلميةةة + مختبر', nameEn: 'Computer Skills 2 (Scientific) + Lab', credits: 3, prereq: 'comp_skills' },
-                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
+                        { id: 'eng102', name: 'اللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
                     ]
                 },
                 {
@@ -271,7 +271,7 @@ export const plansData = {
                     name: 'المستوى الخامس (متقدم)',
                     courses: [
                         { id: 'se', name: 'هندس البرمجيات', nameEn: 'Software Engineering', credits: 3 },
-                        { id: 'algorithms', name: 'تصميم وتحليل الوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
+                        { id: 'algorithms', name: 'تصميم وتحليل الخوارزميات + مختبر', nameEn: 'Algorithms + Lab', credits: 4, prereq: 'ds' },
                         { id: 'robot_control', name: 'أنظم التحكم الآلي للروبوتات + مختبر', nameEn: 'Robot Control Systems + Lab', credits: 4 },
                         { id: 'knowledge_rep', name: 'تمثيل المعرف والاستدلال', nameEn: 'Knowledge Representation', credits: 3, prereq: 'ai_intro' },
                         { id: 'nlp', name: 'معالجة اللغة الطبيعية', nameEn: 'NLP', credits: 3, prereq: 'ai_intro' },
@@ -299,8 +299,8 @@ export const plansData = {
                     courses: [
                         { id: 'math101', name: 'التفاضل والتكامل (1)', nameEn: 'Calculus 1', credits: 3 },
                         { id: 'comp_skills', name: 'مهارات حاسوب وتعلم الكتروني', nameEn: 'Computer Skills', credits: 3 },
-                        { id: 'eng101', name: 'الاللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
-                        { id: 'arabic101', name: 'الاللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
+                        { id: 'eng101', name: 'اللغة الإنجليزية التطبيقية (1)', nameEn: 'Applied English 1', credits: 3 },
+                        { id: 'arabic101', name: 'اللغة العربية التطبيقية', nameEn: 'Applied Arabic', credits: 3 },
                         { id: 'unix_intro', name: 'مقدمة إلى يونكس', nameEn: 'Intro to Unix', credits: 3 }
                     ]
                 },
@@ -312,7 +312,7 @@ export const plansData = {
                         { id: 'comp_skills2', name: 'مهارات حاسوب (2)', nameEn: 'Computer Skills 2', credits: 3, prereq: 'comp_skills' },
                         { id: 'intro_vr', name: 'مقدمة إلى الواقع الافتراضي', nameEn: 'Intro to VR', credits: 3 },
                         { id: 'math_graphics', name: 'الرياضيات للرسم بالحاسوب', nameEn: 'Math for Computer Graphics', credits: 3, prereq: 'math101' },
-                        { id: 'eng102', name: 'الاللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
+                        { id: 'eng102', name: 'اللغة الإنجليزية التطبيقية (2)', nameEn: 'Applied English 2', credits: 3, prereq: 'eng101' }
                     ]
                 },
                 {
@@ -330,11 +330,11 @@ export const plansData = {
                     id: 4,
                     name: 'المستوى الرابع',
                     courses: [
-                        { id: 'ds', name: 'هياكل بيانات ووارزميات + مختبر', nameEn: 'Data Structures + Lab', credits: 4, prereq: 'oop' },
+                        { id: 'ds', name: 'هياكل بيانات وخوارزميات + مختبر', nameEn: 'Data Structures + Lab', credits: 4, prereq: 'oop' },
                         { id: 'image_proc', name: 'معالج الصور', nameEn: 'Image Processing', credits: 3, prereq: 'math_graphics' },
                         { id: 'anim_2d', name: 'رسوم متحرك ثنائي الابعاد + مختبر', nameEn: '2D Animation + Lab', credits: 4, prereq: 'comp_draw' },
                         { id: 'multimedia', name: 'الوسائط المتعدد', nameEn: 'Multimedia', credits: 3 },
-                        { id: 'ux_design', name: 'تصميم تجرب المستدم', nameEn: 'User Experience Design', credits: 3, prereq: 'hci' }
+                        { id: 'ux_design', name: 'تصميم تجربة المستخدم', nameEn: 'User Experience Design', credits: 3, prereq: 'hci' }
                     ]
                 },
                 {

@@ -8,14 +8,14 @@ export const announcements = [
         icon: 'fas fa-lightbulb',
         color: '#1565c0',
         title: {
-            ar: 'كلية الذكاء الاصطناعي تطلق مجل "CHAIN"',
+            ar: 'كلية الذكاء الاصطناعي تطلق مجلة "CHAIN"',
             en: 'AI Faculty Launches "CHAIN" Magazine'
         },
         content: {
             ar: (
                 <>
                     <p>
-                        أطلقت كلية الذكاء الاصطناعي في جامعة البلقاء التطبيقية مجل <strong>"CHAIN"</strong>، في مكتب رئيس الجامعة الأستاذ الدكتور أحمد فري العجلوني...
+                        أطلقت كلية الذكاء الاصطناعي في جامعة البلقاء التطبيقية مجلة <strong>"CHAIN"</strong>، في مكتب رئيس الجامعة الأستاذ الدكتور أحمد فخري العجلوني...
                     </p>
                     <div className="img-placeholder" style={{ background: '#e3f2fd', color: '#1565c0', padding: '2rem', borderRadius: '12px', textAlign: 'center', margin: '1rem 0' }}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ width: '3rem', height: '3rem', display: 'block', margin: '0 auto 10px' }}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -43,7 +43,7 @@ export const announcements = [
         icon: 'fas fa-info-circle',
         color: '#d41111',
         title: {
-            ar: 'شروط وإجراءات تقسيط الرسوم الدراسي',
+            ar: 'شروط وإجراءات تقسيط الرسوم الدراسية',
             en: 'Tuition Fees Installment Conditions'
         },
         content: {
@@ -52,7 +52,7 @@ export const announcements = [
                     <p style={{ color: '#d41111', fontWeight: 'bold' }}>📌 التفاصيل:</p>
                     <ul className="custom-list">
                         <li>التقسيط متاح للرسوم فوق <strong>250 دينار</strong>.</li>
-                        <li>دفع أولى <strong>50%</strong> من رسوم الساعات.</li>
+                        <li>دفعة أولى <strong>50%</strong> من رسوم الساعات.</li>
                     </ul>
                     <p style={{ color: '#388e3c', marginTop: '0.5rem' }}>📢 القرار ساري للفصل القادم.</p>
                 </>
@@ -76,13 +76,13 @@ export const announcements = [
         icon: 'fas fa-file-medical',
         color: '#1976d2',
         title: {
-            ar: 'مقترح: فحص المدرات كشرط للقبول',
+            ar: 'مقترح: فحص المخدرات كشرط للقبول',
             en: 'Proposal: Drug Test as Admission Requirement'
         },
         content: {
             ar: (
                 <p>
-                    مطالب نيابي باعتماد فحص المدرات كشرط أساسي للقبول في الجامعات الحكومي والاص لضمان بيئ تعليمي آمن.
+                    مطالب نيابية باعتماد فحص المخدرات كشرط أساسي للقبول في الجامعات الحكومية والخاصة لضمان بيئة تعليمية آمنة.
                 </p>
             ),
             en: (
@@ -99,13 +99,13 @@ export const announcements = [
         icon: 'fas fa-leaf',
         color: '#388e3c',
         title: {
-            ar: 'استبان تقييم بيئ التدين',
+            ar: 'استبانة تقييم بيئة التدخين',
             en: 'Smoking Environment Assessment Survey'
         },
         content: {
             ar: (
                 <>
-                    <p>شاركونا في استبان تقييم بيئ التدين في الجامعات الأردني.</p>
+                    <p>شاركونا في استبانة تقييم بيئة التدخين في الجامعات الأردنية.</p>
                     <a href="https://forms.gle/Krwf1ZraCwtF1eXP6" target="_blank" rel="noopener noreferrer">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14" style={{display:'inline',verticalAlign:'middle',marginInlineEnd:'4px'}}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> رابط الاستبان
                     </a>
@@ -128,13 +128,13 @@ export const announcements = [
         icon: 'fas fa-calendar-check',
         color: '#d41111',
         title: {
-            ar: 'امتحان الاكمال المئوي',
+            ar: 'امتحان الإكمال المئوي',
             en: 'Makeup Exam (100%)'
         },
         content: {
             ar: (
                 <p>
-                    بدء استقبال طلبات التقدم لامتحان الاكمال المئوي للريجين الراسبين بماد واحد، من <strong>10-9</strong> ولغاي <strong>14-9</strong>.
+                    بدأ استقبال طلبات التقدم لامتحان الإكمال المئوي للخريجين الراسبين في مادة واحدة، من <strong>10-9</strong> ولغاية <strong>14-9</strong>.
                 </p>
             ),
             en: (
@@ -151,13 +151,13 @@ export const announcements = [
         icon: 'fas fa-microchip',
         color: '#388e3c',
         title: {
-            ar: 'مسابق تصميم أشباه الموصلات JoSDC’25',
+            ar: 'مسابقة تصميم أشباه الموصلات JoSDC’25',
             en: 'Semiconductor Design Competition JoSDC’25'
         },
         content: {
             ar: (
                 <>
-                    <p>دعو للمشارك في النس الثالث من المسابق الوطني بجامع الحسين التقني.</p>
+                    <p>دعوة للمشاركة في النسخة الثالثة من المسابقة الوطنية في جامعة الحسين التقنية.</p>
                     <p><strong>آخر موعد للتسجيل: 14 أيلول 2025</strong>.</p>
                 </>
             ),
@@ -176,13 +176,13 @@ export const announcements = [
         icon: 'fas fa-user-graduate',
         color: '#1e88e5',
         title: {
-            ar: 'الدفع الأولى - الموازي',
+            ar: 'الدفعة الأولى - الموازي',
             en: 'First Batch - Parallel Admission'
         },
         content: {
             ar: (
                 <p>
-                    آخر موعد لاستكمال إجراءات القبول ودفع الرسوم هو يوم الخميس <strong>25/9/2025</strong>. الإجراءات إلكتروني بالكامل.
+                    آخر موعد لاستكمال إجراءات القبول ودفع الرسوم هو يوم الخميس <strong>25/9/2025</strong>. الإجراءات إلكترونية بالكامل.
                 </p>
             ),
             en: (
@@ -199,13 +199,13 @@ export const announcements = [
         icon: 'fas fa-award',
         color: '#1976d2',
         title: {
-            ar: 'إنجاز عالمي: 17 باحثاً في قائم ستانفورد',
+            ar: 'إنجاز عالمي: 17 باحثاً في قائمة ستانفورد',
             en: 'Global Achievement: 17 Researchers in Stanford List'
         },
         content: {
             ar: (
                 <p>
-                    جامعة البلقاء التطبيقية تفر باختيار 17 من أعضاء هيئتها التدريسية ضمن قائمة أفضل 2% من الباحثين الأكثر تأثيراً في العالم.
+                    تفخر جامعة البلقاء التطبيقية باختيار 17 من أعضاء هيئتها التدريسية ضمن قائمة أفضل 2% من الباحثين الأكثر تأثيراً في العالم.
                 </p>
             ),
             en: (
@@ -228,7 +228,7 @@ export const announcements = [
         content: {
             ar: (
                 <p>
-                    تم الإعلان عن مواعيد السحب والإضاف. يرجى مراجع بوابة الطالب الإلكتروني لمعرف الموعد المخصص لك.
+                    تم الإعلان عن مواعيد السحب والإضافة. يرجى مراجعة بوابة الطالب الإلكترونية لمعرفة الموعد المخصص لك.
                 </p>
             ),
             en: (

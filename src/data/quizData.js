@@ -6421,7 +6421,7 @@ export const quizData = {
     "applied_english_102": {
         "id": "applied_english_102",
         "title": "Applied English 102",
-        "titleAr": "الاللغة الإنجليزية التطبيقي 102",
+        "titleAr": "اللغة الإنجليزية التطبيقية 102",
         "icon": "doc",
         "color": "#3F51B5",
         "forceEnglish": true,
@@ -11676,8 +11676,8 @@ export const quizData = {
                     },
                     {
                         "id": "d",
-                        "text": "التطيط لكاف الوحدات",
-                        "textAr": "التطيط لكاف الوحدات",
+                        "text": "التخطيط لكافة الوحدات",
+                        "textAr": "التخطيط لكافة الوحدات",
                         "textEn": "",
                         "correct": false
                     }
@@ -11954,7 +11954,7 @@ export const quizData = {
             {
                 "id": 7523,
                 "type": "mcq",
-                "questionAr": "عند التطيط لوحدات حرس الحدود يراعى التهديد من خلال:",
+                "questionAr": "عند التخطيط لوحدات حرس الحدود يراعى التهديد من خلال:",
                 "questionEn": "",
                 "options": [
                     {
@@ -12496,7 +12496,7 @@ export const quizData = {
             {
                 "id": 7538,
                 "type": "mcq",
-                "questionAr": "من واجبات حرس الحدود المرتبط بالتطيط:",
+                "questionAr": "من واجبات حرس الحدود المرتبط بالتخطيط:",
                 "questionEn": "",
                 "options": [
                     {
@@ -21327,8 +21327,8 @@ export const quizData = {
                     },
                     {
                         "id": "b",
-                        "text": "الغاي",
-                        "textAr": "الغاي",
+                        "text": "الغاية",
+                        "textAr": "الغاية",
                         "textEn": "",
                         "correct": false
                     },
@@ -21873,8 +21873,8 @@ export const quizData = {
                     },
                     {
                         "id": "d",
-                        "text": "الغاي",
-                        "textAr": "الغاي",
+                        "text": "الغاية",
+                        "textAr": "الغاية",
                         "textEn": "",
                         "correct": false
                     }
@@ -26487,7 +26487,7 @@ export const quizData = {
             {
                 "id": 7923,
                 "type": "tf",
-                "questionAr": "تعتبر أموال الدول الاص مصص للمنفع العام مثل الطرق العام والجسور.",
+                "questionAr": "تعتبر أموال الدولة أموالاً مخصصة للمنفعة العامة مثل الطرق العامة والجسور.",
                 "questionEn": "",
                 "options": [],
                 "correctAnswer": "",
@@ -32719,7 +32719,7 @@ export const quizData = {
                 ],
                 "correctAnswer": "a",
                 "marks": 1,
-                "explanationAr": "صحيح. أسباب التبرير موضوعي تنصرف إلى الفعل، فإذا كان الفعل مباحاً انتفى التجريم عن كل المساهمةين."
+                "explanationAr": "صحيح. أسباب التبرير موضوعي تنصرف إلى الفعل، فإذا كان الفعل مباحاً انتفى التجريم عن كل المساهمين."
             },
             {
                 "id": 8107,
@@ -41089,7 +41089,7 @@ export const quizCategories = [
             {
                 "id": "applied_english_102",
                 "title": "Applied English 102",
-                "titleAr": "الاللغة الإنجليزية التطبيقي 102"
+                "titleAr": "اللغة الإنجليزية التطبيقية 102"
             }
         ]
     },

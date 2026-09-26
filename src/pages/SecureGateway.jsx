@@ -395,7 +395,7 @@ const SecureGateway = () => {
             setErrorMsg('');
         } else {
             setIsLoading(false);
-            triggerShake('اسم المستدم أو كلم المرور غير صحيح.');
+            triggerShake('اسم المستخدم أو كلمة المرور غير صحيحة.');
             refreshCaptcha();
         }
     };

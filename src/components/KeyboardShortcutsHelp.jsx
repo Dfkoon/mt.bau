@@ -6,8 +6,8 @@ const SHORTCUTS = [
     { keys: ['Ctrl', 'K'], keysAr: ['Ctrl', 'K'], labelAr: 'فتح البحث العام', labelEn: 'Open global search' },
     { keys: ['?'], keysAr: ['?'], labelAr: 'عرض اختصارات لوح المفاتيح', labelEn: 'Show keyboard shortcuts' },
     { keys: ['Esc'], keysAr: ['Esc'], labelAr: 'إغلاق أي نافذ مفتوح', labelEn: 'Close any open modal' },
-    { keys: ['Alt', '←'], keysAr: ['Alt', '→'], labelAr: 'العود للصفح السابق', labelEn: 'Go back to previous page' },
-    { keys: ['Alt', '→'], keysAr: ['Alt', '←'], labelAr: 'الذهاب للصفح التالي', labelEn: 'Go forward to next page' },
+    { keys: ['Alt', '←'], keysAr: ['Alt', '→'], labelAr: 'العودة إلى الصفحة السابقة', labelEn: 'Go back to previous page' },
+    { keys: ['Alt', '→'], keysAr: ['Alt', '←'], labelAr: 'الانتقال إلى الصفحة التالية', labelEn: 'Go forward to next page' },
 ];
 
 const KeyboardShortcutsHelp = () => {

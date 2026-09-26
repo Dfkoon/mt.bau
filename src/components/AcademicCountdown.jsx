@@ -5,7 +5,7 @@ import './AcademicCountdown.css';
 const EVENTS = [
   {
     id: 'drop-add',
-    titleAr: 'فتر السحب والإضاف الفصلي',
+    titleAr: 'فترة السحب والإضافة الفصلية',
     titleEn: 'Drop & Add Period',
     date: '2026-08-25T08:30:00',
     icon: '🔄',

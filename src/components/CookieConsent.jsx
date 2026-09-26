@@ -34,7 +34,7 @@ const CookieConsent = () => {
                         <span className="cookie-consent-icon">🔒</span>
                     </div>
                     <div className="cookie-consent-text">
-                        <h4>{isAr ? 'نحن نهتم بصوصيتك' : 'We care about your privacy'}</h4>
+                        <h4>{isAr ? 'نحن نهتم بخصوصيتك' : 'We care about your privacy'}</h4>
                         <p>
                             {isAr
                                 ? 'يستدم موقع "مكانك" ملفات تعريف الارتباط لتوفير تجرب مستدم ممتاز وحفظ تفضيلاتك (مثل اللغ والمظهر الداكن). باستمرارك في التصفح، فإنك توافق على سياس الصوصي الخاص بنا.'

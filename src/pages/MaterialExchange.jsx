@@ -1890,7 +1890,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 }, 100);
             }
         } else {
-            setLoginError(isAr ? 'اسم المستدم أو كلم المرور غير صحيح' : 'Incorrect username or password');
+            setLoginError(isAr ? 'اسم المستخدم أو كلمة المرور غير صحيحة' : 'Incorrect username or password');
             generateCaptcha();
         }
     };
@@ -8779,7 +8779,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                 className="form-input"
                                                 value={editCoordinatorNotes}
                                                 onChange={e => setEditCoordinatorNotes(e.target.value)}
-                                                placeholder={isAr ? 'مثال: حذف كتاب الاللغة العربية بسبب تسليمه، أو تصحيح اسم الطالب...' : 'Example: Deleted Arabic Book because it was delivered, or corrected student name...'}
+                                                placeholder={isAr ? 'مثال: حذف كتاب اللغة العربية بسبب تسليمه، أو تصحيح اسم الطالب...' : 'Example: Deleted Arabic Book because it was delivered, or corrected student name...'}
                                                 style={{
                                                     minHeight: '80px',
                                                     fontFamily: 'inherit',
@@ -8890,7 +8890,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <form className="login-form" onSubmit={handleLogin}>
                                         <div className="form-group">
-                                            <label>{isAr ? 'اسم المستدم' : 'Username'}</label>
+                                            <label>{isAr ? 'اسم المستخدم' : 'Username'}</label>
                                             <input
                                                 type="text"
                                                 name="staff_username_unique_makanak"
@@ -9315,7 +9315,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <small className="gender-field-hint">
                                         {isAr
-                                            ? 'يُستخدم الجنس لتصنيف موادك وإيصالها للمنسق المختصل بقسمك لتسهيل عملية التسليم والتواصل'
+                                            ? 'يُستخدم الجنس لتصنيف موادك وإيصالها للمنسق المختص بقسمك لتسهيل عملية التسليم والتواصل'
                                             : 'Gender is used to route your materials to the right coordinator for organized delivery and communication'}
                                     </small>
                                 </div>

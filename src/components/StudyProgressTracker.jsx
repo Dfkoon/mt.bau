@@ -8,8 +8,8 @@ const PRESET_SUBJECTS = [
     { id: 'math', nameAr: 'تفاضل وتكامل', nameEn: 'Calculus', icon: '📐' },
     { id: 'phys', nameAr: 'فيزياء عام', nameEn: 'Physics', icon: '⚛️' },
     { id: 'prog', nameAr: 'أساسيات البرمج', nameEn: 'Programming', icon: '💻' },
-    { id: 'arabic', nameAr: 'الاللغة العربية', nameEn: 'Arabic', icon: '📖' },
-    { id: 'english', nameAr: 'الاللغة الإنجليزية', nameEn: 'English', icon: '🌐' },
+    { id: 'arabic', nameAr: 'اللغة العربية', nameEn: 'Arabic', icon: '📖' },
+    { id: 'english', nameAr: 'اللغة الإنجليزية', nameEn: 'English', icon: '🌐' },
 ];
 
 const StudyProgressTracker = () => {
@@ -73,7 +73,7 @@ const StudyProgressTracker = () => {
             <div className="tracker-header">
                 <div className="tracker-title">
                     <h3>📊 {isAr ? 'متتبع تقدم الدراس الشخصي' : 'Personal Study Progress Tracker'}</h3>
-                    <p>{isAr ? 'راقب مسيرتك الدراسي وتقدمك في مواد الفصل بشكل يومي' : 'Monitor your academic journey and daily study progress per subject'}</p>
+                    <p>{isAr ? 'راقب مسيرتك الدراسية وتقدمك في مواد الفصل بشكل يومي' : 'Monitor your academic journey and daily study progress per subject'}</p>
                 </div>
                 <div className="overall-circle">
                     <svg viewBox="0 0 36 36" className="circular-chart">
@@ -169,7 +169,7 @@ const StudyProgressTracker = () => {
                 </form>
             ) : (
                 <button className="btn-add-tracker-subject" onClick={() => setAddMode(true)}>
-                    ＋ {isAr ? 'إضاف مادة جديد' : 'Add New Subject'}
+                    ＋ {isAr ? 'إضافة مادة جديدة' : 'Add New Subject'}
                 </button>
             )}
         </div>

@@ -94,7 +94,7 @@ const PersonalTrackerModal = ({ isOpen, onClose, isAr }) => {
                             />
                             <small style={{ opacity: 0.7, marginTop: '4px', display: 'block' }}>
                                 {isAr
-                                    ? 'الرقم المستدم عند التبرع أو الحجز'
+                                    ? 'الرقم المستخدم عند التبرع أو الحجز'
                                     : 'The phone number used during donation or booking'}
                             </small>
                         </div>

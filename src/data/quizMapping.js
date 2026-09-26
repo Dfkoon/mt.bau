@@ -16,6 +16,7 @@ export const courseNameToQuizMapping = {
     'Data Structures': 'data_structures',
     'هياكل بيانات': 'data_structures',
     'Algorithms Analysis and Design': 'algorithms',
+    'تحليل وتصميم وخوارزميات': 'algorithms',
     'تحليل وتصميم وارزميات': 'algorithms',
     
     // Systems & Hardware
@@ -34,6 +35,7 @@ export const courseNameToQuizMapping = {
     'Numerical Analysis Principles': 'numerical_analysis',
     'مبادئ التحليل العددي': 'numerical_analysis',
     'Discrete Mathematics': 'discrete_math',
+    'رياضيات متقطعة': 'discrete_math',
     'هياكل الرياضيات المنفصلةة': 'discrete_math',
     'Probability and Statistics': 'prob_stats',
     'الاحتمالات والإحصاء': 'prob_stats',
@@ -42,11 +44,11 @@ export const courseNameToQuizMapping = {
     'Computer Skills and E-Learning': 'comp_skills',
     'مهارات الحاسوب والتعليم الإلكتروني': 'comp_skills',
     'Applied English (2)': 'applied_english_102',
-    'الاللغة الإنجليزية التطبيقية (2)': 'applied_english_102',
+    'اللغة الإنجليزية التطبيقية (2)': 'applied_english_102',
     'Innovation, Entrepreneurship and Creativity': 'entrepreneurship',
     'الابتكار والريادة والإبداع': 'entrepreneurship',
     'Entrepreneurship and Innovation (English)': 'entrepreneurship',
-    'الريادة والابتكار (بالاللغة الإنجليزية)': 'entrepreneurship',
+    'الريادة والابتكار (باللغة الإنجليزية)': 'entrepreneurship',
     'Military Sciences': 'military_science',
     'العلوم العسكرية': 'military_science',
 
@@ -68,13 +70,14 @@ export const courseNameToQuizMapping = {
     'Biometrics and Security': 'biometrics_security',
     'أمن وقياسات بيولوجي': 'biometrics_security',
     'Introduction to Law': 'intro_law',
-    'مدل الى علم القانون': 'intro_law',
+    'مدخل إلى علم القانون': 'intro_law',
     'Penal Code - General Section': 'criminal_law_general',
     'قانون العقوبات القسم العام': 'criminal_law_general',
     'قانون العقوبات قسم العام': 'criminal_law_general',
     
     // --- College Specific ---
     'Computer Skills (2) for Scientific Colleges': 'comp_skills_2_science',
+    'مهارات حاسوب (2) لطلبة الكليات العلمية': 'comp_skills_2_science',
     'مهارات حاسوب (2) لطلبة الكليات العلميةةة': 'comp_skills_2_science',
     
     // --- Information Retrieval Systems ---

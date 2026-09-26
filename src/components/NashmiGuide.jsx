@@ -44,12 +44,12 @@ const NashmiGuide = () => {
             hint: 'User is looking for study materials. Help them find specific subjects or summaries.'
         },
         '/plans': {
-            ar: 'وصلت لصفح الخطط الدراسي؛ هون "شجر المواد" لكل تخصص عشان تعرف شو تسجل وتوزع موادك صح.',
+            ar: 'وصلت إلى صفحة الخطط الدراسية؛ هنا "شجرة المواد" لكل تخصص لتعرف ماذا تسجل وكيف توزّع موادك بشكل صحيح.',
             en: 'You are at the Academic Plans page; see the "Course Tree" for each major to plan your registration correctly.',
             hint: 'User is planning their semester. Guide them through the course tree and prerequisites.'
         },
         '/quiz': {
-            ar: 'قاعد بتدرس؟ هون بتقدر تختبر معلوماتك بكويزات تفاعلي وتعرف نتيجتك فوراً! جرب كويز بماد تخصصك هسا.',
+            ar: 'تدرس الآن؟ هنا يمكنك اختبار معلوماتك باختبارات تفاعلية ومعرفة نتيجتك فوراً! جرّب اختباراً في مادة تخصصك الآن.',
             en: 'Studying? Here you can test your knowledge with interactive quizzes and get instant results! Try a quiz for your major now.',
             hint: 'User is in the Quiz/Testing section. Encourage them to try a specific quiz (Calculus, AI, etc.).'
         },
@@ -160,7 +160,7 @@ const NashmiGuide = () => {
 
         if (matchingTarget) {
             navigate(matchingTarget.path);
-            return { text: isAr ? "على طول! هيني أذتك عالصفح اللي سألت عنها 🚀" : "Done! I've taken you to the page you asked for 🚀", score: 150 };
+            return { text: isAr ? "على طول! هيني ودّيتك على الصفحة اللي سألت عنها 🚀" : "Done! I've taken you to the page you asked for 🚀", score: 150 };
         }
 
         // 2. Context Questions (High Confidence)

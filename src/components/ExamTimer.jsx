@@ -120,7 +120,7 @@ const ExamTimer = () => {
                         onClick={() => { setShowCustom(!showCustom); setRunning(false); }}
                         style={showCustom ? { '--tab-clr': '#8b5cf6' } : {}}
                     >
-                        {isAr ? 'مصص' : 'Custom'}
+                        {isAr ? 'مخصص' : 'Custom'}
                     </button>
                 </div>
 

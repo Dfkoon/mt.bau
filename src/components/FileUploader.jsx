@@ -320,7 +320,7 @@ const FileUploader = ({ onClose }) => {
                     ) : (
                         <>
                             <div className="input-group">
-                                <label>{language === 'ar' ? 'نوع المساهمةة (إجباري)' : 'Contribution Type (Mandatory)'}</label>
+                                <label>{language === 'ar' ? 'نوع المساهمة (إجباري)' : 'Contribution Type (Mandatory)'}</label>
                                 <select
                                     className="type-select"
                                     value={contributionType}

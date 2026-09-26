@@ -17,7 +17,7 @@ const LemonChat = () => {
     const [messages, setMessages] = useState([
         {
             id: 1,
-            text: isAr ? 'مرحباً بك! أنا "نشمي المطور"، رفيقك الذكي في مشروع "مكانك الجامعي" التطوعي 🇯🇴🤖. كيف يمكنني مساعدتك في رحلتك الأكاديمي اليوم؟' : 'Welcome! I am Nashmi Advanced, your smart companion in the "Makanak Al-Jami\'i" initiative 🇯🇴🤖. How can I assist you in your academic journey today?',
+            text: isAr ? 'مرحباً بك! أنا "نشمي المطوّر"، رفيقك الذكي في مشروع "مكانك الجامعي" التطوعي 🇯🇴🤖. كيف يمكنني مساعدتك في رحلتك الأكاديمية اليوم؟' : 'Welcome! I am Nashmi Advanced, your smart companion in the "Makanak Al-Jami\'i" initiative 🇯🇴🤖. How can I assist you in your academic journey today?',
             sender: 'bot'
         }
     ]);
@@ -168,7 +168,7 @@ const LemonChat = () => {
         return {
             type: 'calendar_card',
             data: { events: matchingEvents },
-            textAr: 'هاي أقرب المواعيد المطابقة من التقويم الجامعي 👇',
+            textAr: 'هذه أقرب المواعيد المطابقة من التقويم الجامعي 👇',
             textEn: 'Here are the matching dates from the academic calendar 👇'
         };
     };
@@ -332,7 +332,7 @@ const LemonChat = () => {
                             <span className="chat-card-icon">{course.icon || '📘'}</span>
                             <div>
                                 <h4>{isAr ? course.name : course.nameEn}</h4>
-                                <span className="chat-card-badge">{isAr ? 'مادة دراسي' : 'Course'}</span>
+                                <span className="chat-card-badge">{isAr ? 'مادة دراسية' : 'Course'}</span>
                             </div>
                         </div>
 
@@ -417,7 +417,7 @@ const LemonChat = () => {
             return (
                 <div className="chat-rich-content">
                     <p>
-                        {(isAr ? `بتقدر تلاقي اللي بتدور عليه بصفح **${page.titleAr}**:` : `You can find what you need in the **${page.titleEn}** page:`)
+                        {(isAr ? `بتقدر تلاقي اللي بتدور عليه بصفحة **${page.titleAr}**:` : `You can find what you need in the **${page.titleEn}** page:`)
                             .split('**').map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part)}
                     </p>
                     <div

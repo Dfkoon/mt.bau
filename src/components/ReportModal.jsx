@@ -256,7 +256,7 @@ const ReportModal = () => {
             : phone.startsWith('962')
             ? phone
             : '962' + phone;
-        const msg = `مرحباً ${details.studentName}، معك فريق مكانك الجامعي 🎓\nنتواصل معك بصوص حمل تبادل المواد\nليك كشف بالمواد 📋\nشكراً لتعاملك معنا 💙`;
+        const msg = `مرحباً ${details.studentName}، معك فريق مكانك الجامعي 🎓\nنتواصل معك بخصوص حملة تبادل المواد\nليك كشف بالمواد 📋\nشكراً لتعاملك معنا 💙`;
         return `https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`;
     };
 

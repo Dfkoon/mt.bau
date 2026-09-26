@@ -66,7 +66,7 @@ const TimetableBuilder = () => {
     if (hasCollision) {
       setCollisionError(
         isAr
-          ? '⚠️ يوجد تعارض في الوقت مع محاضر أرى بنفس اليوم!'
+          ? '⚠️ يوجد تعارض في الوقت مع محاضرة أخرى في اليوم نفسه!'
           : '⚠️ Time collision detected with another lecture on the same day!'
       );
       return;
@@ -96,7 +96,7 @@ const TimetableBuilder = () => {
   };
 
   const handleClearAll = () => {
-    if (window.confirm(isAr ? 'هل أنت تأكد من مسح الجدول كاملاً؟' : 'Are you sure you want to clear the full timetable?')) {
+    if (window.confirm(isAr ? 'هل أنت متأكد من مسح الجدول بالكامل؟' : 'Are you sure you want to clear the full timetable?')) {
       setCourses([]);
     }
   };
@@ -110,7 +110,7 @@ const TimetableBuilder = () => {
       <div className="timetable-header">
         <div className="title-area">
           <h2>🗓️ {isAr ? 'مولد ومنظّم الجدول الدراسي الأسبوعي' : 'Weekly Timetable Builder'}</h2>
-          <p>{isAr ? 'قم بإضاف محاضراتك وتأكد من عدم وجود تعارض في الأوقات بكل سهول' : 'Add your lectures and verify there are no time conflicts easily'}</p>
+          <p>{isAr ? 'أضف محاضراتك وتأكد بسهولة من عدم وجود تعارض في الأوقات' : 'Add your lectures and verify there are no time conflicts easily'}</p>
         </div>
 
         <div className="actions-area">
@@ -130,7 +130,7 @@ const TimetableBuilder = () => {
       <div className="timetable-grid-layout">
         {/* Form Card */}
         <div className="course-form-card">
-          <h3>➕ {isAr ? 'إضاف محاضر جديد' : 'Add New Lecture'}</h3>
+          <h3>➕ {isAr ? 'إضافة محاضرة جديدة' : 'Add New Lecture'}</h3>
           {collisionError && <div className="collision-alert">{collisionError}</div>}
 
           <form onSubmit={handleAddCourse} className="course-form">
@@ -157,7 +157,7 @@ const TimetableBuilder = () => {
               </div>
 
               <div className="form-group">
-                <label>{isAr ? 'القاع / المبنى' : 'Room / Building'}</label>
+                <label>{isAr ? 'القاعة / المبنى' : 'Room / Building'}</label>
                 <input
                   type="text"
                   placeholder={isAr ? 'مثال: قاع 201' : 'e.g. Room 201'}
@@ -208,7 +208,7 @@ const TimetableBuilder = () => {
             </div>
 
             <button type="submit" className="btn-add-course">
-              ✨ {isAr ? 'إضاف للجدول' : 'Add to Timetable'}
+              ✨ {isAr ? 'إضافة إلى الجدول' : 'Add to Timetable'}
             </button>
           </form>
         </div>
