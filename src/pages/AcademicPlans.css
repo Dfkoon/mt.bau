@@ -835,6 +835,12 @@
 }
 
 /* Major Descriptions Grid & Cards */
+.major-descriptions-section > .careers-container {
+    width: calc(100% - 2rem);
+    max-width: 1400px;
+    margin-inline: auto;
+}
+
 .major-descriptions-grid {
     display: flex;
     flex-direction: column;
@@ -858,11 +864,6 @@
     align-items: center;
     gap: 1.2rem;
     border-bottom: 1px solid var(--glass-border);
-}
-
-.major-desc-icon {
-    font-size: 2.4rem;
-    line-height: 1;
 }
 
 .major-desc-title {
@@ -924,10 +925,14 @@
     line-height: 1.5;
 }
 
-.specs-box li span {
-    font-size: 0.9rem;
-    flex-shrink: 0;
-    margin-top: 2px;
+.specs-box li::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    flex: 0 0 0.45rem;
+    margin-top: 0.45rem;
+    border-radius: 50%;
+    background: var(--card-color, var(--primary));
 }
 
 .master-info-box {

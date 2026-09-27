@@ -222,7 +222,6 @@ const MAJOR_DESCRIPTIONS = [
         id: 'cybersecurity',
         nameAr: 'أمن المعلومات والفضاء الإلكتروني',
         nameEn: 'Info Security & Cybersecurity',
-        icon: '🛡️',
         color: '#ef4444',
         accentBg: 'rgba(239, 68, 68, 0.08)',
         overviewAr: `يهدف التخصص إلى إعداد القوى البشرية والكوادر المتخصصة في مجال أمن المعلومات والفضاء الإلكتروني لحماية الأنظمة والمعلومات من المخاطر والتهديدات الداخلية والخارجية. يُزود الطالب بالمعارف النظرية والعملية المناسبة لحل المشكلات، اتخاذ القرارات، وتطبيق أفضل سياسات الأمن السيبراني وإدارة الشبكات وقواعد البيانات بأمان.`,
@@ -240,7 +239,6 @@ const MAJOR_DESCRIPTIONS = [
         id: 'datascience',
         nameAr: 'علم البيانات',
         nameEn: 'Data Science & AI',
-        icon: '📊',
         color: '#3b82f6',
         accentBg: 'rgba(59, 130, 246, 0.08)',
         overviewAr: `علم البيانات هو تخصص حديث يجمع بين علوم الحاسوب، الرياضيات، الإحصاء والذكاء الاصطناعي لاستخراج المعرفة والقيمة من البيانات الضخمة (Big Data). يُمكن الخريجين من بناء خوارزميات التنبؤ والنماذج الإحصائية وتنقيب البيانات في شتى القطاعات مثل الأعمال، المالية، الصحة، الإعلام، والتحليلات الرياضية والسياسية لمساعدة متخذي القرار في التنبؤ بالمستقبل وتسهيل تدفق المعلومات.`,
@@ -256,7 +254,6 @@ const MAJOR_DESCRIPTIONS = [
         id: 'digitalforensics',
         nameAr: 'التحقيقات الجنائية الرقمية',
         nameEn: 'Digital Forensics',
-        icon: '🔍',
         color: '#f59e0b',
         accentBg: 'rgba(245, 158, 11, 0.08)',
         overviewAr: `يركز برنامج التحقيقات الجنائية الرقمية على كشف وتحليل الجرائم الإلكترونية من خلال جمع الأدلة الرقمية وفحصها بطرق علمية وقانونية محكمة. يشمل الخطة دراسة التشريعات السيبرانية، الحوسبة الجنائية، استعادة البيانات، فحص الأجهزة المحمولة والشبكات، التحقيق في الاحتيال، الابتزاز، والعملات الرقمية المشفرة مع الالتزام التام بالمعايير القانونية والأخلاقية لتزويد الجهات الأمنية والقضائية بالخبراء.`,
@@ -272,7 +269,6 @@ const MAJOR_DESCRIPTIONS = [
         id: 'vr',
         nameAr: 'الواقع الافتراضي والمعزز',
         nameEn: 'Virtual Reality & AR',
-        icon: '🥽',
         color: '#a855f7',
         accentBg: 'rgba(168, 85, 247, 0.08)',
         overviewAr: `تخصص هندسة وبرمجة الواقع الافتراضي والمعزز يهدف لإنشاء بيئات تفاعلية ثلاثية الأبعاد ومحاكاة ذكية للمحتوى والروبوتات والرسومات التفاعلية. يتعلم الطالب كيفية تصميم وإنشاء أنظمة الواقع الافتراضي، تفاعل الإنسان مع الحاسوب (HCI)، بناء الألعاب الإلكترونية الذكية وتطبيقات القصص المصورة ثلاثية الأبعاد، لخدمة كافة القطاعات التعليمية والترفيهية والطبية والصناعية.`,
@@ -288,7 +284,6 @@ const MAJOR_DESCRIPTIONS = [
         id: 'airobotics',
         nameAr: 'الذكاء الاصطناعي والروبوتات',
         nameEn: 'Artificial Intelligence & Robotics',
-        icon: '🤖',
         color: '#10b981',
         accentBg: 'rgba(16, 185, 129, 0.08)',
         overviewAr: `يجمع هذا التخصص بين امتيازات علمين فريدين: علم الذكاء الاصطناعي وعلم الروبوتات لبناء آلات وأنظمة ذكية قادرة على إدراك الأصوات والوجوه ومعالجة اللغات والرؤية الحاسوبية والتجاوب مع المحيط. يهدف لخلق جيل قادر على قيادة التكنولوجيا الحديثة والأتمتة في قطاعات تصنيع السيارات الذكية، النقل، الدفاع، والرعاية الصحية محلياً ودولياً.`,
@@ -740,7 +735,7 @@ const AcademicPlans = () => {
                 <div className="careers-container">
                     <div className="careers-header">
                         <div className="careers-badge" style={{ background: 'rgba(99, 102, 241, 0.12)', borderColor: 'rgba(99, 102, 241, 0.3)', color: '#818cf8' }}>
-                            <span>📚</span> {isAr ? 'دليل ومواصفات خريجي الكلية' : 'Faculty Majors & Graduate Specs'}
+                            {isAr ? 'دليل ومواصفات خريجي الكلية' : 'Faculty Majors & Graduate Specs'}
                         </div>
                         <h2 className="careers-title">
                             {isAr ? 'وصف التخصصات ومواصفات خريجي الكلية' : 'Official Major Overviews & Graduate Specs'}
@@ -756,7 +751,6 @@ const AcademicPlans = () => {
                         {MAJOR_DESCRIPTIONS.map((item) => (
                             <div key={item.id} className="major-desc-card glass-card" style={{ '--card-color': item.color }}>
                                 <div className="major-desc-header" style={{ background: item.accentBg }}>
-                                    <span className="major-desc-icon">{item.icon}</span>
                                     <div>
                                         <h3 className="major-desc-title">{isAr ? item.nameAr : item.nameEn}</h3>
                                         <span className="major-desc-sub">{isAr ? item.nameEn : item.nameAr}</span>
@@ -766,17 +760,17 @@ const AcademicPlans = () => {
                                     <p className="overview-text">{isAr ? item.overviewAr : item.overviewEn}</p>
 
                                     <div className="specs-box">
-                                        <h4>📋 {isAr ? 'مواصفات وتأهيل الخريجين المكتسبة:' : 'Graduate Specifications & Skills:'}</h4>
+                                        <h4>{isAr ? 'مواصفات وتأهيل الخريجين المكتسبة:' : 'Graduate Specifications & Skills:'}</h4>
                                         <ul>
                                             {item.graduateSpecs.map((spec, sIdx) => (
-                                                <li key={sIdx}><span>✅</span> {spec}</li>
+                                                <li key={sIdx}>{spec}</li>
                                             ))}
                                         </ul>
                                     </div>
 
                                     {item.masterInfoAr && (
                                         <div className="master-info-box">
-                                            <h4>🎓 {isAr ? 'درجة الماجستير في التخصص:' : 'Master\'s Degree Overview:'}</h4>
+                                            <h4>{isAr ? 'درجة الماجستير في التخصص:' : 'Master\'s Degree Overview:'}</h4>
                                             <p>{isAr ? item.masterInfoAr : item.masterInfoEn}</p>
                                         </div>
                                     )}

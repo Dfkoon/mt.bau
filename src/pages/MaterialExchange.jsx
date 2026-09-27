@@ -102,6 +102,8 @@ const STAFF_USERS = {
     sara: { role: 'coordinator', nameAr: 'سار', nameEn: 'Sara', gender: 'female' }
 };
 
+const MATERIAL_BOOKING_START_AT = new Date('2026-10-04T10:00:00+03:00');
+
 const MaterialExchange = ({ isEmbedded = false }) => {
     const { language, t } = useLanguage();
     const isAr = language === 'ar';
@@ -181,6 +183,8 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [permissionsSelection, setPermissionsSelection] = useState('ahmad');
     const [bookingOpen, setBookingOpen] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const canBookMaterials = systemSettings.isExchangeActive &&
+        Date.now() >= MATERIAL_BOOKING_START_AT.getTime();
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [bookingData, setBookingData] = useState({ name: '', phone: '', confirmPhone: '', gender: '', hideContactInfo: false, shareContactForDelivery: false });
@@ -464,15 +468,9 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const drawBookingCaptcha = () => drawCaptchaOnCanvas(bookingCanvasRef.current, bookingCaptchaText);
     // ── EFFECTS ───────────────────────────────────────────────────
     useEffect(() => {
-        const targetISO = systemSettings.bookingStartTime || systemSettings.donationEndTime || '';
         const calculateTimeLeft = () => {
-            if (!targetISO) {
-                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-                return;
-            }
             const now = new Date();
-            const target = new Date(targetISO);
-            const difference = target - now;
+            const difference = MATERIAL_BOOKING_START_AT - now;
             if (difference > 0) {
                 setTimeLeft({
                     days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -487,7 +485,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         const timer = setInterval(calculateTimeLeft, 1000);
         calculateTimeLeft();
         return () => clearInterval(timer);
-    }, [systemSettings.bookingStartTime, systemSettings.donationEndTime]);
+    }, []);
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -1557,7 +1555,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             );
             return;
         }
-        if (!bookingOpen) {
+        if (!canBookMaterials) {
             toast.error(isAr ? 'عذراً، حجز المواد لم يبدأ بعد' : 'Sorry, material booking has not started yet');
             return;
         }
@@ -4638,7 +4636,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <div className="section-header">
                                 <h2>
                                     {isAr ? 'المواد المتوفرة' : 'Available Materials'}
-                                    {bookingOpen && <span className="live-badge">● {isAr ? 'الحجز مفتوح' : 'Booking Open'}</span>}
+                                    {canBookMaterials && <span className="live-badge">● {isAr ? 'الحجز مفتوح' : 'Booking Open'}</span>}
                                 </h2>
                                 <p>{isAr ? 'اختر المادة التي ترغب بحجزها' : 'Choose a material to book'}</p>
                             </div>
@@ -4652,9 +4650,9 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             </div>
                                             <button
                                                 type="button"
-                                                className={`btn-book ${!bookingOpen ? 'locked' : ''}`}
+                                                className={`btn-book ${!canBookMaterials ? 'locked' : ''}`}
                                                 onClick={() => openBookingModal({ ...item, materialName: item.materialName })}
-                                                disabled={!bookingOpen}
+                                                disabled={!canBookMaterials}
                                             >
                                                 {isAr ? 'حجز المادة' : 'Book Material'}
                                             </button>
@@ -9598,12 +9596,12 @@ Please contact us to coordinate the pickup.Thank you.`;
                         <div className="section-header">
                             <h2>
                                 {isAr ? 'المواد المتوفرة' : 'Available Materials'}
-                                {systemSettings.isExchangeActive && bookingOpen && <span className="live-badge">● {isAr ? 'مباشر الآن' : 'Live Now'}</span>}
+                                {canBookMaterials && <span className="live-badge">● {isAr ? 'مباشر الآن' : 'Live Now'}</span>}
                             </h2>
                             <p>{isAr ? 'تصفح المواد المتاح للتبادل' : 'Browse available materials for exchange'}</p>
                         </div>
 
-                        {systemSettings.isExchangeActive && !bookingOpen && (
+                        {systemSettings.isExchangeActive && !canBookMaterials && (
                             <div className="booking-notice-banner glass-card animate-pulse">
                                 <span className="notice-icon">⏳</span>
                                 <div className="notice-text">
@@ -9614,35 +9612,12 @@ Please contact us to coordinate the pickup.Thank you.`;
                                         <div className="countdown-item"><span className="time-val">{timeLeft.minutes}</span><span className="time-label">{isAr ? 'دقيق' : 'Min'}</span></div>
                                         <div className="countdown-item"><span className="time-val">{timeLeft.seconds}</span><span className="time-label">{isAr ? 'ثاني' : 'Sec'}</span></div>
                                     </div>
-                                    {systemSettings.bookingStartTime ? (
-                                        <>
-                                            <p className="booking-info-text">
-                                                {isAr
-                                                    ? `الفترة الحالية مخصصة حصراً لجمع وتبرع المواد، على أن يبدأ حجزها بتاريخخ ${new Date(systemSettings.bookingStartTime).toLocaleString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`
-                                                    : `This period is exclusively for donations. Booking opens on ${new Date(systemSettings.bookingStartTime).toLocaleString('en-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}. ⏳`}
-                                            </p>
-                                            <input
-                                                type="text"
-                                                className={`form-input captcha-input-field ${captchaError ? 'input-error-shake' : ''}`}
-                                                value={captchaInput}
-                                                onChange={e => {
-                                                    setCaptchaInput(e.target.value);
-                                                    setCaptchaError(false);
-                                                }}
-                                                placeholder={isAr ? 'أدخل الرمز أعلاه' : 'Enter the code above'}
-                                                autoComplete="off"
-                                                maxLength="6"
-                                            />
-                                            <div className="empty-icon">⏳</div>
-                                            <h3>{isAr ? 'جاري التحميل...' : 'Loading...'}</h3>
-                                        </>
-                                    ) : !systemSettings.isExchangeActive ? (
-                                        <div className="no-materials">
-                                            <div className="empty-icon">🔧</div>
-                                            <h3>{isAr ? 'النظام قيد التطوير' : 'System Under Development'}</h3>
-                                            <p>{isAr ? 'نعمل على إطلاق نظام جديد ومتكامل قريباً' : 'We are launching a new integrated system soon'}</p>
-                                        </div>
-                                    ) : availableMaterials.length > 0 ? (
+                                    <p className="booking-info-text">
+                                        {isAr
+                                            ? `تم تأجيل حجز المواد إلى ${MATERIAL_BOOKING_START_AT.toLocaleString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} بتوقيت الأردن. `
+                                            : `Material booking has been postponed until ${MATERIAL_BOOKING_START_AT.toLocaleString('en-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} Jordan time. `}
+                                    </p>
+                                    {availableMaterials.length > 0 ? (
                                         <div className="materials-grid">
                                             {availableMaterials.map(item => (
                                                 <div key={item.uniqueKey} className="donation-card">
@@ -9651,10 +9626,10 @@ Please contact us to coordinate the pickup.Thank you.`;
                                                         <div className="donation-details"><h3>{item.materialItem.name}</h3></div>
                                                     </div>
                                                     <button
-                                                        className={`btn-book ${!bookingOpen ? 'locked' : ''}`}
-                                                        onClick={() => { if (bookingOpen) openBookingModal(item); }}
-                                                        disabled={!bookingOpen}
-                                                        title={!bookingOpen ? (isAr ? 'حمل الحجز مغلق حالياً' : 'Booking campaign is currently closed') : ''}
+                                                        className={`btn-book ${!canBookMaterials ? 'locked' : ''}`}
+                                                        onClick={() => openBookingModal(item)}
+                                                        disabled={!canBookMaterials}
+                                                        title={!canBookMaterials ? (isAr ? 'يبدأ الحجز يوم الأحد الساعة العاشرة صباحاً' : 'Booking opens Sunday at 10:00 AM') : ''}
                                                     >
                                                         {isAr ? 'حجز المادة' : 'Book Material'}
                                                     </button>
