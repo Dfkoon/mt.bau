@@ -71,26 +71,14 @@ const Offline = ({ code = "404", title, subtitle, showHome = true }) => {
                                 <p>{subtitle || defaultSubtitle}</p>
 
                                 <div className="actions_404">
-                                    {!isOnline && (
-                                        <button 
-                                            type="button"
-                                            onClick={handleRetry} 
-                                            className="retry_link"
-                                            disabled={isRetrying}
-                                        >
-                                            {isRetrying ? "جاري الاتصال..." : "إعادة المحاولة 🔄"}
-                                        </button>
-                                    )}
-
-                                    {showHome && (
-                                        <button 
-                                            type="button" 
-                                            onClick={handleGoHome} 
-                                            className="link_404"
-                                        >
-                                            العودة للرئيسية 🏠
-                                        </button>
-                                    )}
+                                    <button 
+                                        type="button" 
+                                        onClick={handleRetry} 
+                                        className="link_404"
+                                        disabled={isRetrying}
+                                    >
+                                        {isRetrying ? "جاري إعادة التحميل..." : "إعادة تحميل الصفحة 🔄"}
+                                    </button>
                                 </div>
                             </div>
                         </div>
