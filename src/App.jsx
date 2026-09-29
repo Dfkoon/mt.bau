@@ -18,6 +18,8 @@ const SuggestionsSection = React.lazy(() => import('./sections/SuggestionsSectio
 const GraduationPromo = React.lazy(() => import('./sections/GraduationPromo'));
 const Footer = React.lazy(() => import('./components/Footer'));
 import PageTitleUpdater from './components/PageTitleUpdater';
+import OfflineBanner from './components/OfflineBanner';
+const Offline = React.lazy(() => import('./pages/Offline'));
 
 const StudyMaterials = React.lazy(() => import('./pages/StudyMaterials'));
 const AcademicPlans = React.lazy(() => import('./pages/AcademicPlans'));
@@ -189,10 +191,15 @@ function App() {
             {/* 🔒 Isolated coordinator gateway - completely hidden from site, no navbar/footer/sidebar */}
             <Route path="/portal" element={<SecureGateway />} />
 
+            {/* 📡 Offline fallback page */}
+            <Route path="/offline" element={<Offline />} />
+
             {/* All other pages wrapped in site layout */}
             <Route path="*" element={
               <div className="app-container">
                 {maintenanceMode ? <MaintenanceScreen message={maintenanceMessage} /> : <>
+                  {/* 📡 Offline banner — shows automatically when internet is lost */}
+                  <OfflineBanner />
                   <Navbar toggleSidebar={toggleSidebar} />
                   <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
