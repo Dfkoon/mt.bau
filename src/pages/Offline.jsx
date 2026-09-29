@@ -39,24 +39,23 @@ const Offline = ({ code = "404", title, subtitle, showHome = true }) => {
         window.location.hash = '#/';
     };
 
-    const displayCode = !isOnline ? "404" : code;
+    const displayCode = !isOnline ? "انقطع الاتصال" : code;
     const defaultTitle = !isOnline 
-        ? "Look like you're lost" 
-        : (code === "404" ? "Look like you're lost" : "Look like you're lost");
+        ? "يبدو أنك فقدت الاتصال بالإنترنت!" 
+        : (code === "404" ? "عذراً، الصفحة غير موجودة!" : "حدث خطأ غير متوقع");
     
     const defaultSubtitle = !isOnline
-        ? `the page you are looking for not available! Check your connection${dots}`
-        : "the page you are looking for not available!";
+        ? `يرجى التحقق من اتصالك بالشبكة وإعادة المحاولة${dots}`
+        : "الصفحة التي تبحث عنها غير متوفرة حالياً أو تم نقلها.";
 
     return (
-        <section className="page_404">
+        <section className="page_404" dir="rtl">
             <div className="container_404">
                 <div className="row_404">
                     <div className="col_404">
                         
-                        {/* كارت 404 بالضبط كما في صورة الريفرنس */}
                         <div className="card_404">
-                            <h1 className="text-center">{displayCode}</h1>
+                            <h1 className="code_title">{displayCode}</h1>
                             
                             <div 
                                 className="four_zero_four_bg"
@@ -79,7 +78,7 @@ const Offline = ({ code = "404", title, subtitle, showHome = true }) => {
                                             className="retry_link"
                                             disabled={isRetrying}
                                         >
-                                            {isRetrying ? "Retrying..." : "Retry Connection"}
+                                            {isRetrying ? "جاري الاتصال..." : "إعادة المحاولة 🔄"}
                                         </button>
                                     )}
 
@@ -89,7 +88,7 @@ const Offline = ({ code = "404", title, subtitle, showHome = true }) => {
                                             onClick={handleGoHome} 
                                             className="link_404"
                                         >
-                                            Go to Home
+                                            العودة للرئيسية 🏠
                                         </button>
                                     )}
                                 </div>

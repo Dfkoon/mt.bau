@@ -19,6 +19,7 @@ const GraduationPromo = React.lazy(() => import('./sections/GraduationPromo'));
 const Footer = React.lazy(() => import('./components/Footer'));
 import PageTitleUpdater from './components/PageTitleUpdater';
 import OfflineBanner from './components/OfflineBanner';
+import GlobalOfflineScreen from './components/GlobalOfflineScreen';
 const Offline = React.lazy(() => import('./pages/Offline'));
 
 const StudyMaterials = React.lazy(() => import('./pages/StudyMaterials'));
@@ -196,48 +197,48 @@ function App() {
 
             {/* All other pages wrapped in site layout */}
             <Route path="*" element={
-              <div className="app-container">
-                {maintenanceMode ? <MaintenanceScreen message={maintenanceMessage} /> : <>
-                  {/* 📡 Offline banner — shows automatically when internet is lost */}
-                  <OfflineBanner />
-                  <Navbar toggleSidebar={toggleSidebar} />
-                  <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+              <GlobalOfflineScreen>
+                <div className="app-container">
+                  {maintenanceMode ? <MaintenanceScreen message={maintenanceMessage} /> : <>
+                    <Navbar toggleSidebar={toggleSidebar} />
+                    <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-                  <CookieConsent />
+                    <CookieConsent />
 
-                  <main>
-                    <Routes>
-                      <Route path="/" element={<HomePage />} />
-                      <Route path="/materials" element={<StudyMaterials />} />
-                      <Route path="/plans" element={<AcademicPlans />} />
-                      <Route path="/quiz" element={<Quiz />} />
-                      <Route path="/quiz/:quizId" element={<Quiz />} />
-                      <Route path="/calendar" element={<AcademicCalendar />} />
-                      <Route path="/grading" element={<GradingSystem />} />
-                      <Route path="/exchange" element={<MaterialExchange />} />
+                    <main>
+                      <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/materials" element={<StudyMaterials />} />
+                        <Route path="/plans" element={<AcademicPlans />} />
+                        <Route path="/quiz" element={<Quiz />} />
+                        <Route path="/quiz/:quizId" element={<Quiz />} />
+                        <Route path="/calendar" element={<AcademicCalendar />} />
+                        <Route path="/grading" element={<GradingSystem />} />
+                        <Route path="/exchange" element={<MaterialExchange />} />
 
 
-                      <Route path="/faq" element={<FAQ />} />
-                      <Route path="/about" element={<AboutUs />} />
+                        <Route path="/faq" element={<FAQ />} />
+                        <Route path="/about" element={<AboutUs />} />
 
-                      <Route path="/legal" element={<Legal />} />
+                        <Route path="/legal" element={<Legal />} />
 
-                      {/* 404 Page Not Found */}
-                      <Route path="*" element={<Offline code="404" />} />
-                    </Routes>
-                  </main>
+                        {/* 404 Page Not Found */}
+                        <Route path="*" element={<Offline code="404" />} />
+                      </Routes>
+                    </main>
 
-                  {/* Back to top button */}
-                  <BackToTopBtn />
-                  {/* Keyboard shortcuts help modal (press ?) */}
-                  <KeyboardShortcutsHelp />
-                  {/* Reading scroll progress bar */}
-                  <ReadingProgressBar />
-                  {/* Admin notice board (Firebase-driven) */}
-                  <NoticeBoard />
-                  <Footer />
-                </>}
-              </div>
+                    {/* Back to top button */}
+                    <BackToTopBtn />
+                    {/* Keyboard shortcuts help modal (press ?) */}
+                    <KeyboardShortcutsHelp />
+                    {/* Reading scroll progress bar */}
+                    <ReadingProgressBar />
+                    {/* Admin notice board (Firebase-driven) */}
+                    <NoticeBoard />
+                    <Footer />
+                  </>}
+                </div>
+              </GlobalOfflineScreen>
             } />
           </Routes>
         </React.Suspense>
