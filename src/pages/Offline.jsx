@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Offline.css';
+import cavemanGif from '../assets/caveman_404.gif';
 
 const Offline = ({ code = "404", title, subtitle, showHome = true }) => {
     const [dots, setDots] = useState('');
@@ -38,60 +39,60 @@ const Offline = ({ code = "404", title, subtitle, showHome = true }) => {
         window.location.hash = '#/';
     };
 
-    // نحدد النصوص الافتراضية إذا ما تم تمريرها
-    const displayCode = !isOnline ? "503" : code;
+    const displayCode = !isOnline ? "404" : code;
     const defaultTitle = !isOnline 
-        ? "يبدو أنك فقدت الاتصال بالإنترنت!" 
-        : (code === "404" ? "Look like you're lost" : "حدث خطأ غير متوقع");
+        ? "Look like you're lost" 
+        : (code === "404" ? "Look like you're lost" : "Look like you're lost");
     
     const defaultSubtitle = !isOnline
-        ? `يرجى التحقق من اتصالك بالشبكة وإعادة المحاولة${dots}`
-        : "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.";
+        ? `the page you are looking for not available! Check your connection${dots}`
+        : "the page you are looking for not available!";
 
     return (
-        <section className="page_404" dir="rtl">
+        <section className="page_404">
             <div className="container_404">
                 <div className="row_404">
                     <div className="col_404">
                         
-                        {/* الرقم الكبير في الخلفية */}
-                        <div className="four_zero_four_bg">
+                        {/* كارت 404 بالضبط كما في صورة الريفرنس */}
+                        <div className="card_404">
                             <h1 className="text-center">{displayCode}</h1>
-                            {/* gif / صورة الرجل الحجري المتحرك الشهير في تصميم 404 */}
-                            <div className="caveman_character">
-                                <div className="caveman_legs"></div>
+                            
+                            <div 
+                                className="four_zero_four_bg"
+                                style={{ backgroundImage: `url(${cavemanGif})` }}
+                            >
                             </div>
-                        </div>
 
-                        {/* صندوق المحتوى والأزرار */}
-                        <div className="content_box_404">
-                            <h3 className="h2">
-                                {title || defaultTitle}
-                            </h3>
+                            <div className="content_box_404">
+                                <h3 className="h2">
+                                    {title || defaultTitle}
+                                </h3>
 
-                            <p>{subtitle || defaultSubtitle}</p>
+                                <p>{subtitle || defaultSubtitle}</p>
 
-                            <div className="actions_404">
-                                {!isOnline && (
-                                    <button 
-                                        type="button"
-                                        onClick={handleRetry} 
-                                        className="retry_link"
-                                        disabled={isRetrying}
-                                    >
-                                        {isRetrying ? "جاري المحاولة..." : "إعادة المحاولة 🔄"}
-                                    </button>
-                                )}
+                                <div className="actions_404">
+                                    {!isOnline && (
+                                        <button 
+                                            type="button"
+                                            onClick={handleRetry} 
+                                            className="retry_link"
+                                            disabled={isRetrying}
+                                        >
+                                            {isRetrying ? "Retrying..." : "Retry Connection"}
+                                        </button>
+                                    )}
 
-                                {showHome && (
-                                    <button 
-                                        type="button" 
-                                        onClick={handleGoHome} 
-                                        className="link_404"
-                                    >
-                                        الذهاب للرئيسية 🏠
-                                    </button>
-                                )}
+                                    {showHome && (
+                                        <button 
+                                            type="button" 
+                                            onClick={handleGoHome} 
+                                            className="link_404"
+                                        >
+                                            Go to Home
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
