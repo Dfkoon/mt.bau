@@ -74,18 +74,28 @@ const OfflineBanner = () => {
                         <span>تحقق من اتصالك وحاول مجدداً</span>
                     </div>
 
-                    <button
-                        className={`offline-banner__retry ${isRetrying ? 'offline-banner__retry--spinning' : ''}`}
-                        onClick={handleRetry}
-                        disabled={isRetrying}
-                        aria-label="إعادة المحاولة"
-                    >
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="1 4 1 10 7 10" />
-                            <path d="M3.51 15a9 9 0 1 0 .49-3" />
-                        </svg>
-                        {isRetrying ? 'جاري...' : 'إعادة'}
-                    </button>
+                    <div className="offline-banner__actions">
+                        <button
+                            className="offline-banner__details"
+                            onClick={() => { window.location.hash = '#/offline'; }}
+                            aria-label="عرض التفاصيل"
+                        >
+                            تفاصيل ℹ️
+                        </button>
+
+                        <button
+                            className={`offline-banner__retry ${isRetrying ? 'offline-banner__retry--spinning' : ''}`}
+                            onClick={handleRetry}
+                            disabled={isRetrying}
+                            aria-label="إعادة المحاولة"
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="1 4 1 10 7 10" />
+                                <path d="M3.51 15a9 9 0 1 0 .49-3" />
+                            </svg>
+                            {isRetrying ? 'جاري...' : 'إعادة'}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Animated progress line at bottom */}

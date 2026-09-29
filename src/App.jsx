@@ -221,6 +221,9 @@ function App() {
                       <Route path="/about" element={<AboutUs />} />
 
                       <Route path="/legal" element={<Legal />} />
+
+                      {/* 404 Page Not Found */}
+                      <Route path="*" element={<Offline code="404" />} />
                     </Routes>
                   </main>
 

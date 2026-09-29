@@ -57,6 +57,31 @@
     font-size: 12px;
     opacity: 0.85;
 }
+.offline-banner__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.offline-banner__details {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    white-space: nowrap;
+}
+
+.offline-banner__details:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.05);
+}
 
 .offline-banner__retry {
     display: inline-flex;
