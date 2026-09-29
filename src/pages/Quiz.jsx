@@ -192,8 +192,79 @@ const CodeBlock = ({ code, language = 'cpp' }) => (
     </Highlight>
 );
 
-const renderTextWithCode = (text) => {
-    if (!text) return null;
+const isTextEnglish = (text) => {
+    if (!text || typeof text !== 'string') return false;
+    const stripped = text
+        .replace(/```[\s\S]*?```/g, '')
+        .replace(/<[^>]+>/g, '')
+        .trim();
+    if (!stripped) return true;
+    const arabicChars = stripped.match(/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/g) || [];
+    const latinChars = stripped.match(/[a-zA-Z]/g) || [];
+    return latinChars.length >= arabicChars.length;
+};
+
+const normalizeQuestionText = (text) => {
+    if (!text || typeof text !== 'string') return text;
+    let trimmed = text.trim();
+    if (!trimmed) return trimmed;
+
+    const isEn = isTextEnglish(trimmed);
+
+    if (isEn) {
+        // 1. If text starts with question mark (? or ؟), strip from start and ensure it ends with ?
+        if (/^[?؟]+/.test(trimmed)) {
+            trimmed = trimmed.replace(/^[?؟]+\s*/, '');
+            // Handle cases where dots followed: e.g. ".....VoIP stands for" -> "VoIP stands for ....."
+            if (/^\.{3,}\s*[a-zA-Z]/.test(trimmed)) {
+                trimmed = trimmed.replace(/^(\.{3,})\s*(.*)$/, '$2 $1');
+            }
+            if (!/[?؟]$/.test(trimmed)) {
+                trimmed = trimmed.replace(/[:\s]+$/, '');
+                trimmed = trimmed + '?';
+            }
+        }
+
+        // 2. Inverted question mark with leading numbering, e.g. "1. ?What is..." or "1- ?What is..."
+        if (/^(\d+[\.\-\)]\s*)[?؟]+\s*/.test(trimmed)) {
+            trimmed = trimmed.replace(/^(\d+[\.\-\)]\s*)[?؟]+\s*/, '$1');
+            if (!/[?؟]$/.test(trimmed)) {
+                trimmed = trimmed.replace(/[:\s]+$/, '');
+                trimmed = trimmed + '?';
+            }
+        }
+
+        // 3. Fix weird punctuation endings like ":?" or ".:?" or Arabic question mark on English text
+        if (/:[?؟]$/.test(trimmed)) {
+            trimmed = trimmed.replace(/:[?؟]$/, ':');
+        } else if (/؟$/.test(trimmed)) {
+            trimmed = trimmed.replace(/؟$/, '?');
+        }
+
+        // 4. If an English question begins with question words and lacks ending punctuation, append '?'
+        if (/^(what|which|where|when|who|whom|whose|why|how|is|are|can|could|does|do|did|should|would)\b/i.test(trimmed) &&
+            !/[?؟.!:]$/.test(trimmed) &&
+            !trimmed.endsWith('```') &&
+            !trimmed.endsWith('>')) {
+            trimmed = trimmed + '?';
+        }
+    } else {
+        // Arabic questions: clean leading ؟ or ?
+        if (/^[?؟]+\s*/.test(trimmed)) {
+            trimmed = trimmed.replace(/^[?؟]+\s*/, '');
+            if (!trimmed.endsWith('؟') && !trimmed.endsWith('?')) {
+                trimmed = trimmed + '؟';
+            }
+        }
+    }
+
+    return trimmed;
+};
+
+const renderTextWithCode = (rawText) => {
+    if (!rawText) return null;
+    const text = normalizeQuestionText(rawText);
+    const isEn = isTextEnglish(text);
 
     const renderMath = (raw) => raw.replace(/(\$\$[\s\S]+?\$\$|\$[^\$\n][\s\S]*?\$)/g, (match) => {
         const isBlock = match.startsWith('$$') && match.endsWith('$$');
@@ -218,7 +289,6 @@ const renderTextWithCode = (text) => {
     };
 
     // Modern multi-language support for markdown code blocks
-    // Note: We split by the regex but use a capturing group so matches are included in the array
     const parts = text.split(/```(?:java|cpp|javascript|sql|python)?([\s\S]*?)```/i);
 
     if (parts.length > 1) {
@@ -230,20 +300,74 @@ const renderTextWithCode = (text) => {
             const html = renderMath(part);
             const isHtml = /<[^>]+>/.test(html);
             if (isHtml) {
-                return <span key={index} dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }} />;
+                return (
+                    <span
+                        key={index}
+                        dir={isEn ? 'ltr' : 'auto'}
+                        style={{
+                            direction: isEn ? 'ltr' : undefined,
+                            textAlign: isEn ? 'left' : undefined,
+                            unicodeBidi: isEn ? 'isolate' : undefined,
+                            display: isEn ? 'inline-block' : undefined,
+                            width: isEn ? '100%' : undefined
+                        }}
+                        dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
+                    />
+                );
             }
 
-            return <span key={index} style={{ whiteSpace: 'pre-wrap' }}>{html}</span>;
+            return (
+                <span
+                    key={index}
+                    dir={isEn ? 'ltr' : 'auto'}
+                    style={{
+                        whiteSpace: 'pre-wrap',
+                        direction: isEn ? 'ltr' : undefined,
+                        textAlign: isEn ? 'left' : undefined,
+                        unicodeBidi: isEn ? 'isolate' : undefined,
+                        display: isEn ? 'inline-block' : undefined,
+                        width: isEn ? '100%' : undefined
+                    }}
+                >
+                    {html}
+                </span>
+            );
         });
     }
 
     const html = renderMath(text);
     const isHtml = /<[^>]+>/.test(html);
     if (isHtml) {
-        return <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }} />;
+        return (
+            <span
+                dir={isEn ? 'ltr' : 'auto'}
+                style={{
+                    direction: isEn ? 'ltr' : undefined,
+                    textAlign: isEn ? 'left' : undefined,
+                    unicodeBidi: isEn ? 'isolate' : undefined,
+                    display: isEn ? 'inline-block' : undefined,
+                    width: isEn ? '100%' : undefined
+                }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
+            />
+        );
     }
 
-    return <span style={{ whiteSpace: 'pre-wrap' }}>{html}</span>;
+    return (
+        <span
+            dir={isEn ? 'ltr' : 'auto'}
+            style={{
+                whiteSpace: 'pre-wrap',
+                direction: isEn ? 'ltr' : undefined,
+                textAlign: isEn ? 'left' : undefined,
+                unicodeBidi: isEn ? 'isolate' : undefined,
+                display: isEn ? 'inline-block' : undefined,
+                width: isEn ? '100%' : undefined
+            }}
+        >
+            {html}
+        </span>
+    );
 };
 
 // Web Audio API for satisfying click sound without external assets
@@ -638,12 +762,39 @@ const Quiz = () => {
 
         if (!baseQuiz) return null;
 
+        // Helper: strip HTML tags for clean text comparison
+        const stripHtml = (str) => (str || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        const textKey = (q) => stripHtml(q.questionEn || q.questionAr || q.question || '').toLowerCase().slice(0, 100);
+
+        // ── Pre-dedup Firestore questions ────────────────────────────────────
+        // The same question may have been uploaded to Firestore multiple times
+        // under different document IDs. Deduplicate before merging.
+        const dbSeenIds = new Set();
+        const dbSeenTexts = new Set();
+        const uniqueDbQuestions = dbCurrentQuestions.filter(dbQ => {
+            const id = String(dbQ.id ?? dbQ.firestoreId ?? '');
+            if (id && dbSeenIds.has(id)) return false;
+            if (id) dbSeenIds.add(id);
+            const t = textKey(dbQ);
+            if (t && dbSeenTexts.has(t)) return false;
+            if (t) dbSeenTexts.add(t);
+            return true;
+        });
+
         // Start with base questions (if any)
         let mergedQuestions = [...(baseQuiz.questions || [])];
 
-        // Append custom dynamic questions from DB
-        dbCurrentQuestions.forEach(dbQ => {
-            const idx = mergedQuestions.findIndex(q => q.id === dbQ.id);
+        // Append/merge dynamic questions from DB
+        // Match by normalized string ID OR by plain question text
+        // (handles mixed numeric/string IDs and HTML-tagged content)
+        uniqueDbQuestions.forEach(dbQ => {
+            const dbQId = String(dbQ.id ?? dbQ.firestoreId ?? '');
+            const dbQText = textKey(dbQ);
+            const idx = mergedQuestions.findIndex(q => {
+                if (String(q.id ?? '') === dbQId) return true;
+                const qt = textKey(q);
+                return qt && dbQText && qt === dbQText;
+            });
             if (idx >= 0) {
                 mergedQuestions[idx] = { ...mergedQuestions[idx], ...dbQ };
             } else {
@@ -654,7 +805,7 @@ const Quiz = () => {
         // Apply admin edits / corrections
         if (Object.keys(questionEdits).length > 0) {
             mergedQuestions = mergedQuestions.map(q => {
-                const edit = questionEdits[q.id];
+                const edit = questionEdits[q.id] || questionEdits[String(q.id)];
                 if (!edit) return q;
                 if (edit.deleted) return { ...q, deleted: true };
                 return {
@@ -670,6 +821,22 @@ const Quiz = () => {
 
         // Filter out deleted questions
         mergedQuestions = mergedQuestions.filter(q => !q.deleted);
+
+        // ── Final deduplication guard ─────────────────────────────────────────
+        // Last-resort pass: catches any remaining duplicates after all merging.
+        // Strips HTML before text comparison so markup differences don't bypass it.
+        const seenIds = new Set();
+        const seenTexts = new Set();
+        mergedQuestions = mergedQuestions.filter(q => {
+            const idKey = String(q.id ?? q.firestoreId ?? '');
+            if (idKey && seenIds.has(idKey)) return false;
+            if (idKey) seenIds.add(idKey);
+            const t = textKey(q);
+            if (t && seenTexts.has(t)) return false;
+            if (t) seenTexts.add(t);
+            return true;
+        });
+        // ─────────────────────────────────────────────────────────────────────
 
         return {
             ...baseQuiz,
@@ -703,6 +870,26 @@ const Quiz = () => {
     const currentSubjectName = currentSubject
         ? (language === 'ar' ? (currentSubject.nameAr || currentSubject.name) : currentSubject.name)
         : '';
+
+    // Auto-detect if current quiz is predominantly in English
+    const isQuizEnglish = useMemo(() => {
+        if (currentQuiz?.forceEnglish) return true;
+        if (currentSubject?.languageMode === 'en') return true;
+        if (quizId === 'comp_skills') return true;
+        if (!currentQuiz?.questions || currentQuiz.questions.length === 0) return false;
+
+        let enCount = 0;
+        let totalChecked = 0;
+        for (const q of currentQuiz.questions) {
+            const en = q.questionEn || '';
+            const ar = q.questionAr || '';
+            if (en.trim() || ar.trim()) {
+                totalChecked++;
+                if (isTextEnglish(en || ar)) enCount++;
+            }
+        }
+        return totalChecked > 0 && (enCount / totalChecked) >= 0.5;
+    }, [currentQuiz, currentSubject, quizId]);
 
     // Filter categories based on search
     const filteredCategories = mergedCategories.filter(category => {
@@ -1255,7 +1442,7 @@ const Quiz = () => {
                     </div>
 
                     {/* Moodle Style Summary & Review */}
-                    <div className={`moodle-theme-wrapper ${((currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both')) === 'en') ? 'force-ltr' : ''}`} dir={((currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both')) === 'en') ? 'ltr' : ((currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both')) === 'ar' ? 'rtl' : (language === 'ar' ? 'rtl' : 'ltr'))}>
+                    <div className={`moodle-theme-wrapper ${isQuizEnglish ? 'force-ltr' : ''}`} dir={isQuizEnglish ? 'ltr' : ((currentSubject?.languageMode === 'ar') ? 'rtl' : (language === 'ar' ? 'rtl' : 'ltr'))}>
 
                         {/* Moodle Top Navbar removed per user request */}
 
@@ -1522,11 +1709,13 @@ const Quiz = () => {
                                             statusText = isCorrect ? (language === 'ar' ? 'صحيح' : 'Correct') : (language === 'ar' ? 'غير صحيح' : 'Incorrect');
                                         }
 
-                                        const subjectLangMode = currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both');
-                                        const displayLang = subjectLangMode === 'en' ? 'en' : subjectLangMode === 'ar' ? 'ar' : language;
+                                        const subjectLangMode = isQuizEnglish ? 'en' : (currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both'));
+                                        const isEnglishContent = subjectLangMode === 'en';
+                                        const displayLang = isEnglishContent ? 'en' : subjectLangMode === 'ar' ? 'ar' : language;
+                                        const isCurrentQuestionEnglish = isEnglishContent || isTextEnglish(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn);
 
                                         return (
-                                            <div key={q.id} className="moodle-question-block" id={`question-${idx + 1}`}>
+                                            <div key={q.id} className={`moodle-question-block ${isCurrentQuestionEnglish ? 'is-english-question' : ''}`} id={`question-${idx + 1}`}>
                                                 <div className="moodle-q-info-box">
                                                     <div className="moodle-q-num"><strong>{language === 'ar' ? 'سؤال ' : 'Question '} {idx + 1}</strong></div>
                                                     <div className="moodle-q-status">{statusText}</div>
@@ -1537,9 +1726,9 @@ const Quiz = () => {
                                                 </div>
 
                                                 <div className="moodle-q-content-box">
-                                                    <div className={`moodle-q-text-area ${displayLang === 'en' ? 'force-ltr' : ''}`}>
+                                                    <div className={`moodle-q-text-area ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`} dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}>
                                                         {q.codeBlock && <CodeBlock code={q.codeBlock} />}
-                                                        <div className="moodle-q-text-main">
+                                                        <div className="moodle-q-text-main" dir={isTextEnglish(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn) ? 'ltr' : 'auto'} style={{ direction: isTextEnglish(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn) ? 'ltr' : undefined, textAlign: isTextEnglish(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn) ? 'left' : undefined, unicodeBidi: 'isolate' }}>
                                                             {renderTextWithCode(displayLang === 'ar' ? (q.questionAr || q.questionEn) : q.questionEn)}
                                                         </div>
 
@@ -1645,7 +1834,7 @@ const Quiz = () => {
                                                         )}
 
                                                         {/* User Answer Display */}
-                                                        <div className="moodle-q-options-display">
+                                                        <div className={`moodle-q-options-display ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`} dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}>
                                                             {q.type === 'multi_select' && (() => {
                                                                 const correct = q.correctAnswers || (q.correctAnswer ? q.correctAnswer.split(',').filter(Boolean) : []);
                                                                 const selected = Array.isArray(userAnswer) ? userAnswer : [];
@@ -1657,7 +1846,7 @@ const Quiz = () => {
                                                                             : !isSelected && isCorrectOption ? 'moodle-correct-text'
                                                                                 : '';
                                                                     return (
-                                                                        <div key={o.id} className="moodle-radio-display">
+                                                                        <div key={o.id} className={`moodle-radio-display ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`} dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}>
                                                                             <input type="checkbox" checked={isSelected} readOnly style={{ accentColor: '#6366f1' }} />
                                                                             <label className={labelClass}>
                                                                                 <span className="moodle-option-letter">{(() => {
@@ -1677,7 +1866,7 @@ const Quiz = () => {
                                                                 const isSelected = userAnswer === o.id;
                                                                 const isOptionCorrect = o.id === q.correctAnswer;
                                                                 return (
-                                                                    <div key={o.id} className="moodle-radio-display">
+                                                                    <div key={o.id} className={`moodle-radio-display ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`} dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}>
                                                                         <input type="radio" checked={isSelected} readOnly />
                                                                         <label className={isSelected && isOptionCorrect ? 'moodle-correct-text' : (isSelected ? 'moodle-wrong-text' : '')}>
                                                                             <span className="moodle-option-letter">{(() => {
@@ -1955,10 +2144,11 @@ const Quiz = () => {
         }
 
         const question = currentQuiz.questions[currentQuestionIndex];
-        const subjectLangMode = currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both');
+        const subjectLangMode = isQuizEnglish ? 'en' : (currentSubject?.languageMode || (currentQuiz.forceEnglish || quizId === 'comp_skills' ? 'en' : 'both'));
         const isEnglishContent = subjectLangMode === 'en';
         const isArabicContent = subjectLangMode === 'ar';
         const displayLang = isEnglishContent ? 'en' : isArabicContent ? 'ar' : language;
+        const isCurrentQuestionEnglish = question ? (isEnglishContent || isTextEnglish(displayLang === 'ar' ? (question.questionAr || question.questionEn) : question.questionEn)) : false;
 
         // Guard: questions may not be loaded yet (Firebase async). Only keep a loading state when
         // the quiz has no known cached/static data for the current question set. This avoids the
@@ -1997,7 +2187,7 @@ const Quiz = () => {
         };
 
         return (
-            <div className="moodle-theme-wrapper active-quiz-mode" dir={(subjectLangMode === 'en') ? 'ltr' : (subjectLangMode === 'ar' ? 'rtl' : (language === 'ar' ? 'rtl' : 'ltr'))}>
+            <div className={`moodle-theme-wrapper active-quiz-mode ${isEnglishContent ? 'force-ltr' : ''}`} dir={isEnglishContent ? 'ltr' : (subjectLangMode === 'ar' ? 'rtl' : (language === 'ar' ? 'rtl' : 'ltr'))}>
                 {/* Moodle Top Navbar removed per user request */}
 
                 {/* Moodle Breadcrumbs */}
@@ -2091,7 +2281,7 @@ const Quiz = () => {
                         </div>
 
 
-                        <div className="moodle-question-block" id={`question-${currentQuestionIndex + 1}`}>
+                        <div className={`moodle-question-block ${isCurrentQuestionEnglish ? 'is-english-question' : ''}`} id={`question-${currentQuestionIndex + 1}`}>
                             {/* Left Info Box (Moodle Style) */}
                             <div className="moodle-q-info-box">
                                 <div className="moodle-q-num">
@@ -2199,9 +2389,9 @@ const Quiz = () => {
 
                             {/* Question Content Box */}
                             <div className="moodle-q-content-box">
-                                <div className={`moodle-q-text-area ${isEnglishContent ? 'force-ltr' : ''}`}>
+                                <div className={`moodle-q-text-area ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`} dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}>
                                     {question.codeBlock && <CodeBlock code={question.codeBlock} />}
-                                    <div className="moodle-q-text-main">
+                                    <div className="moodle-q-text-main" dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'} style={{ direction: isCurrentQuestionEnglish ? 'ltr' : undefined, textAlign: isCurrentQuestionEnglish ? 'left' : undefined, unicodeBidi: 'isolate' }}>
                                         {renderTextWithCode(displayLang === 'ar' ? (question.questionAr || question.questionEn) : question.questionEn)}
                                     </div>
 
@@ -2306,7 +2496,7 @@ const Quiz = () => {
                                         </div>
                                     )}
 
-                                    <div className="moodle-q-options-display">
+                                    <div className={`moodle-q-options-display ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`} dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}>
                                         {question.type === 'multi_select' ? (
                                             // Checkbox multi-select
                                             (question.options || []).map((opt, oIdx) => {
@@ -2315,7 +2505,8 @@ const Quiz = () => {
                                                 return (
                                                     <div
                                                         key={opt.id}
-                                                        className={`moodle-radio-display ${isChecked ? 'selected' : ''}`}
+                                                        className={`moodle-radio-display ${isChecked ? 'selected' : ''} ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`}
+                                                        dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}
                                                         onClick={() => {
                                                             const cur = Array.isArray(userAnswers[question.id]) ? [...userAnswers[question.id]] : [];
                                                             const updated = cur.includes(opt.id) ? cur.filter(id => id !== opt.id) : [...cur, opt.id];
@@ -2352,7 +2543,8 @@ const Quiz = () => {
                                                 return (
                                                     <div
                                                         key={opt.id}
-                                                        className={`moodle-radio-display ${isSelected ? 'selected' : ''}`}
+                                                        className={`moodle-radio-display ${isSelected ? 'selected' : ''} ${isCurrentQuestionEnglish ? 'force-ltr' : ''}`}
+                                                        dir={isCurrentQuestionEnglish ? 'ltr' : 'auto'}
                                                         onClick={() => handleAnswerSelect(question.id, opt.id)}
                                                     >
                                                         <input type="radio" checked={isSelected} readOnly />

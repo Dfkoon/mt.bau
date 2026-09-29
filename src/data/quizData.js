@@ -33683,7 +33683,7 @@ export const quizData = {
                 "id": 8126,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?.....VolP stands for",
+                "questionEn": "VoIP stands for .....?",
                 "options": [
                     {
                         "id": "opt_1785310650768_1",
@@ -33759,7 +33759,7 @@ export const quizData = {
                 "id": 8128,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?What is a feature of Online Collaboration Tools",
+                "questionEn": "What is a feature of Online Collaboration Tools?",
                 "options": [
                     {
                         "id": "opt_1785310868000_1",
@@ -33835,7 +33835,7 @@ export const quizData = {
                 "id": 8130,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which of the following is not a key characteristics of online collaboration tools",
+                "questionEn": "Which of the following is not a key characteristics of online collaboration tools?",
                 "options": [
                     {
                         "id": "opt_1785311948216_1",
@@ -33873,7 +33873,7 @@ export const quizData = {
                 "id": 8131,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which of the following describe a PLUG IN",
+                "questionEn": "Which of the following describe a PLUG IN?",
                 "options": [
                     {
                         "id": "opt_1785312273163_1",
@@ -33949,7 +33949,7 @@ export const quizData = {
                 "id": 8133,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which of the following is a risk associated with cloud computing",
+                "questionEn": "Which of the following is a risk associated with cloud computing?",
                 "options": [
                     {
                         "id": "opt_1785313346623_1",
@@ -34025,7 +34025,7 @@ export const quizData = {
                 "id": 8135,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which one of the following is NOT using for  Bluetooth",
+                "questionEn": "Which one of the following is NOT using for Bluetooth?",
                 "options": [
                     {
                         "id": "opt_1785316662307_1",
@@ -34063,7 +34063,7 @@ export const quizData = {
                 "id": 8136,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which one of the following statements is TRUE about a tablet",
+                "questionEn": "Which one of the following statements is TRUE about a tablet?",
                 "options": [
                     {
                         "id": "opt_1785316983774_1",
@@ -34101,7 +34101,7 @@ export const quizData = {
                 "id": 8137,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which one of the following can NOT be synchronized",
+                "questionEn": "Which one of the following can NOT be synchronized?",
                 "options": [
                     {
                         "id": "opt_1785317159669_1",
@@ -34139,7 +34139,7 @@ export const quizData = {
                 "id": 8138,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which one of the following is facilited by cloud computing",
+                "questionEn": "Which one of the following is facilited by cloud computing?",
                 "options": [
                     {
                         "id": "opt_1785317231653_1",
@@ -34177,7 +34177,7 @@ export const quizData = {
                 "id": 8139,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which one of the following is Not an operating system for a mobile device",
+                "questionEn": "Which one of the following is Not an operating system for a mobile device?",
                 "options": [
                     {
                         "id": "opt_1785317304625_1",
@@ -34291,7 +34291,7 @@ export const quizData = {
                 "id": 8142,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which one of the following allows multiples users to edit a document in real time",
+                "questionEn": "Which one of the following allows multiples users to edit a document in real time?",
                 "options": [
                     {
                         "id": "opt_1785318246646_1",
@@ -34911,7 +34911,7 @@ export const quizData = {
                 "id": 8165,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?For the following BST, what is the preorder traversal",
+                "questionEn": "For the following BST, what is the preorder traversal?",
                 "options": [
                     {
                         "id": "opt_1786365073082_1",
@@ -35027,7 +35027,7 @@ export const quizData = {
                 "id": 8168,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?In a priority queue, if we concerned about fast enqueuing we choose",
+                "questionEn": "In a priority queue, if we concerned about fast enqueuing we choose:",
                 "options": [
                     {
                         "id": "opt_1786367300116_1",
@@ -35141,7 +35141,7 @@ export const quizData = {
                 "id": 8171,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?If a disjoint set structure contains {1,2,3,4,5,6} and {7,8}, and you apply union(5, 8), what is the result",
+                "questionEn": "If a disjoint set structure contains {1,2,3,4,5,6} and {7,8}, and you apply union(5, 8), what is the result?",
                 "options": [
                     {
                         "id": "opt_1786371531253_1",
@@ -35179,7 +35179,7 @@ export const quizData = {
                 "id": 8172,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?In the following tree, if we delete 79, what is the resulting heap in level-order",
+                "questionEn": "In the following tree, if we delete 79, what is the resulting heap in level-order?",
                 "options": [
                     {
                         "id": "opt_1786371649137_1",
@@ -35560,7 +35560,7 @@ export const quizData = {
                 "id": 8182,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which of the following operations is faster in a doubly linked list compared to a singly linked list",
+                "questionEn": "Which of the following operations is faster in a doubly linked list compared to a singly linked list?",
                 "options": [
                     {
                         "id": "opt_1786375875936_1",
@@ -35598,7 +35598,7 @@ export const quizData = {
                 "id": 8183,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?In a complete binary tree with 20 nodes, and the root considered to be at level 0, how many nodes are there at level 3",
+                "questionEn": "In a complete binary tree with 20 nodes, and the root considered to be at level 0, how many nodes are there at level 3?",
                 "options": [
                     {
                         "id": "opt_1786376026551_1",
@@ -35884,7 +35884,7 @@ export const quizData = {
                 "id": 8195,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which of the following is an example of using an online collabotative tool",
+                "questionEn": "Which of the following is an example of using an online collabotative tool?",
                 "options": [
                     {
                         "id": "opt_1785325517423_1",
@@ -35922,7 +35922,7 @@ export const quizData = {
                 "id": 8196,
                 "type": "mcq",
                 "questionAr": "",
-                "questionEn": "?Which one of the following is an operating system for a mobile device",
+                "questionEn": "Which one of the following is an operating system for a mobile device?",
                 "options": [
                     {
                         "id": "opt_1785328661717_1",

@@ -2940,6 +2940,15 @@ body:has(.moodle-theme-wrapper) {
     font-size: 1rem;
     color: #212529;
     line-height: 1.6;
+    unicode-bidi: isolate;
+}
+
+.moodle-q-text-main[dir="ltr"],
+.moodle-q-text-area.force-ltr .moodle-q-text-main,
+.force-ltr .moodle-q-text-main {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: isolate !important;
 }
 
 .moodle-q-options-display {
@@ -3217,6 +3226,38 @@ body:has(.moodle-theme-wrapper) {
 
 .moodle-theme-wrapper.force-ltr .moodle-q-info-box {
     text-align: left;
+}
+
+/* Standalone English Question overrides (for mixed quizzes or active mode) */
+.moodle-question-block.is-english-question .moodle-q-content-box,
+.moodle-question-block.is-english-question .moodle-q-text-area,
+.moodle-question-block.is-english-question .moodle-q-text-main,
+.moodle-question-block.is-english-question .moodle-q-options-display {
+    direction: ltr !important;
+    text-align: left !important;
+    unicode-bidi: isolate !important;
+}
+
+.moodle-question-block.is-english-question .moodle-radio-display {
+    direction: ltr !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+}
+
+.moodle-question-block.is-english-question .moodle-radio-display input[type="radio"],
+.moodle-question-block.is-english-question .moodle-radio-display input[type="checkbox"] {
+    order: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0.6rem !important;
+}
+
+.moodle-question-block.is-english-question .moodle-radio-display label {
+    order: 1 !important;
+    text-align: left !important;
+    direction: ltr !important;
+    display: flex !important;
+    align-items: center !important;
 }
 
 .moodle-correct-text {

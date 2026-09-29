@@ -832,13 +832,18 @@
         grid-template-columns: 1fr;
         padding: 1.2rem;
     }
+
+    .major-descriptions-section > .careers-container {
+        padding: 0 1rem;
+    }
 }
 
 /* Major Descriptions Grid & Cards */
 .major-descriptions-section > .careers-container {
-    width: calc(100% - 2rem);
+    width: 100%;
     max-width: 1400px;
     margin-inline: auto;
+    padding: 0 1.5rem;
 }
 
 .major-descriptions-grid {
