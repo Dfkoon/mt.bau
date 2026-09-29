@@ -3,7 +3,7 @@
    ============================================================ */
 
 .page_404 {
-    padding: 30px 15px;
+    padding: 20px 15px;
     background: #ffffff !important;
     min-height: 100vh;
     display: flex;
@@ -32,10 +32,10 @@
     text-align: center;
 }
 
-/* بطاقة نظيفة بيضاء تماماً بدون أي إطار أو حدود باهتة */
+/* بطاقة نظيفة بيضاء تماماً بدون أي إطار أو حدود */
 .card_404 {
     background: #ffffff !important;
-    padding: 20px 10px;
+    padding: 10px;
     border: none !important;
     box-shadow: none !important;
     border-radius: 0 !important;
@@ -53,20 +53,22 @@
 
 /* ── مساحة أنيميشن رجل الكهف ── */
 .four_zero_four_bg {
-    height: 380px;
-    background-position: center;
+    height: 340px;
+    background-position: center bottom;
     background-repeat: no-repeat;
     background-size: contain;
     position: relative;
     width: 100%;
-    max-width: 650px;
-    margin: 0 auto;
+    max-width: 600px;
+    margin: 0 auto 15px auto;
 }
 
-/* ── صندوق النصوص ── */
+/* ── صندوق النصوص مع مسافة واضحة لمنع التداخل مع صورة الـ GIF ── */
 .content_box_404 {
-    margin-top: -20px;
+    margin-top: 15px !important;
     text-align: center;
+    position: relative;
+    z-index: 2;
 }
 
 .content_box_404 h3.h2 {
@@ -75,7 +77,8 @@
     font-weight: 800 !important;
     margin-bottom: 12px !important;
     font-family: 'Cairo', sans-serif !important;
-    line-height: 1.4 !important;
+    line-height: 1.5 !important;
+    display: block !important;
 }
 
 .content_box_404 p {
@@ -155,6 +158,9 @@
 
 @media (max-width: 600px) {
     .four_zero_four_bg {
-        height: 250px;
+        height: 240px;
+    }
+    .content_box_404 {
+        margin-top: 10px !important;
     }
 }
