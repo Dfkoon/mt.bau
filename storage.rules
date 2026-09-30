@@ -2,13 +2,26 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow public uploads to contributions folder (max 10MB, images & PDFs)
+    
+    // Contributions folder: allow public upload only for images & PDFs up to 5MB
     match /contributions/{allPaths=**} {
       allow read: if true;
-      allow create: if request.resource.size < 10 * 1024 * 1024
-                    && (request.resource.contentType.matches('image/.*')
+      allow create: if request.resource.size < 5 * 1024 * 1024
+                    && (request.resource.contentType.matches('image/(jpeg|png|webp|gif)')
                         || request.resource.contentType == 'application/pdf');
+      // Only authenticated staff can edit or delete uploaded files
       allow update, delete: if request.auth != null;
+    }
+
+    // Task and coordinator images: only authenticated staff
+    match /tasks/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Default deny for everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
   }
 }

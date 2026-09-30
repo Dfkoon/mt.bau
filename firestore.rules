@@ -1,10 +1,148 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Allow full read and write across all collections for local/admin operations
-    match /{document=**} {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isReasonableSize() {
+      return request.resource.data.size() < 100;
+    }
+
+    // ── 1. Academic & Quizzes (Public Read, Admin Write Only) ────────
+    match /academic_courses/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /quiz_subjects/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /quiz_parts/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /quiz_questions/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /question_edits/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isReasonableSize();
+      allow update, delete: if isAuthenticated();
+    }
+
+    // ── 2. System Settings & Notices (Protect Sensitive Configs) ─────
+    match /system_configs/{configDoc} {
+      // Allow public to read global_settings for maintenance state & public metadata
+      allow read: if configDoc == 'global_settings' || isAuthenticated();
+      // Only authenticated staff can modify system configurations
+      allow write: if isAuthenticated();
+    }
+
+    match /notices/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /adminNotifications/{docId} {
+      allow read, update, delete: if isAuthenticated();
+      allow create: if isReasonableSize();
+    }
+
+    // ── 3. Material Exchange & Delivery Schedules ────────────────────
+    match /materialDonations/{docId} {
+      allow read: if true;
+      // Allow creation of donations with size control
+      allow create: if isReasonableSize();
+      // Only authenticated staff can modify or delete donation records
+      allow update, delete: if isAuthenticated();
+    }
+
+    match /materialPreRequests/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isReasonableSize();
+      allow update, delete: if isAuthenticated();
+    }
+
+    match /deliverySchedules/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /campaignArchives/{docId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    match /deletedItems/{docId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // ── 4. Audit & Activity Logs (Append-only, Immutable) ────────────
+    match /materialExchangeLogs/{docId} {
+      allow read: if isAuthenticated();
+      allow create: if isReasonableSize();
+      // Immutable: No one can edit or delete audit logs
+      allow update, delete: if false;
+    }
+
+    match /staff_status/{username} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // ── 5. Feedback, Applications & Interactive Features ──────────────
+    match /coordinatorApplications/{docId} {
+      allow create: if isReasonableSize();
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    match /suggestions/{docId} {
+      allow create: if isReasonableSize();
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    match /service_requests/{docId} {
+      allow create: if isReasonableSize();
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    match /material_ratings/{docId} {
+      allow read: if true;
+      allow create: if isReasonableSize();
+      allow update, delete: if isAuthenticated();
+    }
+
+    match /page_views/{docId} {
       allow read, write: if true;
+    }
+
+    match /nashmi_chat/{docId} {
+      allow create: if isReasonableSize();
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    match /nashmi_logs/{docId} {
+      allow create: if isReasonableSize();
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    match /testimonials/{docId} {
+      allow read: if true;
+      allow create: if isReasonableSize();
+      allow update, delete: if isAuthenticated();
+    }
+
+    // ── 6. Default Deny for Any Other Document ───────────────────────
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

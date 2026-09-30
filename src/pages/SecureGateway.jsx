@@ -442,17 +442,17 @@ const SecureGateway = () => {
             const tokenPrev = await getTOTPToken(secretToUse, -30);
             const tokenNext = await getTOTPToken(secretToUse, 30);
 
-            // Accept valid TOTP or master bypass pins (000000 / 123456)
-            if (inputCode === tokenCurrent || inputCode === tokenPrev || inputCode === tokenNext || inputCode === '000000' || inputCode === '123456' || !secretToUse) {
+            // Verify strict dynamic TOTP token (no hardcoded bypass codes allowed)
+            if (secretToUse && (inputCode === tokenCurrent || inputCode === tokenPrev || inputCode === tokenNext)) {
                 executeLogin(pendingStaffKey, user);
             } else {
                 setIsLoading(false);
-                triggerShake('رمز المصادق الثنائي (2FA) غير صحيح. حاول مرة أخرى.');
+                triggerShake('رمز المصادقة الثنائية (2FA) غير صحيح أو منتهي الصلاحية.');
             }
         } catch (err) {
             console.error("TOTP Verification error:", err);
-            // Fallback allow on error
-            executeLogin(pendingStaffKey, user);
+            setIsLoading(false);
+            triggerShake('فشل التحقق الأمني من الرمز. حاول مجدداً.');
         }
     };
 
