@@ -122,12 +122,12 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         allowRegistration: true,
         campaignPhase: 'suspended',
         requestStatusFormEnabled: true,
-        secretGatewayCode: 'makanak2025',
+        secretGatewayCode: '',
         exchangeSuspendedMessageAr: 'تفتح الحملة أبوابها مع بداية كل فصل دراسي جديد تزامنًا مع فترة السحب والإضافة.',
         exchangeSuspendedMessageEn: 'It resumes at the start of each new semester during the add and drop period.',
-        adminPassword: 'admin2024',
-        ahmadPassword: 'ahmad2024',
-        saraPassword: 'sara2024',
+        adminPassword: '',
+        ahmadPassword: '',
+        saraPassword: '',
         ahmadNameAr: 'أحمد',
         ahmadNameEn: 'Ahmad',
         saraNameAr: 'سار',
@@ -317,8 +317,6 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [bookingCaptchaError, setBookingCaptchaError] = useState(false);
     const bookingCanvasRef = useRef(null);
 
-    const SECRET_GATEWAY_CODE = 'makanak2025';
-
     // ── DASHBOARD STATE ───────────────────────────────────────────
     const [activeTab, setActiveTab] = useState('donations');
     const [allDonations, setAllDonations] = useState([]);
@@ -503,7 +501,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                         campaignPhase: phase,
                         allowRegistration: data.allow_registration !== undefined ? Boolean(data.allow_registration) : true,
                         isExchangeActive: phase !== 'suspended',
-                        secretGatewayCode: data.secretGatewayCode || 'makanak2025',
+                        secretGatewayCode: data.secretGatewayCode || '',
                         exchangeSuspendedMessageAr: data.exchangeSuspendedMessageAr || prev.exchangeSuspendedMessageAr,
                         exchangeSuspendedMessageEn: data.exchangeSuspendedMessageEn || prev.exchangeSuspendedMessageEn,
                         adminPassword: data.adminPassword || prev.adminPassword,
@@ -576,10 +574,10 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                     setBookingOpen(phase === 'exchange');
                     setEditSettings({
                         campaignPhase: phase,
-                        secretGatewayCode: data.secretGatewayCode || 'makanak2025',
-                        adminPassword: data.adminPassword || 'admin2024',
-                        ahmadPassword: data.ahmadPassword || 'ahmad2024',
-                        saraPassword: data.saraPassword || 'sara2024',
+                        secretGatewayCode: data.secretGatewayCode || '',
+                        adminPassword: data.adminPassword || '',
+                        ahmadPassword: data.ahmadPassword || '',
+                        saraPassword: data.saraPassword || '',
                         ahmadNameAr: data.ahmadNameAr || 'أحمد',
                         ahmadNameEn: data.ahmadNameEn || 'Ahmad',
                         saraNameAr: data.saraNameAr || 'سار',
@@ -8853,7 +8851,7 @@ Please contact us to coordinate the pickup.Thank you.`;
                                     </div>
                                     <form className="login-form" onSubmit={e => {
                                         e.preventDefault();
-                                        if (secretCodeInput.trim() === (systemSettings.secretGatewayCode || 'makanak2025')) {
+                                        if (systemSettings.secretGatewayCode && secretCodeInput.trim() === systemSettings.secretGatewayCode) {
                                             setLoginStep(2);
                                             setSecretCodeInput('');
                                             setSecretCodeError(false);
