@@ -11,7 +11,6 @@ import { sendAdminNotification } from '../services/notificationService';
 import emailjs from '@emailjs/browser';
 import QRBookingCard from '../components/QRBookingCard';
 import MaterialStatusChecker from '../components/MaterialStatusChecker';
-import BookingCountdown from '../components/BookingCountdown';
 import './MaterialExchange.css';
 
 
@@ -4376,7 +4375,6 @@ Please contact us to coordinate the pickup.Thank you.`;
                     </div>
                 </section>
                 <div className="exchange-main-container">
-                    <BookingCountdown isAr={isAr} />
                     <section className="add-material-section glass-card">
                         <div className="section-header">
                             <h2>{isAr ? 'تبرع الآن بالمواد' : 'Donate Materials'}</h2>
