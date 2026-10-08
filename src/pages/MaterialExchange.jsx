@@ -104,6 +104,104 @@ const STAFF_USERS = {
 
 const MATERIAL_BOOKING_START_AT = new Date('2026-10-04T10:00:00+03:00');
 
+const parseExchangeSettings = (data) => {
+    if (!data) return { isExchangeActive: true, isBookingOpen: false, isDonationFrozen: false, isRequestStatusOpen: false };
+
+    // 1. Campaign Active
+    let isExchangeActive = true;
+    if (data.is_exchange_active !== undefined) isExchangeActive = Boolean(data.is_exchange_active && data.is_exchange_active !== '0' && data.is_exchange_active !== 0);
+    else if (data.exchange_active !== undefined) isExchangeActive = Boolean(data.exchange_active && data.exchange_active !== '0' && data.exchange_active !== 0);
+    else if (data.material_exchange_enabled !== undefined) isExchangeActive = Boolean(data.material_exchange_enabled && data.material_exchange_enabled !== '0' && data.material_exchange_enabled !== 0);
+    else if (data.campaign_active !== undefined) isExchangeActive = Boolean(data.campaign_active && data.campaign_active !== '0' && data.campaign_active !== 0);
+    else if (data.campaignPhase !== undefined) isExchangeActive = data.campaignPhase !== 'suspended';
+
+    // 2. Booking Open
+    const checkBool = (val) => {
+        if (val === undefined || val === null) return null;
+        if (typeof val === 'boolean') return val;
+        if (val === 'true' || val === '1' || val === 1) return true;
+        if (val === 'false' || val === '0' || val === 0) return false;
+        return Boolean(val);
+    };
+
+    let isBookingOpen = null;
+    const bookingCandidates = [
+        data.booking_open,
+        data.is_booking_open,
+        data.material_booking_enabled,
+        data.material_booking_open,
+        data.booking_enabled,
+        data.allow_booking,
+        data.bookingOpen,
+        data.isBookingOpen,
+        data.bookingEnabled,
+        data.allowBooking
+    ];
+
+    for (const cand of bookingCandidates) {
+        const res = checkBool(cand);
+        if (res !== null) {
+            isBookingOpen = res;
+            break;
+        }
+    }
+
+    if (isBookingOpen === null) {
+        let phase = data.campaignPhase || 'suspended';
+        if (phase === 'booking') phase = 'exchange';
+        if (phase === 'donation') phase = 'collection';
+        isBookingOpen = phase === 'exchange';
+    }
+
+    if (!isExchangeActive) {
+        isBookingOpen = false;
+    }
+
+    // 3. Donation Form Frozen / Enabled
+    let isDonationOpen = null;
+    const donationCandidates = [
+        data.donation_form_enabled,
+        data.donation_enabled,
+        data.is_donation_open,
+        data.donation_open,
+        data.material_donation_enabled,
+        data.allow_donations
+    ];
+
+    for (const cand of donationCandidates) {
+        const res = checkBool(cand);
+        if (res !== null) {
+            isDonationOpen = res;
+            break;
+        }
+    }
+
+    if (isDonationOpen === null) {
+        if (data.donationFormFrozen !== undefined) {
+            isDonationOpen = !Boolean(data.donationFormFrozen);
+        } else {
+            isDonationOpen = true;
+        }
+    }
+
+    const isDonationFrozen = !isDonationOpen;
+
+    // 4. Request Status Form
+    let isRequestStatusOpen = false;
+    if (data.material_status_checker_enabled !== undefined) {
+        isRequestStatusOpen = Boolean(data.material_status_checker_enabled === true || data.material_status_checker_enabled === '1' || data.material_status_checker_enabled === 1);
+    } else if (data.requestStatusFormEnabled !== undefined) {
+        isRequestStatusOpen = Boolean(data.requestStatusFormEnabled);
+    }
+
+    return {
+        isExchangeActive,
+        isBookingOpen,
+        isDonationFrozen,
+        isRequestStatusOpen
+    };
+};
+
 const MaterialExchange = ({ isEmbedded = false }) => {
     const { language, t } = useLanguage();
     const isAr = language === 'ar';
@@ -183,8 +281,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
     const [permissionsSelection, setPermissionsSelection] = useState('ahmad');
     const [bookingOpen, setBookingOpen] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-    const canBookMaterials = systemSettings.isExchangeActive &&
-        Date.now() >= MATERIAL_BOOKING_START_AT.getTime();
+    const canBookMaterials = Boolean(systemSettings.isExchangeActive && bookingOpen);
     const [showBookingModal, setShowBookingModal] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [bookingData, setBookingData] = useState({ name: '', phone: '', confirmPhone: '', gender: '', hideContactInfo: false, shareContactForDelivery: false });
@@ -492,14 +589,16 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                 const docSnap = await getDoc(settingsRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
+                    const parsedSettings = parseExchangeSettings(data);
                     let phase = data.campaignPhase || 'suspended';
                     if (phase === 'booking') phase = 'exchange';
                     if (phase === 'donation') phase = 'collection';
+                    setBookingOpen(parsedSettings.isBookingOpen);
                     setSystemSettings(prev => ({
                         ...prev,
-                        campaignPhase: phase,
+                        campaignPhase: parsedSettings.isBookingOpen ? 'exchange' : (parsedSettings.isExchangeActive ? 'collection' : 'suspended'),
                         allowRegistration: data.allow_registration !== undefined ? Boolean(data.allow_registration) : true,
-                        isExchangeActive: phase !== 'suspended',
+                        isExchangeActive: parsedSettings.isExchangeActive,
                         secretGatewayCode: data.secretGatewayCode || '',
                         exchangeSuspendedMessageAr: data.exchangeSuspendedMessageAr || prev.exchangeSuspendedMessageAr,
                         exchangeSuspendedMessageEn: data.exchangeSuspendedMessageEn || prev.exchangeSuspendedMessageEn,
@@ -534,10 +633,8 @@ const MaterialExchange = ({ isEmbedded = false }) => {
                         coordinatorFemaleTasksV2: data.coordinatorFemaleTasksV2 || [],
                         sharedCoordinatorTasksV2: data.sharedCoordinatorTasksV2 || [],
                         taskAutoDeleteHours: data.taskAutoDeleteHours !== undefined ? Number(data.taskAutoDeleteHours) : 24,
-                        donationFormFrozen: data.donationFormFrozen !== undefined ? data.donationFormFrozen : false,
-                        requestStatusFormEnabled: data.material_status_checker_enabled !== undefined
-                            ? (data.material_status_checker_enabled === true || data.material_status_checker_enabled === '1' || data.material_status_checker_enabled === 1)
-                            : (data.requestStatusFormEnabled !== undefined ? Boolean(data.requestStatusFormEnabled) : false),
+                        donationFormFrozen: parsedSettings.isDonationFrozen,
+                        requestStatusFormEnabled: parsedSettings.isRequestStatusOpen,
                         donationEndTime: data.donationEndTime || '',
                         bookingStartTime: data.bookingStartTime || '',
                         workdayEnabled: data.workdayEnabled !== undefined ? Boolean(data.workdayEnabled) : false,
@@ -646,22 +743,18 @@ const MaterialExchange = ({ isEmbedded = false }) => {
         const unsubscribe = onSnapshot(doc(db, 'system_configs', 'global_settings'), (snapshot) => {
             if (!snapshot.exists()) return;
             const data = snapshot.data();
-            let phase = data.campaignPhase || 'suspended';
-            if (phase === 'booking') phase = 'exchange';
-            if (phase === 'donation') phase = 'collection';
+            const parsedSettings = parseExchangeSettings(data);
 
             setSystemSettings(prev => ({
                 ...prev,
-                campaignPhase: phase,
-                isExchangeActive: phase !== 'suspended',
-                donationFormFrozen: data.donationFormFrozen !== undefined ? Boolean(data.donationFormFrozen) : prev.donationFormFrozen,
-                requestStatusFormEnabled: data.material_status_checker_enabled !== undefined
-                    ? (data.material_status_checker_enabled === true || data.material_status_checker_enabled === '1' || data.material_status_checker_enabled === 1)
-                    : (data.requestStatusFormEnabled !== undefined ? Boolean(data.requestStatusFormEnabled) : false),
+                campaignPhase: parsedSettings.isBookingOpen ? 'exchange' : (parsedSettings.isExchangeActive ? 'collection' : 'suspended'),
+                isExchangeActive: parsedSettings.isExchangeActive,
+                donationFormFrozen: parsedSettings.isDonationFrozen,
+                requestStatusFormEnabled: parsedSettings.isRequestStatusOpen,
                 bookingStartTime: data.bookingStartTime || '',
                 donationEndTime: data.donationEndTime || ''
             }));
-            setBookingOpen(phase === 'exchange');
+            setBookingOpen(parsedSettings.isBookingOpen);
         }, (error) => {
             console.warn('Failed to listen for campaign setting changes:', error);
         });
@@ -1554,7 +1647,7 @@ const MaterialExchange = ({ isEmbedded = false }) => {
             return;
         }
         if (!canBookMaterials) {
-            toast.error(isAr ? 'عذراً، حجز المواد لم يبدأ بعد' : 'Sorry, material booking has not started yet');
+            toast.error(isAr ? 'عذراً، عملية حجز المواد متوقفة حالياً من قبل الإدارة' : 'Sorry, material booking is currently paused by administration');
             return;
         }
         setSelectedMaterial(material);
@@ -1563,6 +1656,11 @@ const MaterialExchange = ({ isEmbedded = false }) => {
 
     const handleBookingSubmit = (e) => {
         e.preventDefault();
+        if (!canBookMaterials) {
+            toast.error(isAr ? 'عذراً، عملية حجز المواد متوقفة حالياً من قبل الإدارة' : 'Sorry, material booking is currently paused by administration');
+            setShowBookingModal(false);
+            return;
+        }
         if (!selectedMaterial?.id || selectedMaterial.originalIndex === undefined) {
             toast.error(isAr ? 'تعذر تحديد المادة، أغلق النافذة وافتح الحجز مرة أخرى' : 'Could not identify this material. Close the window and try again.');
             return;
@@ -3342,8 +3440,17 @@ Please contact us to coordinate the pickup.Thank you.`;
         setBookingOpen(newPhase === 'exchange');
         setEditSettings(prev => ({ ...prev, campaignPhase: newPhase }));
         try {
-            const settingsRef = doc(db, 'system_configs', 'global_settings');
-            await setDoc(settingsRef, { campaignPhase: newPhase }, { merge: true });
+            await setDoc(settingsRef, {
+                campaignPhase: newPhase,
+                is_exchange_active: newPhase !== 'suspended',
+                exchange_active: newPhase !== 'suspended',
+                material_exchange_enabled: newPhase !== 'suspended',
+                bookingOpen: newPhase === 'exchange',
+                booking_open: newPhase === 'exchange',
+                is_booking_open: newPhase === 'exchange',
+                material_booking_enabled: newPhase === 'exchange',
+                allow_booking: newPhase === 'exchange'
+            }, { merge: true });
             toast.success(isAr ? 'تم تحديث حالة الحملة بنجاح ✅' : 'Campaign status updated successfully ✅');
 
             addAuditLog(
@@ -4634,9 +4741,13 @@ Please contact us to coordinate the pickup.Thank you.`;
                             <div className="section-header">
                                 <h2>
                                     {isAr ? 'المواد المتوفرة' : 'Available Materials'}
-                                    {canBookMaterials && <span className="live-badge">● {isAr ? 'الحجز مفتوح' : 'Booking Open'}</span>}
+                                    {canBookMaterials ? (
+                                        <span className="live-badge">● {isAr ? 'الحجز مفتوح' : 'Booking Open'}</span>
+                                    ) : (
+                                        <span className="closed-badge">🔒 {isAr ? 'الحجز متوقف حالياً' : 'Booking Paused'}</span>
+                                    )}
                                 </h2>
-                                <p>{isAr ? 'اختر المادة التي ترغب بحجزها' : 'Choose a material to book'}</p>
+                                <p>{canBookMaterials ? (isAr ? 'اختر المادة التي ترغب بحجزها' : 'Choose a material to book') : (isAr ? 'عملية حجز المواد متوقفة مؤقتاً من قبل الإدارة' : 'Material booking is currently paused by administration')}</p>
                             </div>
                             
                             {availableMaterials.length > 0 ? (
@@ -4650,10 +4761,17 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             <button
                                                 type="button"
                                                 className={`btn-book ${!canBookMaterials ? 'locked' : ''}`}
-                                                onClick={() => openBookingModal({ ...item, materialName: item.materialName })}
+                                                onClick={() => {
+                                                    if (!canBookMaterials) {
+                                                        toast.error(isAr ? 'عذراً، عملية حجز المواد متوقفة حالياً من قبل الإدارة' : 'Sorry, material booking is currently paused by administration');
+                                                        return;
+                                                    }
+                                                    openBookingModal({ ...item, materialName: item.materialName });
+                                                }}
                                                 disabled={!canBookMaterials}
+                                                title={!canBookMaterials ? (isAr ? 'الحجز متوقف حالياً من قبل الإدارة' : 'Booking is currently paused by administration') : ''}
                                             >
-                                                {isAr ? 'حجز المادة' : 'Book Material'}
+                                                {canBookMaterials ? (isAr ? 'حجز المادة' : 'Book Material') : (isAr ? 'الحجز مغلق' : 'Booking Closed')}
                                             </button>
                                         </div>
                                     ))}
@@ -9595,54 +9713,48 @@ Please contact us to coordinate the pickup.Thank you.`;
                         <div className="section-header">
                             <h2>
                                 {isAr ? 'المواد المتوفرة' : 'Available Materials'}
-                                {canBookMaterials && <span className="live-badge">● {isAr ? 'مباشر الآن' : 'Live Now'}</span>}
+                                {canBookMaterials ? (
+                                    <span className="live-badge">● {isAr ? 'مباشر الآن' : 'Live Now'}</span>
+                                ) : (
+                                    <span className="closed-badge">🔒 {isAr ? 'الحجز متوقف حالياً' : 'Booking Paused'}</span>
+                                )}
                             </h2>
-                            <p>{isAr ? 'تصفح المواد المتاح للتبادل' : 'Browse available materials for exchange'}</p>
+                            <p>{canBookMaterials ? (isAr ? 'تصفح المواد المتاحة للتبادل' : 'Browse available materials for exchange') : (isAr ? 'عملية حجز المواد متوقفة مؤقتاً من قبل الإدارة' : 'Material booking is currently paused by administration')}</p>
                         </div>
 
-                        {systemSettings.isExchangeActive && !canBookMaterials && (
-                            <div className="booking-notice-banner glass-card animate-pulse">
-                                <span className="notice-icon">⏳</span>
-                                <div className="notice-text">
-                                    <h3>{isAr ? 'فتر حجز المواد تبدأ 📚' : 'Material Booking Period Starts 📚'}</h3>
-                                    <div className="countdown-timer">
-                                        <div className="countdown-item"><span className="time-val">{timeLeft.days}</span><span className="time-label">{isAr ? 'يوم' : 'Days'}</span></div>
-                                        <div className="countdown-item"><span className="time-val">{timeLeft.hours}</span><span className="time-label">{isAr ? 'ساع' : 'Hrs'}</span></div>
-                                        <div className="countdown-item"><span className="time-val">{timeLeft.minutes}</span><span className="time-label">{isAr ? 'دقيق' : 'Min'}</span></div>
-                                        <div className="countdown-item"><span className="time-val">{timeLeft.seconds}</span><span className="time-label">{isAr ? 'ثاني' : 'Sec'}</span></div>
+                        {availableMaterials.length > 0 ? (
+                            <div className="materials-grid">
+                                {availableMaterials.map(item => (
+                                    <div key={item.uniqueKey} className="donation-card">
+                                        <div className="donation-main">
+                                            <div className="material-icon">📚</div>
+                                            <div className="donation-details"><h3>{item.materialItem.name}</h3></div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            className={`btn-book ${!canBookMaterials ? 'locked' : ''}`}
+                                            onClick={() => {
+                                                if (!canBookMaterials) {
+                                                    toast.error(isAr ? 'عذراً، عملية حجز المواد متوقفة حالياً من قبل الإدارة' : 'Sorry, material booking is currently paused by administration');
+                                                    return;
+                                                }
+                                                openBookingModal(item);
+                                            }}
+                                            disabled={!canBookMaterials}
+                                            title={!canBookMaterials ? (isAr ? 'الحجز متوقف حالياً من قبل الإدارة' : 'Booking is currently paused by administration') : ''}
+                                        >
+                                            {canBookMaterials ? (isAr ? 'حجز المادة' : 'Book Material') : (isAr ? 'الحجز مغلق' : 'Booking Closed')}
+                                        </button>
                                     </div>
-                                    <p className="booking-info-text">
-                                        {isAr
-                                            ? `تم تأجيل حجز المواد إلى ${MATERIAL_BOOKING_START_AT.toLocaleString('ar-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} بتوقيت الأردن. `
-                                            : `Material booking has been postponed until ${MATERIAL_BOOKING_START_AT.toLocaleString('en-JO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })} Jordan time. `}
-                                    </p>
-                                    {availableMaterials.length > 0 ? (
-                                        <div className="materials-grid">
-                                            {availableMaterials.map(item => (
-                                                <div key={item.uniqueKey} className="donation-card">
-                                                    <div className="donation-main">
-                                                        <div className="material-icon">📚</div>
-                                                        <div className="donation-details"><h3>{item.materialItem.name}</h3></div>
-                                                    </div>
-                                                    <button
-                                                        className={`btn-book ${!canBookMaterials ? 'locked' : ''}`}
-                                                        onClick={() => openBookingModal(item)}
-                                                        disabled={!canBookMaterials}
-                                                        title={!canBookMaterials ? (isAr ? 'يبدأ الحجز يوم الأحد الساعة العاشرة صباحاً' : 'Booking opens Sunday at 10:00 AM') : ''}
-                                                    >
-                                                        {isAr ? 'حجز المادة' : 'Book Material'}
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="no-materials">
-                                            <div className="empty-icon">📦</div>
-                                            <h3>{isAr ? 'لا توجد مواد معروض حالياً' : 'No materials available yet'}</h3>
-                                            <p>{isAr ? 'كن أول المبادرين!' : 'Be the first!'}</p>
-                                        </div>
-                                    )
-                                    }
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="no-materials">
+                                <div className="empty-icon">📦</div>
+                                <h3>{isAr ? 'لا توجد مواد معروض حالياً' : 'No materials available yet'}</h3>
+                                <p>{isAr ? 'كن أول المبادرين!' : 'Be the first!'}</p>
+                            </div>
+                        )}
 
                                     {
                                         systemSettings.isExchangeActive && reservedMaterials.length > 0 && (
@@ -9663,33 +9775,6 @@ Please contact us to coordinate the pickup.Thank you.`;
                                             </div>
                                         )
                                     }
-                                </div>
-                            </div>
-                        )}
-
-                        {systemSettings.isExchangeActive && bookingOpen && (
-                            availableMaterials.length > 0 ? (
-                                <div className="materials-grid">
-                                    {availableMaterials.map(item => (
-                                        <div key={item.uniqueKey} className="donation-card">
-                                            <div className="donation-main">
-                                                <div className="material-icon">📚</div>
-                                                <div className="donation-details"><h3>{item.materialItem.name}</h3></div>
-                                            </div>
-                                            <button type="button" className="btn-book" onClick={() => openBookingModal({ ...item, materialName: item.materialItem.name })}>
-                                                {isAr ? 'حجز المادة' : 'Book Material'}
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="no-materials">
-                                    <div className="empty-icon">📦</div>
-                                    <h3>{isAr ? 'لا توجد مواد معروضة حالياً' : 'No materials available yet'}</h3>
-                                    <p>{isAr ? 'كن أول المبادرين!' : 'Be the first!'}</p>
-                                </div>
-                            )
-                        )}
 
                         {/* Team Section */}
                         <section className="coordination-team-section glass-card">

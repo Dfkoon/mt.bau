@@ -420,6 +420,20 @@
     animation: livePulse 2s infinite;
 }
 
+.closed-badge {
+    font-size: 0.8rem;
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    -webkit-text-fill-color: #ef4444;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 700;
+}
+
 @keyframes livePulse {
     0% {
         opacity: 1;
